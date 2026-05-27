@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VLoca — Aluguel de Motos · Yamaha 0KM para Motoboys em Goiânia</title>
+<meta name="description" content="Alugue uma Yamaha Factor 150 Zero KM em Goiânia. IPVA, seguro, manutenção e suporte 24h inclusos. A partir de R$51,90/dia. Sem consulta Serasa.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={theme:{extend:{colors:{vlo:'#EA580C',vlb:'#1D4ED8',vld:'#060D1F',vln:'#0F1B5E',vls:'#0D1635',vlc:'#111A35'},fontFamily:{display:['"Barlow Condensed"','sans-serif'],sans:['Inter','sans-serif']}}}}
+</script>
+<style>
+/*
+  ============================================================
+  MAPEAMENTO DE IMAGENS — crie a pasta assets/ aqui ao lado e salve:
+  assets/hero.jpg        → Foto 3  (interior: fileira de motos + letreiro iluminado)
+  assets/moto-red.jpg    → Foto 2  (Yamaha vermelha de frente, fundo VLOCA laranja)
+  assets/moto-close.jpg  → Foto 1  (close-up roda/garfo vermelho)
+  assets/frota.jpg       → Foto 4  (fileira de motos pretas de frente, fundo azul)
+  assets/loja-noite.jpg  → Foto 5  (interior, letreiro VF glowing, motos)
+  assets/fachada.jpg     → Foto 6  (fachada externa azul/laranja)
+  assets/gerente.jpg     → Foto 7  (consultora de óculos no atendimento)
+  assets/adalberto.jpg   → Foto 8  (Adalberto, moto vermelha, polegar pra cima)
+  assets/maxwell.jpg     → Foto 9  (Maxwell, óculos, moto preta, polegar)
+  assets/alexsandro.jpg  → Foto 10 (Alex Sandro com funcionário VLoca)
+  assets/alifly.jpg      → Foto 11 (Alifly, manga comprida, moto preta)
+  ============================================================
+*/
+html{scroll-behavior:smooth}
+*{box-sizing:border-box}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulseBorder{0%{box-shadow:0 0 0 0 rgba(234,88,12,.55)}70%{box-shadow:0 0 0 12px rgba(234,88,12,0)}100%{box-shadow:0 0 0 0 rgba(234,88,12,0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.h1-anim{animation:fadeUp .8s ease both .2s}
+.sub-anim{animation:fadeUp .8s ease both .4s}
+.cta-anim{animation:fadeUp .8s ease both .6s}
+.trust-anim{animation:fadeUp .8s ease both .8s}
+.badge-anim{animation:fadeUp .8s ease both .1s, pulseBorder 2.2s infinite .9s}
+
+#navbar{transition:background .3s,box-shadow .3s}
+.magnetic{transition:transform .3s cubic-bezier(.25,.46,.45,.94)}
+
+/* Floating labels */
+.fl{position:relative}
+.fl label{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:#64748b;font-size:.875rem;transition:all .2s;pointer-events:none;line-height:1;background:transparent}
+.fl input,.fl select,.fl textarea{padding-top:1.6rem;padding-bottom:.5rem}
+.fl input:focus+label,.fl input:not(:placeholder-shown)+label,
+.fl select:focus+label,.fl textarea:focus+label,.fl textarea:not(:placeholder-shown)+label{top:.45rem;transform:none;font-size:.68rem;color:#EA580C}
+
+/* FAQ */
+.faq-body{max-height:0;overflow:hidden;transition:max-height .38s ease}
+.faq-body.open{max-height:360px}
+.faq-icon{transition:transform .3s}
+.faq-open .faq-icon{transform:rotate(45deg)}
+
+/* Fleet slider */
+.fleet-track{display:flex;transition:transform .5s cubic-bezier(.25,.46,.45,.94);will-change:transform}
+.fleet-slide{min-width:100%;position:relative}
+
+/* Testimonials */
+.tcard{transition:opacity .4s,transform .4s}
+.tcard.hidden-t{opacity:0;transform:translateY(8px);position:absolute;pointer-events:none}
+.tcard.visible-t{opacity:1;transform:translateY(0);position:relative;pointer-events:auto}
+
+/* Spinner */
+.spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
+</style>
+</head>
+<body class="bg-vld text-white overflow-x-hidden" style="font-family:'Inter',sans-serif">
+
+<!-- ===================== NAVBAR ===================== -->
+<nav id="navbar" class="fixed top-0 inset-x-0 z-50 px-4 md:px-8 py-4">
+  <div class="max-w-6xl mx-auto flex items-center justify-between">
+    <a href="#" class="flex items-center gap-2.5 shrink-0">
+      <div class="w-9 h-9 bg-vlo rounded-lg flex items-center justify-center">
+        <svg width="18" height="18" viewBox="0 0 20 18" fill="none">
+          <path d="M2 16L10 2L18 16" stroke="white" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M5.5 11H14.5" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.25rem;letter-spacing:.08em">VLOCA</span>
+    </a>
+    <a href="https://wa.me/5562933967816?text=Ol%C3%A1%2C+vim+pelo+site+e+quero+saber+mais+sobre+aluguel+de+motos" target="_blank" rel="noopener"
+       class="hidden md:inline-flex items-center gap-2 bg-vlo hover:bg-orange-700 text-white px-5 py-2.5 rounded-full font-semibold text-sm transition-all magnetic">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Falar com consultor
+    </a>
+    <button id="hamburger" class="md:hidden p-2 text-white">
+      <svg id="ico-open" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <svg id="ico-close" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div id="mob-nav" class="hidden md:hidden mt-3 pb-3 border-t border-white/10">
+    <a href="https://wa.me/5562933967816?text=Ol%C3%A1%2C+vim+pelo+site+e+quero+saber+mais+sobre+aluguel+de+motos" target="_blank" rel="noopener"
+       class="flex items-center justify-center gap-2 bg-vlo text-white px-5 py-3 rounded-xl font-semibold mt-3 mx-4">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Falar com consultor
+    </a>
+  </div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+  <div class="absolute inset-0 z-0">
+    <img src="assets/hero.jpg" alt="Frota VLoca — Yamahas 0KM na loja em Goiânia" class="w-full h-full object-cover" onerror="this.style.opacity=0">
+    <div class="absolute inset-0" style="background:linear-gradient(135deg,rgba(6,13,31,.92) 0%,rgba(6,13,31,.75) 60%,rgba(15,27,94,.6) 100%)"></div>
+  </div>
+  <div class="relative z-10 text-center px-4 max-w-5xl mx-auto pt-24 pb-16">
+    <div class="badge-anim inline-flex items-center gap-2 border border-vlo/70 text-orange-400 text-sm font-semibold px-4 py-1.5 rounded-full mb-7">
+      <span class="w-2 h-2 bg-vlo rounded-full animate-pulse"></span>
+      Yamaha Factor 150 · Zero KM · Goiânia
+    </div>
+    <h1 class="h1-anim" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(2.8rem,7vw,5.5rem);line-height:1;text-transform:uppercase;color:#fff;margin-bottom:1.25rem">
+      Aluguel de motos para<br>quem quer trabalhar com<br><span style="color:#EA580C">dignidade e previsibilidade</span>
+    </h1>
+    <p class="sub-anim text-gray-300 mb-10 max-w-2xl mx-auto" style="font-size:clamp(1rem,2.5vw,1.25rem)">
+      Para de financiar. Alugue uma Yamaha 0KM — sem IPVA, sem manutenção, sem seguro saindo do seu bolso.
+    </p>
+    <div class="cta-anim flex flex-col sm:flex-row gap-4 justify-center items-center mb-10">
+      <a href="#simulacao" class="magnetic bg-vlo hover:bg-orange-700 text-white px-9 py-4 rounded-full font-bold text-lg transition-all shadow-lg hover:shadow-orange-700/40 hover:scale-105" style="box-shadow:0 8px 30px rgba(234,88,12,.35)">
+        Quero começar hoje
+      </a>
+      <a href="#planos" class="border-2 border-white/25 hover:border-vlo text-white px-9 py-4 rounded-full font-semibold text-lg transition-all hover:bg-vlo/10">
+        Ver planos
+      </a>
+    </div>
+    <div class="trust-anim flex flex-wrap justify-center gap-5 text-sm text-gray-400">
+      <span class="flex items-center gap-1.5"><span class="text-green-400 font-bold text-base">✓</span> Sem consulta Serasa</span>
+      <span class="flex items-center gap-1.5"><span class="text-green-400 font-bold text-base">✓</span> Resposta em 5 minutos</span>
+      <span class="flex items-center gap-1.5"><span class="text-green-400 font-bold text-base">✓</span> Tudo incluso</span>
+      <span class="flex items-center gap-1.5"><span class="text-green-400 font-bold text-base">✓</span> Suporte 24h</span>
+    </div>
+  </div>
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce">
+    <svg class="w-6 h-6 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+  </div>
+</section>
+
+<!-- ===================== COUNTERS ===================== -->
+<section class="bg-vlo py-10">
+  <div class="max-w-4xl mx-auto px-4">
+    <div class="grid grid-cols-3 gap-4 text-center" id="counters-section">
+      <div data-target="200" data-suffix="+">
+        <div class="font-display font-black text-white leading-none mb-1" style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(2.2rem,6vw,3.5rem);font-weight:900">
+          <span class="counter-num">0</span><span>+</span>
+        </div>
+        <div class="text-orange-100 text-sm">Motos 0KM na frota</div>
+      </div>
+      <div data-target="5" data-suffix=" min">
+        <div class="font-display font-black text-white leading-none mb-1" style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(2.2rem,6vw,3.5rem);font-weight:900">
+          <span class="counter-num">0</span><span class="text-xl"> min</span>
+        </div>
+        <div class="text-orange-100 text-sm">Tempo de resposta</div>
+      </div>
+      <div data-target="1000" data-prefix="+">
+        <div class="font-display font-black text-white leading-none mb-1" style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(2.2rem,6vw,3.5rem);font-weight:900">
+          <span class="text-xl">+</span><span class="counter-num">0</span>
+        </div>
+        <div class="text-orange-100 text-sm">Motoboys atendidos</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== DORES ===================== -->
+<section class="py-20 bg-vld" id="dores">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="text-center mb-12" data-aos="fade-up">
+      <p class="text-orange-500 font-semibold text-xs uppercase tracking-widest mb-3">A realidade de quem tem moto própria</p>
+      <h2 style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.05;text-transform:uppercase">
+        Chega de pagar<br>para <span class="text-vlo">trabalhar</span>
+      </h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-14">
+      <div class="bg-vlc border-l-4 border-vlo p-6 rounded-r-2xl hover:-translate-y-1.5 hover:shadow-xl transition-all duration-300" style="box-shadow:0 0 0 0 transparent" data-aos="fade-up" data-aos-delay="0">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:rgba(234,88,12,.15)">
+          <i data-lucide="wrench" class="w-5 h-5" style="color:#EA580C"></i>
+        </div>
+        <h3 class="font-bold text-white mb-2">Manutenção surpresa</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">Prejuízo na hora que menos espera. Mecânico, peças e dias parado — tudo sai do seu bolso.</p>
+      </div>
+      <div class="bg-vlc border-l-4 border-vlo p-6 rounded-r-2xl hover:-translate-y-1.5 hover:shadow-xl transition-all duration-300" data-aos="fade-up" data-aos-delay="100">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:rgba(234,88,12,.15)">
+          <i data-lucide="frown" class="w-5 h-5" style="color:#EA580C"></i>
+        </div>
+        <h3 class="font-bold text-white mb-2">Desrespeito</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">Tratado como número, não como profissional. Burocracia e falta de atenção que cansa demais.</p>
+      </div>
+      <div class="bg-vlc border-l-4 border-vlo p-6 rounded-r-2xl hover:-translate-y-1.5 hover:shadow-xl transition-all duration-300" data-aos="fade-up" data-aos-delay="200">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:rgba(234,88,12,.15)">
+          <i data-lucide="shield-alert" class="w-5 h-5" style="color:#EA580C"></i>
+        </div>
+        <h3 class="font-bold text-white mb-2">Medo constante</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">Roubo, acidente, sinistro — sem seguro adequado, qualquer imprevisto pode acabar com tudo.</p>
+      </div>
+      <div class="bg-vlc border-l-4 border-vlo p-6 rounded-r-2xl hover:-translate-y-1.5 hover:shadow-xl transition-all duration-300" data-aos="fade-up" data-aos-delay="300">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:rgba(234,88,12,.15)">
+          <i data-lucide="file-x" class="w-5 h-5" style="color:#EA580C"></i>
+        </div>
+        <h3 class="font-bold text-white mb-2">Burocracia</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">IPVA, licenciamento, seguro obrigatório — tudo cai no seu colo e some do seu lucro.</p>
+      </div>
+    </div>
+    <div class="rounded-2xl p-8 md:p-10" style="background:rgba(15,27,94,.4);border:1px solid rgba(29,78,216,.3)" data-aos="fade-up">
+      <p class="text-gray-500 text-xs uppercase tracking-widest mb-6 text-center">Responde com honestidade:</p>
+      <div class="space-y-4 max-w-2xl mx-auto">
+        <p class="text-lg md:text-xl text-white font-semibold leading-snug">"Quantos dias de trampo perdeu por estar sem moto?"</p>
+        <p class="text-lg md:text-xl text-white font-semibold leading-snug">"Quanto te custou a última manutenção surpresa?"</p>
+        <p class="text-lg md:text-xl text-white font-semibold leading-snug">"Quanto vai gastar com IPVA + seguro + licenciamento este ano?"</p>
+        <p class="text-xl md:text-2xl font-bold leading-snug" style="color:#EA580C">"Vale a pena continuar assim?"</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 3 PILARES ===================== -->
+<section class="py-20 bg-vls" id="pilares">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="text-center mb-14" data-aos="fade-up">
+      <p class="text-orange-500 font-semibold text-xs uppercase tracking-widest mb-3">O que te entregamos</p>
+      <h2 style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.05;text-transform:uppercase">
+        Os 3 pilares do seu<br><span style="color:#EA580C">sucesso como piloto</span>
+      </h2>
+      <p class="text-gray-400 mt-3 max-w-lg mx-auto">Você foca no seu trabalho. A VLoca cuida de todo o resto.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="relative bg-vld rounded-2xl p-8 overflow-hidden group hover:-translate-y-2 transition-all duration-300" style="hover:box-shadow:0 20px 40px rgba(234,88,12,.15)" data-aos="zoom-in" data-aos-delay="0">
+        <div class="absolute top-5 right-5 select-none" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:5rem;line-height:1;color:rgba(234,88,12,.08);transition:color .3s">01</div>
+        <div class="w-12 h-12 bg-vlo rounded-xl flex items-center justify-center mb-6">
+          <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+        </div>
+        <h3 class="mb-3" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.75rem;text-transform:uppercase;color:#fff">A melhor moto</h3>
+        <p class="text-gray-400 leading-relaxed">Você não roda com moto genérica. Aqui, você acelera uma <strong class="text-white">Yamaha Zero KM</strong> — robusta, econômica, confortável e confiável.</p>
+      </div>
+      <div class="relative bg-vld rounded-2xl p-8 overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="zoom-in" data-aos-delay="150">
+        <div class="absolute top-5 right-5 select-none" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:5rem;line-height:1;color:rgba(234,88,12,.08)">02</div>
+        <div class="w-12 h-12 bg-vlo rounded-xl flex items-center justify-center mb-6">
+          <i data-lucide="star" class="w-6 h-6 text-white"></i>
+        </div>
+        <h3 class="mb-3" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.75rem;text-transform:uppercase;color:#fff">Atendimento VIP</h3>
+        <p class="text-gray-400 leading-relaxed">Você não é um número. Aqui, você tem <strong class="text-white">Atendimento VIP de verdade</strong> — com respeito, agilidade e espaço digno para esperar.</p>
+      </div>
+      <div class="relative bg-vld rounded-2xl p-8 overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="zoom-in" data-aos-delay="300">
+        <div class="absolute top-5 right-5 select-none" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:5rem;line-height:1;color:rgba(234,88,12,.08)">03</div>
+        <div class="w-12 h-12 bg-vlo rounded-xl flex items-center justify-center mb-6">
+          <i data-lucide="headphones" class="w-6 h-6 text-white"></i>
+        </div>
+        <h3 class="mb-3" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.75rem;text-transform:uppercase;color:#fff">Suporte 24h</h3>
+        <p class="text-gray-400 leading-relaxed">Nosso <strong class="text-white">Suporte 24h</strong> resolve tudo — não importa se é madrugada, feriado ou domingo. Você nunca fica na mão.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ATENDIMENTO VIP DETALHE ===================== -->
+<section class="py-20 bg-vld">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div class="relative" data-aos="fade-right">
+        <div class="rounded-2xl overflow-hidden aspect-[4/5]">
+          <img src="assets/gerente.jpg" alt="Consultora VLoca atendendo cliente com atenção" class="w-full h-full object-cover object-center">
+          <div class="absolute inset-0 rounded-2xl" style="background:linear-gradient(to top,rgba(6,13,31,.7) 0%,transparent 60%)"></div>
+        </div>
+        <div class="absolute bottom-6 left-6 right-6 rounded-xl p-4" style="background:rgba(6,13,31,.9);border:1px solid rgba(234,88,12,.3);backdrop-filter:blur(8px)">
+          <p class="text-orange-400 font-semibold text-sm">Sua única preocupação agora é</p>
+          <p class="text-white font-bold text-lg mt-0.5">não esquecer o capacete 🪖</p>
+        </div>
+      </div>
+      <div data-aos="fade-left">
+        <p class="text-orange-500 font-semibold text-xs uppercase tracking-widest mb-4">Como tratamos você</p>
+        <h2 class="mb-8" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(1.8rem,4vw,3rem);line-height:1.05;text-transform:uppercase">
+          Aqui você não é<br>"só mais um".<br><span style="color:#EA580C">Aqui você é<br>nosso protagonista.</span>
+        </h2>
+        <div class="space-y-7">
+          <div class="flex gap-4">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5" style="background:rgba(234,88,12,.15)">
+              <i data-lucide="zap" class="w-5 h-5" style="color:#EA580C"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-white mb-1">Agilidade</h4>
+              <p class="text-gray-400 text-sm leading-relaxed">Processo rápido, oficina própria e agilidade máxima para você não perder horas de trabalho.</p>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5" style="background:rgba(234,88,12,.15)">
+              <i data-lucide="coffee" class="w-5 h-5" style="color:#EA580C"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-white mb-1">Conforto</h4>
+              <p class="text-gray-400 text-sm leading-relaxed">Sala de espera climatizada, café e um espaço digno para você aguardar — sem ficar no sol.</p>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5" style="background:rgba(234,88,12,.15)">
+              <i data-lucide="heart-handshake" class="w-5 h-5" style="color:#EA580C"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-white mb-1">Respeito</h4>
+              <p class="text-gray-400 text-sm leading-relaxed">Uma equipe treinada para tratar você como o profissional e parceiro que você é.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COMPARATIVO ===================== -->
+<section class="py-20 bg-vls">
+  <div class="max-w-5xl mx-auto px-4">
+    <div class="text-center mb-12" data-aos="fade-up">
+      <h2 style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.05;text-transform:uppercase">
+        Financiando <span class="text-gray-600">vs.</span> <span style="color:#EA580C">Alugando na VLoca</span>
+      </h2>
+      <p class="text-gray-400 mt-3">Veja a diferença real no seu bolso todo mês</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="rounded-2xl p-7" style="background:rgba(127,29,29,.2);border:1px solid rgba(220,38,38,.25)" data-aos="fade-right">
+        <div class="text-center mb-6">
+          <span class="inline-block font-bold px-4 py-1.5 rounded-full text-sm uppercase tracking-wide" style="background:rgba(220,38,38,.2);color:#f87171">Financiando usada</span>
+        </div>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3"><span class="text-red-500 font-bold text-lg shrink-0">✗</span><span class="text-gray-400 text-sm">Juros acumulados no financiamento</span></div>
+          <div class="flex items-center gap-3"><span class="text-red-500 font-bold text-lg shrink-0">✗</span><span class="text-gray-400 text-sm">IPVA por sua conta</span></div>
+          <div class="flex items-center gap-3"><span class="text-red-500 font-bold text-lg shrink-0">✗</span><span class="text-gray-400 text-sm">Licenciamento por sua conta</span></div>
+          <div class="flex items-center gap-3"><span class="text-red-500 font-bold text-lg shrink-0">✗</span><span class="text-gray-400 text-sm">Seguro por sua conta</span></div>
+          <div class="flex items-center gap-3"><span class="text-red-500 font-bold text-lg shrink-0">✗</span><span class="text-gray-400 text-sm">Manutenção surpresa a qualquer hora</span></div>
+          <div class="flex items-center gap-3"><span class="text-red-500 font-bold text-lg shrink-0">✗</span><span class="text-gray-400 text-sm">Risco total de roubo e acidente</span></div>
+          <div class="flex items-center gap-3"><span class="text-red-500 font-bold text-lg shrink-0">✗</span><span class="text-gray-400 text-sm">Moto velha e desgastada</span></div>
+        </div>
+      </div>
+      <div class="rounded-2xl p-7" style="background:rgba(234,88,12,.1);border:1px solid rgba(234,88,12,.4)" data-aos="fade-left">
+        <div class="text-center mb-6">
+          <span class="inline-block bg-vlo text-white font-bold px-4 py-1.5 rounded-full text-sm uppercase tracking-wide">Alugando com VLoca</span>
+        </div>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3"><span class="text-green-400 font-bold text-lg shrink-0">✓</span><span class="text-white text-sm">Parcela fixa e previsível todo mês</span></div>
+          <div class="flex items-center gap-3"><span class="text-green-400 font-bold text-lg shrink-0">✓</span><span class="text-white text-sm">IPVA incluso</span></div>
+          <div class="flex items-center gap-3"><span class="text-green-400 font-bold text-lg shrink-0">✓</span><span class="text-white text-sm">Licenciamento incluso</span></div>
+          <div class="flex items-center gap-3"><span class="text-green-400 font-bold text-lg shrink-0">✓</span><span class="text-white text-sm">Seguro e proteção total inclusos</span></div>
+          <div class="flex items-center gap-3"><span class="text-green-400 font-bold text-lg shrink-0">✓</span><span class="text-white text-sm">Manutenção preventiva inclusa</span></div>
+          <div class="flex items-center gap-3"><span class="text-green-400 font-bold text-lg shrink-0">✓</span><span class="text-white text-sm">Rastreador incluso na frota</span></div>
+          <div class="flex items-center gap-3"><span class="text-green-400 font-bold text-lg shrink-0">✓</span><span class="text-white text-sm">Yamaha Factor 150 Zero KM</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="text-center font-bold text-xl mt-8" style="color:#EA580C" data-aos="fade-up">
+      A partir de R$ 51,90/dia — tudo incluso, zero surpresa.
+    </p>
+  </div>
+</section>
+
+<!-- ===================== PLANOS ===================== -->
+<section class="py-20 bg-vln" id="planos">
+  <div class="max-w-5xl mx-auto px-4">
+    <div class="text-center mb-12" data-aos="fade-up">
+      <p class="text-orange-400 font-semibold text-xs uppercase tracking-widest mb-3">Escolha o seu</p>
+      <h2 style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.05;text-transform:uppercase;color:#fff">
+        Planos que cabem<br>no seu <span style="color:#EA580C">bolso</span>
+      </h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+      <!-- Plano Anual -->
+      <div class="rounded-2xl overflow-hidden" data-aos="fade-right">
+        <div class="py-5 px-7 text-center" style="background:#EA580C">
+          <p class="font-bold text-white text-xs uppercase tracking-widest mb-2">Plano Anual</p>
+          <p class="font-black text-white leading-none" style="font-family:'Barlow Condensed',sans-serif;font-size:3.5rem;font-weight:900">R$ 51,90</p>
+          <p class="text-orange-100 text-sm mt-1">/dia · tudo incluso</p>
+        </div>
+        <div class="py-6 px-7" style="background:#1D4ED8">
+          <p class="text-blue-200 text-sm mb-5">Para quem precisa da moto rapidamente.</p>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3"><span class="text-white font-bold shrink-0">✓</span><span class="text-blue-100 text-sm">Manutenção preventiva</span></div>
+            <div class="flex items-center gap-3"><span class="text-white font-bold shrink-0">✓</span><span class="text-blue-100 text-sm">Assistência técnica 24h</span></div>
+            <div class="flex items-center gap-3"><span class="text-white font-bold shrink-0">✓</span><span class="text-blue-100 text-sm">Seguro incluso</span></div>
+            <div class="flex items-center gap-3"><span class="text-white font-bold shrink-0">✓</span><span class="text-blue-100 text-sm">Desconto combustível</span></div>
+            <div class="flex items-center gap-3"><span class="text-white font-bold shrink-0">✓</span><span class="text-blue-100 text-sm">IPVA e licenciamento inclusos</span></div>
+            <div class="flex items-center gap-3"><span class="text-white font-bold shrink-0">✓</span><span class="text-blue-100 text-sm">Yamaha Factor 150 Zero KM</span></div>
+          </div>
+          <a href="#simulacao" class="block text-center bg-vlo hover:bg-orange-700 text-white font-bold py-3 rounded-xl mt-7 transition-all magnetic">
+            Quero este plano
+          </a>
+        </div>
+      </div>
+      <!-- Plano Premium -->
+      <div class="rounded-2xl overflow-hidden relative" data-aos="fade-left">
+        <div class="absolute top-3 right-3 z-10">
+          <span class="bg-yellow-400 text-yellow-900 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wide">Premium</span>
+        </div>
+        <div class="py-5 px-7 text-center" style="background:#c2410c">
+          <p class="font-bold text-white text-xs uppercase tracking-widest mb-2">Plano Premium</p>
+          <p class="font-black text-white leading-none" style="font-family:'Barlow Condensed',sans-serif;font-size:3.5rem;font-weight:900">R$ 59,90</p>
+          <p class="text-orange-100 text-sm mt-1">/dia · com opção de compra</p>
+        </div>
+        <div class="py-6 px-7" style="background:#1e3a8a">
+          <p class="text-blue-200 text-sm mb-5">Após 28 meses cumprindo contrato, a moto pode ser sua.</p>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3"><span class="text-yellow-400 font-bold shrink-0">✓</span><span class="text-blue-100 text-sm">Manutenção preventiva</span></div>
+            <div class="flex items-center gap-3"><span class="text-yellow-400 font-bold shrink-0">✓</span><span class="text-blue-100 text-sm">Assistência técnica 24h</span></div>
+            <div class="flex items-center gap-3"><span class="text-yellow-400 font-bold shrink-0">✓</span><span class="text-blue-100 text-sm">Seguro incluso</span></div>
+            <div class="flex items-center gap-3"><span class="text-yellow-400 font-bold shrink-0">✓</span><span class="text-blue-100 text-sm">Desconto combustível</span></div>
+            <div class="flex items-center gap-3"><span class="text-yellow-400 font-bold shrink-0">✓</span><span class="text-blue-100 text-sm">IPVA e licenciamento inclusos</span></div>
+            <div class="flex items-center gap-3"><span class="text-yellow-400 font-bold shrink-0">★</span><span class="text-white font-semibold text-sm">Opção de aquisição da moto</span></div>
+          </div>
+          <a href="#simulacao" class="block text-center font-bold py-3 rounded-xl mt-7 transition-all magnetic" style="background:#EA580C;color:#fff">
+            Quero este plano
+          </a>
+        </div>
+      </div>
+    </div>
+    <p class="text-center text-gray-400 text-sm mt-6" data-aos="fade-up">Dúvidas sobre qual plano escolher? Nosso consultor orienta você em menos de 5 minutos.</p>
+  </div>
+</section>
+
+<!-- ===================== GALERIA DA FROTA ===================== -->
+<section class="py-20 bg-vld">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="text-center mb-12" data-aos="fade-up">
+      <p class="text-orange-500 font-semibold text-xs uppercase tracking-widest mb-3">Conheça a frota</p>
+      <h2 style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.05;text-transform:uppercase">
+        A moto que vai te <span style="color:#EA580C">levar longe</span>
+      </h2>
+    </div>
+    <div id="fleet-slider" class="relative overflow-hidden rounded-2xl" data-aos="fade-up">
+      <div id="fleet-track" class="fleet-track">
+        <div class="fleet-slide">
+          <div class="relative aspect-[16/9] md:aspect-[2/1]">
+            <img src="assets/hero.jpg" alt="Frota VLoca — fileira de Yamahas 0KM" class="w-full h-full object-cover">
+            <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(6,13,31,.8) 0%,transparent 50%)"></div>
+            <div class="absolute bottom-6 left-6">
+              <span class="bg-vlo text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase">Yamaha Factor 150 · Zero KM</span>
+            </div>
+          </div>
+        </div>
+        <div class="fleet-slide">
+          <div class="relative aspect-[16/9] md:aspect-[2/1]">
+            <img src="assets/moto-red.jpg" alt="Yamaha Factor 150 vermelha — VLoca Goiânia" class="w-full h-full object-cover">
+            <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(6,13,31,.8) 0%,transparent 50%)"></div>
+            <div class="absolute bottom-6 left-6">
+              <span class="bg-vlo text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase">Disponível agora</span>
+            </div>
+          </div>
+        </div>
+        <div class="fleet-slide">
+          <div class="relative aspect-[16/9] md:aspect-[2/1]">
+            <img src="assets/frota.jpg" alt="Fileira de motos Yamaha na VLoca" class="w-full h-full object-cover">
+            <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(6,13,31,.8) 0%,transparent 50%)"></div>
+            <div class="absolute bottom-6 left-6">
+              <span class="bg-vlo text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase">Mais de 200 motos disponíveis</span>
+            </div>
+          </div>
+        </div>
+        <div class="fleet-slide">
+          <div class="relative aspect-[16/9] md:aspect-[2/1]">
+            <img src="assets/loja-noite.jpg" alt="Interior da VLoca com letreiro iluminado" class="w-full h-full object-cover">
+            <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(6,13,31,.8) 0%,transparent 50%)"></div>
+            <div class="absolute bottom-6 left-6">
+              <span class="bg-vlo text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase">Loja própria em Goiânia</span>
+            </div>
+          </div>
+        </div>
+        <div class="fleet-slide">
+          <div class="relative aspect-[16/9] md:aspect-[2/1]">
+            <img src="assets/moto-close.jpg" alt="Detalhe da Yamaha Factor 150" class="w-full h-full object-cover">
+            <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(6,13,31,.8) 0%,transparent 50%)"></div>
+            <div class="absolute bottom-6 left-6">
+              <span class="bg-vlo text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase">Freio a disco · Pneu Michelin</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Controls -->
+      <button id="fleet-prev" class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:bg-vlo" style="background:rgba(6,13,31,.7);backdrop-filter:blur(4px)">
+        <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button id="fleet-next" class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:bg-vlo" style="background:rgba(6,13,31,.7);backdrop-filter:blur(4px)">
+        <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <!-- Dots -->
+      <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2" id="fleet-dots">
+        <span class="fleet-dot w-2 h-2 rounded-full bg-vlo transition-all"></span>
+        <span class="fleet-dot w-2 h-2 rounded-full transition-all" style="background:rgba(255,255,255,.3)"></span>
+        <span class="fleet-dot w-2 h-2 rounded-full transition-all" style="background:rgba(255,255,255,.3)"></span>
+        <span class="fleet-dot w-2 h-2 rounded-full transition-all" style="background:rgba(255,255,255,.3)"></span>
+        <span class="fleet-dot w-2 h-2 rounded-full transition-all" style="background:rgba(255,255,255,.3)"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FORMULÁRIO ===================== -->
+<section class="py-20 bg-vlb" id="simulacao">
+  <div class="max-w-2xl mx-auto px-4">
+    <div class="text-center mb-10" data-aos="fade-up">
+      <p class="font-semibold text-xs uppercase tracking-widest mb-3 text-blue-200">Sem compromisso</p>
+      <h2 style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(2rem,5vw,3rem);line-height:1.05;text-transform:uppercase;color:#fff">
+        Faça sua simulação grátis
+      </h2>
+      <p class="text-blue-200 mt-3">Um consultor responde em até 5 minutos no horário comercial.</p>
+    </div>
+    <div id="form-wrapper" data-aos="fade-up">
+      <form id="lead-form" class="space-y-4" novalidate>
+        <!-- Nome -->
+        <div class="fl">
+          <input type="text" id="f-name" placeholder=" " autocomplete="name"
+            class="w-full rounded-xl bg-blue-900/50 border border-blue-700/50 focus:border-vlo text-white outline-none px-4 py-3 text-sm transition-all"
+            style="caret-color:#EA580C">
+          <label for="f-name">Nome completo *</label>
+        </div>
+        <!-- WhatsApp -->
+        <div class="fl">
+          <input type="tel" id="f-phone" placeholder=" " autocomplete="tel" maxlength="16"
+            class="w-full rounded-xl bg-blue-900/50 border border-blue-700/50 focus:border-vlo text-white outline-none px-4 py-3 text-sm transition-all"
+            style="caret-color:#EA580C">
+          <label for="f-phone">WhatsApp *</label>
+        </div>
+        <!-- Email -->
+        <div class="fl">
+          <input type="email" id="f-email" placeholder=" " autocomplete="email"
+            class="w-full rounded-xl bg-blue-900/50 border border-blue-700/50 focus:border-vlo text-white outline-none px-4 py-3 text-sm transition-all"
+            style="caret-color:#EA580C">
+          <label for="f-email">E-mail *</label>
+        </div>
+        <!-- Motoboy toggle -->
+        <div>
+          <p class="text-blue-200 text-sm mb-3">Já trabalha como motoboy?</p>
+          <div class="flex gap-3">
+            <label class="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border cursor-pointer transition-all has-[:checked]:border-vlo has-[:checked]:bg-vlo/20" style="border-color:rgba(59,130,246,.5)">
+              <input type="radio" name="motoboy" value="Sim" class="sr-only">
+              <span class="text-white text-sm font-medium">Sim</span>
+            </label>
+            <label class="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border cursor-pointer transition-all has-[:checked]:border-vlo has-[:checked]:bg-vlo/20" style="border-color:rgba(59,130,246,.5)">
+              <input type="radio" name="motoboy" value="Não" class="sr-only">
+              <span class="text-white text-sm font-medium">Não ainda</span>
+            </label>
+          </div>
+        </div>
+        <!-- Quando começa -->
+        <div class="fl">
+          <select id="f-start" class="w-full rounded-xl bg-blue-900/50 border border-blue-700/50 focus:border-vlo text-white outline-none px-4 py-3 text-sm transition-all appearance-none"
+            style="caret-color:#EA580C;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 1rem center">
+            <option value="" disabled selected></option>
+            <option value="Esta semana">Esta semana</option>
+            <option value="Este mês">Este mês</option>
+            <option value="Só pesquisando">Só pesquisando por enquanto</option>
+          </select>
+          <label for="f-start">Quando pretende começar?</label>
+        </div>
+        <!-- Região -->
+        <div class="fl">
+          <input type="text" id="f-region" placeholder=" " autocomplete="address-level2"
+            class="w-full rounded-xl bg-blue-900/50 border border-blue-700/50 focus:border-vlo text-white outline-none px-4 py-3 text-sm transition-all"
+            style="caret-color:#EA580C">
+          <label for="f-region">Sua região em Goiânia</label>
+        </div>
+        <!-- Submit -->
+        <button type="submit" id="form-btn"
+          class="magnetic w-full flex items-center justify-center gap-3 font-bold text-lg py-4 rounded-xl transition-all hover:scale-105"
+          style="background:#EA580C;color:#fff;box-shadow:0 8px 30px rgba(234,88,12,.4)">
+          <span id="btn-text">Quero começar hoje</span>
+          <div class="spinner" id="btn-spin"></div>
+        </button>
+        <p class="text-center text-blue-300 text-xs flex items-center justify-center gap-1.5">
+          <i data-lucide="lock" class="w-3 h-3"></i>
+          Seus dados estão seguros. Não enviamos spam.
+        </p>
+      </form>
+    </div>
+    <!-- Sucesso -->
+    <div id="form-success" class="hidden text-center py-10" data-aos="zoom-in">
+      <div class="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-5">
+        <i data-lucide="check-circle" class="w-8 h-8 text-green-400"></i>
+      </div>
+      <h3 class="font-bold text-2xl text-white mb-3">Recebemos!</h3>
+      <p class="text-blue-200">Um consultor vai entrar em contato com você pelo WhatsApp em instantes.</p>
+      <a href="https://wa.me/5562933967816?text=Ol%C3%A1%2C+quero+saber+mais+sobre+o+aluguel+de+motos" target="_blank" rel="noopener"
+         class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-7 py-3 rounded-full font-semibold mt-6 transition-all">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Falar diretamente no WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== DEPOIMENTOS ===================== -->
+<section class="py-20 bg-vld" id="depoimentos">
+  <div class="max-w-4xl mx-auto px-4">
+    <div class="text-center mb-12" data-aos="fade-up">
+      <p class="text-orange-500 font-semibold text-xs uppercase tracking-widest mb-3">Quem já está rodando conta</p>
+      <h2 style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.05;text-transform:uppercase">
+        Eles escolheram a <span style="color:#EA580C">VLoca</span>
+      </h2>
+    </div>
+    <div id="testimonials-wrap" class="relative min-h-[280px]" data-aos="fade-up">
+      <!-- Adalberto -->
+      <div class="tcard visible-t bg-vlc rounded-2xl p-8">
+        <div class="flex items-center gap-4 mb-5">
+          <img src="assets/adalberto.jpg" alt="Adalberto" class="w-16 h-16 rounded-full object-cover object-top shrink-0">
+          <div>
+            <p class="font-bold text-white">Adalberto</p>
+            <p class="text-gray-400 text-sm">Motoboy iFood · 3 anos na profissão</p>
+            <div class="flex gap-0.5 mt-1">
+              <span class="text-yellow-400 text-sm">★★★★★</span>
+            </div>
+          </div>
+        </div>
+        <p class="text-gray-300 leading-relaxed">"Passei 2 anos pagando parcela de financiamento e ainda tinha que arcar com IPVA, seguro e mecânico. Na VLoca, pago uma parcela fixa e dormi tranquilo pela primeira vez em muito tempo."</p>
+      </div>
+      <!-- Maxwell -->
+      <div class="tcard hidden-t bg-vlc rounded-2xl p-8">
+        <div class="flex items-center gap-4 mb-5">
+          <img src="assets/maxwell.jpg" alt="Maxwell" class="w-16 h-16 rounded-full object-cover object-top shrink-0">
+          <div>
+            <p class="font-bold text-white">Maxwell</p>
+            <p class="text-gray-400 text-sm">Entregador autônomo · Goiânia</p>
+            <div class="flex gap-0.5 mt-1">
+              <span class="text-yellow-400 text-sm">★★★★★</span>
+            </div>
+          </div>
+        </div>
+        <p class="text-gray-300 leading-relaxed">"Tinha restrição no nome e achei que não ia conseguir nada. O pessoal da VLoca analisou meu caso e em menos de uma hora já estava aprovado. Zero burocracia, zero constrangimento."</p>
+      </div>
+      <!-- Alex Sandro -->
+      <div class="tcard hidden-t bg-vlc rounded-2xl p-8">
+        <div class="flex items-center gap-4 mb-5">
+          <img src="assets/alexsandro.jpg" alt="Alex Sandro" class="w-16 h-16 rounded-full object-cover object-center shrink-0">
+          <div>
+            <p class="font-bold text-white">Alex Sandro</p>
+            <p class="text-gray-400 text-sm">Entregador de aplicativos · Goiânia</p>
+            <div class="flex gap-0.5 mt-1">
+              <span class="text-yellow-400 text-sm">★★★★★</span>
+            </div>
+          </div>
+        </div>
+        <p class="text-gray-300 leading-relaxed">"Tive um problema com a moto numa sexta à noite. Acionei o suporte 24h e resolveram tudo até sábado de manhã. Não perdi nem um dia de entrega. Esse tipo de suporte não tem preço."</p>
+      </div>
+      <!-- Alifly -->
+      <div class="tcard hidden-t bg-vlc rounded-2xl p-8">
+        <div class="flex items-center gap-4 mb-5">
+          <img src="assets/alifly.jpg" alt="Alifly" class="w-16 h-16 rounded-full object-cover object-top shrink-0">
+          <div>
+            <p class="font-bold text-white">Alifly</p>
+            <p class="text-gray-400 text-sm">Motoboy iniciante · 6 meses na VLoca</p>
+            <div class="flex gap-0.5 mt-1">
+              <span class="text-yellow-400 text-sm">★★★★★</span>
+            </div>
+          </div>
+        </div>
+        <p class="text-gray-300 leading-relaxed">"Comecei do zero na entrega. A VLoca me deu uma Yamaha 0km, o atendimento foi incrível desde o primeiro contato. Quem ainda não conhece não sabe o que está perdendo."</p>
+      </div>
+    </div>
+    <!-- Dots + arrows -->
+    <div class="flex items-center justify-center gap-4 mt-6">
+      <button id="t-prev" class="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center hover:border-vlo hover:bg-vlo/20 transition-all">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <div class="flex gap-2" id="t-dots">
+        <span class="testimonial-dot w-2 h-2 rounded-full bg-vlo transition-all"></span>
+        <span class="testimonial-dot w-2 h-2 rounded-full transition-all" style="background:rgba(255,255,255,.2)"></span>
+        <span class="testimonial-dot w-2 h-2 rounded-full transition-all" style="background:rgba(255,255,255,.2)"></span>
+        <span class="testimonial-dot w-2 h-2 rounded-full transition-all" style="background:rgba(255,255,255,.2)"></span>
+      </div>
+      <button id="t-next" class="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center hover:border-vlo hover:bg-vlo/20 transition-all">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FAQ ===================== -->
+<section class="py-20 bg-vls" id="faq">
+  <div class="max-w-3xl mx-auto px-4">
+    <div class="text-center mb-12" data-aos="fade-up">
+      <h2 style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.05;text-transform:uppercase">
+        Dúvidas que <span style="color:#EA580C">aparecem sempre</span>
+      </h2>
+    </div>
+    <div class="space-y-3" data-aos="fade-up">
+      <div class="faq-item bg-vlc rounded-2xl overflow-hidden">
+        <button class="faq-trigger w-full flex items-center justify-between px-6 py-5 text-left">
+          <span class="font-semibold text-white pr-4">O que preciso para alugar?</span>
+          <span class="faq-icon text-vlo text-2xl font-light shrink-0">+</span>
+        </button>
+        <div class="faq-body"><div class="px-6 pb-5 text-gray-400 text-sm leading-relaxed">CNH de moto (categoria A) válida e comprovante de residência. Nome sujo não é impeditivo — analisamos caso a caso. Sem burocracia.</div></div>
+      </div>
+      <div class="faq-item bg-vlc rounded-2xl overflow-hidden">
+        <button class="faq-trigger w-full flex items-center justify-between px-6 py-5 text-left">
+          <span class="font-semibold text-white pr-4">E se a moto quebrar?</span>
+          <span class="faq-icon text-vlo text-2xl font-light shrink-0">+</span>
+        </button>
+        <div class="faq-body"><div class="px-6 pb-5 text-gray-400 text-sm leading-relaxed">Nosso Suporte 24h resolve. Se a manutenção for demorada, temos planos com moto reserva para você não perder horas de trabalho.</div></div>
+      </div>
+      <div class="faq-item bg-vlc rounded-2xl overflow-hidden">
+        <button class="faq-trigger w-full flex items-center justify-between px-6 py-5 text-left">
+          <span class="font-semibold text-white pr-4">Tem caução?</span>
+          <span class="faq-icon text-vlo text-2xl font-light shrink-0">+</span>
+        </button>
+        <div class="faq-body"><div class="px-6 pb-5 text-gray-400 text-sm leading-relaxed">Sim, pedimos um caução de segurança. Mas temos opções facilitadas — e ele é totalmente devolvido no encerramento do contrato.</div></div>
+      </div>
+      <div class="faq-item bg-vlc rounded-2xl overflow-hidden">
+        <button class="faq-trigger w-full flex items-center justify-between px-6 py-5 text-left">
+          <span class="font-semibold text-white pr-4">Posso usar para entregas em aplicativos como iFood e Rappi?</span>
+          <span class="faq-icon text-vlo text-2xl font-light shrink-0">+</span>
+        </button>
+        <div class="faq-body"><div class="px-6 pb-5 text-gray-400 text-sm leading-relaxed">Sim! A moto é liberada para trabalho e lazer. Pode usar em qualquer plataforma — iFood, Rappi, Uber Eats, entregas próprias ou qualquer outra atividade com moto.</div></div>
+      </div>
+      <div class="faq-item bg-vlc rounded-2xl overflow-hidden">
+        <button class="faq-trigger w-full flex items-center justify-between px-6 py-5 text-left">
+          <span class="font-semibold text-white pr-4">Quanto tempo leva para aprovação e retirada da moto?</span>
+          <span class="faq-icon text-vlo text-2xl font-light shrink-0">+</span>
+        </button>
+        <div class="faq-body"><div class="px-6 pb-5 text-gray-400 text-sm leading-relaxed">O processo é rápido. Nossa equipe responde em até 5 minutos no horário comercial. Após aprovação e documentação, a retirada pode ser feita no mesmo dia ou no dia seguinte.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== URGÊNCIA + COUNTDOWN ===================== -->
+<section class="py-20" style="background:#7c2d12">
+  <div class="max-w-4xl mx-auto px-4 text-center">
+    <p class="text-orange-200 font-semibold text-xs uppercase tracking-widest mb-4" data-aos="fade-up">Oferta por tempo limitado</p>
+    <h2 class="mb-6" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(2rem,5vw,3.5rem);line-height:1.05;text-transform:uppercase;color:#fff" data-aos="fade-up">
+      Esta oferta expira em:
+    </h2>
+    <div class="flex items-center justify-center gap-3 mb-8" data-aos="zoom-in">
+      <div class="text-center">
+        <div class="rounded-xl px-5 py-3 min-w-[70px]" style="background:rgba(0,0,0,.3)">
+          <span id="cd-h" class="font-black text-white block" style="font-family:'Barlow Condensed',sans-serif;font-size:3rem;line-height:1">00</span>
+        </div>
+        <span class="text-orange-300 text-xs mt-1 block">horas</span>
+      </div>
+      <span class="font-black text-white text-4xl pb-5" style="font-family:'Barlow Condensed',sans-serif">:</span>
+      <div class="text-center">
+        <div class="rounded-xl px-5 py-3 min-w-[70px]" style="background:rgba(0,0,0,.3)">
+          <span id="cd-m" class="font-black text-white block" style="font-family:'Barlow Condensed',sans-serif;font-size:3rem;line-height:1">00</span>
+        </div>
+        <span class="text-orange-300 text-xs mt-1 block">minutos</span>
+      </div>
+      <span class="font-black text-white text-4xl pb-5" style="font-family:'Barlow Condensed',sans-serif">:</span>
+      <div class="text-center">
+        <div class="rounded-xl px-5 py-3 min-w-[70px]" style="background:rgba(0,0,0,.3)">
+          <span id="cd-s" class="font-black text-white block" style="font-family:'Barlow Condensed',sans-serif;font-size:3rem;line-height:1">00</span>
+        </div>
+        <span class="text-orange-300 text-xs mt-1 block">segundos</span>
+      </div>
+    </div>
+    <a href="#simulacao" class="magnetic inline-block bg-vlo hover:bg-orange-600 text-white font-bold text-lg px-10 py-4 rounded-full transition-all hover:scale-105" style="box-shadow:0 8px 30px rgba(0,0,0,.4)" data-aos="fade-up">
+      Quero começar hoje
+    </a>
+  </div>
+</section>
+
+<!-- ===================== CTA FINAL ===================== -->
+<section class="relative py-28">
+  <div class="absolute inset-0">
+    <img src="assets/fachada.jpg" alt="Fachada VLoca — Aluguel de Motos Goiânia" class="w-full h-full object-cover" onerror="this.style.opacity=0">
+    <div class="absolute inset-0" style="background:rgba(6,13,31,.88)"></div>
+  </div>
+  <div class="relative z-10 text-center max-w-3xl mx-auto px-4" data-aos="fade-up">
+    <h2 class="mb-4" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(2.2rem,6vw,4rem);line-height:1.05;text-transform:uppercase;color:#fff">
+      Esta é sua oportunidade real<br>de rodar com <span style="color:#EA580C">profissionalismo</span>
+    </h2>
+    <p class="text-gray-300 text-lg mb-8">A partir de R$ 51,90/dia — tudo incluso, zero surpresa, zero burocracia.</p>
+    <a href="#simulacao" class="magnetic inline-block bg-vlo hover:bg-orange-700 text-white font-bold text-xl px-12 py-5 rounded-full transition-all hover:scale-105 mb-6" style="box-shadow:0 10px 40px rgba(234,88,12,.45)">
+      Faça sua simulação grátis
+    </a>
+    <div class="flex flex-wrap justify-center gap-5 text-sm text-gray-400 mt-2">
+      <span class="flex items-center gap-1.5"><span class="text-green-400">✓</span> Sem consulta Serasa</span>
+      <span class="flex items-center gap-1.5"><span class="text-green-400">✓</span> CNH categoria A</span>
+      <span class="flex items-center gap-1.5"><span class="text-green-400">✓</span> Resposta em 5 min</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="bg-black py-12 border-t border-white/5">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-8">
+      <div class="text-center md:text-left">
+        <div class="flex items-center gap-2.5 justify-center md:justify-start mb-4">
+          <div class="w-8 h-8 bg-vlo rounded-lg flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 20 18" fill="none"><path d="M2 16L10 2L18 16" stroke="white" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 11H14.5" stroke="white" stroke-width="2.8" stroke-linecap="round"/></svg>
+          </div>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.1rem;letter-spacing:.08em">VLOCA</span>
+          <span class="text-gray-600 text-xs">Aluguel de Motos</span>
+        </div>
+        <p class="text-gray-500 text-sm max-w-xs leading-relaxed">
+          Av. C-171, 1079 — Quadra 435, Lote 02<br>
+          Jardim América, Goiânia — GO<br>
+          CEP 74275-010
+        </p>
+      </div>
+      <div class="text-center md:text-right">
+        <a href="https://wa.me/5562933967816?text=Ol%C3%A1%2C+quero+saber+mais+sobre+aluguel+de+motos" target="_blank" rel="noopener"
+           class="inline-flex items-center gap-2 text-gray-400 hover:text-green-400 transition-colors text-sm mb-4">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          (62) 9396-7816
+        </a>
+        <p class="text-gray-700 text-xs">© 2026 VLoca — Todos os direitos reservados</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>
+// Init
+lucide.createIcons();
+AOS.init({duration:700,once:true,offset:80});
+
+// Navbar scroll
+const navbar=document.getElementById('navbar');
+window.addEventListener('scroll',()=>{
+  if(window.scrollY>60){navbar.style.background='#060D1F';navbar.style.boxShadow='0 2px 20px rgba(0,0,0,.6)'}
+  else{navbar.style.background='transparent';navbar.style.boxShadow='none'}
+},{passive:true});
+
+// Mobile menu
+const hamburger=document.getElementById('hamburger');
+const mobNav=document.getElementById('mob-nav');
+const icoOpen=document.getElementById('ico-open');
+const icoClose=document.getElementById('ico-close');
+hamburger.addEventListener('click',()=>{
+  mobNav.classList.toggle('hidden');
+  icoOpen.classList.toggle('hidden');
+  icoClose.classList.toggle('hidden');
+});
+
+// Animated counters
+const counterSection=document.getElementById('counters-section');
+let countersRun=false;
+const countersObs=new IntersectionObserver(entries=>{
+  if(entries[0].isIntersecting && !countersRun){
+    countersRun=true;
+    document.querySelectorAll('#counters-section [data-target]').forEach(wrap=>{
+      const el=wrap.querySelector('.counter-num');
+      const target=parseInt(wrap.dataset.target);
+      const duration=1500;
+      let start=null;
+      function step(ts){
+        if(!start)start=ts;
+        const p=Math.min((ts-start)/duration,1);
+        const ease=1-Math.pow(1-p,3);
+        el.textContent=Math.floor(ease*target);
+        if(p<1)requestAnimationFrame(step);
+        else el.textContent=target;
+      }
+      requestAnimationFrame(step);
+    });
+  }
+},{threshold:.4});
+countersObs.observe(counterSection);
+
+// FAQ accordion
+document.querySelectorAll('.faq-item').forEach(item=>{
+  item.querySelector('.faq-trigger').addEventListener('click',()=>{
+    const isOpen=item.classList.contains('faq-open');
+    document.querySelectorAll('.faq-item').forEach(i=>{i.classList.remove('faq-open');i.querySelector('.faq-body').classList.remove('open')});
+    if(!isOpen){item.classList.add('faq-open');item.querySelector('.faq-body').classList.add('open')}
+  });
+});
+
+// Fleet slider
+let cs=0;
+const flTotal=5;
+const flTrack=document.getElementById('fleet-track');
+const flDots=document.querySelectorAll('.fleet-dot');
+function goSlide(n){
+  cs=(n+flTotal)%flTotal;
+  flTrack.style.transform=`translateX(-${cs*100}%)`;
+  flDots.forEach((d,i)=>{d.style.background=i===cs?'#EA580C':'rgba(255,255,255,.3)'});
+}
+document.getElementById('fleet-prev').addEventListener('click',()=>goSlide(cs-1));
+document.getElementById('fleet-next').addEventListener('click',()=>goSlide(cs+1));
+const flSlider=document.getElementById('fleet-slider');
+let tStart=0;
+flSlider.addEventListener('touchstart',e=>{tStart=e.touches[0].clientX},{passive:true});
+flSlider.addEventListener('touchend',e=>{
+  const diff=tStart-e.changedTouches[0].clientX;
+  if(Math.abs(diff)>50)goSlide(cs+(diff>0?1:-1));
+},{passive:true});
+setInterval(()=>goSlide(cs+1),5000);
+
+// Testimonials
+let ct=0;
+const tcards=document.querySelectorAll('.tcard');
+const tdots=document.querySelectorAll('.testimonial-dot');
+function showT(n){
+  ct=(n+tcards.length)%tcards.length;
+  tcards.forEach((t,i)=>{
+    if(i===ct){t.classList.remove('hidden-t');t.classList.add('visible-t')}
+    else{t.classList.add('hidden-t');t.classList.remove('visible-t')}
+  });
+  tdots.forEach((d,i)=>{d.style.background=i===ct?'#EA580C':'rgba(255,255,255,.2)'});
+}
+document.getElementById('t-prev').addEventListener('click',()=>showT(ct-1));
+document.getElementById('t-next').addEventListener('click',()=>showT(ct+1));
+let tInterval=setInterval(()=>showT(ct+1),5500);
+document.getElementById('testimonials-wrap').addEventListener('mouseenter',()=>clearInterval(tInterval));
+document.getElementById('testimonials-wrap').addEventListener('mouseleave',()=>{tInterval=setInterval(()=>showT(ct+1),5500)});
+
+// Phone mask
+document.getElementById('f-phone').addEventListener('input',function(){
+  let v=this.value.replace(/\D/g,'').substring(0,11);
+  if(v.length>6)v=`(${v.substring(0,2)}) ${v.substring(2,7)}-${v.substring(7)}`;
+  else if(v.length>2)v=`(${v.substring(0,2)}) ${v.substring(2)}`;
+  else if(v.length)v=`(${v}`;
+  this.value=v;
+});
+
+// Form submit → WhatsApp
+document.getElementById('lead-form').addEventListener('submit',function(e){
+  e.preventDefault();
+  const name=document.getElementById('f-name').value.trim();
+  const phone=document.getElementById('f-phone').value.trim();
+  const email=document.getElementById('f-email').value.trim();
+  const motoboy=document.querySelector('[name="motoboy"]:checked')?.value||'não informado';
+  const start=document.getElementById('f-start').value||'não informado';
+  const region=document.getElementById('f-region').value.trim()||'não informada';
+  const emailOk=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const phoneOk=phone.replace(/\D/g,'').length>=10;
+  if(!name||!phoneOk||!emailOk){
+    this.style.animation='shake .5s ease';
+    setTimeout(()=>this.style.animation='',500);
+    return;
+  }
+  const btn=document.getElementById('form-btn');
+  document.getElementById('btn-text').style.display='none';
+  const sp=document.getElementById('btn-spin');
+  sp.style.display='block';
+  btn.disabled=true;
+  const msg=encodeURIComponent(`Olá! Vim pelo site da VLoca.\n\nNome: ${name}\nWhatsApp: ${phone}\nEmail: ${email}\nJá motoboy? ${motoboy}\nInício: ${start}\nRegião: ${region}\n\nQuero saber mais!`);
+  setTimeout(()=>{
+    window.open(`https://wa.me/5562933967816?text=${msg}`,'_blank');
+    document.getElementById('form-wrapper').classList.add('hidden');
+    document.getElementById('form-success').classList.remove('hidden');
+    lucide.createIcons();
+  },800);
+});
+
+// Magnetic buttons
+document.querySelectorAll('.magnetic').forEach(el=>{
+  el.addEventListener('mousemove',e=>{
+    const r=el.getBoundingClientRect();
+    const x=(e.clientX-r.left-r.width/2)*.15;
+    const y=(e.clientY-r.top-r.height/2)*.15;
+    el.style.transform=`translate(${x}px,${y}px)`;
+  });
+  el.addEventListener('mouseleave',()=>{el.style.transform=''});
+});
+
+// 24h countdown
+(function(){
+  const deadline=Date.now()+24*3600*1000;
+  setInterval(()=>{
+    const rem=Math.max(0,deadline-Date.now());
+    const h=Math.floor(rem/3600000);
+    const m=Math.floor((rem%3600000)/60000);
+    const s=Math.floor((rem%60000)/1000);
+    document.getElementById('cd-h').textContent=String(h).padStart(2,'0');
+    document.getElementById('cd-m').textContent=String(m).padStart(2,'0');
+    document.getElementById('cd-s').textContent=String(s).padStart(2,'0');
+  },1000);
+})();
+</script>
+</body>
+</html>
