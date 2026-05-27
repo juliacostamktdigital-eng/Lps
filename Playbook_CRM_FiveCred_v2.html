@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playbook CRM — FiveCred</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',Arial,sans-serif; background:#f0f2f5; color:#1a1a1a; }
+
+/* TOP BAR */
+.topbar {
+  position:sticky; top:0; z-index:100;
+  background:#1a1a1a; display:flex; align-items:center;
+  gap:20px; padding:0 28px; box-shadow:0 2px 8px rgba(0,0,0,.35);
+  min-height:56px;
+}
+.brand { font-size:17px; font-weight:900; color:#FF6600; white-space:nowrap; flex-shrink:0; }
+.brand span { color:#fff; font-weight:400; font-size:11px; margin-left:8px; }
+.tabs { display:flex; overflow-x:auto; gap:0; }
+.tab-btn {
+  background:transparent; border:none; cursor:pointer;
+  color:#777; font-size:12.5px; font-weight:600;
+  padding:18px 15px; white-space:nowrap;
+  border-bottom:3px solid transparent; transition:all .15s;
+}
+.tab-btn:hover { color:#ccc; }
+.tab-btn.active { color:#FF6600; border-bottom-color:#FF6600; }
+
+/* CONTENT */
+.tab-pane { display:none; }
+.tab-pane.active { display:block; }
+.inner { max-width:920px; margin:0 auto; padding:28px 20px 60px; }
+
+/* CARD */
+.card { background:white; border-radius:12px; padding:30px 34px; margin-bottom:22px; box-shadow:0 2px 10px rgba(0,0,0,.07); }
+.sec-title { font-size:19px; font-weight:800; color:#FF6600; border-bottom:3px solid #FF6600; padding-bottom:10px; margin-bottom:22px; text-transform:uppercase; letter-spacing:.4px; }
+.sec-sub { font-size:14px; font-weight:700; color:#222; margin:20px 0 10px; }
+
+/* BANNER */
+.banner {
+  background:linear-gradient(135deg,#FF6600,#cc4400);
+  color:white; border-radius:12px; padding:26px 32px; margin-bottom:22px;
+  display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:12px;
+}
+.banner h2 { font-size:21px; font-weight:900; }
+.banner p { font-size:13px; opacity:.9; margin-top:5px; }
+.banner .tag { background:rgba(255,255,255,.2); border:1.5px solid white; border-radius:20px; padding:4px 14px; font-size:11px; font-weight:700; }
+
+/* INFO BOX */
+.info-box { background:#fff8f0; border:1px solid #ffd0a0; border-radius:8px; padding:13px 17px; margin:12px 0; font-size:13px; color:#555; }
+.info-box strong { color:#FF6600; }
+
+/* GOLDEN */
+.golden { background:#fff8f0; border-left:5px solid #FF6600; border-radius:0 8px 8px 0; padding:13px 18px; margin:14px 0; font-weight:700; font-size:13px; color:#cc4400; }
+
+/* NOTA TÉCNICA */
+.nota { background:#f0f4ff; border-left:4px solid #3f51b5; border-radius:0 8px 8px 0; padding:11px 16px; margin:10px 0; font-size:12.5px; color:#3f51b5; }
+
+/* BOT SEQUENCE */
+.seq-label { font-size:10px; font-weight:800; text-transform:uppercase; color:#aaa; letter-spacing:.8px; margin:18px 0 8px; display:flex; align-items:center; gap:8px; }
+.seq-label::after { content:''; flex:1; height:1px; background:#eee; }
+
+.bubble {
+  background:#fff3e8; border-left:4px solid #FF6600;
+  border-radius:0 10px 10px 0; padding:13px 17px; margin:4px 0;
+  position:relative;
+}
+.bubble .num {
+  position:absolute; top:-7px; left:-1px;
+  background:#FF6600; color:white; font-size:9px; font-weight:800;
+  padding:2px 8px; border-radius:0 4px 4px 0; letter-spacing:.5px;
+}
+.bubble .txt { font-size:13.5px; color:#333; line-height:1.75; white-space:pre-line; }
+.bubble .btns { margin-top:11px; display:flex; flex-wrap:wrap; gap:7px; }
+.btn-sim { background:white; border:2px solid #FF6600; color:#FF6600; border-radius:20px; padding:4px 13px; font-size:12px; font-weight:700; display:inline-block; }
+.btn-nao { background:white; border:2px solid #ccc; color:#999; border-radius:20px; padding:4px 13px; font-size:12px; font-weight:700; display:inline-block; }
+
+/* CONDITIONAL */
+.cond-row { display:flex; gap:10px; flex-wrap:wrap; margin:10px 0; }
+.cond-ok { flex:1; min-width:150px; background:#e8f5e9; border:1.5px solid #43a047; border-radius:8px; padding:11px 14px; font-size:12.5px; color:#2e7d32; }
+.cond-no { flex:1; min-width:150px; background:#fce4ec; border:1.5px solid #e53935; border-radius:8px; padding:11px 14px; font-size:12.5px; color:#c62828; }
+.cond-ok b, .cond-no b { display:block; font-size:11px; text-transform:uppercase; margin-bottom:3px; }
+
+/* REPROVADO / APROVADO */
+.reprov { background:#fce4ec; border:2px solid #e53935; border-radius:10px; padding:13px 17px; margin:12px 0; }
+.reprov h4 { color:#c62828; font-size:12.5px; font-weight:800; margin-bottom:7px; }
+.aprov { background:#e8f5e9; border:2px solid #43a047; border-radius:10px; padding:13px 17px; margin:12px 0; }
+.aprov h4 { color:#2e7d32; font-size:12.5px; font-weight:800; margin-bottom:7px; }
+.passagem { background:#e8eaf6; border:2px solid #3f51b5; border-radius:10px; padding:13px 17px; margin:12px 0; }
+.passagem h4 { color:#3f51b5; font-size:12.5px; font-weight:800; margin-bottom:7px; }
+
+/* PIPELINE GRID */
+.pipe-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(175px,1fr)); gap:11px; margin:14px 0; }
+.pipe-card { border-radius:9px; padding:14px; }
+.pc-b { background:#fff3e8; border:2px solid #FF6600; } .pc-b h4 { color:#FF6600; }
+.pc-a { background:#fff8e1; border:2px solid #ffc107; } .pc-a h4 { color:#f57f17; }
+.pc-v { background:#e8f5e9; border:2px solid #43a047; } .pc-v h4 { color:#2e7d32; }
+.pc-e { background:#fce4ec; border:2px solid #e53935; } .pc-e h4 { color:#c62828; }
+.pipe-card h4 { font-size:11px; font-weight:800; text-transform:uppercase; margin-bottom:4px; }
+.pipe-card p { font-size:11px; color:#666; line-height:1.4; }
+
+/* ROUTE MAP */
+.route-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:12px; margin:16px 0; }
+.route-card { background:#fff3e8; border:2px solid #FF6600; border-radius:10px; padding:14px 16px; }
+.route-card .rtag { font-weight:800; color:#FF6600; font-size:13px; margin-bottom:5px; }
+.route-card .rdesc { font-size:12px; color:#555; }
+
+/* CHECKLIST */
+.chk { list-style:none; }
+.chk li { padding:7px 0; font-size:13px; border-bottom:1px solid #f5f5f5; display:flex; gap:10px; }
+.chk li::before { content:"☑"; color:#FF6600; flex-shrink:0; }
+
+/* FOLLOW TABLE */
+.ftable { width:100%; border-collapse:collapse; font-size:13px; margin:14px 0; }
+.ftable th { background:#1a1a1a; color:white; padding:9px 13px; text-align:left; }
+.ftable td { padding:11px 13px; border-bottom:1px solid #f0f0f0; vertical-align:top; }
+.ftable tr:nth-child(even) td { background:#fafafa; }
+.dia { font-weight:800; color:#FF6600; }
+
+/* ======= SIMULATION ======= */
+.sim-wrap { display:grid; grid-template-columns:1fr 260px; gap:18px; align-items:start; }
+
+.whatsapp-box { border-radius:12px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,.18); }
+.wp-header { background:#128C7E; color:white; padding:12px 16px; display:flex; align-items:center; gap:12px; }
+.wp-avatar { width:38px; height:38px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:15px; flex-shrink:0; }
+.wp-info h3 { font-size:14px; font-weight:700; }
+.wp-info p { font-size:11px; opacity:.8; }
+
+.wp-body {
+  background:#e5ddd5; padding:14px 12px;
+  display:flex; flex-direction:column; gap:3px;
+  min-height:420px; max-height:520px; overflow-y:auto;
+}
+
+.wm { max-width:75%; padding:7px 11px 5px; border-radius:8px; font-size:13px; line-height:1.55; }
+.wm-time { font-size:10px; color:rgba(0,0,0,.4); text-align:right; margin-top:3px; }
+.wm-bot { background:white; align-self:flex-start; border-radius:0 8px 8px 8px; }
+.wm-lead { background:#dcf8c6; align-self:flex-end; border-radius:8px 0 8px 8px; }
+.wm-sys { align-self:center; background:rgba(0,0,0,.12); color:#444; font-size:10.5px; padding:4px 12px; border-radius:10px; margin:6px 0; text-align:center; max-width:88%; }
+
+.wp-btns { align-self:flex-start; display:flex; flex-wrap:wrap; gap:6px; margin:1px 0 7px 2px; }
+.wp-btn { background:white; border:1.5px solid #128C7E; color:#128C7E; border-radius:20px; padding:4px 12px; font-size:11.5px; font-weight:600; }
+.wp-btn.sel { background:#128C7E; color:white; }
+
+/* INTERACTIVE BUTTONS */
+.wp-btns-interactive { align-self:flex-start; display:flex; flex-wrap:wrap; gap:7px; margin:5px 0 10px 2px; }
+.wp-btn-i {
+  background:white; border:1.5px solid #128C7E; color:#128C7E;
+  border-radius:20px; padding:6px 15px; font-size:12px; font-weight:600;
+  cursor:pointer; transition:all .15s;
+}
+.wp-btn-i:hover:not(:disabled) { background:#128C7E; color:white; }
+.wp-btn-i.selected { background:#128C7E; color:white; }
+.wp-btn-i.faded { opacity:0.3; }
+.wp-btn-i:disabled { cursor:default; }
+
+/* TYPING INDICATOR */
+.typing-indicator { display:flex !important; align-items:center; gap:5px; padding:11px 15px !important; min-width:56px; }
+.typing-indicator span { width:8px; height:8px; border-radius:50%; background:#bbb; animation:bounce .9s infinite; display:inline-block; flex-shrink:0; }
+.typing-indicator span:nth-child(2) { animation-delay:.2s; }
+.typing-indicator span:nth-child(3) { animation-delay:.4s; }
+@keyframes bounce { 0%,60%,100% { transform:translateY(0); } 30% { transform:translateY(-6px); } }
+
+/* KOMMO PANEL */
+.kommo-panel { background:white; border-radius:12px; padding:18px; box-shadow:0 2px 10px rgba(0,0,0,.07); position:sticky; top:70px; }
+.kommo-panel h3 { font-size:12px; font-weight:800; color:#FF6600; text-transform:uppercase; letter-spacing:.5px; margin-bottom:14px; }
+.k-stage { display:flex; align-items:center; gap:9px; padding:7px 0; font-size:12px; border-bottom:1px solid #f5f5f5; }
+.k-dot { width:10px; height:10px; border-radius:50%; background:#ddd; flex-shrink:0; transition:background .35s; }
+.k-dot.done { background:#43a047; }
+.k-dot.active { background:#FF6600; }
+.k-name { color:#888; transition:all .35s; }
+.k-name.done { color:#43a047; font-weight:600; }
+.k-name.active { color:#FF6600; font-weight:700; }
+
+.sim-tag-info { background:#1a1a1a; color:white; border-radius:10px; padding:14px 16px; margin-bottom:18px; font-size:12px; }
+.sim-tag-info .tag-big { font-size:20px; font-weight:900; color:#FF6600; margin-bottom:4px; }
+
+/* FUNNEL SELECTOR */
+.funnel-selector { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+.funnel-card {
+  background:white; border:2px solid #eee; border-radius:14px;
+  padding:24px 14px 18px; text-align:center; cursor:pointer;
+  transition:all .2s; box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.funnel-card:hover { border-color:#FF6600; transform:translateY(-4px); box-shadow:0 8px 24px rgba(255,102,0,.15); }
+.fc-emoji { font-size:30px; margin-bottom:8px; }
+.fc-name { font-size:14px; font-weight:800; color:#1a1a1a; margin-bottom:3px; }
+.fc-desc { font-size:11px; color:#888; margin-bottom:10px; line-height:1.4; min-height:28px; }
+.fc-lead { font-size:11px; color:#FF6600; font-weight:600; margin-bottom:14px; }
+.fc-btn { background:#FF6600; color:white; border-radius:20px; padding:6px 16px; font-size:12px; font-weight:700; display:inline-block; transition:background .15s; }
+.funnel-card:hover .fc-btn { background:#cc4400; }
+
+/* SIM CONTROLS */
+.sim-controls { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+.sim-restart-btn {
+  background:white; border:2px solid #ddd; border-radius:20px;
+  padding:7px 18px; font-size:12px; font-weight:700; cursor:pointer; color:#444;
+  transition:all .15s;
+}
+.sim-restart-btn:hover { border-color:#FF6600; color:#FF6600; }
+
+@media(max-width:900px) { .funnel-selector { grid-template-columns:repeat(2,1fr); } }
+@media(max-width:700px) {
+  .sim-wrap { grid-template-columns:1fr; }
+  .kommo-panel { position:static; }
+  .tab-btn { padding:15px 10px; font-size:11px; }
+  .funnel-selector { grid-template-columns:repeat(2,1fr); }
+}
+@media(max-width:420px) { .funnel-selector { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="brand">FiveCred <span>CRM Playbook v2</span></div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('geral',this)">Visão Geral</button>
+    <button class="tab-btn" onclick="showTab('cgi',this)">CGI</button>
+    <button class="tab-btn" onclick="showTab('luz',this)">Conta de Luz</button>
+    <button class="tab-btn" onclick="showTab('fgts',this)">FGTS</button>
+    <button class="tab-btn" onclick="showTab('clt',this)">CLT</button>
+    <button class="tab-btn" onclick="showTab('follow',this)">Follow-up</button>
+    <button class="tab-btn" onclick="showTab('sim',this)">Simulação Real</button>
+  </div>
+</div>
+
+<!-- ===================== VISÃO GERAL ===================== -->
+<div id="tab-geral" class="tab-pane active">
+<div class="inner">
+
+  <div class="banner" style="flex-direction:column;align-items:flex-start;">
+    <div>
+      <h2>Playbook Comercial CRM, FiveCred</h2>
+      <p>Atendimento, automação e mensagens via Kommo, Maio 2026</p>
+    </div>
+    <span class="tag">Uso interno, equipe comercial</span>
+  </div>
+
+  <div class="card">
+    <div class="sec-title">Objetivo</div>
+    <p style="font-size:14px;color:#444;line-height:1.8;margin-bottom:16px;">
+      Este playbook define o processo comercial completo da FiveCred: da entrada do lead até o fechamento. Cobre a estrutura do CRM Kommo, os campos obrigatórios por etapa, o fluxo de atendimento e todas as mensagens padronizadas para cada frente de produto.
+    </p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="info-box"><strong>Mais conversão</strong><br>Bot qualifica, consultor fecha. Sem aumentar investimento em mídia.</div>
+      <div class="info-box"><strong>Atendimento padronizado</strong><br>Rápido e personalizado por produto e perfil do lead.</div>
+      <div class="info-box"><strong>Clareza para o time</strong><br>O que fazer em cada etapa, sem dúvidas sobre quando o consultor entra.</div>
+      <div class="info-box"><strong>Dados confiáveis</strong><br>Campos obrigatórios por etapa para análise real de funil.</div>
+    </div>
+    <div class="golden">REGRA DE OURO: Nunca use template depois que o lead respondeu. A conversa tem que parecer humana.</div>
+  </div>
+
+  <div class="card">
+    <div class="sec-title">Pipeline, As 9 Etapas</div>
+    <div class="pipe-grid">
+      <div class="pipe-card pc-b"><h4>1. Novo Lead</h4><p>Entra automaticamente. Ninguém tocou ainda.</p></div>
+      <div class="pipe-card pc-a"><h4>2. Aguardando Atendimento</h4><p>Lead respondeu. Consultor entra em até 5 min.</p></div>
+      <div class="pipe-card pc-b"><h4>3. Em Qualificação Bot</h4><p>Bot fazendo as perguntas automaticamente.</p></div>
+      <div class="pipe-card pc-v"><h4>4. Interesse Real (MQL)</h4><p>Passou pelo bot e está qualificado. Consultor assume.</p></div>
+      <div class="pipe-card pc-v"><h4>5. Negociação (SQL)</h4><p>Proposta enviada, lead avançando para fechar.</p></div>
+      <div class="pipe-card pc-v"><h4>6. Venda Ganha</h4><p>Crédito aprovado e formalizado.</p></div>
+      <div class="pipe-card pc-e"><h4>7. Venda Perdida</h4><p>Sem resposta, sem interesse ou desistiu.</p></div>
+      <div class="pipe-card pc-e"><h4>8. Reprovado</h4><p>Não se enquadrou nos critérios do produto.</p></div>
+      <div class="pipe-card pc-a"><h4>9. Venda Futura</h4><p>Qualificado, mas não é o momento. Data de retorno definida.</p></div>
+    </div>
+    <div class="golden">REGRA: Nenhum lead fica sem tarefa e sem próximo passo definido. Lead parado sem ação = venda perdida.</div>
+  </div>
+
+  <div class="card">
+    <div class="sec-title">Arquitetura de Bot, Roteamento por Tag</div>
+    <p style="font-size:13px;color:#666;margin-bottom:16px;">A FiveCred opera com um único número WhatsApp para todos os produtos. O roteamento é feito automaticamente por tag: cada formulário de campanha identifica o produto quando o lead entra no Kommo. Não é necessário perguntar ao lead qual produto ele quer.</p>
+    <div class="route-grid">
+      <div class="route-card"><div class="rtag">Tag [CGI]</div><div class="rdesc">Formulário campanha CGI, bot CGI dispara automaticamente.</div></div>
+      <div class="route-card"><div class="rtag">Tag [LUZ]</div><div class="rdesc">Formulário campanha Conta de Luz, bot LUZ dispara.</div></div>
+      <div class="route-card"><div class="rtag">Tag [FGTS]</div><div class="rdesc">Formulário campanha FGTS, bot FGTS dispara.</div></div>
+      <div class="route-card"><div class="rtag">Tag [CLT]</div><div class="rdesc">Formulário campanha CLT, bot CLT dispara.</div></div>
+    </div>
+    <div class="nota">Lead sem tag (WhatsApp direto): bot de fallback faz a pergunta de segmentação e aplica a tag manualmente antes de seguir o funil correto.</div>
+  </div>
+
+  <div class="card">
+    <div class="sec-title">Fluxo Operacional</div>
+    <div class="sec-sub">Se o lead NÃO responder, régua automática:</div>
+    <ul class="chk">
+      <li>D+1 (24h), mensagem com ângulo dor e acolhimento</li>
+      <li>D+2 (48h), mensagem com resultado e prova social</li>
+      <li>D+3 (72h), mensagem com diferencial do produto</li>
+      <li>D+4 (96h), mensagem de encerramento com porta aberta</li>
+      <li>Após D+4 sem resposta, Venda Perdida automaticamente</li>
+    </ul>
+    <div class="sec-sub">Prioridade de atendimento do consultor:</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+      <div style="background:#fff3e8;padding:10px 16px;border-radius:8px;font-size:13px;display:flex;gap:10px;align-items:center;"><span style="background:#FF6600;color:white;font-weight:800;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;">1</span><strong>Negociação (SQL)</strong>, prontos para fechar</div>
+      <div style="background:#fff8f0;padding:10px 16px;border-radius:8px;font-size:13px;display:flex;gap:10px;align-items:center;"><span style="background:#FF6600;color:white;font-weight:800;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;">2</span><strong>Aguardando Atendimento</strong>, responderam agora</div>
+      <div style="background:#fff8f0;padding:10px 16px;border-radius:8px;font-size:13px;display:flex;gap:10px;align-items:center;"><span style="background:#FF6600;color:white;font-weight:800;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;">3</span><strong>Interesse Real (MQL)</strong>, engajados e qualificados</div>
+      <div style="background:#fff8f0;padding:10px 16px;border-radius:8px;font-size:13px;display:flex;gap:10px;align-items:center;"><span style="background:#FF6600;color:white;font-weight:800;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;">4</span><strong>Venda Futura</strong>, retorno na data combinada</div>
+    </div>
+    <div class="sec-sub">Checklist diário do consultor:</div>
+    <ul class="chk">
+      <li><strong>CHATS:</strong> Filtrar atribuídos, zerar pendentes em Aguardando Atendimento</li>
+      <li><strong>CALENDÁRIO:</strong> Tarefas do dia, responder chats vinculados, criar tarefas de retorno</li>
+      <li><strong>FUNIL:</strong> Nenhum lead sem tarefa, mover cards com campos obrigatórios preenchidos</li>
+    </ul>
+  </div>
+
+</div>
+</div>
+
+<!-- ===================== CGI ===================== -->
+<div id="tab-cgi" class="tab-pane">
+<div class="inner">
+
+  <div class="banner">
+    <div>
+      <h2>CGI, Crédito com Garantia de Imóvel</h2>
+      <p>Crédito de R$ 50 mil até R$ 5 milhões. Imóvel próprio ou de familiar, quitado ou financiado, acima de R$ 150 mil. 100% digital.</p>
+    </div>
+    <span class="tag">Tag [CGI]</span>
+  </div>
+
+  <!-- CGI-00 -->
+  <div class="card">
+    <div class="sec-title">Step CGI-00, Saudação Inicial</div>
+    <div class="info-box">Disparado automaticamente quando o lead entra com a tag [CGI]. Move o status para <strong>Em Qualificação Bot</strong>.</div>
+
+    <div class="seq-label">Mensagem 1 de 3</div>
+    <div class="bubble">
+      <div class="num">MSG 1</div>
+      <div class="txt">Oi, [Primeiro nome]! 😊 Aqui é da FiveCred, especialistas em crédito inteligente.</div>
+    </div>
+
+    <div class="seq-label">Mensagem 2 de 3</div>
+    <div class="bubble">
+      <div class="num">MSG 2</div>
+      <div class="txt">Recebi seu cadastro para o Crédito com Garantia de Imóvel e fico feliz em te ajudar! É uma das formas mais inteligentes de acessar crédito com taxas muito menores do que o mercado convencional, de R$ 50 mil até R$ 5 milhões, usando seu imóvel como garantia. Processo 100% digital e sem burocracia. 🏠</div>
+    </div>
+
+    <div class="seq-label">Mensagem 3 de 3, com botões</div>
+    <div class="bubble last">
+      <div class="num">MSG 3</div>
+      <div class="txt">Vou fazer algumas perguntinhas rápidas para verificar se você já se enquadra. Pode ser?</div>
+      <div class="btns">
+        <span class="btn-sim">Pode ser!</span>
+        <span class="btn-nao">Não tenho interesse</span>
+      </div>
+    </div>
+    <p style="font-size:12px;color:#888;margin-top:6px;">→ "Não tenho interesse": Encerramento com empatia. "Pode ser!": Segue para CGI-01.</p>
+  </div>
+
+  <!-- CGI-01 -->
+  <div class="card">
+    <div class="sec-title">Step CGI-01, Valor do Crédito</div>
+    <div class="seq-label">Mensagem única</div>
+    <div class="bubble last">
+      <div class="txt">Qual o valor de crédito que você está buscando?</div>
+      <div class="btns">
+        <span class="btn-sim">A partir de R$ 50 mil</span>
+        <span class="btn-sim">A partir de R$ 100 mil</span>
+        <span class="btn-sim">A partir de R$ 300 mil</span>
+        <span class="btn-sim">A partir de R$ 500 mil</span>
+      </div>
+    </div>
+    <div class="cond-row">
+      <div class="cond-ok"><b>Qualquer opção, continua</b>Todas as faixas se enquadram. Segue para CGI-02.</div>
+    </div>
+  </div>
+
+  <!-- CGI-02 -->
+  <div class="card">
+    <div class="sec-title">Step CGI-02, Posse do Imóvel</div>
+    <div class="seq-label">Mensagem única</div>
+    <div class="bubble last">
+      <div class="txt">Para o Crédito com Garantia de Imóvel, precisamos de um imóvel como garantia da operação. Você possui imóvel em seu nome ou de um familiar direto?</div>
+      <div class="btns">
+        <span class="btn-sim">Sim, possuo</span>
+        <span class="btn-nao">Não tenho imóvel</span>
+      </div>
+    </div>
+    <div class="cond-row">
+      <div class="cond-ok"><b>Sim, continua</b>Segue para CGI-03.</div>
+      <div class="cond-no"><b>Não, reprovado</b>Imóvel é requisito obrigatório do produto.</div>
+    </div>
+    <div class="reprov">
+      <h4>Reprovado CGI, Sem Imóvel</h4>
+      <div class="seq-label">Mensagem 1 de 2</div>
+      <div class="bubble"><div class="num">MSG 1</div><div class="txt">Entendido, [Primeiro nome]! Para o Crédito com Garantia de Imóvel, precisamos de um imóvel como garantia da operação.</div></div>
+      <div class="seq-label">Mensagem 2 de 2, com botões</div>
+      <div class="bubble last"><div class="num">MSG 2</div><div class="txt">Mas fique tranquilo, temos outras linhas de crédito que podem te ajudar sem precisar de imóvel como garantia. Posso te apresentar? 😊</div><div class="btns"><span class="btn-sim">Sim, quero conhecer</span><span class="btn-nao">Não, obrigado</span></div></div>
+    </div>
+    <div class="passagem">
+      <h4>Se "Sim, quero conhecer", passagem para consultor</h4>
+      <div class="bubble last"><div class="txt">Ótimo! 😊 Vou te passar para um dos nossos consultores agora, que vai apresentar as opções disponíveis para o seu perfil. Um momento!</div></div>
+      <p style="font-size:12px;color:#3f51b5;margin-top:6px;">→ Move para AGUARDANDO ATENDIMENTO. Consultor avalia o perfil e indica o produto certo.</p>
+    </div>
+  </div>
+
+  <!-- CGI-03 -->
+  <div class="card">
+    <div class="sec-title">Step CGI-03, Situação do Imóvel</div>
+    <div class="seq-label">Mensagem única</div>
+    <div class="bubble last">
+      <div class="txt">O imóvel está quitado ou ainda está em financiamento?</div>
+      <div class="btns">
+        <span class="btn-sim">Sim, está quitado</span>
+        <span class="btn-sim">Ainda está em financiamento</span>
+      </div>
+    </div>
+    <div class="cond-row">
+      <div class="cond-ok"><b>Ambas as opções, continua</b>Imóvel em financiamento pode ser aceito dependendo do saldo devedor. Segue para CGI-04.</div>
+    </div>
+  </div>
+
+  <!-- CGI-04 -->
+  <div class="card">
+    <div class="sec-title">Step CGI-04, Valor do Imóvel</div>
+    <div class="seq-label">Mensagem 1 de 2</div>
+    <div class="bubble"><div class="num">MSG 1</div><div class="txt">Quase lá! Última verificação. 😊</div></div>
+    <div class="seq-label">Mensagem 2 de 2, com botões</div>
+    <div class="bubble last"><div class="num">MSG 2</div><div class="txt">Qual o valor aproximado do seu imóvel?</div><div class="btns"><span class="btn-nao">Abaixo de R$ 150 mil</span><span class="btn-sim">Acima de R$ 150 mil</span></div></div>
+    <div class="cond-row">
+      <div class="cond-ok"><b>Acima de R$ 150 mil, MQL</b>Lead qualificado. Bot cria tarefa para o consultor (5 min). Move para INTERESSE REAL.</div>
+      <div class="cond-no"><b>Abaixo de R$ 150 mil, reprovado</b>Valor do imóvel não atinge o mínimo da operação.</div>
+    </div>
+    <div class="reprov">
+      <h4>Reprovado CGI, Valor do Imóvel Abaixo do Mínimo</h4>
+      <div class="seq-label">Mensagem 1 de 2</div>
+      <div class="bubble"><div class="num">MSG 1</div><div class="txt">Entendido, [Primeiro nome]! Para o Crédito com Garantia de Imóvel, o valor mínimo do imóvel é de R$ 150 mil.</div></div>
+      <div class="seq-label">Mensagem 2 de 2, com botões</div>
+      <div class="bubble last"><div class="num">MSG 2</div><div class="txt">Mas não se preocupe, temos outras linhas de crédito que podem te ajudar. Posso te apresentar? 😊</div><div class="btns"><span class="btn-sim">Sim, quero conhecer</span><span class="btn-nao">Não, obrigado</span></div></div>
+    </div>
+    <div class="aprov">
+      <h4>CGI, Lead Qualificado (MQL)</h4>
+      <div class="seq-label">Mensagem 1 de 2</div>
+      <div class="bubble"><div class="num">MSG 1</div><div class="txt">Perfeito, [Primeiro nome]! ✅ Suas informações foram verificadas com sucesso.</div></div>
+      <div class="seq-label">Mensagem 2 de 2</div>
+      <div class="bubble last"><div class="num">MSG 2</div><div class="txt">Agora é só aguardar um momento que um dos nossos consultores especializados em Crédito com Garantia de Imóvel vai entrar em contato. Ele vai apresentar as melhores condições e tirar todas as dúvidas. Já já nosso time te chama aqui! 🚀</div></div>
+      <p style="font-size:12px;color:#2e7d32;margin-top:6px;">→ Move para INTERESSE REAL. Bot cria tarefa para o consultor (5 min).</p>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ===================== CONTA DE LUZ ===================== -->
+<div id="tab-luz" class="tab-pane">
+<div class="inner">
+
+  <div class="banner">
+    <div>
+      <h2>Empréstimo na Conta de Luz 💡</h2>
+      <p>Crédito de R$ 400 a R$ 4.000. Desconto na fatura de energia. Conveniadas: CPFL, RGE, COELBA, CELPE, COSERN, ELEKTRO, ENEL. Idades 21 a 84 anos.</p>
+    </div>
+    <span class="tag">Tag [LUZ]</span>
+  </div>
+
+  <!-- LUZ-00 -->
+  <div class="card">
+    <div class="sec-title">Step LUZ-00, Saudação Inicial</div>
+    <div class="seq-label">Mensagem 1 de 3</div>
+    <div class="bubble"><div class="num">MSG 1</div><div class="txt">Oi, [Primeiro nome]! 😊 Aqui é da FiveCred, especialistas em crédito inteligente.</div></div>
+    <div class="seq-label">Mensagem 2 de 3</div>
+    <div class="bubble"><div class="num">MSG 2</div><div class="txt">Recebi seu cadastro para o Empréstimo na Conta de Luz e fico feliz em te ajudar! É uma das formas mais práticas de conseguir crédito, o desconto é feito direto na sua fatura de energia, sem burocracia e com aprovação rápida. Crédito de R$ 400 até R$ 4.000. 💡</div></div>
+    <div class="seq-label">Mensagem 3 de 3, com botões</div>
+    <div class="bubble last"><div class="num">MSG 3</div><div class="txt">Vou fazer algumas perguntinhas rápidas para verificar se você se enquadra. Pode ser?</div><div class="btns"><span class="btn-sim">Pode ser!</span><span class="btn-nao">Não tenho interesse</span></div></div>
+  </div>
+
+  <!-- LUZ-01 -->
+  <div class="card">
+    <div class="sec-title">Step LUZ-01, Valor do Crédito</div>
+    <div class="seq-label">Mensagem única</div>
+    <div class="bubble last"><div class="txt">Qual o valor que você precisa?</div><div class="btns"><span class="btn-sim">Entre R$ 400 e R$ 4.000</span><span class="btn-nao">Acima de R$ 4.000</span></div></div>
+    <div class="cond-row">
+      <div class="cond-ok"><b>Dentro do limite, continua</b>Segue para LUZ-02.</div>
+      <div class="cond-no"><b>Acima de R$ 4.000, reorientar</b>Limite do produto é R$ 4.000. Oferecer alternativa.</div>
+    </div>
+    <div class="reprov">
+      <h4>Reorientação LUZ, Valor Acima do Limite</h4>
+      <div class="bubble last"><div class="txt">Entendido! O Empréstimo na Conta de Luz atende até R$ 4.000. Para valores maiores, temos outras soluções que podem te atender melhor. Quer conhecer?</div><div class="btns"><span class="btn-sim">Sim, quero conhecer</span><span class="btn-nao">Não, obrigado</span></div></div>
+    </div>
+  </div>
+
+  <!-- LUZ-02 -->
+  <div class="card">
+    <div class="sec-title">Step LUZ-02, Companhia de Energia</div>
+    <div class="seq-label">Mensagem única</div>
+    <div class="bubble last"><div class="txt">Qual é a sua companhia de energia elétrica?</div><div class="btns"><span class="btn-sim">CPFL</span><span class="btn-sim">RGE</span><span class="btn-sim">COELBA</span><span class="btn-sim">CELPE</span><span class="btn-sim">COSERN</span><span class="btn-sim">ELEKTRO</span><span class="btn-sim">ENEL</span><span class="btn-nao">Outra companhia</span></div></div>
+    <div class="cond-row">
+      <div class="cond-ok"><b>CIA conveniada, continua</b>Segue para LUZ-03.</div>
+      <div class="cond-no"><b>Outra, reprovado</b>Companhia sem convênio com a FiveCred.</div>
+    </div>
+    <div class="reprov">
+      <h4>Reprovado LUZ, Companhia Sem Convênio</h4>
+      <div class="seq-label">Mensagem 1 de 2</div>
+      <div class="bubble"><div class="num">MSG 1</div><div class="txt">Entendido, [Primeiro nome]! No momento, o Empréstimo na Conta de Luz está disponível apenas para clientes das companhias CPFL, RGE, COELBA, CELPE, COSERN, ELEKTRO e ENEL.</div></div>
+      <div class="seq-label">Mensagem 2 de 2, com botões</div>
+      <div class="bubble last"><div class="num">MSG 2</div><div class="txt">Mas posso te apresentar outras opções de crédito da FiveCred. Quer conhecer? 😊</div><div class="btns"><span class="btn-sim">Sim, quero conhecer</span><span class="btn-nao">Não, obrigado</span></div></div>
+    </div>
+    <div class="passagem"><h4>Se "Sim, quero conhecer"</h4><div class="bubble last"><div class="txt">Ótimo! 😊 Vou te passar para um dos nossos consultores agora, que vai apresentar as opções disponíveis para o seu perfil. Um momento!</div></div><p style="font-size:12px;color:#3f51b5;margin-top:6px;">→ Move para AGUARDANDO ATENDIMENTO.</p></div>
+  </div>
+
+  <!-- LUZ-03 -->
+  <div class="card">
+    <div class="sec-title">Step LUZ-03, Titularidade</div>
+    <div class="seq-label">Mensagem única</div>
+    <div class="bubble last"><div class="txt">A conta de energia está no seu nome e é uma unidade residencial?</div><div class="btns"><span class="btn-sim">Sim, está no meu nome e é residencial</span><span class="btn-nao">Não</span></div></div>
+    <div class="cond-row">
+      <div class="cond-ok"><b>Sim, continua</b>Segue para LUZ-04.</div>
+      <div class="cond-no"><b>Não, reprovado</b>Conta precisa estar no nome do solicitante e ser residencial.</div>
+    </div>
+    <div class="reprov">
+      <h4>Reprovado LUZ, Titularidade</h4>
+      <div class="seq-label">Mensagem 1 de 2</div>
+      <div class="bubble"><div class="num">MSG 1</div><div class="txt">Entendido, [Primeiro nome]! Para o Empréstimo na Conta de Luz, a fatura de energia precisa estar no seu nome e ser de uma unidade residencial.</div></div>
+      <div class="seq-label">Mensagem 2 de 2, com botões</div>
+      <div class="bubble last"><div class="num">MSG 2</div><div class="txt">Caso regularize essa situação, pode nos chamar a qualquer momento! Posso te apresentar outras opções enquanto isso? 😊</div><div class="btns"><span class="btn-sim">Sim, quero conhecer</span><span class="btn-nao">Não, obrigado</span></div></div>
+    </div>
+  </div>
+
+  <!-- LUZ-04 -->
+  <div class="card">
+    <div class="sec-title">Step LUZ-04, Parcelamento Ativo</div>
+    <div class="seq-label">Mensagem 1 de 2</div>
+    <div class="bubble"><div class="num">MSG 1</div><div class="txt">Quase lá! Última verificação. 😊</div></div>
+    <div class="seq-label">Mensagem 2 de 2, com botões</div>
+    <div class="bubble last"><div class="num">MSG 2</div><div class="txt">Sua fatura de energia possui algum parcelamento ativo?</div><div class="btns"><span class="btn-sim">Não, está em dia</span><span class="btn-nao">Sim, possui parcelamento</span></div></div>
+    <div class="cond-row">
+      <div class="cond-ok"><b>Não, MQL</b>Lead qualificado. Move para INTERESSE REAL.</div>
+      <div class="cond-no"><b>Sim, análise especial</b>Consultor avalia caso a caso por CIA e valor.</div>
+    </div>
+    <div class="passagem">
+      <h4>Se possui parcelamento, passagem para consultor</h4>
+      <div class="bubble last"><div class="txt">Entendido! Faturas com parcelamento ativo passam por uma análise específica antes de serem aprovadas. Vou te passar para um dos nossos consultores que vai verificar sua situação individualmente. Um momentinho! 😊</div></div>
+      <p style="font-size:12px;color:#3f51b5;margin-top:6px;">→ Move para AGUARDANDO ATENDIMENTO.</p>
+    </div>
+    <div class="aprov">
+      <h4>Conta de Luz, Lead Qualificado (MQL)</h4>
+      <div class="seq-label">Mensagem 1 de 2</div>
+      <div class="bubble"><div class="num">MSG 1</div><div class="txt">Perfeito, [Primeiro nome]! ✅ Suas informações foram verificadas e você se enquadra no Empréstimo na Conta de Luz da FiveCred.</div></div>
+      <div class="seq-label">Mensagem 2 de 2</div>
+      <div class="bubble last"><div class="num">MSG 2</div><div class="txt">Agora é só aguardar, um dos nossos consultores vai entrar em contato para apresentar sua simulação personalizada e cuidar de todo o processo. Já já nosso time te chama aqui! 🚀</div></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ===================== FGTS ===================== -->
+<div id="tab-fgts" class="tab-pane">
+<div class="inner">
+
+  <div class="banner">
+    <div>
+      <h2>Antecipação de FGTS 💰</h2>
+      <p>Antecipação do saque-aniversário. Adesão há mais de 90 dias, saldo disponível e intervalo mínimo de 12 meses desde a última antecipação.</p>
+    </div>
+    <span class="tag">Tag [FGTS]</span>
+  </div>
+
+  <!-- FGTS-00 -->
+  <div class="card">
+    <div class="sec-title">Step FGTS-00, Saudação Inicial</div>
+    <div class="seq-label">Mensagem 1 de 3</div>
+    <div class="bubble"><div class="num">MSG 1</div><div class="txt">Oi, [Primeiro nome]! 😊 Aqui é da FiveCred, especialistas em crédito inteligente.</div></div>
+    <div class="seq-label">Mensagem 2 de 3</div>
+    <div class="bubble"><div class="num">MSG 2</div><div class="txt">Recebi seu cadastro para a Antecipação de FGTS e já vou te ajudar! É uma das formas mais rápidas de ter acesso ao seu próprio dinheiro, você antecipa as parcelas do saque-aniversário direto na conta, com taxas menores e processo 100% digital. 💰</div></div>
+    <div class="seq-label">Mensagem 3 de 3, com botões</div>
+    <div class="bubble last"><div class="num">MSG 3</div><div class="txt">Vou fazer algumas perguntinhas rápidas para verificar se você se enquadra. Pode ser?</div><div class="btns"><span class="btn-sim">Pode ser!</span><span class="btn-nao">Não tenho interesse</span></div></div>
+  </div>
+
+  <!-- FGTS-01 -->
+  <div class="card">
+    <div class="sec-title">Step FGTS-01, Adesão ao Saque-Aniversário</div>
+    <div class="seq-label">Mensagem única</div>
+    <div class="bubble last"><div class="txt">Para antecipar o FGTS, é necessário ter aderido à modalidade saque-aniversário. Você já aderiu há mais de 90 dias?</div><div class="btns"><span class="btn-sim">Sim, já aderiu há mais de 90 dias</span><span class="btn-nao">Não ou não sei</span></div></div>
+    <div class="cond-row">
+      <div class="cond-ok"><b>Sim, continua</b>Segue para FGTS-02.</div>
+      <div class="cond-no"><b>Não, reprovado</b>Sem adesão há mais de 90 dias não é possível antecipar.</div>
+    </div>
+    <div class="reprov">
+      <h4>Reprovado FGTS, Saque-Aniversário</h4>
+      <div class="seq-label">Mensagem 1 de 2</div>
+      <div class="bubble"><div class="num">MSG 1</div><div class="txt">Entendido, [Primeiro nome]! Para antecipar o FGTS, é preciso ter aderido à modalidade saque-aniversário há pelo menos 90 dias pelo aplicativo do FGTS.</div></div>
+      <div class="seq-label">Mensagem 2 de 2, com botões</div>
+      <div class="bubble last"><div class="num">MSG 2</div><div class="txt">Se você ainda não aderiu, pode fazer agora pelo app e nos chamar quando completar os 90 dias, teremos prazer em te atender! Posso te apresentar outras opções enquanto isso? 😊</div><div class="btns"><span class="btn-sim">Sim, quero conhecer</span><span class="btn-nao">Não, obrigado</span></div></div>
+    </div>
+    <div class="passagem"><h4>Se "Sim, quero conhecer"</h4><div class="bubble last"><div class="txt">Ótimo! 😊 Vou te passar para um dos nossos consultores agora, que vai apresentar as opções disponíveis para o seu perfil. Um momento!</div></div><p style="font-size:12px;color:#3f51b5;margin-top:6px;">→ Move para AGUARDANDO ATENDIMENTO.</p></div>
+  </div>
+
+  <!-- FGTS-02 -->
+  <div class="card">
+    <div class="sec-title">Step FGTS-02, Saldo Disponível</div>
+    <div class="seq-label">Mensagem única</div>
+    <div class="bubble last"><div class="txt">Você sabe se possui saldo liberado no FGTS disponível para antecipação? Pode verificar pelo aplicativo FGTS em Saque-Aniversário, Simular Antecipação.</div><div class="btns"><span class="btn-sim">Sim, tenho saldo disponível</span><span class="btn-nao">Não tenho saldo ou não sei</span></div></div>
+    <div class="cond-row">
+      <div class="cond-ok"><b>Sim, continua</b>Segue para FGTS-03.</div>
+      <div class="cond-no"><b>Não sei, passagem para consultor</b>Consultor orienta como verificar.</div>
+    </div>
+    <div class="passagem"><h4>Se não sabe o saldo</h4><div class="bubble last"><div class="txt">Sem problema! Vou te passar para um dos nossos consultores que vai te orientar como verificar o saldo disponível. Um momento! 😊</div></div><p style="font-size:12px;color:#3f51b5;margin-top:6px;">→ Move para AGUARDANDO ATENDIMENTO.</p></div>
+  </div>
+
+  <!-- FGTS-03 -->
+  <div class="card">
+    <div class="sec-title">Step FGTS-03, Antecipação Recente</div>
+    <div class="seq-label">Mensagem 1 de 2</div>
+    <div class="bubble"><div class="num">MSG 1</div><div class="txt">Quase lá! Última verificação. 😊</div></div>
+    <div class="seq-label">Mensagem 2 de 2, com botões</div>
+    <div class="bubble last"><div class="num">MSG 2</div><div class="txt">Você realizou alguma antecipação de FGTS nos últimos 12 meses?</div><div class="btns"><span class="btn-sim">Não, há mais de 12 meses ou nunca antecipei</span><span class="btn-nao">Sim, realizei nos últimos 12 meses</span></div></div>
+    <div class="cond-row">
+      <div class="cond-ok"><b>Não, MQL</b>Lead qualificado. Move para INTERESSE REAL.</div>
+      <div class="cond-no"><b>Sim, reprovado</b>Intervalo mínimo de 12 meses não cumprido.</div>
+    </div>
+    <div class="reprov">
+      <h4>Reprovado FGTS, Antecipação Recente</h4>
+      <div class="seq-label">Mensagem 1 de 2</div>
+      <div class="bubble"><div class="num">MSG 1</div><div class="txt">Entendido, [Primeiro nome]! O intervalo mínimo entre antecipações de FGTS é de 12 meses.</div></div>
+      <div class="seq-label">Mensagem 2 de 2, com botões</div>
+      <div class="bubble last"><div class="num">MSG 2</div><div class="txt">Assim que esse período for completado, pode nos chamar a qualquer momento! Posso te apresentar outras opções enquanto isso? 😊</div><div class="btns"><span class="btn-sim">Sim, quero conhecer</span><span class="btn-nao">Não, obrigado</span></div></div>
+    </div>
+    <div class="aprov">
+      <h4>FGTS, Lead Qualificado (MQL)</h4>
+      <div class="seq-label">Mensagem 1 de 2</div>
+      <div class="bubble"><div class="num">MSG 1</div><div class="txt">Que ótimo, [Primeiro nome]! ✅ Tudo certo, você se enquadra na Antecipação de FGTS da FiveCred.</div></div>
+      <div class="seq-label">Mensagem 2 de 2</div>
+      <div class="bubble last"><div class="num">MSG 2</div><div class="txt">Em poucos minutos um dos nossos consultores vai entrar em contato para fazer sua simulação. Processo 100% digital. Já já nosso time te chama aqui! 🚀</div></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ===================== CLT ===================== -->
+<div id="tab-clt" class="tab-pane">
+<div class="inner">
+
+  <div class="banner">
+    <div>
+      <h2>Consignado CLT, Crédito do Trabalhador 💼</h2>
+      <p>Crédito de R$ 500 a R$ 25.000. Desconto em folha. Margem até 35% do salário. Taxa 4,98% a.m. Mínimo 6 meses de vínculo. 100% digital.</p>
+    </div>
+    <span class="tag">Tag [CLT]</span>
+  </div>
+
+  <!-- CLT-00 -->
+  <div class="card">
+    <div class="sec-title">Step CLT-00, Saudação Inicial</div>
+    <div class="seq-label">Mensagem 1 de 3</div>
+    <div class="bubble"><div class="num">MSG 1</div><div class="txt">Oi, [Primeiro nome]! 😊 Aqui é da FiveCred, especialistas em crédito inteligente.</div></div>
+    <div class="seq-label">Mensagem 2 de 3</div>
+    <div class="bubble"><div class="num">MSG 2</div><div class="txt">Recebi seu cadastro para o Crédito do Trabalhador e fico feliz em te ajudar! É exclusivo para quem tem carteira assinada e oferece condições muito melhores do que empréstimo pessoal convencional. Desconto direto na folha, processo 100% digital e aprovação rápida. Crédito de R$ 500 até R$ 25.000. 💼</div></div>
+    <div class="seq-label">Mensagem 3 de 3, com botões</div>
+    <div class="bubble last"><div class="num">MSG 3</div><div class="txt">Vou fazer algumas perguntinhas rápidas para verificar se você se enquadra. Pode ser?</div><div class="btns"><span class="btn-sim">Pode ser!</span><span class="btn-nao">Não tenho interesse</span></div></div>
+  </div>
+
+  <!-- CLT-01 -->
+  <div class="card">
+    <div class="sec-title">Step CLT-01, Valor do Crédito</div>
+    <div class="seq-label">Mensagem única</div>
+    <div class="bubble last"><div class="txt">Qual o valor de crédito que você está buscando?</div><div class="btns"><span class="btn-nao">Abaixo de R$ 500</span><span class="btn-sim">Entre R$ 500 e R$ 25.000</span></div></div>
+    <div class="cond-row">
+      <div class="cond-ok"><b>Dentro do limite, continua</b>Segue para CLT-02.</div>
+      <div class="cond-no"><b>Abaixo de R$ 500, reorientar</b>Valor abaixo do mínimo do produto.</div>
+    </div>
+    <div class="reprov">
+      <h4>Reorientação CLT, Valor Abaixo do Mínimo</h4>
+      <div class="bubble last"><div class="txt">Entendido! O Crédito do Trabalhador atende a partir de R$ 500. Para valores menores, posso te apresentar outras opções da FiveCred. Quer conhecer?</div><div class="btns"><span class="btn-sim">Sim, quero conhecer</span><span class="btn-nao">Não, obrigado</span></div></div>
+    </div>
+    <div class="passagem"><h4>Se "Sim, quero conhecer"</h4><div class="bubble last"><div class="txt">Ótimo! 😊 Vou te passar para um dos nossos consultores agora, que vai apresentar as opções disponíveis para o seu perfil. Um momento!</div></div><p style="font-size:12px;color:#3f51b5;margin-top:6px;">→ Move para AGUARDANDO ATENDIMENTO.</p></div>
+  </div>
+
+  <!-- CLT-02 -->
+  <div class="card">
+    <div class="sec-title">Step CLT-02, Vínculo CLT</div>
+    <div class="seq-label">Mensagem única</div>
+    <div class="bubble last"><div class="txt">Você trabalha registrado(a) em regime CLT, com carteira assinada?</div><div class="btns"><span class="btn-sim">Sim, tenho carteira assinada</span><span class="btn-nao">Não, sou autônomo, MEI ou PJ</span></div></div>
+    <div class="cond-row">
+      <div class="cond-ok"><b>Sim, continua</b>Segue para CLT-03.</div>
+      <div class="cond-no"><b>Não, reprovado</b>Produto exclusivo para trabalhadores CLT.</div>
+    </div>
+    <div class="reprov">
+      <h4>Reprovado CLT, Sem Vínculo CLT</h4>
+      <div class="seq-label">Mensagem 1 de 2</div>
+      <div class="bubble"><div class="num">MSG 1</div><div class="txt">Entendido, [Primeiro nome]! O Crédito do Trabalhador é exclusivo para quem tem carteira assinada.</div></div>
+      <div class="seq-label">Mensagem 2 de 2, com botões</div>
+      <div class="bubble last"><div class="num">MSG 2</div><div class="txt">Se você for autônomo, MEI ou PJ, temos outras opções que podem te atender. Posso apresentar? 😊</div><div class="btns"><span class="btn-sim">Sim, quero conhecer outras opções</span><span class="btn-nao">Não, obrigado</span></div></div>
+    </div>
+    <div class="passagem"><h4>Se "Sim, quero conhecer"</h4><div class="bubble last"><div class="txt">Ótimo! 😊 Vou te passar para um dos nossos consultores agora, que vai apresentar as opções disponíveis para o seu perfil. Um momento!</div></div><p style="font-size:12px;color:#3f51b5;margin-top:6px;">→ Move para AGUARDANDO ATENDIMENTO.</p></div>
+  </div>
+
+  <!-- CLT-03 -->
+  <div class="card">
+    <div class="sec-title">Step CLT-03, Tempo de Registro</div>
+    <div class="seq-label">Mensagem única</div>
+    <div class="bubble last"><div class="txt">Você está registrado(a) nessa empresa há mais de 6 meses?</div><div class="btns"><span class="btn-sim">Sim, há mais de 6 meses</span><span class="btn-nao">Não, há menos de 6 meses</span></div></div>
+    <div class="cond-row">
+      <div class="cond-ok"><b>Sim, MQL</b>Lead qualificado. Move para INTERESSE REAL.</div>
+      <div class="cond-no"><b>Não, reprovado</b>Mínimo de 6 meses de vínculo não cumprido.</div>
+    </div>
+    <div class="reprov">
+      <h4>Reprovado CLT, Tempo de Registro Insuficiente</h4>
+      <div class="seq-label">Mensagem 1 de 2</div>
+      <div class="bubble"><div class="num">MSG 1</div><div class="txt">Entendido, [Primeiro nome]! O Crédito do Trabalhador requer no mínimo 6 meses de vínculo com a empresa atual.</div></div>
+      <div class="seq-label">Mensagem 2 de 2, com botões</div>
+      <div class="bubble last"><div class="num">MSG 2</div><div class="txt">Assim que completar esse período, pode nos chamar a qualquer momento! Posso te apresentar outras opções enquanto isso? 😊</div><div class="btns"><span class="btn-sim">Sim, quero conhecer</span><span class="btn-nao">Não, obrigado</span></div></div>
+    </div>
+    <div class="aprov">
+      <h4>CLT, Lead Qualificado (MQL)</h4>
+      <div class="seq-label">Mensagem 1 de 2</div>
+      <div class="bubble"><div class="num">MSG 1</div><div class="txt">Perfeito, [Primeiro nome]! ✅ Tudo certo, você se enquadra no Crédito do Trabalhador da FiveCred.</div></div>
+      <div class="seq-label">Mensagem 2 de 2</div>
+      <div class="bubble last"><div class="num">MSG 2</div><div class="txt">Em poucos minutos um dos nossos consultores vai entrar em contato para fazer sua simulação personalizada. O desconto é direto na folha, 100% digital e sem burocracia. Já já nosso time te chama aqui! 🚀</div></div>
+      <p style="font-size:12px;color:#2e7d32;margin-top:6px;">→ Move para INTERESSE REAL. Bot cria tarefa para o consultor (5 min).</p>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ===================== FOLLOW-UP ===================== -->
+<div id="tab-follow" class="tab-pane">
+<div class="inner">
+
+  <div class="banner" style="flex-direction:column;align-items:flex-start;">
+    <div><h2>Régua de Follow-up</h2><p>Cadência automática para leads que não responderam. D+1 até D+4.</p></div>
+  </div>
+
+  <div class="card">
+    <div class="sec-title">Regras da Régua</div>
+    <div class="golden">IMPORTANTE: Todas as mensagens incluem o botão "Não tenho interesse". Quando o lead clica, a cadência para automaticamente e o lead vai para Venda Perdida. Isso protege o número de denúncias.</div>
+    <div class="golden">Se o lead responder em qualquer momento (D+1, D+2, qualquer dia): régua para imediatamente, lead vai para Aguardando Atendimento e o consultor entra em até 5 minutos.</div>
+
+    <table class="ftable" style="margin-top:20px;">
+      <tr><th>Quando</th><th>Ângulo</th><th>Objetivo</th></tr>
+      <tr><td><span class="dia">D+1, 24h</span></td><td>Dor e acolhimento</td><td>Reconhecer a correria, abrir conversa com empatia</td></tr>
+      <tr><td><span class="dia">D+2, 48h</span></td><td>Resultado e prova social</td><td>Mostrar que outras pessoas resolveram, gerar FOMO</td></tr>
+      <tr><td><span class="dia">D+3, 72h</span></td><td>Diferencial do produto</td><td>Reforçar facilidade e agilidade do processo</td></tr>
+      <tr><td><span class="dia">D+4, 96h</span></td><td>Encerramento</td><td>Porta aberta, sem pressão, preservar imagem</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="sec-title">D+1, Dor e Acolhimento (24h)</div>
+    <div class="bubble last"><div class="txt">Oi, [Primeiro nome]! Vi que você não respondeu e imaginei que pode ter sido a correria do dia a dia mesmo. 😊
+
+Conseguiu ver o que te mandei? Me conta o que você precisa que te ajudo direto ao ponto, sem enrolação.</div><div class="btns"><span class="btn-sim">Quero saber mais</span><span class="btn-nao">Não tenho interesse</span></div></div>
+  </div>
+
+  <div class="card">
+    <div class="sec-title">D+2, Resultado e Prova Social (48h)</div>
+    <div class="bubble last"><div class="txt">Oi, [Primeiro nome]! Quem resolve o crédito certo no momento certo muda completamente a situação financeira. 💪
+
+Aqui na FiveCred já ajudamos centenas de pessoas a acessar crédito de forma rápida, digital e sem burocracia, com condições que o mercado convencional raramente oferece.
+
+Posso fazer uma simulação gratuita para você agora?</div><div class="btns"><span class="btn-sim">Sim, quero a simulação</span><span class="btn-nao">Não tenho interesse</span></div></div>
+  </div>
+
+  <div class="card">
+    <div class="sec-title">D+3, Diferencial do Produto (72h)</div>
+    <div class="bubble last"><div class="txt">Oi, [Primeiro nome]! Você sabia que nosso processo é 100% digital, rápido e sem sair de casa? 📱
+
+Desde a simulação até a liberação do crédito, tudo pelo celular. Sem papelada, sem filas e com atendimento personalizado.
+
+Ainda dá tempo de você garantir o crédito hoje. Basta responder aqui!</div><div class="btns"><span class="btn-sim">Quero garantir agora</span><span class="btn-nao">Não tenho interesse</span></div></div>
+  </div>
+
+  <div class="card">
+    <div class="sec-title">D+4, Encerramento (96h)</div>
+    <div class="bubble last"><div class="txt">Oi, [Primeiro nome]! Como não tive seu retorno, vou encerrar seu atendimento por aqui para não ficar te chamando à toa.
+
+Mas fica tranquilo: se precisar de crédito no futuro, é só me chamar aqui. Teremos prazer em te atender com prioridade.
+
+Grande abraço,
+Equipe FiveCred 🧡</div><div class="btns"><span class="btn-sim">Quero conversar</span><span class="btn-nao">Não tenho interesse</span></div></div>
+    <p style="font-size:12px;color:#888;margin-top:8px;">→ Após D+4 sem resposta: lead vai para VENDA PERDIDA automaticamente.</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ===================== SIMULAÇÃO REAL ===================== -->
+<div id="tab-sim" class="tab-pane">
+<div class="inner">
+
+  <div class="banner" style="flex-direction:column;align-items:flex-start;margin-bottom:20px;">
+    <div><h2>Simulação Interativa de Atendimento</h2><p>Escolha um funil, clique nos botões e navegue pelo fluxo do bot como o lead faria no WhatsApp.</p></div>
+    <span class="tag">Simulação interativa, todos os funis</span>
+  </div>
+
+  <!-- SELETOR DE FUNIL -->
+  <div id="funnel-selector" class="funnel-selector">
+    <div class="funnel-card" onclick="startFunnel('CGI')">
+      <div class="fc-emoji">🏠</div>
+      <div class="fc-name">CGI</div>
+      <div class="fc-desc">Crédito com Garantia de Imóvel</div>
+      <div class="fc-lead">Lead: Ana</div>
+      <div class="fc-btn">Simular ▶</div>
+    </div>
+    <div class="funnel-card" onclick="startFunnel('LUZ')">
+      <div class="fc-emoji">💡</div>
+      <div class="fc-name">Conta de Luz</div>
+      <div class="fc-desc">Empréstimo na Conta de Energia</div>
+      <div class="fc-lead">Lead: Marcos</div>
+      <div class="fc-btn">Simular ▶</div>
+    </div>
+    <div class="funnel-card" onclick="startFunnel('FGTS')">
+      <div class="fc-emoji">💰</div>
+      <div class="fc-name">FGTS</div>
+      <div class="fc-desc">Antecipação do FGTS</div>
+      <div class="fc-lead">Lead: Roberto</div>
+      <div class="fc-btn">Simular ▶</div>
+    </div>
+    <div class="funnel-card" onclick="startFunnel('CLT')">
+      <div class="fc-emoji">💼</div>
+      <div class="fc-name">CLT</div>
+      <div class="fc-desc">Crédito do Trabalhador</div>
+      <div class="fc-lead">Lead: Cristian</div>
+      <div class="fc-btn">Simular ▶</div>
+    </div>
+  </div>
+
+  <!-- CONTAINER DA SIMULAÇÃO -->
+  <div id="sim-container" style="display:none;">
+    <div class="sim-controls">
+      <button class="sim-restart-btn" onclick="resetSim()">← Escolher outro funil</button>
+      <span id="sim-label" style="font-size:13px;color:#888;font-weight:600;"></span>
+    </div>
+    <div class="sim-wrap">
+      <!-- CHAT WHATSAPP -->
+      <div class="whatsapp-box">
+        <div class="wp-header">
+          <div class="wp-avatar" id="wp-avatar">?</div>
+          <div class="wp-info">
+            <h3 id="wp-lead-name">Lead</h3>
+            <p id="wp-lead-info">Simulação FiveCred</p>
+          </div>
+        </div>
+        <div class="wp-body" id="wp-body"></div>
+      </div>
+      <!-- KOMMO PANEL -->
+      <div>
+        <div class="sim-tag-info">
+          <div class="tag-big" id="kommo-tag">[---]</div>
+          <div style="font-size:12px;color:#ccc;" id="kommo-tag-desc">Selecione um funil</div>
+        </div>
+        <div class="kommo-panel">
+          <h3>Kommo, Status do Lead</h3>
+          <div id="kommo-stages">
+            <div class="k-stage k-stage-item"><div class="k-dot"></div><span class="k-name">Novo Lead</span></div>
+            <div class="k-stage k-stage-item"><div class="k-dot"></div><span class="k-name">Em Qualificação Bot</span></div>
+            <div class="k-stage k-stage-item"><div class="k-dot"></div><span class="k-name">Interesse Real (MQL)</span></div>
+            <div class="k-stage k-stage-item"><div class="k-dot"></div><span class="k-name">Aguardando Atendimento</span></div>
+            <div class="k-stage k-stage-item"><div class="k-dot"></div><span class="k-name">Negociação (SQL)</span></div>
+            <div class="k-stage k-stage-item"><div class="k-dot"></div><span class="k-name">Venda Ganha</span></div>
+          </div>
+          <div style="margin-top:14px;background:#e8f5e9;border-radius:8px;padding:12px;font-size:12px;">
+            <div style="font-weight:800;color:#2e7d32;margin-bottom:6px;">Dados capturados</div>
+            <div id="kommo-captured" style="color:#555;line-height:1.9;">Aguardando respostas...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- RODAPÉ -->
+<div style="text-align:center;padding:30px;color:#aaa;font-size:12px;background:white;margin-top:20px;">
+  <strong style="color:#FF6600;">FiveCred</strong> | Playbook CRM v2 | Kommo | Maio 2026 | Uso interno
+</div>
+
+<script>
+// ===================== NAV =====================
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ===================== SIMULAÇÃO =====================
+const SIM_STAGES = ['Novo Lead','Em Qualificação Bot','Interesse Real (MQL)','Aguardando Atendimento','Negociação (SQL)','Venda Ganha'];
+
+let simFunnel = null;
+let simCaptured = {};
+let simMsgTime = 0;
+
+const SHARED_STEPS = {
+  passagem: {
+    stage: 'Aguardando Atendimento',
+    messages: ['Ótimo! 😊 Vou te passar para um dos nossos consultores agora, que vai apresentar as opções disponíveis para o seu perfil. Um momento!'],
+    systemAfter: '👤 Lead transferido para consultor. Status: AGUARDANDO ATENDIMENTO.',
+    buttons: null, end: true
+  },
+  fim: {
+    stage: null,
+    messages: ['Tudo bem! Qualquer dúvida no futuro, é só nos chamar aqui. Até mais! 😊'],
+    buttons: null, end: true
+  }
+};
+
+const FUNNELS = {
+  CGI: {
+    name: 'Crédito com Garantia de Imóvel', tag: '[CGI]', emoji: '🏠',
+    lead: 'Ana', campaign: 'Campanha CGI',
+    steps: {
+      start: {
+        stage: 'Novo Lead',
+        systemBefore: 'Tag [CGI] aplicada automaticamente. Bot CGI iniciado.',
+        messages: [
+          'Oi, Ana! 😊 Aqui é da FiveCred, especialistas em crédito inteligente.',
+          'Recebi seu cadastro para o Crédito com Garantia de Imóvel e fico feliz em te ajudar! É uma das modalidades com juros mais baixos do mercado, porque o imóvel serve como garantia. Crédito de R$ 50.000 até R$ 1.500.000, com prazo de até 10 anos. 🏠',
+          'Vou fazer algumas perguntinhas rápidas para verificar se você se enquadra. Pode ser?'
+        ],
+        buttons: [
+          { label: 'Pode ser!', next: 'cgi-01', capture: {} },
+          { label: 'Não tenho interesse', next: 'cgi-desinteresse', capture: {} }
+        ]
+      },
+      'cgi-desinteresse': { stage: null, messages: ['Tudo bem! Qualquer dúvida no futuro, é só nos chamar aqui. Até mais! 😊'], buttons: null, end: true },
+      'cgi-01': {
+        stage: 'Em Qualificação Bot',
+        messages: ['Qual o valor do imóvel que você utilizaria como garantia?'],
+        buttons: [
+          { label: 'Até R$ 350.000', next: 'cgi-02', capture: { 'Valor do imóvel': 'Até R$ 350.000' } },
+          { label: 'R$ 350.001 a R$ 1.500.000', next: 'cgi-02', capture: { 'Valor do imóvel': 'R$ 350k a R$ 1,5M' } },
+          { label: 'Acima de R$ 1.500.000', next: 'cgi-reprovado-valor', capture: { 'Valor do imóvel': 'Acima de R$ 1,5M' } }
+        ]
+      },
+      'cgi-reprovado-valor': {
+        stage: null,
+        messages: [
+          'Entendido! O Crédito com Garantia de Imóvel da FiveCred aceita imóveis avaliados em até R$ 1.500.000.',
+          'Para imóveis acima desse valor, posso te orientar sobre outras opções disponíveis. Quer conhecer?'
+        ],
+        buttons: [
+          { label: 'Sim, quero conhecer', next: 'passagem', capture: {} },
+          { label: 'Não, obrigado', next: 'fim', capture: {} }
+        ]
+      },
+      'cgi-02': {
+        stage: null,
+        messages: ['Com qual finalidade você precisa do crédito?'],
+        buttons: [
+          { label: 'Comprar um imóvel', next: 'cgi-03', capture: { 'Finalidade': 'Compra de imóvel' } },
+          { label: 'Construir ou reformar', next: 'cgi-03', capture: { 'Finalidade': 'Construção/Reforma' } },
+          { label: 'Quitar dívidas', next: 'cgi-03', capture: { 'Finalidade': 'Quitação de dívidas' } },
+          { label: 'Capital de giro', next: 'cgi-03', capture: { 'Finalidade': 'Capital de giro' } }
+        ]
+      },
+      'cgi-03': {
+        stage: null,
+        messages: ['O imóvel precisa estar no seu nome ou de um familiar direto e estar quitado. Você tem um imóvel nessas condições?'],
+        buttons: [
+          { label: 'Sim, tenho imóvel quitado', next: 'cgi-04', capture: { 'Imóvel quitado': 'Sim' } },
+          { label: 'Não tenho imóvel', next: 'cgi-reprovado-imovel', capture: { 'Imóvel quitado': 'Não' } }
+        ]
+      },
+      'cgi-reprovado-imovel': {
+        stage: null,
+        messages: [
+          'Entendido! Para o CGI, é necessário ter um imóvel quitado no seu nome ou de familiar direto como garantia.',
+          'Mas temos outras linhas de crédito que não exigem imóvel. Quer que um consultor apresente as opções?'
+        ],
+        buttons: [
+          { label: 'Sim, quero conhecer', next: 'passagem', capture: {} },
+          { label: 'Não, obrigado', next: 'fim', capture: {} }
+        ]
+      },
+      'cgi-04': {
+        stage: null,
+        messages: [
+          'Quase lá! Última verificação. 😊',
+          'O imóvel possui alguma pendência em cartório, como dívidas ativas, penhora ou ação judicial?'
+        ],
+        buttons: [
+          { label: 'Não, está tudo regular', next: 'cgi-mql', capture: { 'Documentação': 'Regular' } },
+          { label: 'Sim, tenho pendências', next: 'cgi-reprovado-docs', capture: { 'Documentação': 'Com pendências' } }
+        ]
+      },
+      'cgi-reprovado-docs': {
+        stage: null,
+        messages: [
+          'Entendido! Imóveis com pendências em cartório não são aceitos como garantia no momento.',
+          'Assim que regularizar, pode voltar que verificamos as condições. Ou posso te apresentar outras opções. Quer conhecer?'
+        ],
+        buttons: [
+          { label: 'Sim, quero conhecer', next: 'passagem', capture: {} },
+          { label: 'Não, obrigado', next: 'fim', capture: {} }
+        ]
+      },
+      'cgi-mql': {
+        stage: 'Interesse Real (MQL)',
+        messages: [
+          'Ótimo, Ana! ✅ Tudo certo, você se enquadra no Crédito com Garantia de Imóvel da FiveCred.',
+          'Em poucos minutos um dos nossos consultores vai entrar em contato para fazer sua simulação personalizada. Taxas muito abaixo do mercado e prazo de até 10 anos. Já já nosso time te chama aqui! 🚀'
+        ],
+        systemAfter: '✅ Lead movido para INTERESSE REAL. Tarefa criada para consultor (5 min).',
+        buttons: null, end: true
+      }
+    }
+  },
+
+  LUZ: {
+    name: 'Empréstimo na Conta de Luz', tag: '[LUZ]', emoji: '💡',
+    lead: 'Marcos', campaign: 'Campanha Conta de Luz',
+    steps: {
+      start: {
+        stage: 'Novo Lead',
+        systemBefore: 'Tag [LUZ] aplicada automaticamente. Bot Conta de Luz iniciado.',
+        messages: [
+          'Oi, Marcos! 😊 Aqui é da FiveCred, especialistas em crédito inteligente.',
+          'Recebi seu cadastro para o Empréstimo na Conta de Luz e fico feliz em te ajudar! Uma opção prática para quem precisa de crédito rápido, sem precisar de imóvel ou carteira assinada. O desconto vai direto na sua fatura de energia. Crédito de até R$ 15.000. 💡',
+          'Vou fazer algumas perguntinhas rápidas para verificar se você se enquadra. Pode ser?'
+        ],
+        buttons: [
+          { label: 'Pode ser!', next: 'luz-01', capture: {} },
+          { label: 'Não tenho interesse', next: 'luz-desinteresse', capture: {} }
+        ]
+      },
+      'luz-desinteresse': { stage: null, messages: ['Tudo bem! Qualquer dúvida no futuro, é só nos chamar aqui. Até mais! 😊'], buttons: null, end: true },
+      'luz-01': {
+        stage: 'Em Qualificação Bot',
+        messages: ['Qual o valor que você precisa?'],
+        buttons: [
+          { label: 'Até R$ 3.000', next: 'luz-02', capture: { 'Valor desejado': 'Até R$ 3.000' } },
+          { label: 'Entre R$ 3.001 e R$ 15.000', next: 'luz-02', capture: { 'Valor desejado': 'R$ 3k a R$ 15k' } },
+          { label: 'Acima de R$ 15.000', next: 'luz-reprovado-valor', capture: { 'Valor desejado': 'Acima de R$ 15k' } }
+        ]
+      },
+      'luz-reprovado-valor': {
+        stage: null,
+        messages: [
+          'Entendido! O Empréstimo na Conta de Luz da FiveCred oferece crédito de até R$ 15.000.',
+          'Para valores maiores, posso te orientar sobre outras linhas disponíveis. Quer conhecer?'
+        ],
+        buttons: [
+          { label: 'Sim, quero conhecer', next: 'passagem', capture: {} },
+          { label: 'Não, obrigado', next: 'fim', capture: {} }
+        ]
+      },
+      'luz-02': {
+        stage: null,
+        messages: ['A conta de luz está no seu nome?'],
+        buttons: [
+          { label: 'Sim, está no meu nome', next: 'luz-03', capture: { 'Conta no nome': 'Sim' } },
+          { label: 'Não, está em outro nome', next: 'luz-reprovado-conta', capture: { 'Conta no nome': 'Não' } }
+        ]
+      },
+      'luz-reprovado-conta': {
+        stage: null,
+        messages: [
+          'Entendido! Para esse produto, é necessário que a conta de energia esteja no nome do solicitante.',
+          'Se quiser regularizar ou conhecer outras opções, posso te orientar. Quer conhecer?'
+        ],
+        buttons: [
+          { label: 'Sim, quero conhecer', next: 'passagem', capture: {} },
+          { label: 'Não, obrigado', next: 'fim', capture: {} }
+        ]
+      },
+      'luz-03': {
+        stage: null,
+        messages: ['Você possui alguma pendência grave, como protesto em cartório ou ação judicial em aberto?'],
+        buttons: [
+          { label: 'Não tenho', next: 'luz-mql', capture: { 'Pendências graves': 'Não' } },
+          { label: 'Sim, tenho', next: 'luz-reprovado-pending', capture: { 'Pendências graves': 'Sim' } }
+        ]
+      },
+      'luz-reprovado-pending': {
+        stage: null,
+        messages: [
+          'Entendido! Pendências graves como protestos ou ações judiciais podem impedir a aprovação.',
+          'Assim que regularizar, pode voltar. Ou posso te apresentar alternativas. Quer conhecer?'
+        ],
+        buttons: [
+          { label: 'Sim, quero conhecer', next: 'passagem', capture: {} },
+          { label: 'Não, obrigado', next: 'fim', capture: {} }
+        ]
+      },
+      'luz-mql': {
+        stage: 'Interesse Real (MQL)',
+        messages: [
+          'Ótimo, Marcos! ✅ Tudo certo, você se enquadra no Empréstimo na Conta de Luz da FiveCred.',
+          'Em poucos minutos um dos nossos consultores vai entrar em contato para finalizar sua simulação. Processo rápido, sem burocracia, com o desconto direto na sua fatura de energia. Já já nosso time te chama aqui! 🚀'
+        ],
+        systemAfter: '✅ Lead movido para INTERESSE REAL. Tarefa criada para consultor (5 min).',
+        buttons: null, end: true
+      }
+    }
+  },
+
+  FGTS: {
+    name: 'Antecipação do FGTS', tag: '[FGTS]', emoji: '💰',
+    lead: 'Roberto', campaign: 'Campanha FGTS',
+    steps: {
+      start: {
+        stage: 'Novo Lead',
+        systemBefore: 'Tag [FGTS] aplicada automaticamente. Bot FGTS iniciado.',
+        messages: [
+          'Oi, Roberto! 😊 Aqui é da FiveCred, especialistas em crédito inteligente.',
+          'Recebi seu cadastro para a Antecipação do FGTS e fico feliz em te ajudar! Você recebe seu saldo de FGTS antecipado, sem precisar esperar. Processo 100% digital, dinheiro na conta em até 24h e sem desconto no salário. 💰',
+          'Vou fazer algumas perguntinhas rápidas para verificar se você se enquadra. Pode ser?'
+        ],
+        buttons: [
+          { label: 'Pode ser!', next: 'fgts-01', capture: {} },
+          { label: 'Não tenho interesse', next: 'fgts-desinteresse', capture: {} }
+        ]
+      },
+      'fgts-desinteresse': { stage: null, messages: ['Tudo bem! Qualquer dúvida no futuro, é só nos chamar aqui. Até mais! 😊'], buttons: null, end: true },
+      'fgts-01': {
+        stage: 'Em Qualificação Bot',
+        messages: ['Você possui saldo de FGTS disponível para saque?'],
+        buttons: [
+          { label: 'Sim, tenho saldo', next: 'fgts-02', capture: { 'Saldo FGTS': 'Sim' } },
+          { label: 'Não sei, nunca verifiquei', next: 'fgts-dica', capture: { 'Saldo FGTS': 'Não verificado' } },
+          { label: 'Não tenho saldo', next: 'fgts-reprovado-saldo', capture: { 'Saldo FGTS': 'Não' } }
+        ]
+      },
+      'fgts-dica': {
+        stage: null,
+        messages: [
+          'Sem problema! Você pode verificar seu saldo pelo app FGTS (disponível na App Store e Google Play) ou pelo site fgts.caixa.gov.br.',
+          'Quando verificar, pode nos chamar de volta que damos continuidade! Até mais. 😊'
+        ],
+        buttons: [{ label: 'Ok, vou verificar!', next: 'fim', capture: {} }]
+      },
+      'fgts-reprovado-saldo': {
+        stage: null,
+        messages: [
+          'Entendido! Sem saldo disponível, a antecipação do FGTS não é possível no momento.',
+          'Temos outras opções de crédito que não dependem do FGTS. Quer conhecer?'
+        ],
+        buttons: [
+          { label: 'Sim, quero conhecer', next: 'passagem', capture: {} },
+          { label: 'Não, obrigado', next: 'fim', capture: {} }
+        ]
+      },
+      'fgts-02': {
+        stage: null,
+        messages: ['Você já utilizou o saque-aniversário do FGTS anteriormente?'],
+        buttons: [
+          { label: 'Não utilizei', next: 'fgts-03', capture: { 'Saque-aniversário': 'Não utilizei' } },
+          { label: 'Sim, já utilizei', next: 'fgts-orientar', capture: { 'Saque-aniversário': 'Sim' } },
+          { label: 'Não sei o que é', next: 'fgts-orientar', capture: { 'Saque-aniversário': 'Desconhece' } }
+        ]
+      },
+      'fgts-orientar': {
+        stage: null,
+        messages: [
+          'O saque-aniversário é uma modalidade do FGTS que permite retirar parte do saldo todo ano. Se você aderiu a ele, a antecipação funciona de forma diferente.',
+          'Posso te passar para um consultor que vai verificar qual modalidade se aplica ao seu caso. Quer prosseguir?'
+        ],
+        buttons: [
+          { label: 'Sim, quero prosseguir', next: 'passagem', capture: {} },
+          { label: 'Não, obrigado', next: 'fim', capture: {} }
+        ]
+      },
+      'fgts-03': {
+        stage: null,
+        messages: [
+          'Quase lá! Última verificação. 😊',
+          'Você possui alguma pendência grave, como protesto em cartório ou ação judicial em aberto?'
+        ],
+        buttons: [
+          { label: 'Não tenho', next: 'fgts-mql', capture: { 'Pendências graves': 'Não' } },
+          { label: 'Sim, tenho', next: 'fgts-reprovado-docs', capture: { 'Pendências graves': 'Sim' } }
+        ]
+      },
+      'fgts-reprovado-docs': {
+        stage: null,
+        messages: [
+          'Entendido! Pendências graves podem impedir a aprovação da antecipação.',
+          'Assim que regularizar, podemos verificar novamente. Ou posso te apresentar alternativas. Quer conhecer?'
+        ],
+        buttons: [
+          { label: 'Sim, quero conhecer', next: 'passagem', capture: {} },
+          { label: 'Não, obrigado', next: 'fim', capture: {} }
+        ]
+      },
+      'fgts-mql': {
+        stage: 'Interesse Real (MQL)',
+        messages: [
+          'Perfeito, Roberto! ✅ Tudo certo, você se enquadra na Antecipação do FGTS da FiveCred.',
+          'Em poucos minutos um dos nossos consultores vai entrar em contato para verificar seu saldo e simular o valor disponível. Dinheiro na conta em até 24h! Já já nosso time te chama aqui! 🚀'
+        ],
+        systemAfter: '✅ Lead movido para INTERESSE REAL. Tarefa criada para consultor (5 min).',
+        buttons: null, end: true
+      }
+    }
+  },
+
+  CLT: {
+    name: 'Crédito do Trabalhador', tag: '[CLT]', emoji: '💼',
+    lead: 'Cristian', campaign: 'Campanha Consignado CLT',
+    steps: {
+      start: {
+        stage: 'Novo Lead',
+        systemBefore: 'Tag [CLT] aplicada automaticamente. Bot CLT iniciado.',
+        messages: [
+          'Oi, Cristian! 😊 Aqui é da FiveCred, especialistas em crédito inteligente.',
+          'Recebi seu cadastro para o Crédito do Trabalhador e fico feliz em te ajudar! É exclusivo para quem tem carteira assinada e oferece condições muito melhores que empréstimo pessoal convencional. Desconto direto na folha, processo 100% digital e aprovação rápida. Crédito de R$ 500 até R$ 25.000. 💼',
+          'Vou fazer algumas perguntinhas rápidas para verificar se você se enquadra. Pode ser?'
+        ],
+        buttons: [
+          { label: 'Pode ser!', next: 'clt-01', capture: {} },
+          { label: 'Não tenho interesse', next: 'clt-desinteresse', capture: {} }
+        ]
+      },
+      'clt-desinteresse': { stage: null, messages: ['Tudo bem! Qualquer dúvida no futuro, é só nos chamar aqui. Até mais! 😊'], buttons: null, end: true },
+      'clt-01': {
+        stage: 'Em Qualificação Bot',
+        messages: ['Qual o valor de crédito que você está buscando?'],
+        buttons: [
+          { label: 'Abaixo de R$ 500', next: 'clt-01b', capture: { 'Valor desejado': 'Abaixo de R$ 500' } },
+          { label: 'Entre R$ 500 e R$ 25.000', next: 'clt-02', capture: { 'Valor desejado': 'R$ 500 a R$ 25.000' } }
+        ]
+      },
+      'clt-01b': {
+        stage: null,
+        messages: [
+          'Entendido! O Crédito do Trabalhador atende a partir de R$ 500.',
+          'Para valores menores, posso te orientar sobre outras opções disponíveis na FiveCred. Quer conhecer?'
+        ],
+        buttons: [
+          { label: 'Sim, quero conhecer', next: 'passagem', capture: {} },
+          { label: 'Não, obrigado', next: 'fim', capture: {} }
+        ]
+      },
+      'clt-02': {
+        stage: null,
+        messages: ['Você trabalha registrado(a) em regime CLT, com carteira assinada?'],
+        buttons: [
+          { label: 'Sim, tenho carteira assinada', next: 'clt-03', capture: { 'Regime CLT': 'Sim' } },
+          { label: 'Não, sou autônomo, MEI ou PJ', next: 'clt-reprovado-clt', capture: { 'Regime CLT': 'Não' } }
+        ]
+      },
+      'clt-reprovado-clt': {
+        stage: null,
+        messages: [
+          'Entendido! O Crédito do Trabalhador é exclusivo para quem tem carteira assinada (CLT).',
+          'Se você for autônomo, MEI ou PJ, temos outras opções que podem te atender. Posso apresentar?'
+        ],
+        buttons: [
+          { label: 'Sim, quero conhecer outras opções', next: 'passagem', capture: {} },
+          { label: 'Não, obrigado', next: 'fim', capture: {} }
+        ]
+      },
+      'clt-03': {
+        stage: null,
+        messages: ['Você está registrado(a) nessa empresa há mais de 6 meses?'],
+        buttons: [
+          { label: 'Sim, há mais de 6 meses', next: 'clt-mql', capture: { 'Tempo de registro': 'Mais de 6 meses' } },
+          { label: 'Não, há menos de 6 meses', next: 'clt-reprovado-tempo', capture: { 'Tempo de registro': 'Menos de 6 meses' } }
+        ]
+      },
+      'clt-reprovado-tempo': {
+        stage: null,
+        messages: [
+          'Entendido! Para o Crédito do Trabalhador, é necessário pelo menos 6 meses de registro na empresa.',
+          'Dependendo do seu perfil, pode haver outras opções disponíveis. Quer que um consultor verifique?'
+        ],
+        buttons: [
+          { label: 'Sim, quero verificar', next: 'passagem', capture: {} },
+          { label: 'Não, obrigado', next: 'fim', capture: {} }
+        ]
+      },
+      'clt-mql': {
+        stage: 'Interesse Real (MQL)',
+        messages: [
+          'Perfeito, Cristian! ✅ Tudo certo, você se enquadra no Crédito do Trabalhador da FiveCred.',
+          'Em poucos minutos um dos nossos consultores vai entrar em contato para fazer sua simulação personalizada. O desconto é direto na folha, 100% digital e sem burocracia. Já já nosso time te chama aqui! 🚀'
+        ],
+        systemAfter: '✅ Lead movido para INTERESSE REAL. Tarefa criada para consultor (5 min).',
+        buttons: null, end: true
+      }
+    }
+  }
+};
+
+// ===================== ENGINE =====================
+
+function startFunnel(id) {
+  simFunnel = id;
+  simCaptured = { 'Produto': FUNNELS[id].name };
+  simMsgTime = 0;
+  const f = FUNNELS[id];
+
+  document.getElementById('funnel-selector').style.display = 'none';
+  document.getElementById('sim-container').style.display = 'block';
+
+  document.getElementById('wp-avatar').textContent = f.lead[0];
+  document.getElementById('wp-lead-name').textContent = f.lead;
+  document.getElementById('wp-lead-info').textContent = 'Lead, ' + f.campaign;
+  document.getElementById('sim-label').textContent = f.emoji + ' ' + f.name + '  |  Lead ' + f.lead;
+  document.getElementById('kommo-tag').textContent = f.tag;
+  document.getElementById('kommo-tag-desc').textContent = f.campaign;
+
+  resetKommoStages();
+  updateKommoData();
+  document.getElementById('wp-body').innerHTML = '';
+
+  processSimStep('start');
+}
+
+function getSimStep(id) {
+  if (id === 'passagem' || id === 'fim') return SHARED_STEPS[id];
+  return FUNNELS[simFunnel].steps[id];
+}
+
+function processSimStep(stepId) {
+  const step = getSimStep(stepId);
+  if (!step) return;
+
+  if (step.stage) {
+    setKommoStage(step.stage);
+    if (step.stage === 'Em Qualificação Bot') {
+      appendSimSystem('Status: Em Qualificação Bot');
+    }
+  }
+  if (step.systemBefore) appendSimSystem(step.systemBefore);
+
+  displaySimMessages(step.messages, 0, function() {
+    if (step.systemAfter) {
+      setTimeout(function() { appendSimSystem(step.systemAfter); }, 300);
+    }
+    if (step.buttons && step.buttons.length > 0) {
+      setTimeout(function() { appendSimButtons(step.buttons); }, step.systemAfter ? 600 : 0);
+    }
+  });
+}
+
+function displaySimMessages(messages, idx, callback) {
+  if (idx >= messages.length) { callback(); return; }
+  var typing = appendSimTyping();
+  var len = messages[idx].length;
+  var delay = Math.min(500 + len * 8, 2000);
+  setTimeout(function() {
+    typing.remove();
+    appendSimBotMsg(messages[idx]);
+    setTimeout(function() {
+      displaySimMessages(messages, idx + 1, callback);
+    }, idx === messages.length - 1 ? 150 : 400);
+  }, delay);
+}
+
+function appendSimBotMsg(text) {
+  var body = document.getElementById('wp-body');
+  var div = document.createElement('div');
+  div.className = 'wm wm-bot';
+  div.innerHTML = esc(text) + '<div class="wm-time">' + getSimTime() + '</div>';
+  body.appendChild(div);
+  scrollSim();
+  return div;
+}
+
+function appendSimLeadMsg(text) {
+  var body = document.getElementById('wp-body');
+  var div = document.createElement('div');
+  div.className = 'wm wm-lead';
+  div.innerHTML = esc(text) + '<div class="wm-time">' + getSimTime() + '</div>';
+  body.appendChild(div);
+  scrollSim();
+  return div;
+}
+
+function appendSimSystem(text) {
+  var body = document.getElementById('wp-body');
+  var div = document.createElement('div');
+  div.className = 'wm-sys';
+  div.textContent = text;
+  body.appendChild(div);
+  scrollSim();
+  return div;
+}
+
+function appendSimTyping() {
+  var body = document.getElementById('wp-body');
+  var div = document.createElement('div');
+  div.className = 'wm wm-bot typing-indicator';
+  div.innerHTML = '<span></span><span></span><span></span>';
+  body.appendChild(div);
+  scrollSim();
+  return div;
+}
+
+function appendSimButtons(buttons) {
+  var body = document.getElementById('wp-body');
+  var container = document.createElement('div');
+  container.className = 'wp-btns-interactive';
+  buttons.forEach(function(btn) {
+    var el = document.createElement('button');
+    el.className = 'wp-btn-i';
+    el.textContent = btn.label;
+    el.onclick = function() { handleSimButton(btn, container); };
+    container.appendChild(el);
+  });
+  body.appendChild(container);
+  scrollSim();
+}
+
+function handleSimButton(btn, container) {
+  container.querySelectorAll('button').forEach(function(b) {
+    b.disabled = true;
+    if (b.textContent === btn.label) { b.classList.add('selected'); }
+    else { b.classList.add('faded'); }
+  });
+  setTimeout(function() {
+    appendSimLeadMsg(btn.label);
+    if (btn.capture) {
+      Object.assign(simCaptured, btn.capture);
+      updateKommoData();
+    }
+    setTimeout(function() { processSimStep(btn.next); }, 500);
+  }, 200);
+}
+
+function setKommoStage(stage) {
+  var idx = SIM_STAGES.indexOf(stage);
+  document.querySelectorAll('.k-stage-item').forEach(function(el, i) {
+    var dot = el.querySelector('.k-dot');
+    var name = el.querySelector('.k-name');
+    dot.className = 'k-dot';
+    name.className = 'k-name';
+    if (i < idx) { dot.classList.add('done'); name.classList.add('done'); }
+    else if (i === idx) { dot.classList.add('active'); name.classList.add('active'); }
+  });
+}
+
+function resetKommoStages() {
+  document.querySelectorAll('.k-stage-item .k-dot').forEach(function(d) { d.className = 'k-dot'; });
+  document.querySelectorAll('.k-stage-item .k-name').forEach(function(n) { n.className = 'k-name'; });
+}
+
+function updateKommoData() {
+  var container = document.getElementById('kommo-captured');
+  var entries = Object.entries(simCaptured);
+  if (entries.length === 0) { container.innerHTML = 'Aguardando respostas...'; return; }
+  container.innerHTML = entries.map(function(e) {
+    return '<div style="margin-bottom:3px;"><span style="color:#888;">' + esc(e[0]) + ':</span> <strong>' + esc(e[1]) + '</strong></div>';
+  }).join('');
+}
+
+function scrollSim() {
+  var body = document.getElementById('wp-body');
+  body.scrollTop = body.scrollHeight;
+}
+
+function getSimTime() {
+  var h = 10 + Math.floor(simMsgTime / 60);
+  var m = simMsgTime % 60;
+  simMsgTime++;
+  return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+}
+
+function esc(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function resetSim() {
+  simFunnel = null;
+  simCaptured = {};
+  simMsgTime = 0;
+  document.getElementById('sim-container').style.display = 'none';
+  document.getElementById('funnel-selector').style.display = 'grid';
+  document.getElementById('wp-body').innerHTML = '';
+  document.getElementById('kommo-captured').innerHTML = 'Aguardando respostas...';
+  resetKommoStages();
+}
+</script>
+</body>
+</html>

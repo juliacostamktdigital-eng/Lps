@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Briefing Completo — Kidys Park Brinquedos | SDR IA Kickoff</title>
+<style>
+  :root {
+    --azul: #1A2B4A;
+    --azul-mid: #2C4270;
+    --azul-light: #4A7FC1;
+    --verde: #2ECC71;
+    --laranja: #E67E22;
+    --vermelho: #E74C3C;
+    --amarelo: #F1C40F;
+    --cinza-bg: #F4F6FA;
+    --cinza-card: #FFFFFF;
+    --cinza-borda: #DDE3EF;
+    --texto: #1C2B3A;
+    --texto-light: #5A6A7E;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--cinza-bg);
+    color: var(--texto);
+    line-height: 1.65;
+    font-size: 14px;
+  }
+
+  /* CAPA */
+  .capa {
+    background: linear-gradient(135deg, var(--azul) 0%, var(--azul-mid) 60%, #3D5A8A 100%);
+    color: white;
+    padding: 60px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .capa::before {
+    content: '';
+    position: absolute;
+    right: -80px; top: -80px;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .capa::after {
+    content: '';
+    position: absolute;
+    right: 80px; bottom: -120px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+  }
+  .capa-tag {
+    display: inline-block;
+    background: var(--azul-light);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .capa h1 {
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+  }
+  .capa h1 span { color: var(--amarelo); }
+  .capa .subtitulo {
+    font-size: 17px;
+    opacity: 0.8;
+    margin-bottom: 32px;
+    max-width: 600px;
+  }
+  .capa-meta {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .capa-meta-item {
+    display: flex;
+    flex-direction: column;
+  }
+  .capa-meta-item .label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 3px;
+  }
+  .capa-meta-item .valor {
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .capa-alert {
+    margin-top: 28px;
+    background: rgba(241,196,15,0.15);
+    border-left: 4px solid var(--amarelo);
+    padding: 12px 18px;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    color: rgba(255,255,255,0.9);
+    max-width: 700px;
+  }
+
+  /* LAYOUT */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+
+  /* ÍNDICE */
+  .indice {
+    background: var(--azul);
+    color: white;
+    padding: 28px 80px;
+  }
+  .indice-titulo {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-bottom: 14px;
+  }
+  .indice-lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 28px;
+    list-style: none;
+  }
+  .indice-lista li a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .indice-lista li a:hover { color: white; }
+  .indice-lista li a .num {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--azul-light);
+    min-width: 20px;
+  }
+
+  /* SEÇÕES */
+  .secao { padding: 50px 80px; border-bottom: 1px solid var(--cinza-borda); }
+  .secao:last-child { border-bottom: none; }
+  .secao-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--cinza-borda);
+  }
+  .secao-num {
+    background: var(--azul);
+    color: white;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800;
+    flex-shrink: 0;
+  }
+  .secao-titulo {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--azul);
+    letter-spacing: -0.3px;
+  }
+  .secao-desc {
+    font-size: 13px;
+    color: var(--texto-light);
+    margin-top: 3px;
+  }
+
+  /* CARDS */
+  .cards-grid { display: grid; gap: 20px; }
+  .cards-grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .cards-grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .cards-grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+  .card {
+    background: white;
+    border: 1px solid var(--cinza-borda);
+    border-radius: 12px;
+    padding: 22px 24px;
+  }
+  .card-titulo {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--texto-light);
+    margin-bottom: 8px;
+  }
+  .card-valor {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--azul);
+    line-height: 1.1;
+  }
+  .card-valor.verde { color: #27AE60; }
+  .card-valor.vermelho { color: var(--vermelho); }
+  .card-valor.laranja { color: var(--laranja); }
+  .card-sub {
+    font-size: 12px;
+    color: var(--texto-light);
+    margin-top: 6px;
+  }
+  .card-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+    margin-top: 6px;
+  }
+  .badge-vermelho { background: #FDECEA; color: var(--vermelho); }
+  .badge-verde { background: #E8F8F0; color: #27AE60; }
+  .badge-amarelo { background: #FEF9E7; color: #B7950B; }
+  .badge-azul { background: #EBF2FC; color: var(--azul-mid); }
+  .badge-laranja { background: #FEF0E6; color: var(--laranja); }
+
+  /* TABELAS */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--cinza-borda);
+  }
+  th {
+    background: var(--azul);
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--cinza-borda);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: #F8FAFD; }
+
+  /* TIMELINE */
+  .timeline { position: relative; padding-left: 36px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px; top: 6px; bottom: 6px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--azul-light), var(--cinza-borda));
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 28px;
+    background: white;
+    border: 1px solid var(--cinza-borda);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -30px; top: 20px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--azul-light);
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px var(--azul-light);
+  }
+  .timeline-data {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--azul-light);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .timeline-titulo {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--azul);
+    margin-bottom: 8px;
+  }
+  .timeline-body { font-size: 13px; color: var(--texto); line-height: 1.6; }
+  .timeline-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .timeline-tag {
+    font-size: 11px;
+    padding: 3px 9px;
+    background: var(--cinza-bg);
+    border: 1px solid var(--cinza-borda);
+    border-radius: 12px;
+    color: var(--texto-light);
+  }
+
+  /* ALERTA */
+  .alerta {
+    border-left: 4px solid;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  .alerta-vermelho { border-color: var(--vermelho); background: #FDECEA; color: #7B241C; }
+  .alerta-amarelo { border-color: var(--amarelo); background: #FEF9E7; color: #7D6608; }
+  .alerta-verde { border-color: var(--verde); background: #E8F8F0; color: #1A5C38; }
+  .alerta-azul { border-color: var(--azul-light); background: #EBF2FC; color: var(--azul-mid); }
+  .alerta strong { display: block; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+
+  /* FUNIL */
+  .funil { display: flex; flex-direction: column; gap: 8px; max-width: 600px; }
+  .funil-step {
+    padding: 14px 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .funil-step .num { font-size: 22px; font-weight: 800; }
+
+  /* PERSONA CARDS */
+  .persona-card {
+    background: white;
+    border: 1px solid var(--cinza-borda);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .persona-header {
+    background: var(--azul);
+    color: white;
+    padding: 16px 20px;
+  }
+  .persona-header .nome { font-size: 16px; font-weight: 800; }
+  .persona-header .tipo { font-size: 11px; opacity: 0.7; margin-top: 2px; }
+  .persona-body { padding: 18px 20px; }
+  .persona-item { margin-bottom: 12px; }
+  .persona-item-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--texto-light);
+    margin-bottom: 4px;
+  }
+  .persona-item-value { font-size: 13px; color: var(--texto); }
+
+  /* LISTA ITENS */
+  .lista-itens { list-style: none; }
+  .lista-itens li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--cinza-borda);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+  }
+  .lista-itens li:last-child { border-bottom: none; }
+  .lista-itens li::before {
+    content: '▸';
+    color: var(--azul-light);
+    font-size: 12px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  /* DOIS COLUNAS */
+  .col-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .col-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+
+  /* HIGHLIGHT BOX */
+  .highlight-box {
+    background: var(--azul);
+    color: white;
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin: 20px 0;
+  }
+  .highlight-box h3 { font-size: 16px; font-weight: 800; margin-bottom: 10px; }
+  .highlight-box p { font-size: 13px; opacity: 0.85; line-height: 1.6; }
+
+  /* PILARES */
+  .pilar {
+    background: white;
+    border: 1px solid var(--cinza-borda);
+    border-top: 4px solid var(--azul-light);
+    border-radius: 0 0 10px 10px;
+    padding: 20px;
+  }
+  .pilar-num { font-size: 32px; font-weight: 800; color: var(--cinza-borda); line-height: 1; }
+  .pilar-titulo { font-size: 15px; font-weight: 700; color: var(--azul); margin: 4px 0 8px; }
+  .pilar-desc { font-size: 13px; color: var(--texto-light); }
+
+  /* FOOTER */
+  .footer {
+    background: var(--azul);
+    color: rgba(255,255,255,0.6);
+    padding: 28px 80px;
+    font-size: 12px;
+    text-align: center;
+  }
+  .footer strong { color: white; }
+
+  /* GARGALOS */
+  .gargalo-item {
+    background: white;
+    border: 1px solid var(--cinza-borda);
+    border-left: 4px solid var(--vermelho);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .gargalo-num {
+    background: var(--vermelho);
+    color: white;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800;
+    flex-shrink: 0;
+  }
+  .gargalo-titulo { font-size: 14px; font-weight: 700; color: var(--azul); }
+  .gargalo-desc { font-size: 12px; color: var(--texto-light); margin-top: 3px; }
+
+  /* ONDA */
+  .onda {
+    background: white;
+    border: 1px solid var(--cinza-borda);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .onda-header {
+    padding: 14px 18px;
+    color: white;
+    font-weight: 800;
+    font-size: 14px;
+  }
+  .onda-body { padding: 16px 18px; }
+  .onda-item {
+    font-size: 13px;
+    padding: 5px 0;
+    border-bottom: 1px dashed var(--cinza-borda);
+    display: flex; gap: 8px;
+  }
+  .onda-item:last-child { border-bottom: none; }
+  .onda-item::before { content: '✓'; color: var(--verde); font-weight: 700; }
+
+  @media print {
+    .secao { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CAPA -->
+<div class="capa">
+  <div class="capa-tag">Uso Interno — Confidencial</div>
+  <h1>Kidys Park <span>Brinquedos</span><br>Briefing Completo</h1>
+  <p class="subtitulo">Contexto integral do cliente para kickoff de implementação SDR IA — inclui histórico, diagnóstico comercial, campanhas, estratégia e status atual.</p>
+  <div class="capa-meta">
+    <div class="capa-meta-item">
+      <span class="label">Data de geração</span>
+      <span class="valor">27 de maio de 2026</span>
+    </div>
+    <div class="capa-meta-item">
+      <span class="label">Agência responsável</span>
+      <span class="valor">Colli&Co / V4 Company</span>
+    </div>
+    <div class="capa-meta-item">
+      <span class="label">Fase atual</span>
+      <span class="valor">Semana 5+ — CRM / SDR IA</span>
+    </div>
+    <div class="capa-meta-item">
+      <span class="label">Status contrato SDR IA</span>
+      <span class="valor" style="color: var(--verde);">Contrato assinado</span>
+    </div>
+  </div>
+  <div class="capa-alert">
+    <strong>Para o implementador SDR IA:</strong> Este documento reúne 100% do contexto disponível sobre o cliente — kickoff, diagnósticos, reuniões de check-in, campanhas ativas, definições de ICP, MQL/SQL e pendências. Leia antes de qualquer reunião de onboarding.
+  </div>
+</div>
+
+<!-- ÍNDICE -->
+<div class="indice">
+  <p class="indice-titulo">Índice</p>
+  <ul class="indice-lista">
+    <li><a href="#s1"><span class="num">01</span> Visão Geral</a></li>
+    <li><a href="#s2"><span class="num">02</span> Stakeholders</a></li>
+    <li><a href="#s3"><span class="num">03</span> Dados Financeiros</a></li>
+    <li><a href="#s4"><span class="num">04</span> Produto</a></li>
+    <li><a href="#s5"><span class="num">05</span> Mercado</a></li>
+    <li><a href="#s6"><span class="num">06</span> ICP e Personas</a></li>
+    <li><a href="#s7"><span class="num">07</span> Diagnóstico Comercial</a></li>
+    <li><a href="#s8"><span class="num">08</span> Campanhas e Performance</a></li>
+    <li><a href="#s9"><span class="num">09</span> Timeline V4/Colli</a></li>
+    <li><a href="#s10"><span class="num">10</span> DCC e Comunicação</a></li>
+    <li><a href="#s11"><span class="num">11</span> UCM</a></li>
+    <li><a href="#s12"><span class="num">12</span> CRM e SDR IA</a></li>
+    <li><a href="#s13"><span class="num">13</span> Plano de Ação</a></li>
+    <li><a href="#s14"><span class="num">14</span> Pendências Críticas</a></li>
+  </ul>
+</div>
+
+
+<!-- S1: VISÃO GERAL -->
+<div class="secao" id="s1">
+  <div class="secao-header">
+    <div class="secao-num">01</div>
+    <div>
+      <div class="secao-titulo">Visão Geral da Empresa</div>
+      <div class="secao-desc">Quem é a Kidys Park, o que faz e onde está</div>
+    </div>
+  </div>
+
+  <div class="cards-grid cards-grid-3" style="margin-bottom:28px;">
+    <div class="card">
+      <div class="card-titulo">Razão Social</div>
+      <div class="card-valor" style="font-size:18px;">Kidys Park Brinquedos</div>
+      <div class="card-sub">Também referenciada como "Kids Spark" internamente</div>
+    </div>
+    <div class="card">
+      <div class="card-titulo">Segmento</div>
+      <div class="card-valor" style="font-size:16px;">Playgrounds Comerciais B2B</div>
+      <div class="card-sub">Fabricação de equipamentos de lazer premium de grande porte</div>
+    </div>
+    <div class="card">
+      <div class="card-titulo">Maturidade</div>
+      <div class="card-valor" style="font-size:16px;">12 anos de mercado</div>
+      <div class="card-sub">Autoridade industrial consolidada no setor</div>
+    </div>
+  </div>
+
+  <div class="col-2">
+    <div>
+      <h3 style="font-size:15px;font-weight:800;color:var(--azul);margin-bottom:12px;">Definição do negócio</h3>
+      <p style="font-size:13px;line-height:1.7;color:var(--texto);">A Kidys Park atua no mercado de <strong>fabricação de equipamentos de lazer premium e playgrounds comerciais B2B</strong>, dirigidos a estabelecimentos com necessidades de monetização de espaço, segurança técnica e alta durabilidade. Produz brinquedões (Kid Plays) sob medida, playgrounds modulares e cenografias interativas para salões de festas, restaurantes, escolas e empreendedores em todo o território nacional, com destaque para Sudeste e Sul.</p>
+
+      <div class="alerta alerta-azul" style="margin-top:16px;">
+        <strong>Diferencial técnico principal</strong>
+        Utiliza tubo galvanizado (não enferruja), estrutura em MDF de qualidade superior — diferente dos concorrentes locais que usam ferro de menor custo. Entregas rápidas e atendimento pós-venda como diferenciais percebidos.
+      </div>
+    </div>
+    <div>
+      <h3 style="font-size:15px;font-weight:800;color:var(--azul);margin-bottom:12px;">Cobertura geográfica</h3>
+      <table>
+        <tr><th>Região</th><th>Prioridade</th></tr>
+        <tr><td>Sudeste (SP, RJ, MG)</td><td><span class="badge-verde badge">Principal</span></td></tr>
+        <tr><td>Sul (PR, SC, RS)</td><td><span class="badge-verde badge">Principal</span></td></tr>
+        <tr><td>Centro-Oeste</td><td><span class="badge-amarelo badge">Secundário</span></td></tr>
+        <tr><td>Nordeste / Norte</td><td><span class="badge-vermelho badge">Fora do foco</span></td></tr>
+      </table>
+      <div class="alerta alerta-vermelho" style="margin-top:12px;">
+        <strong>Problema ativo</strong>
+        Leads chegando do Pará, Ceará, Piauí e Maranhão via Meta Ads — fora da área operacional. Segmentação geográfica precisa ser corrigida nas campanhas e filtrada pelo SDR IA.
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- S2: STAKEHOLDERS -->
+<div class="secao" id="s2">
+  <div class="secao-header">
+    <div class="secao-num">02</div>
+    <div>
+      <div class="secao-titulo">Stakeholders</div>
+      <div class="secao-desc">Quem são as pessoas do cliente e da equipe V4/Colli</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:14px;font-weight:800;color:var(--azul);margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;">Lado do Cliente</h3>
+  <table style="margin-bottom:28px;">
+    <tr>
+      <th>Nome</th><th>Papel</th><th>Relevância para SDR IA</th><th>Observações</th>
+    </tr>
+    <tr>
+      <td><strong>Murilo</strong></td>
+      <td>Proprietário / CEO / Decisor comercial</td>
+      <td><span class="badge-vermelho badge">Crítico</span></td>
+      <td>Decisor final. Aprovou CRM verbalmente em 19/05. Contrato ainda não assinado. Não estava no kickoff de 15/04.</td>
+    </tr>
+    <tr>
+      <td><strong>Érica Dametto</strong></td>
+      <td>Comercial e Administrativo (esposa de Murilo)</td>
+      <td><span class="badge-vermelho badge">Crítico</span></td>
+      <td>73% da receita passa por ela. Principal ponto de contato operacional. Trabalha remotamente. Solicitou brinquedão azul maior nos criativos (20/05).</td>
+    </tr>
+    <tr>
+      <td><strong>Dani</strong></td>
+      <td>Comercial</td>
+      <td><span class="badge-amarelo badge">Importante</span></td>
+      <td>Junto com Érica, concentram 73% da receita. Usuária do CRM.</td>
+    </tr>
+    <tr>
+      <td><strong>Carlos</strong></td>
+      <td>Comercial / Operacional</td>
+      <td><span class="badge-amarelo badge">Importante</span></td>
+      <td>Parte da equipe que usará o CRM. Mencionsdo nas próximas etapas do kickoff 4ª semana.</td>
+    </tr>
+  </table>
+
+  <div class="alerta alerta-vermelho">
+    <strong>Concentração de risco</strong>
+    73% da receita está concentrada em Érica + Dani. Isso significa que qualquer ausência delas afeta diretamente o faturamento. A implementação do SDR IA reduz esse risco ao padronizar o funil independente de pessoas.
+  </div>
+
+  <h3 style="font-size:14px;font-weight:800;color:var(--azul);margin:24px 0 16px;text-transform:uppercase;letter-spacing:1px;">Equipe V4 / Colli&Co</h3>
+  <table>
+    <tr><th>Nome</th><th>Papel</th></tr>
+    <tr><td><strong>Thiago Almeida</strong></td><td>Consultor de negócios V4 (4+ anos, 100+ negócios gerenciados)</td></tr>
+    <tr><td><strong>Andressa Boraschi</strong></td><td>Gestora de tráfego — Colli&Co (formação em direito + gestão empresarial)</td></tr>
+    <tr><td><strong>Ellyel Santos Damião</strong></td><td>Copywriter e estrategista de comunicação</td></tr>
+    <tr><td><strong>Rafael de Moraes Camargo</strong></td><td>Designer — diagnóstico visual (formação em sistemas de informação)</td></tr>
+    <tr><td><strong>Emanuele Lourenço</strong></td><td>Nova integrante (adicionada na 4ª semana, ponto de contato com equipe)</td></tr>
+    <tr><td><strong>Julia Costa</strong></td><td>Gestora de contas — Colli&Co</td></tr>
+    <tr><td><strong>Sara Pizzico</strong></td><td>Comercial — negociação de contratos (SDR IA / CRM)</td></tr>
+    <tr><td><strong>Ruan Silva</strong></td><td>Analítico — backoffice</td></tr>
+  </table>
+</div>
+
+
+<!-- S3: DADOS FINANCEIROS -->
+<div class="secao" id="s3">
+  <div class="secao-header">
+    <div class="secao-num">03</div>
+    <div>
+      <div class="secao-titulo">Dados Financeiros</div>
+      <div class="secao-desc">Faturamento, ticket médio e indicadores de performance</div>
+    </div>
+  </div>
+
+  <div class="cards-grid cards-grid-4" style="margin-bottom:28px;">
+    <div class="card">
+      <div class="card-titulo">Faturamento 2024</div>
+      <div class="card-valor">R$ 5,16M</div>
+      <div class="card-sub">Referência ano anterior</div>
+    </div>
+    <div class="card">
+      <div class="card-titulo">Faturamento 2025</div>
+      <div class="card-valor vermelho">R$ 4,3M</div>
+      <span class="badge-vermelho badge">▼ 15% queda</span>
+      <div class="card-sub">Queda identificada no diagnóstico</div>
+    </div>
+    <div class="card">
+      <div class="card-titulo">Ticket médio</div>
+      <div class="card-valor">R$ 12.900</div>
+      <div class="card-sub">Preço promocional usado como âncora — pode chegar a R$15–16k</div>
+    </div>
+    <div class="card">
+      <div class="card-titulo">Fat. mensal (kickoff)</div>
+      <div class="card-valor">R$ 200–250k</div>
+      <div class="card-sub">Estimativa na época do kickoff (abril/2026)</div>
+    </div>
+  </div>
+
+  <div class="cards-grid cards-grid-4" style="margin-bottom:24px;">
+    <div class="card">
+      <div class="card-titulo">Leads/mês (estimado)</div>
+      <div class="card-valor">~500</div>
+      <div class="card-sub">Volume atual antes de otimizações</div>
+    </div>
+    <div class="card">
+      <div class="card-titulo">Taxa de conversão</div>
+      <div class="card-valor vermelho">2–5%</div>
+      <span class="badge-vermelho badge">Crítico — 95% perdido</span>
+    </div>
+    <div class="card">
+      <div class="card-titulo">Leads gerados (4–12/mai)</div>
+      <div class="card-valor verde">258</div>
+      <div class="card-sub">206 Meta + 52 Google (8 dias)</div>
+    </div>
+    <div class="card">
+      <div class="card-titulo">Vendas recentes (mai/26)</div>
+      <div class="card-valor">1 venda</div>
+      <div class="card-sub">Volume baixo — reforça urgência do SDR IA</div>
+    </div>
+  </div>
+
+  <div class="alerta alerta-vermelho">
+    <strong>Diagnóstico central do problema financeiro</strong>
+    A empresa captura 500 leads/mês mas converte apenas 2–5%. O problema não é falta de mercado — é ausência de previsibilidade comercial, tempo de resposta lento a leads, ancoragem em preço baixo (R$12.900) e 73% da receita dependente de 2 pessoas. O SDR IA ataca diretamente todos esses pontos.
+  </div>
+</div>
+
+
+<!-- S4: PRODUTO -->
+<div class="secao" id="s4">
+  <div class="secao-header">
+    <div class="secao-num">04</div>
+    <div>
+      <div class="secao-titulo">Produto</div>
+      <div class="secao-desc">O que a Kidys Park vende e como é o portfólio</div>
+    </div>
+  </div>
+
+  <div class="col-2" style="margin-bottom:24px;">
+    <div>
+      <h3 style="font-size:15px;font-weight:800;color:var(--azul);margin-bottom:14px;">Linha principal — Brinquedões</h3>
+      <table>
+        <tr><th>Variante</th><th>Status nos criativos</th></tr>
+        <tr><td>Brinquedão <strong>Verde/Amarelo</strong></td><td><span class="badge-verde badge">Ativo — footage real</span></td></tr>
+        <tr><td>Brinquedão <strong>Azul</strong> (carro-chefe)</td><td><span class="badge-amarelo badge">Solicitar destaque maior</span></td></tr>
+      </table>
+      <div class="alerta alerta-amarelo" style="margin-top:12px;">
+        <strong>Briefing visual crítico</strong>
+        Érica solicitou em 20/05 que o brinquedão azul apareça grande e chamativo nos criativos. Nos novos materiais ele estava pequeno demais — afeta conversão.
+      </div>
+    </div>
+    <div>
+      <h3 style="font-size:15px;font-weight:800;color:var(--azul);margin-bottom:14px;">Submercados de produto</h3>
+      <ul class="lista-itens">
+        <li><strong>Playgrounds Comerciais Sob Medida (Core):</strong> Projetos personalizados, venda consultiva, maior ticket</li>
+        <li><strong>Playgrounds Modulares/Padronizados:</strong> Mais escalável, menor complexidade</li>
+        <li><strong>Grandes Estruturas (Parques/Kids Centers):</strong> Ticket muito alto, ciclo longo</li>
+        <li><strong>Manutenção e Pós-instalação:</strong> Recorrência — modelo de receita a desenvolver</li>
+        <li><strong>Retrofit:</strong> Reforma de playgrounds antigos — menor barreira de entrada</li>
+        <li><strong>Locação de playground:</strong> Aluguel para eventos temporários — nova frente de receita</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <h3>Diferenciais técnicos do produto</h3>
+    <p>Tubo galvanizado (não enferruja) vs. ferro dos concorrentes · MDF de qualidade superior · Entregas rápidas · Atendimento pós-instalação · 12 anos de autoridade industrial · Projetos sob medida com engenharia especializada em aço galvanizado · Conformidade com normas de segurança infantil</p>
+  </div>
+</div>
+
+
+<!-- S5: MERCADO -->
+<div class="secao" id="s5">
+  <div class="secao-header">
+    <div class="secao-num">05</div>
+    <div>
+      <div class="secao-titulo">Análise de Mercado</div>
+      <div class="secao-desc">Tamanho, concorrentes e posicionamento</div>
+    </div>
+  </div>
+
+  <div class="cards-grid cards-grid-3" style="margin-bottom:28px;">
+    <div class="card">
+      <div class="card-titulo">TAM — Mercado Total Brasil</div>
+      <div class="card-valor" style="font-size:22px;">R$ 1,5–2B/ano</div>
+      <div class="card-sub">Equipamentos de lazer infantil (público + privado)</div>
+    </div>
+    <div class="card">
+      <div class="card-titulo">SAM — Mercado Endereçável B2B</div>
+      <div class="card-valor" style="font-size:22px;">R$ 80–300M/ano</div>
+      <div class="card-sub">Playgrounds comerciais B2B (buffets, restaurantes, escolas, academias)</div>
+    </div>
+    <div class="card">
+      <div class="card-titulo">SOM — Potencial de captura (3–5 anos)</div>
+      <div class="card-valor verde" style="font-size:22px;">R$ 5–15M/ano</div>
+      <div class="card-sub">Com otimização de marketing, vendas e operação</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:15px;font-weight:800;color:var(--azul);margin-bottom:16px;">Principais concorrentes identificados</h3>
+  <table style="margin-bottom:20px;">
+    <tr><th>Concorrente</th><th>Presença digital</th><th>Diferencial/Ameaça</th></tr>
+    <tr>
+      <td><strong>Nogueira</strong></td>
+      <td><span class="badge-vermelho badge">34 anúncios ativos no Google</span></td>
+      <td>Domínio de Google Ads — concorrente mais agressivo em mídia paga</td>
+    </tr>
+    <tr>
+      <td><strong>Play Kids</strong></td>
+      <td>Presente no segmento</td>
+      <td>Concorrente direto, similar ao core business da Kidys</td>
+    </tr>
+    <tr>
+      <td><strong>Aquarela</strong></td>
+      <td>Presente no segmento</td>
+      <td>Identificado como concorrente relevante na pesquisa de mercado</td>
+    </tr>
+    <tr>
+      <td><strong>Concorrentes locais</strong></td>
+      <td>Baixa presença digital</td>
+      <td>Usam materiais inferiores (ferro sem galvanização), menor custo</td>
+    </tr>
+  </table>
+
+  <div class="alerta alerta-azul">
+    <strong>Oportunidade estratégica</strong>
+    Grande parte dos fornecedores do setor ainda atua de forma artesanal ou com baixa qualidade — abrindo espaço para a Kidys capturar valor com posicionamento premium estruturado. A ausência da Kidys no Google Ads (vs. 34 anúncios do Nogueira) é uma lacuna a preencher imediatamente.
+  </div>
+</div>
+
+
+<!-- S6: ICP E PERSONAS -->
+<div class="secao" id="s6">
+  <div class="secao-header">
+    <div class="secao-num">06</div>
+    <div>
+      <div class="secao-titulo">ICP e Personas</div>
+      <div class="secao-desc">Quem compra, por quê compra e como qualificar</div>
+    </div>
+  </div>
+
+  <div class="alerta alerta-azul" style="margin-bottom:24px;">
+    <strong>ICP para o SDR IA</strong>
+    Persona B2B. Decisor é sempre o dono ou gestor do estabelecimento. Nunca o pai/mãe da criança. A linguagem deve ser de retorno sobre investimento, não de experiência infantil.
+  </div>
+
+  <div class="cards-grid cards-grid-2" style="margin-bottom:24px;">
+    <div class="persona-card">
+      <div class="persona-header">
+        <div class="nome">Dono de Restaurante</div>
+        <div class="tipo">ICP Primário — maior volume</div>
+      </div>
+      <div class="persona-body">
+        <div class="persona-item">
+          <div class="persona-item-label">Dor principal</div>
+          <div class="persona-item-value">Precisa entreter crianças para que os pais consumam mais e fiquem mais tempo no estabelecimento</div>
+        </div>
+        <div class="persona-item">
+          <div class="persona-item-label">Gatilho de compra</div>
+          <div class="persona-item-value">Aumentar ticket médio e tempo de permanência das famílias</div>
+        </div>
+        <div class="persona-item">
+          <div class="persona-item-label">Objeção típica</div>
+          <div class="persona-item-value">Espaço limitado, custo de instalação, manutenção</div>
+        </div>
+        <div class="persona-item">
+          <div class="persona-item-label">Argumento SDR IA</div>
+          <div class="persona-item-value">"Seu cliente com filhos fica 40% mais tempo quando tem área kids — o brinquedão se paga em semanas"</div>
+        </div>
+      </div>
+    </div>
+    <div class="persona-card">
+      <div class="persona-header" style="background:var(--azul-mid);">
+        <div class="nome">Dono de Buffet</div>
+        <div class="tipo">ICP Primário — alto ticket</div>
+      </div>
+      <div class="persona-body">
+        <div class="persona-item">
+          <div class="persona-item-label">Dor principal</div>
+          <div class="persona-item-value">Diferencial competitivo — buffet com área kids de qualidade se destaca e cobra mais</div>
+        </div>
+        <div class="persona-item">
+          <div class="persona-item-label">Gatilho de compra</div>
+          <div class="persona-item-value">Temporada de festas, renovação, concorrência com novo buffet na região</div>
+        </div>
+        <div class="persona-item">
+          <div class="persona-item-label">Objeção típica</div>
+          <div class="persona-item-value">Já tem playground (antigo), não vê necessidade de trocar</div>
+        </div>
+        <div class="persona-item">
+          <div class="persona-item-label">Argumento SDR IA</div>
+          <div class="persona-item-value">Retrofit + upgrade: modernizar o que existe com menor investimento vs. novo</div>
+        </div>
+      </div>
+    </div>
+    <div class="persona-card">
+      <div class="persona-header" style="background:#2D6A4F;">
+        <div class="nome">Gestor de Escola</div>
+        <div class="tipo">ICP Secundário — ciclo longo</div>
+      </div>
+      <div class="persona-body">
+        <div class="persona-item">
+          <div class="persona-item-label">Dor principal</div>
+          <div class="persona-item-value">Necessidade pedagógica + segurança técnica + aprovação em inspeções</div>
+        </div>
+        <div class="persona-item">
+          <div class="persona-item-label">Gatilho de compra</div>
+          <div class="persona-item-value">Renovação de espaço, INEP, sazonalidade de matrículas</div>
+        </div>
+        <div class="persona-item">
+          <div class="persona-item-label">Objeção típica</div>
+          <div class="persona-item-value">Verba limitada, processo de aprovação interno longo</div>
+        </div>
+        <div class="persona-item">
+          <div class="persona-item-label">Argumento SDR IA</div>
+          <div class="persona-item-value">Normas ABNT + segurança certificada + diferencial na captação de alunos</div>
+        </div>
+      </div>
+    </div>
+    <div class="persona-card">
+      <div class="persona-header" style="background:#6B3FA0;">
+        <div class="nome">Empreendedor</div>
+        <div class="tipo">ICP com alto potencial de escala</div>
+      </div>
+      <div class="persona-body">
+        <div class="persona-item">
+          <div class="persona-item-label">Dor principal</div>
+          <div class="persona-item-value">Quer montar um negócio de entretenimento infantil ou expandir espaço existente</div>
+        </div>
+        <div class="persona-item">
+          <div class="persona-item-label">Gatilho de compra</div>
+          <div class="persona-item-value">Sonho de negócio próprio, retorno sobre investimento atraente</div>
+        </div>
+        <div class="persona-item">
+          <div class="persona-item-label">Objeção típica</div>
+          <div class="persona-item-value">Medo de inadimplência no investimento, dúvida sobre retorno</div>
+        </div>
+        <div class="persona-item">
+          <div class="persona-item-label">Argumento SDR IA</div>
+          <div class="persona-item-value">Calculadora de ROI: "Com ticket de R$30 por criança, em quantas festas você recupera o investimento?"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-size:15px;font-weight:800;color:var(--azul);margin-bottom:14px;">Critérios de qualificação MQL / SQL</h3>
+  <table>
+    <tr><th>Nível</th><th>Critério</th><th>Ação do SDR IA</th></tr>
+    <tr>
+      <td><strong>MQL</strong><br><span style="font-size:11px;color:var(--texto-light);">Marketing Qualified</span></td>
+      <td>
+        ✓ Tipo de negócio compatível (buffet, restaurante, escola, empreendedor)<br>
+        ✓ Localização dentro da área de atuação (Sudeste/Sul/Centro-Oeste)<br>
+        ✓ Interesse declarado no formulário
+      </td>
+      <td>Notificar SDR humano para contato em &lt;15 min</td>
+    </tr>
+    <tr>
+      <td><strong>SQL</strong><br><span style="font-size:11px;color:var(--texto-light);">Sales Qualified</span></td>
+      <td>
+        ✓ Respondeu ao contato inicial<br>
+        ✓ Confirmou perfil e capacidade de investimento (~R$12k+)<br>
+        ✓ Agendou conversa com closer
+      </td>
+      <td>Passar para Closer (Murilo/Érica/Dani) com caderno de contexto</td>
+    </tr>
+    <tr>
+      <td><strong>DESQUALIFICADO</strong></td>
+      <td>
+        ✗ Estado fora da área (PA, CE, PI, MA, etc.)<br>
+        ✗ Pessoa física sem negócio<br>
+        ✗ Ticket esperado abaixo de R$5k
+      </td>
+      <td>Descarte automático com mensagem educada</td>
+    </tr>
+  </table>
+</div>
+
+
+<!-- S7: DIAGNÓSTICO COMERCIAL -->
+<div class="secao" id="s7">
+  <div class="secao-header">
+    <div class="secao-num">07</div>
+    <div>
+      <div class="secao-titulo">Diagnóstico Comercial</div>
+      <div class="secao-desc">Gargalos identificados e estrutura H0 → H1</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:15px;font-weight:800;color:var(--azul);margin-bottom:16px;">7 Gargalos Prioritários</h3>
+
+  <div class="gargalo-item">
+    <div class="gargalo-num">1</div>
+    <div>
+      <div class="gargalo-titulo">Baixa taxa de conversão (2–5%)</div>
+      <div class="gargalo-desc">500 leads/mês, 95% são perdidos. Causa: ancoragem de preço baixo (R$12.900 como âncora) e falta de processo estruturado de follow-up.</div>
+    </div>
+  </div>
+  <div class="gargalo-item">
+    <div class="gargalo-num">2</div>
+    <div>
+      <div class="gargalo-titulo">Ausência de previsibilidade comercial</div>
+      <div class="gargalo-desc">Não há indicadores de quais campanhas geram vendas reais. Faturamento caiu 15% de 2024 para 2025 sem diagnóstico claro da causa.</div>
+    </div>
+  </div>
+  <div class="gargalo-item">
+    <div class="gargalo-num">3</div>
+    <div>
+      <div class="gargalo-titulo">Tempo de resposta lento a leads</div>
+      <div class="gargalo-desc">Leads chegam mas não são atendidos rapidamente — impacto direto na conversão. Comprador B2B de alto ticket perde interesse rápido.</div>
+    </div>
+  </div>
+  <div class="gargalo-item">
+    <div class="gargalo-num">4</div>
+    <div>
+      <div class="gargalo-titulo">Concentração de receita em 2 pessoas</div>
+      <div class="gargalo-desc">73% do faturamento depende de Érica + Dani. Risco operacional alto — ausência de qualquer uma impacta o mês inteiro.</div>
+    </div>
+  </div>
+  <div class="gargalo-item">
+    <div class="gargalo-num">5</div>
+    <div>
+      <div class="gargalo-titulo">Ausência no Google Ads</div>
+      <div class="gargalo-desc">Nogueira mantém 34 anúncios ativos no Google enquanto a Kidys não estava presente. Leads com intenção de compra são captados pelo concorrente.</div>
+    </div>
+  </div>
+  <div class="gargalo-item">
+    <div class="gargalo-num">6</div>
+    <div>
+      <div class="gargalo-titulo">Segmentação geográfica incorreta nas campanhas</div>
+      <div class="gargalo-desc">Meta Ads trazendo leads do Norte e Nordeste — fora da área de entrega. Custo desperdiçado em leads impossíveis de converter.</div>
+    </div>
+  </div>
+  <div class="gargalo-item">
+    <div class="gargalo-num">7</div>
+    <div>
+      <div class="gargalo-titulo">Falta de padronização comercial + sem CRM</div>
+      <div class="gargalo-desc">Vendas feitas no WhatsApp sem registro. Sem histórico de interações, não há aprendizado acumulado. Cada lead começa do zero.</div>
+    </div>
+  </div>
+
+  <div class="col-2" style="margin-top:28px;">
+    <div>
+      <h3 style="font-size:15px;font-weight:800;color:var(--azul);margin-bottom:16px;">Estrutura H0 (atual)</h3>
+      <div class="funil">
+        <div class="funil-step" style="background:#BDC3C7;color:#2C3E50;">Lead entra pelo WhatsApp ou LP</div>
+        <div class="funil-step" style="background:#85929E;color:white;">Érica ou Dani atendem (manualmente)</div>
+        <div class="funil-step" style="background:#616A6B;color:white;">Follow-up informal (sem cadência)</div>
+        <div class="funil-step" style="background:#2C3E50;color:white;">Fechamento (ou abandono)</div>
+      </div>
+      <div class="alerta alerta-vermelho" style="margin-top:12px;">Sem rastreamento · Sem qualificação · Sem padronização · Dependência de pessoas</div>
+    </div>
+    <div>
+      <h3 style="font-size:15px;font-weight:800;color:var(--azul);margin-bottom:16px;">Estrutura H1 (proposta com SDR IA)</h3>
+      <div class="funil">
+        <div class="funil-step" style="background:#2980B9;">Formulário nativo Meta / Google</div>
+        <div class="funil-step" style="background:#2471A3;">Planilha centralizada (Google Sheets)</div>
+        <div class="funil-step" style="background:var(--azul-light);">SDR IA — qualificação automática 24/7</div>
+        <div class="funil-step" style="background:#1A5276;">MQL → SDR humano (&lt;15 min)</div>
+        <div class="funil-step" style="background:var(--azul);">SQL → Closer (Murilo/Érica/Dani)</div>
+      </div>
+      <div class="alerta alerta-verde" style="margin-top:12px;">Rastreável · Escalável · Independente de pessoas · Com cadência de 5 FUPs</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:15px;font-weight:800;color:var(--azul);margin:28px 0 14px;">Cadência de Follow-up — 5 FUPs</h3>
+  <table>
+    <tr><th>FUP</th><th>Timing</th><th>Canal</th><th>Objetivo</th></tr>
+    <tr><td><strong>FUP 1</strong></td><td>Imediato (&lt;5 min)</td><td>WhatsApp</td><td>Confirmar recebimento do lead, iniciar qualificação</td></tr>
+    <tr><td><strong>FUP 2</strong></td><td>2 horas depois</td><td>WhatsApp</td><td>Apresentar produto, solicitar informações do espaço</td></tr>
+    <tr><td><strong>FUP 3</strong></td><td>24 horas</td><td>WhatsApp / E-mail</td><td>Enviar portfólio e cases de instalação</td></tr>
+    <tr><td><strong>FUP 4</strong></td><td>3 dias</td><td>WhatsApp</td><td>Oferecer agendamento de visita técnica ou demonstração</td></tr>
+    <tr><td><strong>FUP 5</strong></td><td>7 dias</td><td>WhatsApp</td><td>Oferta especial ou urgência (prazo de entrega, estoque)</td></tr>
+  </table>
+</div>
+
+
+<!-- S8: CAMPANHAS E PERFORMANCE -->
+<div class="secao" id="s8">
+  <div class="secao-header">
+    <div class="secao-num">08</div>
+    <div>
+      <div class="secao-titulo">Campanhas e Performance Meta/Google</div>
+      <div class="secao-desc">Status atual das campanhas ativas e resultados</div>
+    </div>
+  </div>
+
+  <div class="cards-grid cards-grid-3" style="margin-bottom:24px;">
+    <div class="card">
+      <div class="card-titulo">Meta Ads (4–12/mai)</div>
+      <div class="card-valor verde">206 leads</div>
+      <div class="card-sub">Em 8 dias de campanha ativa</div>
+    </div>
+    <div class="card">
+      <div class="card-titulo">Google Ads (4–12/mai)</div>
+      <div class="card-valor verde">52 leads</div>
+      <div class="card-sub">Início recente — Google estava zerado antes</div>
+    </div>
+    <div class="card">
+      <div class="card-titulo">Budget inicial</div>
+      <div class="card-valor">R$ 1.000</div>
+      <div class="card-sub">Via Pix — migração da agência anterior (30/04)</div>
+    </div>
+  </div>
+
+  <div class="col-2" style="margin-bottom:24px;">
+    <div>
+      <h3 style="font-size:15px;font-weight:800;color:var(--azul);margin-bottom:14px;">Status dos criativos (check-in 15/05)</h3>
+      <table>
+        <tr><th>Criativo</th><th>Status</th></tr>
+        <tr><td>Top criativo 1</td><td><span class="badge-verde badge">Performando</span></td></tr>
+        <tr><td>Top criativo 2</td><td><span class="badge-verde badge">Performando</span></td></tr>
+        <tr><td>Top criativo 3</td><td><span class="badge-verde badge">Performando</span></td></tr>
+        <tr><td>Novos criativos (brinquedão pequeno)</td><td><span class="badge-vermelho badge">Ajuste necessário</span></td></tr>
+      </table>
+    </div>
+    <div>
+      <h3 style="font-size:15px;font-weight:800;color:var(--azul);margin-bottom:14px;">Problemas ativos em campanhas</h3>
+      <ul class="lista-itens">
+        <li><strong>Segmentação geográfica:</strong> Leads de PA, CE, PI, MA — fora da área de entrega</li>
+        <li><strong>Visibilidade produto:</strong> Brinquedão azul ficou pequeno nos novos criativos — Érica pediu versão maior</li>
+        <li><strong>Ancoragem de preço:</strong> R$12.900 como âncora pode estar filtrando clientes de maior valor</li>
+        <li><strong>A/B de preço:</strong> Teste em andamento para validar impacto do preço na conversão</li>
+        <li><strong>Rastreamento:</strong> Pixel instalado, mas histórico de origem das vendas ainda incompleto</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="alerta alerta-amarelo">
+    <strong>Decisão tomada (check-in 15/05)</strong>
+    Migrar de landing page para formulários nativos do Meta e Google Ads — maior qualidade de lead, menor custo por lead, integração direta com planilha de captura e futuro CRM. LP ainda ativa mas formulários sendo priorizados.
+  </div>
+
+  <h3 style="font-size:15px;font-weight:800;color:var(--azul);margin:24px 0 14px;">Briefing de criativos ativos</h3>
+  <table>
+    <tr><th>Peça</th><th>Formato</th><th>Produto</th><th>Tipo</th></tr>
+    <tr><td>Roteiro 1</td><td>Vídeo</td><td>Brinquedão verde/amarelo</td><td>Footage real</td></tr>
+    <tr><td>Roteiro 2</td><td>Vídeo</td><td>Brinquedão azul</td><td>IA (Gemini/Veo 3)</td></tr>
+    <tr><td>Roteiro 3</td><td>Vídeo</td><td>Campo de futebol</td><td>IA (Gemini/Veo 3)</td></tr>
+    <tr><td>Roteiro 4</td><td>Vídeo</td><td>Brinquedão azul</td><td>Footage real</td></tr>
+    <tr><td>Estática 1–3</td><td>Imagem estática</td><td>Mix portfólio</td><td>Design</td></tr>
+  </table>
+</div>
+
+
+<!-- S9: TIMELINE -->
+<div class="secao" id="s9">
+  <div class="secao-header">
+    <div class="secao-num">09</div>
+    <div>
+      <div class="secao-titulo">Timeline — Projeto V4/Colli</div>
+      <div class="secao-desc">Histórico completo de reuniões e entregas desde o início</div>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-data">15 de abril de 2026</div>
+      <div class="timeline-titulo">Kickoff — Discovery Call</div>
+      <div class="timeline-body">
+        Primeira reunião com Érica Dametto (Murilo não estava presente). Dinâmica de quebra-gelo, pitch elevator (Érica demonstrou dificuldade em vender o produto), apresentação da equipe V4/Colli. Diagnóstico inicial: vendas reativas via WhatsApp, sem acesso aos gerenciadores de anúncios, sem controle de dados, logística para regiões distantes reduz rentabilidade.
+        <br><br>
+        <strong>Participantes:</strong> Thiago Almeida, Andressa Boraschi, Ellyel Santos, Rafael Camargo + Érica Dametto<br>
+        <strong>Diferenciais mapeados:</strong> Tubo galvanizado, MDF de qualidade, rapidez de entrega, 12 anos de mercado<br>
+        <strong>Próximas etapas definidas:</strong> Érica enviar margem por produto, faturamento 2 anos, lista de concorrentes. Acesso a gerenciadores de anúncios. Rafael puxar documentação visual da marca.
+      </div>
+      <div class="timeline-tags">
+        <span class="timeline-tag">Discovery</span>
+        <span class="timeline-tag">Diagnóstico inicial</span>
+        <span class="timeline-tag">Pitch elevator</span>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-data">Semana 2 — Abril/2026</div>
+      <div class="timeline-titulo">Entrega: Pesquisa de Mercado e Posicionamento</div>
+      <div class="timeline-body">
+        PPT com definição de mercado (TAM/SAM/SOM), submercados, análise de concorrentes (Nogueira: 34 anúncios no Google; Play Kids; Aquarela) e posicionamento estratégico recomendado para a Kidys Park.
+      </div>
+      <div class="timeline-tags">
+        <span class="timeline-tag">Pesquisa de mercado</span>
+        <span class="timeline-tag">Concorrentes</span>
+        <span class="timeline-tag">Posicionamento</span>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-data">30 de abril de 2026</div>
+      <div class="timeline-titulo">Setup de Acesso Facebook Ads</div>
+      <div class="timeline-body">
+        Migração dos acessos da agência anterior (não-responsiva, retinha conexões). Orçamento inicial de R$1.000 via Pix para ativar campanhas imediatamente após migração.
+      </div>
+      <div class="timeline-tags">
+        <span class="timeline-tag">Mídia paga</span>
+        <span class="timeline-tag">Migração de agência</span>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-data">Semana 3 — Início de maio/2026</div>
+      <div class="timeline-titulo">Entrega: DCC + UCM + Diagnóstico Comercial</div>
+      <div class="timeline-body">
+        Três grandes entregas: DCC (15 seções de estratégia de copy), UCM (5 fases de uso), PPT com diagnóstico comercial completo — 7 gargalos, estrutura H0/H1, critérios MQL/SQL, cadência de 5 FUPs, KPIs por função.
+      </div>
+      <div class="timeline-tags">
+        <span class="timeline-tag">DCC</span>
+        <span class="timeline-tag">UCM</span>
+        <span class="timeline-tag">Diagnóstico comercial</span>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-data">13 de maio de 2026</div>
+      <div class="timeline-titulo">4ª Semana — Entregáveis: Plano de Marketing + SDR + CRM</div>
+      <div class="timeline-body">
+        Reunião de apresentação dos entregáveis da 4ª semana com toda a equipe. Thiago apresentou comparativo de faturamento (R$5,16M 2024 → R$4,3M 2025, -15%). Dados de campanha 4–12/mai: 206 leads Meta + 52 Google. Diagnóstico do funil: 500 leads/mês, 2–5% conversão, 73% receita em Érica + Dani. Apresentação de SDR + CRM como solução. Sara Pizzico negociando contrato. Emanuele Lourenço adicionada à equipe.
+        <br><br>
+        <strong>Próximas etapas:</strong> Érica/Dani/Carlos usar CRM, registrar instalações com foto antes/depois, ajustar botão WhatsApp para micro formulário, Rafael atualizar landing page (remover fotos de inadimplentes).
+      </div>
+      <div class="timeline-tags">
+        <span class="timeline-tag">Plano marketing</span>
+        <span class="timeline-tag">CRM apresentado</span>
+        <span class="timeline-tag">SDR proposto</span>
+        <span class="timeline-tag">206+52 leads</span>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-data">15 de maio de 2026</div>
+      <div class="timeline-titulo">Check-in 1 — Performance de Criativos</div>
+      <div class="timeline-body">
+        Revisão de performance dos criativos. 3 top criativos identificados. Decisão de migrar para formulários nativos do Meta. Dados de receita: 1 venda fechada em maio. Segmentação via WhatsApp. Estruturação de planilha centralizada de leads.
+      </div>
+      <div class="timeline-tags">
+        <span class="timeline-tag">Performance criativos</span>
+        <span class="timeline-tag">Formulários nativos</span>
+        <span class="timeline-tag">Planilha centralizada</span>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-data">19 de maio de 2026</div>
+      <div class="timeline-titulo">Check-in 2 — CRM, LP e Planilha</div>
+      <div class="timeline-body">
+        Alinhamento sobre migração de LP, setup de planilha centralizada, formalização de critérios MQL/SQL. Proposta de CRM apresentada — Murilo disse "OK" verbalmente. Treinamento da equipe planejado. Cadência de follow-up validada.
+      </div>
+      <div class="timeline-tags">
+        <span class="timeline-tag">CRM aprovado verbalmente</span>
+        <span class="timeline-tag">MQL/SQL definidos</span>
+        <span class="timeline-tag">Treinamento planejado</span>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-data">20 de maio de 2026</div>
+      <div class="timeline-titulo">Acompanhamento Comercial — Follow-up CRM + Criativos</div>
+      <div class="timeline-body">
+        Follow-up do contrato CRM (ainda não assinado). Problema identificado: visibilidade do brinquedão nos criativos novos — Érica solicitou brinquedão azul grande. Problema de segmentação geográfica identificado (leads PA, CE, PI, MA). Teste A/B de preço em andamento.
+      </div>
+      <div class="timeline-tags">
+        <span class="timeline-tag">Contrato pendente</span>
+        <span class="timeline-tag">Brinquedão azul maior</span>
+        <span class="timeline-tag">Geolocalização errada</span>
+        <span class="timeline-tag">A/B preço</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- S10: DCC -->
+<div class="secao" id="s10">
+  <div class="secao-header">
+    <div class="secao-num">10</div>
+    <div>
+      <div class="secao-titulo">DCC — Estratégia de Comunicação</div>
+      <div class="secao-desc">Documento de Concepção de Copy — diretrizes para todos os canais</div>
+    </div>
+  </div>
+
+  <div class="col-3" style="margin-bottom:24px;">
+    <div class="pilar">
+      <div class="pilar-num">01</div>
+      <div class="pilar-titulo">Tom de voz</div>
+      <div class="pilar-desc">Aspiracional, seguro, especialista. Fala com o empreendedor — não com a criança. Linguagem de negócios com emoção de impacto.</div>
+    </div>
+    <div class="pilar">
+      <div class="pilar-num">02</div>
+      <div class="pilar-titulo">Arquétipo de marca</div>
+      <div class="pilar-desc">Referência técnica + parceiro de negócios. Posicionamento de autoridade industrial com linguagem acessível ao dono de negócio.</div>
+    </div>
+    <div class="pilar">
+      <div class="pilar-num">03</div>
+      <div class="pilar-titulo">Proposta de valor</div>
+      <div class="pilar-desc">Brinquedões de alto padrão que transformam espaços em atratores de famílias — com ROI mensurável para o negócio comprador.</div>
+    </div>
+  </div>
+
+  <div class="col-2">
+    <div>
+      <h3 style="font-size:15px;font-weight:800;color:var(--azul);margin-bottom:12px;">DO's — O que deve aparecer na comunicação</h3>
+      <ul class="lista-itens">
+        <li>Mostrar o brinquedão em uso, com crianças e pais satisfeitos</li>
+        <li>Destacar o brinquedão grande, colorido e chamativo (especialmente o azul)</li>
+        <li>Usar linguagem de retorno sobre investimento</li>
+        <li>Falar diretamente com o decisor B2B (dono do negócio)</li>
+        <li>Destacar durabilidade (tubo galvanizado) e segurança certificada</li>
+        <li>Mostrar instalações prontas (before/after) como prova social</li>
+        <li>Usar depoimentos de donos de negócio, não de pais</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="font-size:15px;font-weight:800;color:var(--azul);margin-bottom:12px;">DON'Ts — O que evitar</h3>
+      <ul class="lista-itens">
+        <li>Mostrar o produto pequeno ou cortado no frame</li>
+        <li>Usar linguagem infantil ou emocional (de pai/mãe para filho)</li>
+        <li>Ignorar o decisor B2B em favor de apelo emocional</li>
+        <li>Usar preço como único argumento</li>
+        <li>Fotos de instalações de clientes inadimplentes ou antigas</li>
+        <li>Comunicação genérica sem ROI demonstrável</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="highlight-box" style="margin-top:20px;">
+    <h3>Diretrizes de linguagem para o SDR IA</h3>
+    <p>Scripts do SDR IA devem seguir o tom do DCC: direto, especialista, orientado a resultado de negócio. Nunca usar linguagem de consumidor final (B2C). Exemplos: "Aumentar o ticket médio do seu estabelecimento" · "Fidelizar famílias com crianças" · "Área kids que se paga em semanas" · "Projeto personalizado para o tamanho do seu espaço".</p>
+  </div>
+</div>
+
+
+<!-- S11: UCM -->
+<div class="secao" id="s11">
+  <div class="secao-header">
+    <div class="secao-num">11</div>
+    <div>
+      <div class="secao-titulo">UCM — Use Case Map</div>
+      <div class="secao-desc">Mapa de jornada do cliente B2B em 5 fases</div>
+    </div>
+  </div>
+
+  <div class="cards-grid cards-grid-3" style="gap:16px;">
+    <div class="card" style="border-top:4px solid var(--vermelho);">
+      <div class="card-titulo" style="color:var(--vermelho);">Fase 1 — Problemas</div>
+      <ul class="lista-itens" style="margin-top:8px;">
+        <li>Clientes com crianças saem mais cedo do estabelecimento</li>
+        <li>Área kids com equipamento antigo e inseguro</li>
+        <li>Concorrente com playground novo captando mais famílias</li>
+        <li>Falta de diferencial visual para atrair famílias</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:4px solid var(--laranja);">
+      <div class="card-titulo" style="color:var(--laranja);">Fase 2 — Personas</div>
+      <ul class="lista-itens" style="margin-top:8px;">
+        <li>Dono de restaurante familiar</li>
+        <li>Gestor de buffet em crescimento</li>
+        <li>Diretor de escola particular</li>
+        <li>Empreendedor montando espaço kids</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:4px solid var(--amarelo);">
+      <div class="card-titulo" style="color:#B7950B;">Fase 3 — Alternativas consideradas</div>
+      <ul class="lista-itens" style="margin-top:8px;">
+        <li>Comprar de fabricante local mais barato</li>
+        <li>Reformar o que já tem (retrofit)</li>
+        <li>Esperar mais tempo sem investir</li>
+        <li>Locar estrutura temporária</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:4px solid var(--azul-light);">
+      <div class="card-titulo" style="color:var(--azul-light);">Fase 4 — Frequência natural de contato</div>
+      <ul class="lista-itens" style="margin-top:8px;">
+        <li>Ver anúncio no Meta Ads enquanto scrollava</li>
+        <li>Busca ativa no Google por "playground comercial"</li>
+        <li>Indicação de outro empresário do setor</li>
+        <li>Ver instalação da Kidys em estabelecimento que frequenta</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:4px solid var(--verde);">
+      <div class="card-titulo" style="color:#27AE60;">Fase 5 — Por que a Kidys Park</div>
+      <ul class="lista-itens" style="margin-top:8px;">
+        <li>Qualidade técnica superior (galvanizado vs. ferro comum)</li>
+        <li>12 anos de mercado = segurança e referências</li>
+        <li>Entrega rápida + instalação incluída</li>
+        <li>Personalização do tamanho e cor para o espaço</li>
+        <li>Prova social: instalações visíveis e funcionando</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:4px solid var(--azul);">
+      <div class="card-titulo">Objeções mais comuns e respostas</div>
+      <ul class="lista-itens" style="margin-top:8px;">
+        <li><strong>"Está caro"</strong> → ROI: tempo de payback em semanas com famílias fidelizadas</li>
+        <li><strong>"Não tenho espaço"</strong> → Projeto personalizado para qualquer dimensão</li>
+        <li><strong>"Concorrente é mais barato"</strong> → Qualidade do material, durabilidade, garantia</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- S12: CRM e SDR IA -->
+<div class="secao" id="s12">
+  <div class="secao-header">
+    <div class="secao-num">12</div>
+    <div>
+      <div class="secao-titulo">CRM e SDR IA — Status da Implementação</div>
+      <div class="secao-desc">O que foi proposto, o que foi aprovado, o que está pendente</div>
+    </div>
+  </div>
+
+  <div class="alerta alerta-verde" style="margin-bottom:24px;">
+    <strong>Contrato assinado</strong>
+    Contrato de CRM/SDR IA formalizado. Implementação pode avançar imediatamente para configuração e treinamento da equipe.
+  </div>
+
+  <div class="col-2" style="margin-bottom:24px;">
+    <div>
+      <h3 style="font-size:15px;font-weight:800;color:var(--azul);margin-bottom:14px;">Fluxo proposto de implementação</h3>
+      <div class="funil">
+        <div class="funil-step" style="background:#D5DBDB;color:#2C3E50;font-size:13px;">1. Formulário nativo Meta/Google Ads</div>
+        <div class="funil-step" style="background:#AEB6BF;color:#2C3E50;font-size:13px;">2. Planilha Google Sheets centralizada</div>
+        <div class="funil-step" style="background:var(--azul-light);font-size:13px;">3. SDR IA — qualificação automática 24/7</div>
+        <div class="funil-step" style="background:var(--azul-mid);font-size:13px;">4. MQL → notificação SDR humano</div>
+        <div class="funil-step" style="background:var(--azul);font-size:13px;">5. SQL → Closer (Murilo/Érica/Dani)</div>
+        <div class="funil-step" style="background:#0D1F3C;font-size:13px;">6. CRM → registro e follow-up pós-venda</div>
+      </div>
+    </div>
+    <div>
+      <h3 style="font-size:15px;font-weight:800;color:var(--azul);margin-bottom:14px;">O que está pronto vs. pendente</h3>
+      <table>
+        <tr><th>Item</th><th>Status</th></tr>
+        <tr><td>Critérios MQL/SQL definidos</td><td><span class="badge-verde badge">Pronto</span></td></tr>
+        <tr><td>Planilha centralizada</td><td><span class="badge-amarelo badge">Em montagem</span></td></tr>
+        <tr><td>Formulários nativos</td><td><span class="badge-amarelo badge">Decisão tomada</span></td></tr>
+        <tr><td>Pixel instalado</td><td><span class="badge-verde badge">Pronto</span></td></tr>
+        <tr><td>Cadência 5 FUPs definida</td><td><span class="badge-verde badge">Pronto</span></td></tr>
+        <tr><td>Contrato CRM assinado</td><td><span class="badge-verde badge">Assinado</span></td></tr>
+        <tr><td>SDR IA configurado</td><td><span class="badge-vermelho badge">Pendente</span></td></tr>
+        <tr><td>Treinamento equipe Kidys</td><td><span class="badge-vermelho badge">Pendente</span></td></tr>
+        <tr><td>Integração CRM ativo</td><td><span class="badge-vermelho badge">Pendente</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h3 style="font-size:15px;font-weight:800;color:var(--azul);margin-bottom:14px;">KPIs por função após implementação</h3>
+  <table>
+    <tr><th>Função</th><th>KPI principal</th><th>Meta sugerida</th></tr>
+    <tr><td><strong>SDR IA</strong></td><td>Taxa de qualificação (leads → MQL)</td><td>&gt;35% dos leads viram MQL qualificados</td></tr>
+    <tr><td><strong>SDR humano</strong></td><td>Tempo de resposta + taxa de agendamento</td><td>&lt;15 min resposta · &gt;20% MQL vira SQL</td></tr>
+    <tr><td><strong>Closer (Érica/Dani/Murilo)</strong></td><td>Taxa de conversão SQL → Venda</td><td>&gt;15% SQL fecha (vs. 2–5% atual)</td></tr>
+    <tr><td><strong>Diretor Comercial (Murilo)</strong></td><td>Faturamento + CAC + previsibilidade</td><td>Retorno ao patamar R$5M+/ano</td></tr>
+  </table>
+</div>
+
+
+<!-- S13: PLANO DE AÇÃO -->
+<div class="secao" id="s13">
+  <div class="secao-header">
+    <div class="secao-num">13</div>
+    <div>
+      <div class="secao-titulo">Plano de Ação — 3 Ondas</div>
+      <div class="secao-desc">Estrutura de execução por prioridade</div>
+    </div>
+  </div>
+
+  <div class="cards-grid cards-grid-3">
+    <div class="onda">
+      <div class="onda-header" style="background:#E74C3C;">Onda 1 — Fundação</div>
+      <div class="onda-body">
+        <div style="font-size:11px;font-weight:700;color:var(--texto-light);margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;">Urgente — fazer agora</div>
+        <div class="onda-item">Assinar contrato CRM/SDR IA</div>
+        <div class="onda-item">Corrigir segmentação geográfica Meta/Google</div>
+        <div class="onda-item">Novo criativo brinquedão azul — produto grande</div>
+        <div class="onda-item">Formulários nativos ativos no Meta e Google</div>
+        <div class="onda-item">Planilha centralizada operacional</div>
+        <div class="onda-item">Atualizar LP — remover fotos inadimplentes</div>
+        <div class="onda-item">Botão WhatsApp → micro formulário</div>
+      </div>
+    </div>
+    <div class="onda">
+      <div class="onda-header" style="background:var(--laranja);">Onda 2 — Aceleração</div>
+      <div class="onda-body">
+        <div style="font-size:11px;font-weight:700;color:var(--texto-light);margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;">Próximas 2–4 semanas</div>
+        <div class="onda-item">SDR IA configurado e qualificando</div>
+        <div class="onda-item">CRM treinado (Érica, Dani, Carlos)</div>
+        <div class="onda-item">Cadência de 5 FUPs automatizada</div>
+        <div class="onda-item">Google Ads escalar com campanhas de intenção</div>
+        <div class="onda-item">Registrar instalações (fotos antes/depois)</div>
+        <div class="onda-item">Banco de prova social atualizado</div>
+        <div class="onda-item">Criativos de vídeo novos (Veo 3)</div>
+      </div>
+    </div>
+    <div class="onda">
+      <div class="onda-header" style="background:#27AE60;">Onda 3 — Escala</div>
+      <div class="onda-body">
+        <div style="font-size:11px;font-weight:700;color:var(--texto-light);margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;">Meses 2–3</div>
+        <div class="onda-item">SDR IA otimizado (A/B de scripts)</div>
+        <div class="onda-item">Reduzir dependência de Érica/Dani (de 73% para &lt;50%)</div>
+        <div class="onda-item">Remarketing para leads não convertidos</div>
+        <div class="onda-item">Google Ads com campanhas de retrofit e manutenção</div>
+        <div class="onda-item">Estratégia de sazonalidade (2º semestre)</div>
+        <div class="onda-item">Expansão de portfólio (locação, retrofit)</div>
+        <div class="onda-item">Dashboard de faturamento com atribuição por campanha</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- S14: PENDÊNCIAS CRÍTICAS -->
+<div class="secao" id="s14">
+  <div class="secao-header">
+    <div class="secao-num">14</div>
+    <div>
+      <div class="secao-titulo">Pendências Críticas para o Kickoff</div>
+      <div class="secao-desc">O que o implementador SDR IA precisa resolver primeiro</div>
+    </div>
+  </div>
+
+  <div class="alerta alerta-vermelho">
+    <strong>Prioridade absoluta</strong>
+    O contrato não está assinado. Sem assinatura, nada pode avançar formalmente. Sara Pizzico está tratando — confirmar status antes de qualquer outro passo.
+  </div>
+
+  <table style="margin-top:20px;">
+    <tr>
+      <th>#</th><th>Pendência</th><th>Responsável</th><th>Impacto se não resolver</th>
+    </tr>
+    <tr>
+      <td><strong>1</strong></td>
+      <td>Contrato CRM/SDR IA assinado</td>
+      <td>Murilo + Sara Pizzico</td>
+      <td><span class="badge-verde badge">Concluído</span> — implementação liberada</td>
+    </tr>
+    <tr>
+      <td><strong>2</strong></td>
+      <td>Corrigir segmentação geográfica (Meta/Google)</td>
+      <td>Andressa Boraschi</td>
+      <td><span class="badge-vermelho badge">Alto</span> — leads fora do ICP desperdiçando budget</td>
+    </tr>
+    <tr>
+      <td><strong>3</strong></td>
+      <td>Novo criativo com brinquedão azul grande</td>
+      <td>Rafael Camargo + Time criativo</td>
+      <td><span class="badge-amarelo badge">Médio</span> — impacto na conversão dos anúncios ativos</td>
+    </tr>
+    <tr>
+      <td><strong>4</strong></td>
+      <td>Formulários nativos 100% operacionais</td>
+      <td>Emanuele Lourenço + Júlia</td>
+      <td><span class="badge-amarelo badge">Médio</span> — qualidade dos leads ainda baixa sem formulário</td>
+    </tr>
+    <tr>
+      <td><strong>5</strong></td>
+      <td>Treinamento equipe Kidys no CRM</td>
+      <td>Thiago Almeida + Colli&Co</td>
+      <td><span class="badge-amarelo badge">Médio</span> — sem treinamento, Érica/Dani/Carlos não adotam</td>
+    </tr>
+    <tr>
+      <td><strong>6</strong></td>
+      <td>Margem por produto (prometida no kickoff)</td>
+      <td>Érica Dametto</td>
+      <td><span class="badge-azul badge">Baixo</span> — necessário para calcular LTV e ajustar estratégia de preço</td>
+    </tr>
+    <tr>
+      <td><strong>7</strong></td>
+      <td>Histórico de faturamento 2 anos (planilha)</td>
+      <td>Érica Dametto</td>
+      <td><span class="badge-azul badge">Baixo</span> — necessário para sazonalidade e forecast</td>
+    </tr>
+  </table>
+
+  <div class="highlight-box" style="margin-top:24px;">
+    <h3>Resumo executivo para o implementador SDR IA</h3>
+    <p>
+      A Kidys Park é uma empresa sólida (12 anos, R$4–5M/ano) que perdeu eficiência comercial. Captura 500 leads/mês mas converte apenas 2–5% porque o processo de vendas é manual, sem padronização e concentrado em 2 pessoas. O SDR IA vai resolver o problema de tempo de resposta, qualificação e cadência — o produto é bom, o mercado existe, o problema é processo.
+      <br><br>
+      <strong>Decisor:</strong> Murilo (proprietário) · <strong>Operacional:</strong> Érica Dametto · <strong>Time comercial:</strong> Érica + Dani + Carlos · <strong>Ticket médio:</strong> R$12.900–16.000 · <strong>Ciclo de venda:</strong> médio-longo (5–14 dias) · <strong>ICP geográfico:</strong> Sudeste + Sul + Centro-Oeste.
+    </p>
+  </div>
+</div>
+
+
+<!-- FOOTER -->
+<div class="footer">
+  Documento gerado em 27/05/2026 · <strong>Kidys Park Brinquedos</strong> — Briefing Completo para Kickoff SDR IA · <strong>Colli&Co / V4 Company</strong> · Uso interno e confidencial
+</div>
+
+</body>
+</html>

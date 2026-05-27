@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VLoca — Roteiros Promo Ajustados</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      background: #f4f5f7;
+      color: #1a1a2e;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    /* HEADER */
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .header .brand {
+      font-size: 52px;
+      font-weight: 800;
+      color: #e85d04;
+      letter-spacing: -1px;
+    }
+
+    .header .subtitle {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1b2a6b;
+      margin-top: 6px;
+    }
+
+    .header .badge {
+      display: inline-block;
+      margin-top: 14px;
+      background: #1b2a6b;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 18px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    /* OFERTA DESTAQUE */
+    .oferta-box {
+      background: #1b2a6b;
+      color: #fff;
+      border-radius: 12px;
+      padding: 22px 28px;
+      margin-bottom: 48px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .oferta-box .oferta-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #e85d04;
+      width: 100%;
+    }
+
+    .oferta-pill {
+      background: #e85d04;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+
+    .oferta-pill.outline {
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,0.4);
+      color: #fff;
+    }
+
+    /* ROTEIRO CARD */
+    .roteiro {
+      background: #fff;
+      border-radius: 14px;
+      margin-bottom: 36px;
+      overflow: hidden;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+    }
+
+    .roteiro-header {
+      background: #1b2a6b;
+      padding: 20px 28px;
+    }
+
+    .roteiro-header .numero {
+      font-size: 11px;
+      font-weight: 700;
+      color: #e85d04;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .roteiro-header .titulo {
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .roteiro-body {
+      padding: 28px;
+    }
+
+    /* BLOCO DE CENA */
+    .bloco {
+      margin-bottom: 24px;
+    }
+
+    .bloco:last-child {
+      margin-bottom: 0;
+    }
+
+    .bloco-label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    .bloco-label.hook    { background: #e85d04; color: #fff; }
+    .bloco-label.cena    { background: #eef0f8; color: #1b2a6b; }
+    .bloco-label.copy    { background: #eef0f8; color: #1b2a6b; }
+    .bloco-label.oferta  { background: #fff3e0; color: #b84000; border: 1.5px solid #e85d04; }
+    .bloco-label.cta     { background: #1b2a6b; color: #fff; }
+
+    .bloco-stage {
+      font-size: 12px;
+      color: #888;
+      font-style: italic;
+      margin-bottom: 6px;
+    }
+
+    .bloco-fala {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a2e;
+      line-height: 1.6;
+    }
+
+    .bloco-texto {
+      font-size: 14px;
+      color: #3a3a5c;
+      line-height: 1.65;
+    }
+
+    .tela {
+      display: inline-block;
+      background: #1a1a2e;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 6px;
+      margin-top: 8px;
+      letter-spacing: 0.3px;
+    }
+
+    .tela.orange { background: #e85d04; }
+
+    .checklist {
+      list-style: none;
+      margin-top: 10px;
+    }
+
+    .checklist li {
+      font-size: 14px;
+      color: #1a1a2e;
+      padding: 5px 0;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .checklist li::before {
+      content: "✔";
+      color: #e85d04;
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .destaque {
+      background: #fff3e0;
+      border-left: 4px solid #e85d04;
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #b84000;
+    }
+
+    .tag-promo {
+      display: inline-block;
+      background: #e85d04;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 12px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    .texto-tela-box {
+      background: #f0f2ff;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-top: 10px;
+    }
+
+    .texto-tela-box .ttb-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #1b2a6b;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .texto-tela-box p {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin: 2px 0;
+    }
+
+    hr.divider {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 20px 0;
+    }
+
+    /* RODAPÉ */
+    .footer {
+      text-align: center;
+      margin-top: 48px;
+      padding: 24px;
+      background: #1b2a6b;
+      border-radius: 12px;
+      color: rgba(255,255,255,0.6);
+      font-size: 12px;
+    }
+
+    .footer strong {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="brand">VLOCA</div>
+    <div class="subtitle">Roteiros Promocionais — Versao Ajustada</div>
+    <div class="badge">Semana Maluca / Semana de Promocao &bull; Tom descontraido + oferta</div>
+  </div>
+
+  <!-- OFERTA DE REFERENCIA -->
+  <div class="oferta-box">
+    <div class="oferta-label">Oferta que deve aparecer em todos os roteiros</div>
+    <span class="oferta-pill">Primeira semana em 3x semanais</span>
+    <span class="oferta-pill outline">Yamaha 0KM</span>
+    <span class="oferta-pill outline">Manutencao preventiva inclusa</span>
+    <span class="oferta-pill outline">Troca de oleo inclusa</span>
+    <span class="oferta-pill outline">Suporte 24h</span>
+  </div>
+
+  <!-- ROTEIRO 01 -->
+  <div class="roteiro">
+    <div class="roteiro-header">
+      <div class="numero">Video 01</div>
+      <div class="titulo">Socio do Mecanico</div>
+    </div>
+    <div class="roteiro-body">
+
+      <div class="bloco">
+        <div class="bloco-label hook">Hook</div>
+        <div class="bloco-stage">Motoboy empurrando moto parada na subida de ladeira. Cara de sofrimento total.</div>
+        <div class="tela">Texto na tela: "Voce e motoboy ou socio do mecanico?"</div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="bloco">
+        <div class="bloco-label cena">Cena</div>
+        <div class="bloco-stage">Corte rapido: motoboy na oficina, scrollando o celular entediado. Mecanico passa sorrindo e acena.</div>
+        <div class="tela">Texto na tela: "Ele ama voce. Voce sustenta o negocio dele."</div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="bloco">
+        <div class="bloco-label oferta">Virada + Oferta <span class="tag-promo">PROMO</span></div>
+        <div class="bloco-stage">Corte: motoboy olha pra camera com cara de "chega disso". Tom de quem descobriu um segredo.</div>
+        <div class="bloco-fala">"Essa semana a VLoca resolveu isso de vez. Yamaha 0KM, manutencao preventiva e troca de oleo ja inclusos. E ainda: a primeira semana voce parcela em 3x semanais. Sai hoje e deixa o mecanico com saudade."</div>
+        <div class="destaque">Mostrar na tela enquanto fala: "3x semanais | Yamaha 0KM | Manutencao inclusa"</div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="bloco">
+        <div class="bloco-label cta">CTA</div>
+        <div class="bloco-stage">Motoboy sai acelerando, feliz. Mecanico olha pro horizonte com cara de perdido.</div>
+        <div class="tela orange">Tela final: "Para de empurrar moto. O mecanico vai sentir sua falta. 👇 Fala com a VLoca"</div>
+      </div>
+
+      <div class="texto-tela-box">
+        <div class="ttb-label">Texto fixo na tela (todo o video)</div>
+        <p>SEMANA MALUCA VLOCA — LOCADORA DE MOTOS</p>
+        <p>Caucao em 3x | Yamaha 0KM | Manutencao inclusa</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ROTEIRO 02 -->
+  <div class="roteiro">
+    <div class="roteiro-header">
+      <div class="numero">Video 02</div>
+      <div class="titulo">Quantos Dias Voce Ficou Parado?</div>
+    </div>
+    <div class="roteiro-body">
+
+      <div class="bloco">
+        <div class="bloco-label hook">Hook</div>
+        <div class="bloco-stage">Tela preta. Texto aparece em impacto. Som de notificacao de corrida recusada (aquele som chato mesmo).</div>
+        <div class="tela">Texto na tela: "Quantos dias voce ficou sem rodar esse mes?"</div>
+        <br />
+        <div class="bloco-stage">Pausa de 1 segundo. Segundo texto aparece abaixo, menor.</div>
+        <div class="tela">Texto: "Pode ser honesto."</div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="bloco">
+        <div class="bloco-label cena">Cena</div>
+        <div class="bloco-stage">Corte rapido em sequencia com corte seco em cada item. Ritmo de meme.</div>
+        <div class="texto-tela-box">
+          <div class="ttb-label">Sequencia de cortes</div>
+          <p>→ Moto na oficina</p>
+          <p>→ Mecanico mexendo (bem devagar, proposital)</p>
+          <p>→ Dono esperando na cadeira, olhando pro teto</p>
+          <p>→ Conta chegando no celular</p>
+          <p>→ Dono olhando a conta com cara de susto</p>
+        </div>
+        <div class="tela" style="margin-top:12px">Texto em cima de cada corte: "Oficina. Espera. Peca. Conta. Repete."</div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="bloco">
+        <div class="bloco-label oferta">Virada + Oferta <span class="tag-promo">PROMO</span></div>
+        <div class="bloco-stage">Texto animado entrando rapido. Musica muda pro tom animado.</div>
+        <div class="bloco-fala">"Moto parada e dinheiro perdido. Essa semana a VLoca abriu um caminho diferente: Yamaha 0KM, manutencao preventiva e troca de oleo ja inclusos. E o melhor: a primeira semana voce parcela em 3x semanais. Nenhuma desculpa sobrou."</div>
+        <div class="destaque">Checklist aparece na tela: ✔ Yamaha 0KM &nbsp;|&nbsp; ✔ 3x semanais &nbsp;|&nbsp; ✔ Manutencao inclusa</div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="bloco">
+        <div class="bloco-label cta">CTA</div>
+        <div class="tela orange">Tela final: "Comeca a rodar HOJE. Sem desculpa. 👇 Quero rodar com a VLoca"</div>
+      </div>
+
+      <div class="texto-tela-box">
+        <div class="ttb-label">Texto fixo na tela (todo o video)</div>
+        <p>SEMANA DE PROMOCAO VLOCA — LOCADORA DE MOTOS</p>
+        <p>Caucao em 3x | Yamaha 0KM | Manutencao inclusa</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ROTEIRO 03 -->
+  <div class="roteiro">
+    <div class="roteiro-header">
+      <div class="numero">Video 03</div>
+      <div class="titulo">R$51,90 faz o que?</div>
+    </div>
+    <div class="roteiro-body">
+
+      <div class="bloco">
+        <div class="bloco-label hook">Hook</div>
+        <div class="bloco-stage">Tela preta. Numero aparece grande, sozinho. Silencio. Deixa respirar.</div>
+        <div class="tela" style="font-size:18px; padding: 14px 24px;">R$51,90 por dia.</div>
+        <br />
+        <div class="bloco-stage">Pausa de 1.5s. Texto menor aparece embaixo com tom de provocacao.</div>
+        <div class="tela">Parece caro? Deixa eu te mostrar o que ta incluso.</div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="bloco">
+        <div class="bloco-label cena">Checklist Animado</div>
+        <div class="bloco-stage">Cada item entra com som de "check". Ritmo empolgante. Fundo escuro, texto branco/laranja.</div>
+        <ul class="checklist">
+          <li>Yamaha 0KM rodando todo dia</li>
+          <li>Manutencao preventiva inclusa</li>
+          <li>Troca de oleo inclusa</li>
+          <li>Sem surpresa no bolso</li>
+        </ul>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="bloco">
+        <div class="bloco-label copy">Copy</div>
+        <div class="bloco-stage">Corte brusco: imagem de nota fiscal de oficina com valor alto. Silencio dramatico.</div>
+        <div class="tela">So uma ida na oficina ja custa mais que isso.</div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="bloco">
+        <div class="bloco-label oferta">Oferta Semana <span class="tag-promo">PROMO</span></div>
+        <div class="bloco-stage">Tom empolgante. Texto entra com destaque, como se fosse novidade extra.</div>
+        <div class="bloco-fala">"E essa semana ficou ainda mais facil entrar: a primeira semana voce ainda parcela em 3x semanais. Nao precisa desembolsar tudo de uma vez. Pega a moto hoje e comeca a pagar no seu ritmo."</div>
+        <div class="destaque">Texto na tela: "3x semanais na primeira semana — so essa semana!"</div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="bloco">
+        <div class="bloco-label cta">CTA</div>
+        <div class="tela orange">R$51,90/dia. Com tudo incluso. Primeira semana em 3x. 👇 Quero rodar com a VLoca</div>
+      </div>
+
+      <div class="texto-tela-box">
+        <div class="ttb-label">Texto fixo na tela (todo o video)</div>
+        <p>VLOCA — LOCADORA DE MOTOS</p>
+        <p>R$51,90/dia | Primeira semana em 3x | Manutencao inclusa</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ROTEIRO 04 -->
+  <div class="roteiro">
+    <div class="roteiro-header">
+      <div class="numero">Video 04</div>
+      <div class="titulo">Menos que um Almoco por Dia</div>
+    </div>
+    <div class="roteiro-body">
+
+      <div class="bloco">
+        <div class="bloco-label hook">Hook</div>
+        <div class="bloco-stage">Motoboy olha pra camera. Tom de quem vai fazer uma pergunta boba de proposito.</div>
+        <div class="bloco-fala">"Voce gasta quanto num almoco? R$30, R$40?"</div>
+        <div class="bloco-stage" style="margin-top:8px">Pausa. Cara de deboche calculando na cabeca.</div>
+        <div class="bloco-fala">"Na VLoca voce sai com Yamaha 0KM por R$51,90 o dia."</div>
+        <div class="bloco-stage" style="margin-top:8px">Pausa de novo. Deixa a pessoa processar.</div>
+        <div class="bloco-fala">"Isso mesmo que voce ouviu."</div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="bloco">
+        <div class="bloco-label copy">Copy</div>
+        <div class="bloco-stage">Tom natural, contando nos dedos. Gesticulando como se fosse um calculo simples demais.</div>
+        <div class="bloco-fala">"Manutencao preventiva inclusa. Troca de oleo inclusa. Moto nova pra rodar. Tudo no mesmo valor."</div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="bloco">
+        <div class="bloco-label oferta">Virada Promo <span class="tag-promo">PROMO</span></div>
+        <div class="bloco-stage">Sorriso aberto. Como quem guarda o melhor pro final.</div>
+        <div class="bloco-fala">"E essa semana ainda ficou mais facil: a primeira semana voce parcela em 3x semanais. Menos que dois almocos e voce ta na rua faturando. Sem ter que desembolsar tudo de uma vez."</div>
+        <div class="destaque">Texto na tela: "Primeira semana em 3x semanais — so essa semana!"</div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="bloco">
+        <div class="bloco-label cena">Cena</div>
+        <div class="bloco-stage">Corte rapido: motoboy saindo com a moto nova, dando joinha pra camera, sorrindo.</div>
+        <div class="tela">Texto: "R$51,90/dia. Primeira semana em 3x. Manutencao e oleo inclusos."</div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="bloco">
+        <div class="bloco-label cta">CTA</div>
+        <div class="tela orange">Para de calcular. Comeca a faturar. 👇 Quero rodar com a VLoca</div>
+      </div>
+
+      <div class="texto-tela-box">
+        <div class="ttb-label">Texto fixo na tela (todo o video)</div>
+        <p>VLOCA — LOCADORA DE MOTOS</p>
+        <p>R$51,90/dia | Primeira semana em 3x | Manutencao inclusa</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    <strong>VLoca — Roteiros Promocionais Ajustados</strong><br />
+    Tom: descontraido, humor seco, identificacao imediata &bull; Oferta: primeira semana em 3x semanais
+  </div>
+
+</div>
+</body>
+</html>

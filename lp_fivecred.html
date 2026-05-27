@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FiveCred, Empréstimo na Conta de Luz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: '#F05A28',
+            'brand-dark': '#D44A18',
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
+
+  <style>
+    *, body { font-family: 'Poppins', sans-serif; }
+    .display, h1, h2, h3, h4 { font-family: 'Bebas Neue', sans-serif; }
+    html { scroll-behavior: smooth; }
+
+    /* ── colours ── */
+    :root {
+      --orange: #F05A28;
+      --black:  #0A0A0A;
+      --dark:   #111111;
+      --card:   #171717;
+    }
+
+    /* ── animations ── */
+    @keyframes marquee   { to { transform: translateX(-50%); } }
+    @keyframes floatA    { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-12px) rotate(2deg)} }
+    @keyframes floatB    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    @keyframes floatC    { 0%,100%{transform:translateY(0) rotate(3deg)} 50%{transform:translateY(-6px) rotate(-1deg)} }
+    @keyframes shine     { 0%{left:-110%} 45%,100%{left:160%} }
+    @keyframes pulseRing { 0%,100%{box-shadow:0 0 0 0 rgba(240,90,40,.5)} 50%{box-shadow:0 0 0 16px rgba(240,90,40,0)} }
+    @keyframes fadeInUp  { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes slideL    { from{opacity:0;transform:translateX(-36px)} to{opacity:1;transform:translateX(0)} }
+    @keyframes slideR    { from{opacity:0;transform:translateX(36px)} to{opacity:1;transform:translateX(0)} }
+    @keyframes popIn     { 0%{transform:scale(0);opacity:0} 70%{transform:scale(1.12)} 100%{transform:scale(1);opacity:1} }
+    @keyframes blinkDot  { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
+    @keyframes countUp   { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+    .fa { animation: floatA 4s ease-in-out infinite; }
+    .fb { animation: floatB 5s ease-in-out infinite 1s; }
+    .fc { animation: floatC 3.8s ease-in-out infinite 1.8s; }
+    .marquee-run { animation: marquee 26s linear infinite; }
+    .pulse-btn   { animation: pulseRing 2.5s ease-in-out infinite; }
+    .anim-l      { animation: slideL .75s ease-out both; }
+    .anim-r      { animation: slideR .75s ease-out both .1s; }
+    .anim-up     { animation: fadeInUp .65s ease-out both; }
+    .dot { animation: blinkDot 1.4s ease-in-out infinite; display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--orange); }
+    .dot:nth-child(2){animation-delay:.2s}
+    .dot:nth-child(3){animation-delay:.4s}
+
+    /* ── shine button ── */
+    .btn-shine { position:relative; overflow:hidden; }
+    .btn-shine::after {
+      content:''; position:absolute;
+      top:-50%; left:-110%; width:55%; height:200%;
+      background:linear-gradient(to right,transparent,rgba(255,255,255,.22),transparent);
+      transform:skewX(-20deg);
+      animation:shine 4s ease-in-out infinite;
+    }
+
+    /* ── hero ── */
+    .hero-section {
+      position:relative; min-height:100vh; overflow:hidden;
+      background:var(--black);
+    }
+    .hero-bg-glow {
+      position:absolute; inset:0; pointer-events:none;
+      background:
+        radial-gradient(ellipse 70% 80% at 28% 65%, rgba(240,90,40,.16) 0%, transparent 60%),
+        radial-gradient(ellipse 35% 45% at 80% 20%, rgba(240,90,40,.06) 0%, transparent 55%);
+    }
+    /* subtle grid */
+    .hero-grid {
+      position:absolute; inset:0; pointer-events:none; opacity:.04;
+      background-image:
+        linear-gradient(rgba(240,90,40,1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(240,90,40,1) 1px, transparent 1px);
+      background-size:50px 50px;
+    }
+
+    /* Daniel photo container */
+    .daniel-wrap {
+      position:absolute; left:0; bottom:0;
+      width:52%; height:100%;
+      overflow:hidden;
+      display:none;
+    }
+    @media(min-width:1024px){ .daniel-wrap{ display:block; } }
+
+    .daniel-wrap img {
+      position:absolute; bottom:0;
+      left:50%; transform:translateX(-42%);
+      height:100%; width:auto;
+      max-width:none; object-fit:cover;
+      filter:contrast(1.08) brightness(.97);
+    }
+    /* fade right edge → dark */
+    .daniel-wrap::after {
+      content:''; position:absolute; inset:0;
+      background:linear-gradient(to right, rgba(10,10,10,0) 30%, rgba(10,10,10,.15) 65%, rgba(10,10,10,.92) 100%);
+    }
+    /* fade bottom */
+    .daniel-wrap::before {
+      content:''; position:absolute; inset-x:0; bottom:0; z-index:2;
+      height:120px;
+      background:linear-gradient(to top, var(--black), transparent);
+    }
+
+    /* ── form card ── */
+    .form-card {
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      overflow:hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(240,90,40,.06);
+    }
+    .form-card-top {
+      height:3px;
+      background:linear-gradient(to right, transparent, var(--orange), transparent);
+    }
+    .finput {
+      width:100%; background:#1E1E1E;
+      border:1px solid rgba(255,255,255,.08);
+      color:#fff; border-radius:8px;
+      padding:11px 14px; font-size:13px;
+      font-family:'Poppins',sans-serif;
+      transition:border-color .2s, box-shadow .2s;
+    }
+    .finput:focus {
+      outline:none;
+      border-color:var(--orange);
+      box-shadow:0 0 0 3px rgba(240,90,40,.18);
+    }
+    .finput::placeholder { color:#4A4A4A; }
+    .rlabel {
+      display:flex; align-items:center; gap:10px;
+      background:#1E1E1E; border:1.5px solid rgba(255,255,255,.07);
+      border-radius:8px; padding:10px 13px;
+      cursor:pointer; font-size:13px; color:#aaa;
+      transition:border-color .2s, background .2s, color .2s;
+      font-family:'Poppins',sans-serif;
+    }
+    .rlabel:has(input:checked) {
+      border-color:var(--orange);
+      background:rgba(240,90,40,.1);
+      color:#fff;
+    }
+    input[type=radio] { accent-color:var(--orange); }
+
+    /* ── benefit card ── */
+    .bcard {
+      background:#0A0A0A;
+      border:1px solid rgba(240,90,40,.2);
+      border-radius:14px; padding:24px;
+      transition:border-color .22s, transform .22s, box-shadow .22s;
+    }
+    .bcard:hover {
+      border-color:var(--orange);
+      transform:translateY(-4px);
+      box-shadow:0 16px 40px rgba(240,90,40,.1);
+    }
+
+    /* ── Sarah split section ── */
+    .sarah-right {
+      background:#F2EDE8;
+      position:relative; overflow:hidden;
+      min-height:520px;
+      display:flex; align-items:flex-end; justify-content:center;
+    }
+    .sarah-right img {
+      position:relative; z-index:1;
+      height:100%; width:auto; max-height:560px;
+      object-fit:cover; object-position:top center;
+      display:block;
+    }
+    .sarah-right::before {
+      content:''; position:absolute;
+      inset-x:0; top:0; height:80px; z-index:2;
+      background:linear-gradient(to bottom,rgba(242,237,232,.8),transparent);
+    }
+
+    /* ── accordion ── */
+    .acc-body { max-height:0; overflow:hidden; transition:max-height .35s ease; }
+    .acc-body.open { max-height:300px; }
+    .acc-plus { transition:transform .3s ease; color:var(--orange); font-size:22px; line-height:1; }
+    .acc-plus.open { transform:rotate(45deg); }
+
+    /* ── testimonial badge ── */
+    .verified { display:inline-flex; align-items:center; gap:4px;
+      background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.25);
+      border-radius:99px; padding:2px 8px;
+      color:rgb(74,222,128); font-size:10px; font-weight:600;
+    }
+
+    /* ── misc ── */
+    .section-dark  { background:#0A0A0A; }
+    .section-mid   { background:#111111; }
+    .snap-x-carousel { overflow-x:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; }
+    .snap-item { scroll-snap-align:start; }
+  </style>
+</head>
+
+<body class="bg-[#0A0A0A] text-white overflow-x-hidden">
+
+<!-- ═══════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════ -->
+<nav class="fixed inset-x-0 top-0 z-50 border-b border-white/5"
+     style="background:rgba(10,10,10,.94);backdrop-filter:blur(12px)">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 flex items-center justify-between h-16">
+
+    <a href="#" class="flex items-center gap-2 shrink-0">
+      <!-- Substitua pelo logo real: <img src="logo-fivecred.png" alt="FiveCred" class="h-8"> -->
+      <svg width="32" height="25" viewBox="0 0 32 25" fill="none" aria-hidden="true">
+        <rect width="32" height="10" rx="3" fill="#F05A28"/>
+        <rect y="15" width="20" height="10" rx="3" fill="#F05A28"/>
+      </svg>
+      <span class="font-bold text-[17px] tracking-tight">FiveCred</span>
+    </a>
+
+    <a href="#form"
+       class="hidden md:inline-flex items-center gap-2 btn-shine
+              bg-[#F05A28] hover:bg-[#D44A18] text-black font-semibold text-[13px]
+              px-5 py-2.5 rounded-lg transition-colors">
+      Simular agora →
+    </a>
+
+    <button id="nb" class="md:hidden p-2 text-white" aria-label="Menu">
+      <svg id="ico-m" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <svg id="ico-x" class="w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div id="nb-menu" class="hidden md:hidden border-t border-white/5 px-5 py-4" style="background:#111">
+    <a href="#form" class="flex justify-center btn-shine bg-[#F05A28] text-black font-semibold px-5 py-3 rounded-lg">Simular agora →</a>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════
+     HERO
+═══════════════════════════════════════ -->
+<section class="hero-section pt-16">
+
+  <!-- background effects -->
+  <div class="hero-bg-glow"></div>
+  <div class="hero-grid"></div>
+
+  <!-- Daniel photo (desktop only) -->
+  <div class="daniel-wrap">
+    <!--
+      Salve a foto do Daniel como daniel.jpg na mesma pasta do HTML.
+      A foto tem fundo cinza escuro que se funde naturalmente com o background.
+    -->
+    <img src="daniel.jpg" alt="Daniel, consultor FiveCred">
+  </div>
+
+  <!-- Content -->
+  <div class="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 min-h-screen flex items-center py-20">
+    <div class="w-full grid lg:grid-cols-2 gap-10 lg:gap-8 items-start">
+
+      <!-- LEFT: copy -->
+      <div class="anim-l space-y-5 lg:pt-6">
+
+        <!-- Badge -->
+        <div class="inline-flex items-center gap-2 bg-[#F05A28]/10 border border-[#F05A28]/30
+                    rounded-full px-4 py-1.5">
+          <span class="w-2 h-2 rounded-full bg-[#F05A28] animate-pulse"></span>
+          <span class="text-[#F05A28] text-[12px] font-semibold uppercase tracking-wider">Crédito para negativados</span>
+        </div>
+
+        <!-- Headline -->
+        <h1 class="display font-display leading-none uppercase
+                   text-[46px] sm:text-[54px] lg:text-[58px]">
+          Empréstimo de até<br>
+          <span class="text-[#F05A28]">R$ 4.000</span><br>
+          mesmo com o<br>
+          <span class="text-[#F05A28]">nome sujo</span>
+        </h1>
+
+        <p class="text-gray-300 text-[15px] leading-relaxed max-w-md">
+          Na FiveCred, sua conta de luz é tudo que você precisa. Sem burocracia, sem complicação.
+        </p>
+
+        <div class="space-y-3">
+          <a href="#form"
+             class="btn-shine pulse-btn inline-flex items-center gap-2.5
+                    bg-[#F05A28] hover:bg-[#D44A18] text-black font-bold
+                    text-[15px] px-7 py-3.5 rounded-xl transition-colors">
+            Quero meu empréstimo agora →
+          </a>
+          <p class="text-gray-500 text-[12px]">
+            100% digital&nbsp;•&nbsp;Resposta em minutos&nbsp;•&nbsp;Sem fiador
+          </p>
+        </div>
+
+        <!-- Floating visual elements (desktop) -->
+        <div class="relative h-24 hidden lg:block select-none pointer-events-none">
+
+          <!-- ENEL bill card -->
+          <div class="fa absolute left-0 top-0 bg-white rounded-xl shadow-2xl shadow-black/70 p-3 w-44 rotate-1">
+            <div class="flex items-center justify-between mb-1.5">
+              <div class="flex items-center gap-1">
+                <div class="w-3.5 h-3.5 rounded-full bg-[#0055A5]"></div>
+                <span class="text-[#0055A5] font-bold text-[10px]">ENEL</span>
+              </div>
+              <span class="text-[8px] text-gray-400">CONTA DE ENERGIA</span>
+            </div>
+            <div class="border-t border-gray-100 pt-1.5 space-y-0.5">
+              <div class="flex justify-between"><span class="text-gray-400 text-[8px]">Referência</span><span class="text-gray-600 text-[8px] font-semibold">JUN/2025</span></div>
+              <div class="flex justify-between"><span class="text-gray-700 text-[9px] font-bold">TOTAL</span><span class="text-[#0055A5] text-[10px] font-bold">R$ 187,40</span></div>
+            </div>
+            <div class="mt-1.5 bg-[#F05A28]/10 rounded-lg px-2 py-1 flex items-center gap-1">
+              <svg class="w-3 h-3 text-[#F05A28] shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L13 2Z"/></svg>
+              <span class="text-[#F05A28] text-[8px] font-semibold leading-tight">Usar como garantia FiveCred</span>
+            </div>
+          </div>
+
+          <!-- Approved notification -->
+          <div class="fb absolute left-48 top-4 bg-[#171717] border border-[#F05A28]/30
+                      rounded-xl px-3 py-2.5 flex items-center gap-2.5 shadow-xl">
+            <div class="w-7 h-7 rounded-full bg-green-500/20 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <div class="leading-tight">
+              <p class="text-[11px] text-white font-semibold">Crédito aprovado!</p>
+              <p class="text-[12px] text-[#F05A28] font-bold">R$ 2.500,00</p>
+            </div>
+          </div>
+
+          <!-- Floating R$ coins -->
+          <div class="fc absolute right-16 top-1 w-10 h-10 rounded-full
+                      bg-gradient-to-br from-yellow-400 to-yellow-600
+                      flex items-center justify-center shadow-lg shadow-yellow-900/50
+                      text-black font-black text-[10px]">R$</div>
+          <div class="fa absolute right-4 top-10 w-7 h-7 rounded-full opacity-60
+                      bg-gradient-to-br from-yellow-300 to-orange-400
+                      flex items-center justify-center text-black font-black text-[8px]"
+               style="animation-delay:.5s">$</div>
+
+          <!-- Analyzing dots -->
+          <div class="fb absolute right-28 bottom-0 bg-[#171717] border border-white/8
+                      rounded-xl px-3 py-2 flex items-center gap-1.5 shadow-lg">
+            <span class="text-[11px] text-gray-400 font-medium">Analisando</span>
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          </div>
+
+        </div>
+      </div><!-- /left -->
+
+      <!-- RIGHT: form -->
+      <div id="form" class="anim-r">
+        <div class="form-card">
+          <div class="form-card-top"></div>
+          <div class="p-6 sm:p-7">
+
+            <h2 class="display font-display text-[26px] uppercase text-white mb-0.5">Simule agora</h2>
+            <p class="text-gray-500 text-[13px] mb-5">Gratuito e sem compromisso</p>
+
+            <form id="lf" novalidate class="space-y-3.5">
+
+              <div class="space-y-2">
+                <input id="fn" type="text"  placeholder="Nome completo"       required class="finput">
+                <input id="ft" type="tel"   placeholder="WhatsApp (com DDD)"  required class="finput">
+                <input id="fe" type="email" placeholder="Seu melhor e-mail"   required class="finput">
+                <input id="fc" type="text"  placeholder="CPF" maxlength="14"  required class="finput">
+              </div>
+
+              <div class="border-t border-white/5"></div>
+
+              <!-- Q1 valor -->
+              <div>
+                <p class="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-2">Qual valor você precisa?</p>
+                <div class="space-y-1.5">
+                  <label class="rlabel"><input type="radio" name="v" value="ok"> Entre R$ 400 e R$ 4.000</label>
+                  <label class="rlabel"><input type="radio" name="v" value="no"> Acima de R$ 4.000</label>
+                </div>
+              </div>
+
+              <!-- Q2 distribuidora -->
+              <div>
+                <p class="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-2">Sua companhia de energia?</p>
+                <div class="grid grid-cols-2 gap-1.5">
+                  <label class="rlabel"><input type="radio" name="d" value="ok1"> CPFL / RGE</label>
+                  <label class="rlabel"><input type="radio" name="d" value="ok2"> COELBA / CELPE</label>
+                  <label class="rlabel"><input type="radio" name="d" value="ok3"> COSERN / ELEKTRO / ENEL</label>
+                  <label class="rlabel"><input type="radio" name="d" value="no"> Outra</label>
+                </div>
+              </div>
+
+              <!-- Q3 titular -->
+              <div>
+                <p class="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-2">Conta no seu nome e residencial?</p>
+                <div class="grid grid-cols-2 gap-1.5">
+                  <label class="rlabel"><input type="radio" name="t" value="ok"> Sim</label>
+                  <label class="rlabel"><input type="radio" name="t" value="no"> Não</label>
+                </div>
+              </div>
+
+              <!-- Q4 parcelamento -->
+              <div>
+                <p class="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-2">Fatura com parcelamento ativo?</p>
+                <div class="grid grid-cols-2 gap-1.5">
+                  <label class="rlabel"><input type="radio" name="p" value="ok"> Não</label>
+                  <label class="rlabel"><input type="radio" name="p" value="no"> Sim</label>
+                </div>
+              </div>
+
+              <!-- Disq msg -->
+              <div id="msg-no" class="hidden rounded-xl border border-red-500/25 bg-red-950/30 p-3.5 text-center">
+                <p class="text-red-300 font-semibold text-[13px]">Poxa, no momento você não se qualifica.</p>
+                <p class="text-gray-500 text-[12px] mt-1">Fique de olho, estamos sempre expandindo!</p>
+              </div>
+
+              <!-- Success msg -->
+              <div id="msg-yes" class="hidden rounded-xl border border-green-600/25 bg-green-950/30 p-5 text-center"
+                   style="animation:popIn .45s ease-out both">
+                <div class="w-11 h-11 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                  <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <p class="text-white font-bold text-[16px]">Você se qualifica!</p>
+                <p class="text-gray-300 text-[13px] mt-1">Nossa equipe entra em contato via WhatsApp em breve.</p>
+              </div>
+
+              <!-- Submit -->
+              <button type="submit" id="btn-sub"
+                class="btn-shine w-full bg-[#F05A28] hover:bg-[#D44A18]
+                       text-black font-bold text-[15px] py-3.5 rounded-xl
+                       transition-colors flex items-center justify-center gap-2">
+                Ver se me qualifico →
+              </button>
+
+              <p class="text-center text-gray-600 text-[11px]">Seus dados estão protegidos. Análise baseada na sua fatura.</p>
+            </form>
+          </div>
+        </div>
+      </div><!-- /right -->
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     BARRA LARANJA
+═══════════════════════════════════════ -->
+<div class="bg-[#F05A28] py-3.5 overflow-hidden">
+  <div class="flex whitespace-nowrap">
+    <div class="marquee-run flex items-center gap-10 px-8 text-[13px] font-semibold text-black select-none">
+      <span class="shrink-0">✓&nbsp; +3.200 clientes atendidos</span>
+      <span class="shrink-0 opacity-30">|</span>
+      <span class="shrink-0">✓&nbsp; 98% de aprovação entre qualificados</span>
+      <span class="shrink-0 opacity-30">|</span>
+      <span class="shrink-0">✓&nbsp; No mercado desde 2021</span>
+      <span class="shrink-0 opacity-30">|</span>
+      <span class="shrink-0">✓&nbsp; Negativados aceitos</span>
+      <span class="shrink-0 opacity-30">|</span>
+      <span class="shrink-0">✓&nbsp; Aprovação em até 24h</span>
+      <span class="shrink-0 opacity-30">|</span>
+      <!-- clone -->
+      <span class="shrink-0">✓&nbsp; +3.200 clientes atendidos</span>
+      <span class="shrink-0 opacity-30">|</span>
+      <span class="shrink-0">✓&nbsp; 98% de aprovação entre qualificados</span>
+      <span class="shrink-0 opacity-30">|</span>
+      <span class="shrink-0">✓&nbsp; No mercado desde 2021</span>
+      <span class="shrink-0 opacity-30">|</span>
+      <span class="shrink-0">✓&nbsp; Negativados aceitos</span>
+      <span class="shrink-0 opacity-30">|</span>
+      <span class="shrink-0">✓&nbsp; Aprovação em até 24h</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     DOR
+═══════════════════════════════════════ -->
+<section class="bg-white py-20 lg:py-28">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+      <!-- Text -->
+      <div class="space-y-5 anim-up">
+        <h2 class="display font-display uppercase leading-tight
+                   text-[36px] sm:text-[42px] lg:text-[48px] text-black">
+          Imprevistos não escolhem hora.<br>
+          E quando chegam, o crédito some.
+        </h2>
+        <div class="space-y-3 text-gray-600 text-[15px] leading-relaxed">
+          <p>Conta atrasada, emergência médica, conserto urgente, e o banco nega por causa do nome sujo. O score baixo fecha todas as portas. O rotativo do cartão cobra juros absurdos.</p>
+          <p>O sistema bancário foi feito pra quem já tem tudo.</p>
+          <p class="font-display text-[26px] sm:text-[30px] uppercase italic text-black">
+            A FiveCred foi feita pra quem precisa.
+          </p>
+        </div>
+        <a href="#form"
+           class="btn-shine inline-flex items-center gap-2 bg-[#F05A28] hover:bg-[#D44A18]
+                  text-black font-bold text-[14px] px-6 py-3 rounded-xl transition-colors">
+          Quero sair do aperto agora →
+        </a>
+      </div>
+
+      <!-- Stats grid -->
+      <div class="grid grid-cols-2 gap-4 anim-up" style="animation-delay:.18s">
+        <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+          <p class="font-display text-[52px] text-[#F05A28] leading-none">67<span class="text-[32px]">M</span></p>
+          <p class="text-gray-600 text-[13px] mt-1 font-medium">brasileiros negativados</p>
+        </div>
+        <div class="bg-[#0A0A0A] rounded-2xl p-6 border border-white/5">
+          <p class="font-display text-[52px] text-[#F05A28] leading-none">1<span class="text-[32px]">em3</span></p>
+          <p class="text-gray-400 text-[13px] mt-1 font-medium">adultos com o nome sujo</p>
+        </div>
+        <div class="bg-[#0A0A0A] rounded-2xl p-6 border border-white/5 col-span-2">
+          <p class="font-display text-[40px] text-white leading-none">
+            E eles precisam de crédito <span class="text-[#F05A28]">agora.</span>
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     SARAH — ESPECIALISTA
+═══════════════════════════════════════ -->
+<section class="overflow-hidden">
+  <div class="grid lg:grid-cols-2">
+
+    <!-- LEFT: dark bg, text -->
+    <div class="bg-[#0A0A0A] flex items-center px-8 sm:px-12 lg:px-16 py-16 lg:py-24
+                relative overflow-hidden">
+      <!-- subtle glow behind text -->
+      <div class="absolute inset-0 pointer-events-none"
+           style="background:radial-gradient(ellipse 80% 60% at 0% 50%,rgba(240,90,40,.08),transparent 70%)"></div>
+      <div class="relative z-10 space-y-5 max-w-md">
+        <div class="inline-flex items-center gap-2 bg-[#F05A28]/10 border border-[#F05A28]/30
+                    rounded-full px-4 py-1.5">
+          <span class="text-[#F05A28] text-[11px] font-semibold uppercase tracking-wider">Equipe FiveCred</span>
+        </div>
+        <h2 class="display font-display uppercase leading-tight
+                   text-[36px] sm:text-[42px] lg:text-[46px] text-white">
+          Fale com quem<br>
+          <span class="text-[#F05A28]">entende de crédito</span>
+        </h2>
+        <p class="text-gray-300 text-[15px] leading-relaxed">
+          Nossa equipe está pronta para te ajudar a conseguir o crédito que você precisa, sem complicação. Se você tem conta de luz residencial no seu nome, já é o suficiente.
+        </p>
+        <div class="grid grid-cols-2 gap-3 pt-2">
+          <div class="flex items-center gap-2">
+            <div class="w-5 h-5 rounded-full bg-[#F05A28]/20 flex items-center justify-center shrink-0">
+              <svg class="w-3 h-3 text-[#F05A28]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <span class="text-gray-300 text-[13px]">Análise gratuita</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-5 h-5 rounded-full bg-[#F05A28]/20 flex items-center justify-center shrink-0">
+              <svg class="w-3 h-3 text-[#F05A28]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <span class="text-gray-300 text-[13px]">Sem burocracia</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-5 h-5 rounded-full bg-[#F05A28]/20 flex items-center justify-center shrink-0">
+              <svg class="w-3 h-3 text-[#F05A28]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <span class="text-gray-300 text-[13px]">Resposta rápida</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-5 h-5 rounded-full bg-[#F05A28]/20 flex items-center justify-center shrink-0">
+              <svg class="w-3 h-3 text-[#F05A28]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <span class="text-gray-300 text-[13px]">100% digital</span>
+          </div>
+        </div>
+        <a href="#form"
+           class="btn-shine inline-flex items-center gap-2 bg-[#F05A28] hover:bg-[#D44A18]
+                  text-black font-bold text-[14px] px-6 py-3 rounded-xl transition-colors mt-2">
+          Simular gratuitamente →
+        </a>
+      </div>
+    </div>
+
+    <!-- RIGHT: Sarah on cream bg -->
+    <div class="sarah-right">
+      <!--
+        Salve a foto da Sarah como sarah.jpg na mesma pasta do HTML.
+        Fundo branco da foto se funde com o background creme da seção.
+      -->
+      <img src="sarah.jpg" alt="Sarah, especialista FiveCred">
+      <!-- Name badge -->
+      <div class="absolute bottom-6 left-6 z-10 bg-white/90 backdrop-blur rounded-xl px-4 py-2.5 shadow-lg">
+        <p class="font-bold text-gray-800 text-[14px]">Sarah</p>
+        <p class="text-[#F05A28] text-[12px] font-semibold">Especialista FiveCred</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     SOLUÇÃO
+═══════════════════════════════════════ -->
+<section class="section-dark py-20 lg:py-28 relative overflow-hidden">
+  <!-- subtle bg pattern -->
+  <div class="absolute inset-0 opacity-[.025] pointer-events-none"
+       style="background-image:linear-gradient(rgba(240,90,40,1) 1px,transparent 1px),linear-gradient(90deg,rgba(240,90,40,1) 1px,transparent 1px);background-size:60px 60px"></div>
+
+  <div class="relative max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="text-center mb-14">
+      <h2 class="display font-display uppercase leading-tight
+                 text-[36px] sm:text-[44px] lg:text-[52px] text-white mb-3">
+        Sua conta de luz é o seu crédito
+      </h2>
+      <p class="text-gray-400 text-[15px] max-w-xl mx-auto leading-relaxed">
+        Aqui o que importa não é seu score. Avaliamos sua conta de energia, não seu histórico de crédito.
+      </p>
+    </div>
+
+    <div class="grid sm:grid-cols-3 gap-6 lg:gap-10">
+
+      <div class="text-center anim-up">
+        <div class="display font-display text-[#F05A28] leading-none select-none mb-4
+                    text-[90px] sm:text-[80px] lg:text-[100px]">1</div>
+        <h3 class="display font-display uppercase text-[22px] text-white mb-2">Simule online</h3>
+        <p class="text-gray-400 text-[14px] leading-relaxed">
+          Informe o valor que você precisa, de R$ 400 a R$ 4.000, e preencha seus dados. Rápido e sem sair de casa.
+        </p>
+      </div>
+
+      <div class="text-center anim-up" style="animation-delay:.15s">
+        <div class="display font-display text-[#F05A28] leading-none select-none mb-4
+                    text-[90px] sm:text-[80px] lg:text-[100px]">2</div>
+        <h3 class="display font-display uppercase text-[22px] text-white mb-2">Aprovação rápida</h3>
+        <p class="text-gray-400 text-[14px] leading-relaxed">
+          Analisamos sua fatura de energia. Sem fiador, sem comprovante de renda, sem pegadinha.
+        </p>
+      </div>
+
+      <div class="text-center anim-up" style="animation-delay:.3s">
+        <div class="display font-display text-[#F05A28] leading-none select-none mb-4
+                    text-[90px] sm:text-[80px] lg:text-[100px]">3</div>
+        <h3 class="display font-display uppercase text-[22px] text-white mb-2">Dinheiro na sua mão</h3>
+        <p class="text-gray-400 text-[14px] leading-relaxed">
+          Valor liberado para saque. Você paga parcelado, direto na sua fatura de luz.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="text-center mt-12">
+      <a href="#form"
+         class="btn-shine inline-flex items-center gap-2.5 bg-[#F05A28] hover:bg-[#D44A18]
+                text-black font-bold text-[15px] px-8 py-3.5 rounded-xl transition-colors">
+        Quero meu empréstimo agora →
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     BENEFÍCIOS
+═══════════════════════════════════════ -->
+<section class="section-mid py-20 lg:py-28">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+
+    <div class="text-center mb-14">
+      <h2 class="display font-display uppercase leading-tight
+                 text-[36px] sm:text-[44px] lg:text-[50px] text-white">
+        Por que a FiveCred é diferente
+      </h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      <div class="bcard">
+        <div class="w-9 h-9 rounded-lg bg-[#F05A28]/10 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-[#F05A28]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <h3 class="display font-display uppercase text-[20px] text-white mb-1.5">Negativado? Sem problema</h3>
+        <p class="text-gray-400 text-[13px] leading-relaxed">Seu score não é o critério. Avaliamos sua conta de energia.</p>
+      </div>
+
+      <div class="bcard">
+        <div class="w-9 h-9 rounded-lg bg-[#F05A28]/10 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-[#F05A28]" fill="currentColor" viewBox="0 0 24 24"><path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L13 2Z"/></svg>
+        </div>
+        <h3 class="display font-display uppercase text-[20px] text-white mb-1.5">Pague com a fatura</h3>
+        <p class="text-gray-400 text-[13px] leading-relaxed">O valor é descontado direto na conta de luz. Sem boleto extra, sem TED, sem esquecimento.</p>
+      </div>
+
+      <div class="bcard">
+        <div class="w-9 h-9 rounded-lg bg-[#F05A28]/10 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-[#F05A28]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h3 class="display font-display uppercase text-[20px] text-white mb-1.5">De R$ 400 a R$ 4.000</h3>
+        <p class="text-gray-400 text-[13px] leading-relaxed">Escolha o valor certo para o seu momento. Sem pegar mais do que precisa.</p>
+      </div>
+
+      <div class="bcard">
+        <div class="w-9 h-9 rounded-lg bg-[#F05A28]/10 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-[#F05A28]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+        </div>
+        <h3 class="display font-display uppercase text-[20px] text-white mb-1.5">100% digital</h3>
+        <p class="text-gray-400 text-[13px] leading-relaxed">Simule, solicite e receba sem sair de casa, pelo celular.</p>
+      </div>
+
+      <div class="bcard">
+        <div class="w-9 h-9 rounded-lg bg-[#F05A28]/10 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-[#F05A28]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <h3 class="display font-display uppercase text-[20px] text-white mb-1.5">Sem burocracia</h3>
+        <p class="text-gray-400 text-[13px] leading-relaxed">Sem fiador, sem comprovante de renda, sem papelada.</p>
+      </div>
+
+      <div class="bcard">
+        <div class="w-9 h-9 rounded-lg bg-[#F05A28]/10 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-[#F05A28]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h3 class="display font-display uppercase text-[20px] text-white mb-1.5">Aprovação em 24h</h3>
+        <p class="text-gray-400 text-[13px] leading-relaxed">Após a aprovação, o crédito é liberado em até 24 horas.</p>
+      </div>
+
+    </div>
+
+    <!-- Distribuidoras -->
+    <div class="mt-14 pt-10 border-t border-white/5">
+      <p class="text-center text-gray-500 text-[11px] uppercase tracking-widest font-semibold mb-6">Distribuidoras parceiras</p>
+      <div class="flex flex-wrap justify-center gap-2.5">
+        <span class="border border-white/10 hover:border-[#F05A28]/60 text-gray-300 font-semibold text-[12px] px-4 py-2 rounded-full bg-[#0A0A0A] transition-colors cursor-default">CPFL</span>
+        <span class="border border-white/10 hover:border-[#F05A28]/60 text-gray-300 font-semibold text-[12px] px-4 py-2 rounded-full bg-[#0A0A0A] transition-colors cursor-default">RGE</span>
+        <span class="border border-white/10 hover:border-[#F05A28]/60 text-gray-300 font-semibold text-[12px] px-4 py-2 rounded-full bg-[#0A0A0A] transition-colors cursor-default">COELBA</span>
+        <span class="border border-white/10 hover:border-[#F05A28]/60 text-gray-300 font-semibold text-[12px] px-4 py-2 rounded-full bg-[#0A0A0A] transition-colors cursor-default">CELPE</span>
+        <span class="border border-white/10 hover:border-[#F05A28]/60 text-gray-300 font-semibold text-[12px] px-4 py-2 rounded-full bg-[#0A0A0A] transition-colors cursor-default">COSERN</span>
+        <span class="border border-white/10 hover:border-[#F05A28]/60 text-gray-300 font-semibold text-[12px] px-4 py-2 rounded-full bg-[#0A0A0A] transition-colors cursor-default">ELEKTRO</span>
+        <span class="border border-white/10 hover:border-[#F05A28]/60 text-gray-300 font-semibold text-[12px] px-4 py-2 rounded-full bg-[#0A0A0A] transition-colors cursor-default">ENEL</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     DEPOIMENTOS
+═══════════════════════════════════════ -->
+<section class="section-dark py-20 lg:py-28">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="text-center mb-14">
+      <h2 class="display font-display uppercase text-[36px] sm:text-[44px] lg:text-[50px] text-white">
+        Quem já saiu do aperto com a FiveCred
+      </h2>
+    </div>
+
+    <!-- Desktop -->
+    <div class="hidden sm:grid sm:grid-cols-3 gap-5">
+
+      <div class="bg-[#111] border border-white/8 rounded-2xl p-5 flex flex-col gap-4 hover:border-[#F05A28]/35 transition-colors">
+        <div class="flex gap-0.5 text-[#F05A28]">
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <p class="text-gray-300 text-[13px] leading-relaxed italic flex-1">
+          "Eu tava negativada há dois anos e precisava pagar uma dívida que tava me sufocando. Na FiveCred foi diferente, em dois dias o dinheiro estava na minha conta. Simplesmente não acreditei."
+        </p>
+        <div class="flex items-center gap-3 pt-3 border-t border-white/5">
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-[#F05A28]/50 to-[#F05A28]/10 flex items-center justify-center text-[#F05A28] font-bold text-[11px] shrink-0">RM</div>
+          <div class="flex-1 min-w-0"><p class="text-white font-semibold text-[13px]">Rosângela M.</p><p class="text-gray-500 text-[11px]">Recife, PE • CELPE</p></div>
+          <span class="verified shrink-0">✓ Verificado</span>
+        </div>
+      </div>
+
+      <div class="bg-[#111] border border-white/8 rounded-2xl p-5 flex flex-col gap-4 hover:border-[#F05A28]/35 transition-colors">
+        <div class="flex gap-0.5 text-[#F05A28]">
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <p class="text-gray-300 text-[13px] leading-relaxed italic flex-1">
+          "Meu filho precisou de um procedimento médico e eu não tinha o dinheiro. Meu nome tava sujo. Um amigo me indicou a FiveCred. Preenchi tudo pelo celular e foi aprovado. Pago junto com a conta de luz, sem estresse."
+        </p>
+        <div class="flex items-center gap-3 pt-3 border-t border-white/5">
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-[#F05A28]/50 to-[#F05A28]/10 flex items-center justify-center text-[#F05A28] font-bold text-[11px] shrink-0">ET</div>
+          <div class="flex-1 min-w-0"><p class="text-white font-semibold text-[13px]">Edmilson T.</p><p class="text-gray-500 text-[11px]">Campinas, SP • CPFL</p></div>
+          <span class="verified shrink-0">✓ Verificado</span>
+        </div>
+      </div>
+
+      <div class="bg-[#111] border border-white/8 rounded-2xl p-5 flex flex-col gap-4 hover:border-[#F05A28]/35 transition-colors">
+        <div class="flex gap-0.5 text-[#F05A28]">
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <p class="text-gray-300 text-[13px] leading-relaxed italic flex-1">
+          "Achei que ia ter pegadinha, sabe? Mas não tinha nada. Sem fiador, sem comprovante, sem consulta ao Serasa. Só a conta de luz. O processo foi mais simples do que pagar uma conta online."
+        </p>
+        <div class="flex items-center gap-3 pt-3 border-t border-white/5">
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-[#F05A28]/50 to-[#F05A28]/10 flex items-center justify-center text-[#F05A28] font-bold text-[11px] shrink-0">FO</div>
+          <div class="flex-1 min-w-0"><p class="text-white font-semibold text-[13px]">Francinete O.</p><p class="text-gray-500 text-[11px]">Salvador, BA • COELBA</p></div>
+          <span class="verified shrink-0">✓ Verificado</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Mobile carousel -->
+    <div class="sm:hidden snap-x-carousel flex gap-4 pb-3">
+      <div class="snap-item shrink-0 w-[84vw] bg-[#111] border border-white/8 rounded-2xl p-5 flex flex-col gap-4">
+        <div class="flex gap-0.5 text-[#F05A28]"><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+        <p class="text-gray-300 text-[13px] leading-relaxed italic flex-1">"Eu tava negativada há dois anos. Na FiveCred foi diferente, em dois dias o dinheiro estava na minha conta."</p>
+        <div class="flex items-center gap-3 pt-3 border-t border-white/5">
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-[#F05A28]/50 to-[#F05A28]/10 flex items-center justify-center text-[#F05A28] font-bold text-[11px] shrink-0">RM</div>
+          <div><p class="text-white font-semibold text-[13px]">Rosângela M.</p><p class="text-gray-500 text-[11px]">Recife, PE • CELPE</p></div>
+          <span class="verified ml-auto shrink-0">✓ Verificado</span>
+        </div>
+      </div>
+      <div class="snap-item shrink-0 w-[84vw] bg-[#111] border border-white/8 rounded-2xl p-5 flex flex-col gap-4">
+        <div class="flex gap-0.5 text-[#F05A28]"><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+        <p class="text-gray-300 text-[13px] leading-relaxed italic flex-1">"Meu nome tava sujo. Preenchi tudo pelo celular e foi aprovado. Pago junto com a conta de luz, sem estresse."</p>
+        <div class="flex items-center gap-3 pt-3 border-t border-white/5">
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-[#F05A28]/50 to-[#F05A28]/10 flex items-center justify-center text-[#F05A28] font-bold text-[11px] shrink-0">ET</div>
+          <div><p class="text-white font-semibold text-[13px]">Edmilson T.</p><p class="text-gray-500 text-[11px]">Campinas, SP • CPFL</p></div>
+          <span class="verified ml-auto shrink-0">✓ Verificado</span>
+        </div>
+      </div>
+      <div class="snap-item shrink-0 w-[84vw] bg-[#111] border border-white/8 rounded-2xl p-5 flex flex-col gap-4">
+        <div class="flex gap-0.5 text-[#F05A28]"><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+        <p class="text-gray-300 text-[13px] leading-relaxed italic flex-1">"Sem fiador, sem comprovante, sem consulta ao Serasa. Só a conta de luz. Mais simples do que pagar uma conta online."</p>
+        <div class="flex items-center gap-3 pt-3 border-t border-white/5">
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-[#F05A28]/50 to-[#F05A28]/10 flex items-center justify-center text-[#F05A28] font-bold text-[11px] shrink-0">FO</div>
+          <div><p class="text-white font-semibold text-[13px]">Francinete O.</p><p class="text-gray-500 text-[11px]">Salvador, BA • COELBA</p></div>
+          <span class="verified ml-auto shrink-0">✓ Verificado</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     FAQ
+═══════════════════════════════════════ -->
+<section class="section-mid py-20 lg:py-28">
+  <div class="max-w-3xl mx-auto px-5 sm:px-8">
+    <div class="text-center mb-12">
+      <h2 class="display font-display uppercase text-[36px] sm:text-[44px] lg:text-[50px] text-white">
+        Suas dúvidas mais comuns
+      </h2>
+    </div>
+    <div class="space-y-2">
+
+      <div class="bg-[#0A0A0A] border border-white/8 rounded-xl overflow-hidden">
+        <button class="at w-full flex items-center justify-between px-5 py-4 text-left gap-4">
+          <span class="text-white font-medium text-[14px]">Estou com o nome sujo. Consigo mesmo assim?</span>
+          <span class="acc-plus">+</span>
+        </button>
+        <div class="acc-body px-5">
+          <p class="text-gray-400 pb-4 text-[13px] leading-relaxed">Sim. Avaliamos sua conta de energia elétrica residencial, não seu histórico de crédito. O único requisito é ter a conta no seu nome, em uma das distribuidoras parceiras.</p>
+        </div>
+      </div>
+
+      <div class="bg-[#0A0A0A] border border-white/8 rounded-xl overflow-hidden">
+        <button class="at w-full flex items-center justify-between px-5 py-4 text-left gap-4">
+          <span class="text-white font-medium text-[14px]">Como funciona o pagamento?</span>
+          <span class="acc-plus">+</span>
+        </button>
+        <div class="acc-body px-5">
+          <p class="text-gray-400 pb-4 text-[13px] leading-relaxed">O valor é adicionado diretamente na sua fatura de energia. Sem boleto separado, você paga junto com a conta de luz, como sempre faz.</p>
+        </div>
+      </div>
+
+      <div class="bg-[#0A0A0A] border border-white/8 rounded-xl overflow-hidden">
+        <button class="at w-full flex items-center justify-between px-5 py-4 text-left gap-4">
+          <span class="text-white font-medium text-[14px]">Minha fatura pode ter parcelamento ativo?</span>
+          <span class="acc-plus">+</span>
+        </button>
+        <div class="acc-body px-5">
+          <p class="text-gray-400 pb-4 text-[13px] leading-relaxed">Não. Para garantir a aprovação, a fatura não pode ter nenhum parcelamento ativo no momento da solicitação.</p>
+        </div>
+      </div>
+
+      <div class="bg-[#0A0A0A] border border-white/8 rounded-xl overflow-hidden">
+        <button class="at w-full flex items-center justify-between px-5 py-4 text-left gap-4">
+          <span class="text-white font-medium text-[14px]">Qual é o valor mínimo e máximo?</span>
+          <span class="acc-plus">+</span>
+        </button>
+        <div class="acc-body px-5">
+          <p class="text-gray-400 pb-4 text-[13px] leading-relaxed">De R$ 400 a R$ 4.000, dependendo do seu perfil e da análise da sua fatura.</p>
+        </div>
+      </div>
+
+      <div class="bg-[#0A0A0A] border border-white/8 rounded-xl overflow-hidden">
+        <button class="at w-full flex items-center justify-between px-5 py-4 text-left gap-4">
+          <span class="text-white font-medium text-[14px]">Em quanto tempo o dinheiro é liberado?</span>
+          <span class="acc-plus">+</span>
+        </button>
+        <div class="acc-body px-5">
+          <p class="text-gray-400 pb-4 text-[13px] leading-relaxed">Após a aprovação, o crédito é liberado em até 24 horas.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     CTA FINAL
+═══════════════════════════════════════ -->
+<section class="section-dark py-20 lg:py-28 relative overflow-hidden">
+  <div class="absolute inset-0 opacity-[.03] pointer-events-none"
+       style="background-image:linear-gradient(rgba(240,90,40,1) 1px,transparent 1px),linear-gradient(90deg,rgba(240,90,40,1) 1px,transparent 1px);background-size:60px 60px"></div>
+  <div class="relative max-w-2xl mx-auto px-5 sm:px-8">
+    <div class="border-2 border-[#F05A28] rounded-2xl p-10 lg:p-14 text-center
+                shadow-[0_0_100px_rgba(240,90,40,.14)]">
+      <h2 class="display font-display uppercase leading-tight
+                 text-[38px] sm:text-[46px] lg:text-[52px] text-white mb-3">
+        Não deixe o imprevisto decidir por você
+      </h2>
+      <p class="text-gray-400 text-[15px] mb-7 leading-relaxed">
+        Resolva hoje. Sua conta de luz já é o suficiente.
+      </p>
+      <a href="#form"
+         class="btn-shine inline-flex items-center gap-2.5 bg-[#F05A28] hover:bg-[#D44A18]
+                text-black font-bold text-[16px] px-10 py-4 rounded-xl transition-colors">
+        Simular meu empréstimo, é grátis →
+      </a>
+      <p class="text-gray-600 text-[12px] mt-5">
+        Sem compromisso&nbsp;•&nbsp;Análise baseada na sua fatura&nbsp;•&nbsp;Resposta rápida
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════ -->
+<footer class="section-dark border-t border-white/5 py-10">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-5 mb-8">
+      <div class="flex items-center gap-2 shrink-0">
+        <svg width="28" height="22" viewBox="0 0 28 22" fill="none"><rect width="28" height="9" rx="2" fill="#F05A28"/><rect y="13" width="18" height="9" rx="2" fill="#F05A28"/></svg>
+        <span class="font-bold text-base">FiveCred</span>
+      </div>
+      <div class="flex flex-wrap justify-center gap-x-5 gap-y-2 text-[13px] text-gray-500">
+        <a href="#" class="hover:text-gray-300 transition-colors">Política de Privacidade</a>
+        <a href="#" class="hover:text-gray-300 transition-colors">Termos de Uso</a>
+        <a href="#" class="hover:text-gray-300 transition-colors">Contato</a>
+      </div>
+    </div>
+    <div class="border-t border-white/5 pt-6 space-y-2">
+      <p class="text-gray-600 text-[11px] leading-relaxed max-w-4xl">
+        <strong class="text-gray-500">Exemplo representativo de crédito:</strong>
+        Empréstimo de R$ 2.000,00 em 12 parcelas de R$&nbsp;[VALOR]. Taxa de juros: [X]%&nbsp;a.m. CET: [X]%&nbsp;a.m. / [X]%&nbsp;a.a. Prazo: 12 meses. Total a pagar: R$&nbsp;[VALOR]. Sujeito à análise de crédito. Valores e condições podem variar conforme perfil do cliente e distribuidora de energia.
+      </p>
+      <p class="text-gray-700 text-[11px]">© 2025 FiveCred. Todos os direitos reservados.&nbsp;&nbsp;CNPJ: [00.000.000/0001-00]</p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════ -->
+<script>
+  // ── navbar mobile ─────────────────────
+  var nb=document.getElementById('nb'),nbMenu=document.getElementById('nb-menu'),
+      icoM=document.getElementById('ico-m'),icoX=document.getElementById('ico-x');
+  nb.addEventListener('click',function(){
+    var o=!nbMenu.classList.contains('hidden');
+    nbMenu.classList.toggle('hidden',o);
+    icoM.classList.toggle('hidden',!o);
+    icoX.classList.toggle('hidden',o);
+  });
+
+  // ── accordion ──────────────────────────
+  document.querySelectorAll('.at').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var body=btn.parentElement.querySelector('.acc-body');
+      var plus=btn.querySelector('.acc-plus');
+      var open=body.classList.contains('open');
+      document.querySelectorAll('.acc-body').forEach(function(b){b.classList.remove('open');});
+      document.querySelectorAll('.acc-plus').forEach(function(p){p.classList.remove('open');});
+      if(!open){body.classList.add('open');plus.classList.add('open');}
+    });
+  });
+
+  // ── form live disqualify ───────────────
+  var qn=['v','d','t','p'];
+  function checkLive(){
+    var disq=false;
+    qn.forEach(function(n){
+      var s=document.querySelector('input[name="'+n+'"]:checked');
+      if(s&&s.value==='no') disq=true;
+    });
+    document.getElementById('msg-no').classList.toggle('hidden',!disq);
+  }
+  document.querySelectorAll('#lf input[type=radio]').forEach(function(r){r.addEventListener('change',checkLive);});
+
+  // ── form submit ────────────────────────
+  document.getElementById('lf').addEventListener('submit',function(e){
+    e.preventDefault();
+    var fn=document.getElementById('fn').value.trim(),
+        ft=document.getElementById('ft').value.trim(),
+        fe=document.getElementById('fe').value.trim(),
+        fc=document.getElementById('fc').value.trim();
+    if(!fn||!ft||!fe||!fc){alert('Preencha todos os campos.');return;}
+    var disq=false,inc=false;
+    qn.forEach(function(n){
+      var s=document.querySelector('input[name="'+n+'"]:checked');
+      if(!s) inc=true; else if(s.value==='no') disq=true;
+    });
+    if(inc){alert('Por favor, responda todas as perguntas.');return;}
+    var mNo=document.getElementById('msg-no'),mYes=document.getElementById('msg-yes'),btn=document.getElementById('btn-sub');
+    if(disq){
+      mNo.classList.remove('hidden'); mYes.classList.add('hidden');
+      mNo.scrollIntoView({behavior:'smooth',block:'center'});
+    } else {
+      document.getElementById('fn').closest('.space-y-2').style.display='none';
+      document.querySelector('#lf .border-t.border-white\\/5').style.display='none';
+      document.querySelectorAll('#lf .space-y-3\\.5 > div:not([id])').forEach(function(d){d.style.display='none';});
+      mNo.classList.add('hidden'); mYes.classList.remove('hidden'); btn.style.display='none';
+      mYes.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+  });
+
+  // ── masks ──────────────────────────────
+  document.getElementById('fc').addEventListener('input',function(){
+    var v=this.value.replace(/\D/g,'');
+    v=v.replace(/(\d{3})(\d)/,'$1.$2'); v=v.replace(/(\d{3})(\d)/,'$1.$2'); v=v.replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+    this.value=v;
+  });
+  document.getElementById('ft').addEventListener('input',function(){
+    var v=this.value.replace(/\D/g,'');
+    v=v.replace(/^(\d{2})(\d)/,'($1) $2'); v=v.replace(/(\d{5})(\d)/,'$1-$2');
+    this.value=v;
+  });
+
+  // ── smooth scroll ──────────────────────
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      var t=document.querySelector(this.getAttribute('href'));
+      if(!t) return; e.preventDefault();
+      window.scrollTo({top:t.getBoundingClientRect().top+window.pageYOffset-70,behavior:'smooth'});
+      nbMenu.classList.add('hidden'); icoM.classList.remove('hidden'); icoX.classList.add('hidden');
+    });
+  });
+</script>
+</body>
+</html>

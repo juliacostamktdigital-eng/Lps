@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roteiro de Apresentacao — Playbook CRM FiveCred</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; color: #1a1a1a; line-height: 1.6; }
+
+  .capa {
+    background: linear-gradient(135deg, #FF6600 0%, #cc4400 100%);
+    color: white; text-align: center; padding: 60px 40px;
+    min-height: 280px; display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+  }
+  .capa .logo { font-size: 42px; font-weight: 900; letter-spacing: -2px; margin-bottom: 8px; }
+  .capa h1 { font-size: 22px; font-weight: 700; margin: 14px 0 8px; letter-spacing: 1px; }
+  .capa h2 { font-size: 14px; font-weight: 400; opacity: 0.9; margin-bottom: 20px; }
+  .capa .badge { background: rgba(255,255,255,0.2); border: 2px solid white; border-radius: 20px; padding: 6px 20px; font-size: 12px; font-weight: 600; }
+
+  .container { max-width: 860px; margin: 0 auto; padding: 0 24px 60px; }
+
+  .momento {
+    background: white; border-radius: 12px; padding: 36px 40px;
+    margin: 28px 0; box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  }
+  .momento-header {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 24px; padding-bottom: 16px;
+    border-bottom: 3px solid #FF6600;
+  }
+  .momento-num {
+    background: #FF6600; color: white;
+    font-size: 20px; font-weight: 900;
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .momento-titulo { font-size: 19px; font-weight: 800; color: #FF6600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .momento-sub { font-size: 12px; color: #888; font-weight: 400; margin-top: 2px; }
+
+  .fala {
+    background: #fff3e8; border-left: 5px solid #FF6600;
+    border-radius: 0 10px 10px 0; padding: 18px 22px; margin: 16px 0;
+  }
+  .fala .rotulo {
+    font-size: 10px; font-weight: 800; text-transform: uppercase;
+    color: #FF6600; margin-bottom: 10px; letter-spacing: 1px;
+  }
+  .fala .texto {
+    font-size: 14px; color: #333; white-space: pre-line; line-height: 1.8;
+    font-style: italic;
+  }
+
+  .nota {
+    background: #fff8f0; border: 1px solid #ffd0a0;
+    border-radius: 8px; padding: 12px 18px; margin: 10px 0;
+    font-size: 12px; color: #666;
+  }
+  .nota strong { color: #FF6600; }
+
+  .dica {
+    background: #e8f5e9; border-left: 4px solid #43a047;
+    border-radius: 0 8px 8px 0; padding: 12px 18px; margin: 10px 0;
+    font-size: 13px; color: #2e7d32;
+  }
+  .dica strong { color: #1b5e20; }
+
+  .alerta {
+    background: #fce4ec; border-left: 4px solid #e53935;
+    border-radius: 0 8px 8px 0; padding: 12px 18px; margin: 10px 0;
+    font-size: 13px; color: #c62828;
+  }
+
+  .bloco-topicos { margin: 14px 0; }
+  .topico { display: flex; gap: 10px; margin: 8px 0; font-size: 13px; color: #444; align-items: flex-start; }
+  .topico::before { content: "→"; color: #FF6600; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+  .tempo-tag {
+    display: inline-block; background: #1a1a1a; color: #FF6600;
+    font-size: 11px; font-weight: 800; padding: 3px 12px; border-radius: 20px;
+    margin-bottom: 12px; letter-spacing: 0.5px;
+  }
+
+  .transicao {
+    text-align: center; padding: 10px 0; color: #bbb;
+    font-size: 13px; font-style: italic;
+  }
+
+  .rodape { text-align: center; padding: 40px; color: #aaa; font-size: 12px; }
+  .rodape strong { color: #FF6600; }
+</style>
+</head>
+<body>
+
+<div class="capa">
+  <div class="logo">FiveCred</div>
+  <h1>ROTEIRO DE APRESENTACAO — PLAYBOOK CRM</h1>
+  <h2>Guia de falas para apresentacao do Kommo e estrutura de atendimento</h2>
+  <div class="badge">Uso interno — V4 Company | Maio 2026</div>
+</div>
+
+<div class="container">
+
+<!-- MOMENTO 1 -->
+<div class="momento">
+  <div class="momento-header">
+    <div class="momento-num">1</div>
+    <div>
+      <div class="momento-titulo">Abertura — Contexto e Objetivo</div>
+      <div class="momento-sub">Tempo sugerido: 2-3 min</div>
+    </div>
+  </div>
+  <div class="tempo-tag">2-3 minutos</div>
+
+  <div class="fala">
+    <div class="rotulo">Fala de abertura</div>
+    <div class="texto">Pessoal, obrigada pela presenca! Hoje a gente vai apresentar o Playbook Comercial da FiveCred — que e basicamente o manual de como o CRM Kommo vai funcionar no dia a dia de voces.
+
+A ideia e sair daqui com tudo claro: como o lead entra, o que o bot faz, quando o consultor entra, e o que cada pessoa do time precisa fazer em cada momento.</div>
+  </div>
+
+  <div class="fala">
+    <div class="rotulo">Por que isso importa</div>
+    <div class="texto">A maioria das empresas perde lead nao por falta de midia — perde por demora no atendimento ou por falta de padrao.
+
+O que a gente construiu aqui resolve isso: o bot qualifica na hora, o consultor so entra quando o lead esta pronto, e o processo inteiro fica registrado no Kommo para voces acompanharem em tempo real.</div>
+  </div>
+
+  <div class="dica"><strong>Dica:</strong> Se tiver o computador, abra o Playbook (arquivo HTML) na tela para mostrar visualmente enquanto fala.</div>
+</div>
+
+<div class="transicao">— Mostrar Secao 2: Pipeline —</div>
+
+<!-- MOMENTO 2 -->
+<div class="momento">
+  <div class="momento-header">
+    <div class="momento-num">2</div>
+    <div>
+      <div class="momento-titulo">O Pipeline — As Etapas do Funil</div>
+      <div class="momento-sub">Tempo sugerido: 4-5 min</div>
+    </div>
+  </div>
+  <div class="tempo-tag">4-5 minutos</div>
+
+  <div class="fala">
+    <div class="rotulo">Apresentando o pipeline</div>
+    <div class="texto">Vamos comecar pelo pipeline — que e o funil de vendas dentro do Kommo. Todo lead vai passar por essas etapas aqui.
+
+Sao 9 etapas no total. Vou explicar cada uma rapidinho, porque e importante que o time entenda o que cada etapa significa antes de usar.</div>
+  </div>
+
+  <div class="bloco-topicos">
+    <div class="topico"><strong>Novo Lead:</strong> entra automaticamente. Ninguem tocou ainda.</div>
+    <div class="topico"><strong>Aguardando Atendimento:</strong> lead respondeu — consultor precisa entrar em ate 5 minutos.</div>
+    <div class="topico"><strong>Em Qualificacao Bot:</strong> o bot esta fazendo as perguntas automaticamente.</div>
+    <div class="topico"><strong>Interesse Real (MQL):</strong> lead passou pelo bot e esta qualificado. Consultor assume.</div>
+    <div class="topico"><strong>Negociacao (SQL):</strong> proposta enviada, lead avancando para fechar.</div>
+    <div class="topico"><strong>Venda Ganha:</strong> credito aprovado e formalizado.</div>
+    <div class="topico"><strong>Venda Perdida:</strong> sem resposta, sem interesse ou nao quis fechar.</div>
+    <div class="topico"><strong>Reprovado:</strong> lead nao se enquadrou nos criterios do produto.</div>
+    <div class="topico"><strong>Venda Futura:</strong> lead qualificado mas nao e o momento certo — tem data de retorno combinada.</div>
+  </div>
+
+  <div class="fala">
+    <div class="rotulo">Regra de ouro do pipeline</div>
+    <div class="texto">Uma regra importante: nenhum lead pode ficar parado sem uma tarefa e sem um proximo passo definido. Se o lead ta parado sem acao no Kommo, ele some do radar e a venda se perde.
+
+O proprio Kommo vai criar tarefas automaticamente para o consultor quando o bot qualificar um lead. A responsabilidade do time e executar essas tarefas no prazo.</div>
+  </div>
+
+  <div class="nota"><strong>Pausa para perguntas</strong> — pergunte: "Faz sentido essa estrutura? Tem alguma etapa que voces acham que falta?"</div>
+</div>
+
+<div class="transicao">— Mostrar Secao 3: Campos Obrigatorios —</div>
+
+<!-- MOMENTO 3 -->
+<div class="momento">
+  <div class="momento-header">
+    <div class="momento-num">3</div>
+    <div>
+      <div class="momento-titulo">Campos Obrigatorios por Etapa</div>
+      <div class="momento-sub">Tempo sugerido: 3 min</div>
+    </div>
+  </div>
+  <div class="tempo-tag">3 minutos</div>
+
+  <div class="fala">
+    <div class="rotulo">Explicando os campos</div>
+    <div class="texto">Cada etapa do funil tem campos que precisam ser preenchidos antes de mover o card. Isso parece chato, mas e o que garante que voces tenham dados confiaveis para analisar o funil depois.
+
+Por exemplo: quando um lead vai para "Interesse Real", o bot ja captura automaticamente o produto de interesse e o status da qualificacao. O consultor so precisa confirmar e complementar quando necessario.</div>
+  </div>
+
+  <div class="fala">
+    <div class="rotulo">Por que isso importa para a gestao</div>
+    <div class="texto">Com esses campos preenchidos, a Sarah e o Eder conseguem ver em tempo real: quantos leads entraram, de qual produto, quantos qualificaram, quantos foram reprovados e por que.
+
+Isso e o que vai mostrar se o formulario de alguma campanha ta atraindo o perfil errado — e permite ajustar a midia antes de gastar mais dinheiro.</div>
+  </div>
+</div>
+
+<div class="transicao">— Mostrar Secao 5: Arquitetura de Bot —</div>
+
+<!-- MOMENTO 4 -->
+<div class="momento">
+  <div class="momento-header">
+    <div class="momento-num">4</div>
+    <div>
+      <div class="momento-titulo">Como o Bot Funciona — Roteamento por Tag</div>
+      <div class="momento-sub">Tempo sugerido: 5 min | Momento mais importante da apresentacao</div>
+    </div>
+  </div>
+  <div class="tempo-tag">5 minutos — ponto central</div>
+
+  <div class="fala">
+    <div class="rotulo">Explicando a logica de um numero, quatro produtos</div>
+    <div class="texto">Aqui esta uma das decisoes mais importantes do projeto: voces tem apenas um numero de WhatsApp, mas quatro produtos com campanhas separadas.
+
+A solucao que a gente usou e o roteamento por tag. Funciona assim: cada formulario de anuncio — seja no Meta ou no Google — vai ter um identificador invisivel para o usuario, chamado de campo oculto ou UTM. Quando o lead preenche o formulario da campanha de CGI, por exemplo, ele chega no Kommo ja com a tag [CGI].
+
+O Kommo le essa tag automaticamente e dispara o bot especifico daquele produto — sem precisar perguntar nada para o lead.</div>
+  </div>
+
+  <div class="fala">
+    <div class="rotulo">O que o lead ve na pratica</div>
+    <div class="texto">Do ponto de vista do lead, a experiencia fica muito mais fluida. Ele se cadastrou para o CGI, ai chega a mensagem:
+
+"Oi, Joao! Recebi seu cadastro para o Credito com Garantia de Imovel e fico feliz em te ajudar! Vou fazer algumas perguntinhas rapidas para verificar se voce se enquadra. Pode ser?"
+
+Sem aquela pergunta generica de "qual produto voce quer?". Ele ja sabe por que ta conversando com voces.</div>
+  </div>
+
+  <div class="fala">
+    <div class="rotulo">E o lead que chega organico?</div>
+    <div class="texto">Para quem chegar pelo WhatsApp direto, sem ter vindo de campanha — o bot tem um fluxo de fallback que faz a pergunta de segmentacao normalmente. Ela so e usada nesse caso.</div>
+  </div>
+
+  <div class="dica"><strong>Dica visual:</strong> Mostre o quadro dos 4 bots na Secao 5 do Playbook — tag [CGI], [LUZ], [FGTS], [CLT] — cada um com seu fluxo separado.</div>
+  <div class="nota"><strong>Pausa para perguntas</strong> — pergunte: "Faz sentido essa logica? Tem alguma duvida sobre como as tags funcionam?"</div>
+</div>
+
+<div class="transicao">— Mostrar Secoes 6 a 9: Funis por Produto —</div>
+
+<!-- MOMENTO 5 -->
+<div class="momento">
+  <div class="momento-header">
+    <div class="momento-num">5</div>
+    <div>
+      <div class="momento-titulo">Os Quatro Funis de Qualificacao</div>
+      <div class="momento-sub">Tempo sugerido: 6-8 min</div>
+    </div>
+  </div>
+  <div class="tempo-tag">6-8 minutos</div>
+
+  <div class="fala">
+    <div class="rotulo">Apresentando os funis</div>
+    <div class="texto">Cada produto tem seu proprio fluxo de perguntas. O bot so segue para a proxima pergunta se o lead responder corretamente — se em qualquer ponto o lead nao se enquadrar, o bot encerra com empatia e oferece uma alternativa.
+
+Vou mostrar cada um rapidinho.</div>
+  </div>
+
+  <div class="fala">
+    <div class="rotulo">Funil CGI — Credito com Garantia de Imovel</div>
+    <div class="texto">Sao 4 perguntas:
+1. Qual o valor que voce precisa? (de R$50k a R$5M)
+2. Voce possui imovel em seu nome ou de familiar direto?
+3. O imovel e quitado ou ainda esta em financiamento?
+4. Qual o valor aproximado do imovel? (precisa ser acima de R$150 mil)
+
+Se passar por todas — lead qualificado, vai para o consultor.</div>
+  </div>
+
+  <div class="fala">
+    <div class="rotulo">Funil Conta de Luz</div>
+    <div class="texto">4 perguntas:
+1. Qual o valor que voce precisa? (de R$400 a R$4.000)
+2. Qual e a sua companhia de energia? (so aceita as conveniadas: CPFL, RGE, COELBA, CELPE, COSERN, ELEKTRO e ENEL)
+3. A conta esta no seu nome e e residencial?
+4. Tem algum parcelamento ativo na fatura?
+
+Se tiver parcelamento, o bot avisa que vai precisar de uma analise especifica e passa para o consultor.</div>
+  </div>
+
+  <div class="fala">
+    <div class="rotulo">Funil FGTS</div>
+    <div class="texto">3 perguntas:
+1. Voce ja aderiu ao saque-aniversario ha mais de 90 dias?
+2. Voce tem saldo disponivel para antecipacao?
+3. Voce realizou antecipacao nos ultimos 12 meses?
+
+Se nao fez antecipacao recente e tem saldo — qualificado.</div>
+  </div>
+
+  <div class="fala">
+    <div class="rotulo">Funil Consignado CLT</div>
+    <div class="texto">3 perguntas:
+1. Qual o valor que voce precisa? (de R$500 a R$25.000)
+2. Voce trabalha com carteira assinada, regime CLT?
+3. Esta registrado nessa empresa ha mais de 6 meses?
+
+Se sim para os tres — qualificado, consultor entra em 5 minutos.</div>
+  </div>
+
+  <div class="dica"><strong>Dica:</strong> Mencione que o lead reprovado sempre recebe uma mensagem com empatia e uma oferta alternativa — isso protege a reputacao do numero e pode recuperar o lead para outro produto.</div>
+</div>
+
+<div class="transicao">— Mostrar Secao 11: Regua de Follow —</div>
+
+<!-- MOMENTO 6 -->
+<div class="momento">
+  <div class="momento-header">
+    <div class="momento-num">6</div>
+    <div>
+      <div class="momento-titulo">Regua de Follow — Leads que Nao Respondem</div>
+      <div class="momento-sub">Tempo sugerido: 3 min</div>
+    </div>
+  </div>
+  <div class="tempo-tag">3 minutos</div>
+
+  <div class="fala">
+    <div class="rotulo">Explicando a regua</div>
+    <div class="texto">Nem todo lead vai responder na hora. Para esses casos, tem uma cadencia automatica de 4 mensagens — uma por dia, de D+1 a D+4.
+
+Cada mensagem tem um angulo diferente: dor e acolhimento no primeiro dia, prova social no segundo, diferencial do produto no terceiro, encerramento com porta aberta no quarto.
+
+Todas as mensagens tem o botao "Nao tenho interesse" — quando o lead clica, a cadencia para automaticamente. Isso e importante para proteger o numero de denuncias.</div>
+  </div>
+
+  <div class="fala">
+    <div class="rotulo">O que acontece se o lead responder durante a regua</div>
+    <div class="texto">Se o lead responder em qualquer momento da cadencia — D+1, D+2, qualquer dia — o bot para imediatamente e move o lead para Aguardando Atendimento. O consultor precisa entrar na conversa em ate 5 minutos.
+
+Apos D+4 sem resposta, o lead vai para Venda Perdida automaticamente.</div>
+  </div>
+</div>
+
+<div class="transicao">— Momento final —</div>
+
+<!-- MOMENTO 7 -->
+<div class="momento">
+  <div class="momento-header">
+    <div class="momento-num">7</div>
+    <div>
+      <div class="momento-titulo">Proximos Passos e Encerramento</div>
+      <div class="momento-sub">Tempo sugerido: 3-4 min</div>
+    </div>
+  </div>
+  <div class="tempo-tag">3-4 minutos</div>
+
+  <div class="fala">
+    <div class="rotulo">Proximos passos da implementacao</div>
+    <div class="texto">Agora que voces estao alinhados com a estrutura, os proximos passos sao:
+
+Primeiro, configurar o Kommo com o pipeline, os campos e as automacoes — isso a gente faz junto durante o periodo de teste.
+
+Segundo, ajustar os formularios de cada campanha para incluir o identificador de produto — isso e simples, a gente orienta o time de midia.
+
+Terceiro, treinar o time comercial no Kommo — como usar o checklist diario, quando mover os cards, como usar as tarefas.
+
+E ai a gente entra no periodo de 30 dias de teste para calibrar os fluxos com base nos leads reais.</div>
+  </div>
+
+  <div class="fala">
+    <div class="rotulo">Encerramento</div>
+    <div class="texto">O objetivo do Kommo nao e substituir o consultor — e fazer o consultor trabalhar so com os leads que realmente valem o tempo dele.
+
+Com essa estrutura, o time de voces para de perder lead por falta de atendimento rapido, e a Sarah e o Eder passam a ter visibilidade real do funil — o que ta convertendo, o que ta travando, onde esta o gargalo.
+
+Esse documento que eu trouxe e o guia de referencia para o time. Qualquer duvida durante a implementacao — a gente vai estar junto.
+
+Tem alguma duvida sobre o que eu apresentei?</div>
+  </div>
+
+  <div class="alerta"><strong>Se perguntarem sobre custo do Kommo:</strong> O periodo de teste de 30 dias e gratuito. Apos isso, a contratacao e feita diretamente pela FiveCred — a proposta comercial esta sendo preparada em separado.</div>
+  <div class="dica"><strong>Se pedirem para ver o bot funcionando:</strong> Explique que durante a implementacao voces vao configurar um ambiente de teste no Kommo para validar os fluxos antes de ativar com leads reais.</div>
+</div>
+
+<!-- RESUMO DE TEMPO -->
+<div class="momento" style="background:#1a1a1a; color:white;">
+  <div style="font-size:18px; font-weight:800; color:#FF6600; margin-bottom:20px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:3px solid #FF6600; padding-bottom:12px;">Resumo de Tempo Total</div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+    <div style="background:#222; border-radius:8px; padding:12px 16px;">
+      <div style="font-size:11px; color:#888; font-weight:700; text-transform:uppercase; margin-bottom:4px;">Momento 1 — Abertura</div>
+      <div style="color:#FF6600; font-weight:800;">2-3 min</div>
+    </div>
+    <div style="background:#222; border-radius:8px; padding:12px 16px;">
+      <div style="font-size:11px; color:#888; font-weight:700; text-transform:uppercase; margin-bottom:4px;">Momento 2 — Pipeline</div>
+      <div style="color:#FF6600; font-weight:800;">4-5 min</div>
+    </div>
+    <div style="background:#222; border-radius:8px; padding:12px 16px;">
+      <div style="font-size:11px; color:#888; font-weight:700; text-transform:uppercase; margin-bottom:4px;">Momento 3 — Campos</div>
+      <div style="color:#FF6600; font-weight:800;">3 min</div>
+    </div>
+    <div style="background:#222; border-radius:8px; padding:12px 16px;">
+      <div style="font-size:11px; color:#888; font-weight:700; text-transform:uppercase; margin-bottom:4px;">Momento 4 — Bot / Tags</div>
+      <div style="color:#FF6600; font-weight:800;">5 min</div>
+    </div>
+    <div style="background:#222; border-radius:8px; padding:12px 16px;">
+      <div style="font-size:11px; color:#888; font-weight:700; text-transform:uppercase; margin-bottom:4px;">Momento 5 — Funis</div>
+      <div style="color:#FF6600; font-weight:800;">6-8 min</div>
+    </div>
+    <div style="background:#222; border-radius:8px; padding:12px 16px;">
+      <div style="font-size:11px; color:#888; font-weight:700; text-transform:uppercase; margin-bottom:4px;">Momento 6 — Follow</div>
+      <div style="color:#FF6600; font-weight:800;">3 min</div>
+    </div>
+    <div style="background:#222; border-radius:8px; padding:12px 16px; grid-column: span 2;">
+      <div style="font-size:11px; color:#888; font-weight:700; text-transform:uppercase; margin-bottom:4px;">Momento 7 — Proximos Passos</div>
+      <div style="color:#FF6600; font-weight:800;">3-4 min</div>
+    </div>
+  </div>
+  <div style="margin-top:20px; background:#FF6600; border-radius:8px; padding:14px 18px; text-align:center;">
+    <div style="font-size:13px; color:white; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">Apresentacao Total</div>
+    <div style="font-size:28px; font-weight:900; color:white; margin-top:4px;">26 — 31 minutos</div>
+    <div style="font-size:12px; color:rgba(255,255,255,0.8); margin-top:4px;">+ tempo de perguntas</div>
+  </div>
+</div>
+
+<div class="rodape">
+  <p><strong>FiveCred</strong> | Roteiro de Apresentacao — Playbook CRM | V4 Company | Maio 2026</p>
+  <p style="margin-top:6px;">Documento de uso interno — nao compartilhar com o cliente.</p>
+</div>
+
+</div>
+</body>
+</html>

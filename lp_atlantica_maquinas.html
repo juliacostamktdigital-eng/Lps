@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlântica Máquinas — Fábrica de Blocos até 6.000 unidades/dia</title>
+<meta name="description" content="Máquinas para fabricação de blocos de concreto. Produção de até 6.000 blocos por dia. Tecnologia hidráulica, conformidade ABNT e suporte técnico especializado.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        'atl-navy':      '#002B69',
+        'atl-navy-dark': '#001A42',
+        'atl-navy-mid':  '#003B8E',
+        'atl-red':       '#CC1417',
+        'atl-red-dark':  '#A01012',
+      },
+      fontFamily: {
+        display: ['Barlow Condensed', 'sans-serif'],
+        body:    ['Inter', 'sans-serif'],
+      }
+    }
+  }
+}
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+/* ── REVEAL ANIMATIONS ── */
+.reveal       { opacity:0; transform:translateY(40px);  transition:opacity .7s ease,transform .7s ease; }
+.reveal-left  { opacity:0; transform:translateX(-40px); transition:opacity .7s ease,transform .7s ease; }
+.reveal-right { opacity:0; transform:translateX(40px);  transition:opacity .7s ease,transform .7s ease; }
+.reveal.visible,.reveal-left.visible,.reveal-right.visible { opacity:1; transform:none; }
+
+.stagger > * { opacity:0; transform:translateY(28px); transition:opacity .5s ease,transform .5s ease; }
+.stagger.visible > *:nth-child(1){opacity:1;transform:none;transition-delay:.05s}
+.stagger.visible > *:nth-child(2){opacity:1;transform:none;transition-delay:.15s}
+.stagger.visible > *:nth-child(3){opacity:1;transform:none;transition-delay:.25s}
+.stagger.visible > *:nth-child(4){opacity:1;transform:none;transition-delay:.35s}
+.stagger.visible > *:nth-child(5){opacity:1;transform:none;transition-delay:.45s}
+.stagger.visible > *:nth-child(6){opacity:1;transform:none;transition-delay:.55s}
+
+/* ── NAVBAR ── */
+#navbar { transition: background .3s, box-shadow .3s; }
+#navbar.scrolled { background:rgba(0,26,66,.97)!important; backdrop-filter:blur(12px); box-shadow:0 4px 24px rgba(0,0,0,.35); }
+
+/* ── HERO ── */
+.hero-bg {
+  background: linear-gradient(135deg,#001A42 0%,#002B69 55%,#001A42 100%);
+  position:relative; overflow:hidden;
+}
+.hero-bg::before {
+  content:''; position:absolute; inset:0;
+  background-image: linear-gradient(rgba(0,59,142,.15) 1px,transparent 1px),
+                    linear-gradient(90deg,rgba(0,59,142,.15) 1px,transparent 1px);
+  background-size:50px 50px; pointer-events:none;
+}
+.hero-bg::after {
+  content:''; position:absolute; top:-200px; right:-200px;
+  width:600px; height:600px; border-radius:50%;
+  background:radial-gradient(circle,rgba(204,20,23,.18) 0%,transparent 70%);
+  pointer-events:none;
+}
+
+/* ── FORM ── */
+.hero-form { background:rgba(255,255,255,.97); border-radius:14px; box-shadow:0 32px 80px rgba(0,0,0,.45); }
+.form-field { transition:border-color .2s,box-shadow .2s; }
+.form-field:focus { border-color:#002B69; box-shadow:0 0 0 3px rgba(0,43,105,.12); outline:none; }
+
+/* ── CTA BUTTON ── */
+.btn-red {
+  background:#CC1417; color:#fff;
+  transition:background .2s,transform .2s,box-shadow .2s;
+  position:relative; overflow:hidden;
+}
+.btn-red::after {
+  content:''; position:absolute; top:0; left:-100%;
+  width:100%; height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
+  transition:left .4s;
+}
+.btn-red:hover { background:#A01012; transform:translateY(-2px); box-shadow:0 8px 24px rgba(204,20,23,.4); }
+.btn-red:hover::after { left:100%; }
+.btn-red:active { transform:none; }
+
+/* ── PRODUCT CARD ── */
+.pcard { transition:transform .3s,box-shadow .3s; }
+.pcard:hover { transform:translateY(-12px); box-shadow:0 28px 60px rgba(0,43,105,.22); }
+.pcard .pcard-overlay { opacity:0; transition:opacity .3s; }
+.pcard:hover .pcard-overlay { opacity:1; }
+.pcard .pcard-specs { max-height:0; overflow:hidden; opacity:0; transition:max-height .4s ease,opacity .4s ease; }
+.pcard:hover .pcard-specs { max-height:220px; opacity:1; }
+
+/* ── FEATURE CARD ── */
+.fcard { transition:transform .3s,box-shadow .3s,border-color .3s; border:2px solid transparent; }
+.fcard:hover { transform:translateY(-6px); box-shadow:0 16px 40px rgba(0,43,105,.1); border-color:#CC1417; }
+.fcard:hover .fcard-icon { background:#CC1417; color:#fff; }
+.fcard-icon { transition:background .3s,color .3s; }
+
+/* ── FAQ ── */
+.faq-item .faq-body { max-height:0; overflow:hidden; transition:max-height .4s ease; }
+.faq-item.open .faq-body { max-height:300px; }
+.faq-item .faq-icon { transition:transform .3s; }
+.faq-item.open .faq-icon { transform:rotate(45deg); }
+.faq-item.open { background:#f8faff; }
+
+/* ── MOBILE MENU ── */
+#mobile-menu { max-height:0; overflow:hidden; transition:max-height .4s ease; }
+#mobile-menu.open { max-height:500px; }
+
+/* ── SCROLL INDICATOR ── */
+.scroll-bounce { animation:bounce 2s infinite; }
+@keyframes bounce {
+  0%,100%{ transform:translateX(-50%) translateY(0); }
+  50%    { transform:translateX(-50%) translateY(10px); }
+}
+
+/* ── VIDEO PLACEHOLDER ── */
+.vid-ph {
+  background:linear-gradient(135deg,#1a1a2e,#16213e);
+  border:2px dashed rgba(255,255,255,.18); border-radius:12px;
+  transition:border-color .3s,transform .3s;
+}
+.vid-ph:hover { border-color:#CC1417; transform:scale(1.02); }
+
+/* ── SECTION TAG ── */
+.stag {
+  display:inline-block; text-transform:uppercase;
+  letter-spacing:.12em; font-size:.72rem; font-weight:700;
+  color:#CC1417; border-left:3px solid #CC1417; padding-left:10px;
+}
+</style>
+</head>
+<body class="bg-white text-gray-800">
+
+<!-- ═══════════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════════ -->
+<nav id="navbar" class="fixed top-0 inset-x-0 z-50 bg-atl-navy-dark/90 backdrop-blur-sm">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+
+    <a href="#hero" class="flex items-center gap-3">
+      <div class="w-10 h-10 bg-atl-red rounded-lg flex items-center justify-center flex-shrink-0">
+        <span class="font-display font-black text-white text-xl leading-none">A</span>
+      </div>
+      <div>
+        <div class="font-display font-bold text-white text-lg leading-none tracking-wide">ATLÂNTICA</div>
+        <div class="text-xs text-gray-400 tracking-widest uppercase">Máquinas para Blocos</div>
+      </div>
+    </a>
+
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#produtos"    class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Produtos</a>
+      <a href="#diferenciais"class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Diferenciais</a>
+      <a href="#depoimentos" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Resultados</a>
+      <a href="#faq"         class="text-gray-300 hover:text-white transition-colors text-sm font-medium">FAQ</a>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <a href="#contato" class="hidden md:block btn-red font-display font-bold text-base px-6 py-2.5 rounded-lg uppercase tracking-wide">
+        Solicitar Orçamento
+      </a>
+      <button id="menu-toggle" class="md:hidden text-white" aria-label="Abrir menu">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="md:hidden bg-atl-navy-dark border-t border-white/10">
+    <div class="px-6 py-4 flex flex-col gap-4">
+      <a href="#produtos"     class="text-gray-300 hover:text-white py-2 border-b border-white/10">Produtos</a>
+      <a href="#diferenciais" class="text-gray-300 hover:text-white py-2 border-b border-white/10">Diferenciais</a>
+      <a href="#depoimentos"  class="text-gray-300 hover:text-white py-2 border-b border-white/10">Resultados</a>
+      <a href="#faq"          class="text-gray-300 hover:text-white py-2">FAQ</a>
+      <a href="#contato" class="btn-red font-display font-bold text-base px-6 py-3 rounded-lg uppercase tracking-wide text-center mt-2">
+        Solicitar Orçamento
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     HERO + FORM
+═══════════════════════════════════════════ -->
+<section id="hero" class="hero-bg min-h-screen flex items-center pt-24 pb-16 relative">
+  <div class="max-w-7xl mx-auto px-6 w-full">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+      <!-- LEFT: HEADLINE -->
+      <div class="text-white">
+        <div class="flex items-center gap-2 mb-6 reveal-left">
+          <span class="w-8 h-0.5 bg-atl-red"></span>
+          <span class="text-atl-red font-display font-bold uppercase tracking-widest text-sm">Fabricante nacional · +50 anos</span>
+        </div>
+
+        <h1 class="font-display font-black text-5xl lg:text-7xl leading-none mb-6 reveal-left" style="transition-delay:.1s">
+          Monte sua<br>
+          fábrica de blocos.<br>
+          <span class="text-atl-red">Produza até<br>
+          6.000 unidades<br>
+          por dia.</span>
+        </h1>
+
+        <p class="text-gray-300 text-lg leading-relaxed mb-8 max-w-lg reveal-left" style="transition-delay:.2s">
+          Máquinas de alta produção para blocos de concreto conformes à ABNT. Tecnologia hidráulica, elétrica e pneumática para todos os volumes.
+        </p>
+
+        <div class="grid grid-cols-3 gap-4 mb-8 reveal-left" style="transition-delay:.3s">
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
+            <div class="font-display font-black text-3xl text-atl-red counter-num" data-target="6000">0</div>
+            <div class="text-xs text-gray-400 mt-1">blocos/dia</div>
+          </div>
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
+            <div class="font-display font-black text-3xl text-white counter-num" data-target="50">0</div>
+            <div class="text-xs text-gray-400 mt-1">anos no mercado</div>
+          </div>
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
+            <div class="font-display font-black text-3xl text-white">ABNT</div>
+            <div class="text-xs text-gray-400 mt-1">certificação</div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 text-gray-400 text-xs reveal-left" style="transition-delay:.4s">
+          <i data-lucide="shield-check" class="w-4 h-4 text-atl-red flex-shrink-0"></i>
+          <span>Assistência técnica especializada · Peças originais · Suporte pós-venda</span>
+        </div>
+      </div>
+
+      <!-- RIGHT: FORM -->
+      <div class="hero-form p-8 reveal-right" id="contato">
+        <div class="mb-6">
+          <div class="stag mb-3">Oferta exclusiva</div>
+          <h2 class="font-display font-black text-2xl lg:text-3xl text-atl-navy-dark leading-tight">
+            Receba a proposta ideal<br>
+            <span class="text-atl-red">para o seu projeto</span>
+          </h2>
+          <p class="text-gray-500 text-sm mt-2">Resposta em até 24h úteis pelo WhatsApp</p>
+        </div>
+
+        <form id="lead-form" class="space-y-4" novalidate>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Nome completo *</label>
+            <input id="f-name" type="text" placeholder="Seu nome"
+              class="form-field w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-gray-800 placeholder-gray-400" required>
+            <span class="err-msg text-xs text-red-600 hidden mt-1 block">Campo obrigatório</span>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">WhatsApp *</label>
+            <input id="f-phone" type="tel" placeholder="(00) 00000-0000"
+              class="form-field w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-gray-800 placeholder-gray-400" required>
+            <span class="err-msg text-xs text-red-600 hidden mt-1 block">Campo obrigatório</span>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Em qual fase você está? *</label>
+            <select id="f-stage"
+              class="form-field w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-gray-800 bg-white appearance-none" required>
+              <option value="" disabled selected>Selecione</option>
+              <option value="pesquisa">Pesquisando opções</option>
+              <option value="pronto">Pronto para comprar</option>
+              <option value="expansao">Quero ampliar minha produção</option>
+            </select>
+            <span class="err-msg text-xs text-red-600 hidden mt-1 block">Campo obrigatório</span>
+          </div>
+          <button type="submit" class="btn-red w-full font-display font-black text-xl py-4 rounded-xl uppercase tracking-wide mt-2">
+            Receber contato agora
+          </button>
+        </form>
+
+        <div id="form-success" class="hidden text-center py-8">
+          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i data-lucide="check-circle" class="w-8 h-8 text-green-600"></i>
+          </div>
+          <h3 class="font-display font-black text-xl text-gray-800 mb-2">Recebemos seu contato!</h3>
+          <p class="text-gray-500 text-sm">Nossa equipe entrará em contato pelo WhatsApp em breve.</p>
+        </div>
+
+        <p class="text-center text-xs text-gray-400 mt-4 flex items-center justify-center gap-1">
+          <i data-lucide="lock" class="w-3 h-3"></i> Seus dados estão seguros. Sem spam.
+        </p>
+      </div>
+
+    </div>
+  </div>
+  <div class="scroll-bounce absolute bottom-8 left-1/2">
+    <i data-lucide="chevron-down" class="w-6 h-6 text-white/40"></i>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     CREDIBILITY BAR
+═══════════════════════════════════════════ -->
+<section class="bg-atl-red py-7">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 stagger">
+      <div class="text-center text-white">
+        <div class="font-display font-black text-4xl"><span class="counter-num" data-target="6000">0</span>+</div>
+        <div class="text-white/80 text-sm mt-1">blocos/dia (máximo)</div>
+      </div>
+      <div class="text-center text-white">
+        <div class="font-display font-black text-4xl"><span class="counter-num" data-target="50">0</span> anos</div>
+        <div class="text-white/80 text-sm mt-1">de experiência</div>
+      </div>
+      <div class="text-center text-white">
+        <div class="font-display font-black text-4xl">10+</div>
+        <div class="text-white/80 text-sm mt-1">modelos disponíveis</div>
+      </div>
+      <div class="text-center text-white">
+        <div class="font-display font-black text-4xl">ABNT</div>
+        <div class="text-white/80 text-sm mt-1">conformidade garantida</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     POR QUE BLOCOS?
+═══════════════════════════════════════════ -->
+<section class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+      <div class="relative reveal-left">
+        <div class="rounded-2xl overflow-hidden aspect-video relative bg-gray-100">
+          <img src="https://placehold.co/700x450/002B69/FFFFFF?text=Fábrica+em+Operação"
+            alt="Fábrica de blocos de concreto em operação com máquina Atlântica"
+            class="w-full h-full object-cover">
+          <div class="absolute bottom-6 left-6 right-6 flex gap-4">
+            <div class="bg-atl-red text-white rounded-xl px-4 py-3 flex-1 text-center">
+              <div class="font-display font-black text-2xl">R$ 0,22</div>
+              <div class="text-xs opacity-80">custo médio/bloco</div>
+            </div>
+            <div class="bg-atl-navy-dark text-white rounded-xl px-4 py-3 flex-1 text-center">
+              <div class="font-display font-black text-2xl">~3 meses</div>
+              <div class="text-xs opacity-80">retorno do investimento*</div>
+            </div>
+          </div>
+        </div>
+        <div class="absolute -top-6 -right-6 bg-white rounded-2xl shadow-2xl p-5 w-48">
+          <i data-lucide="trending-up" class="w-8 h-8 text-atl-red mb-2"></i>
+          <div class="font-display font-black text-atl-navy text-lg leading-tight">Mercado em alta</div>
+          <div class="text-xs text-gray-500 mt-1">Construção civil crescendo</div>
+        </div>
+      </div>
+
+      <div class="reveal-right">
+        <div class="stag mb-4">Oportunidade de negócio</div>
+        <h2 class="font-display font-black text-4xl lg:text-5xl text-atl-navy-dark leading-none mb-8">
+          Por que fabricar<br>
+          <span class="text-atl-red">blocos de concreto?</span>
+        </h2>
+        <div class="space-y-5 stagger">
+          <div class="flex gap-4">
+            <div class="w-10 h-10 bg-atl-red/10 rounded-lg flex items-center justify-center flex-shrink-0">
+              <i data-lucide="dollar-sign" class="w-5 h-5 text-atl-red"></i>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-900 mb-1">Alta demanda constante</h3>
+              <p class="text-gray-600 text-sm leading-relaxed">Blocos são insumo básico da construção civil. Toda obra precisa — do pequeno muro à grande edificação.</p>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <div class="w-10 h-10 bg-atl-red/10 rounded-lg flex items-center justify-center flex-shrink-0">
+              <i data-lucide="recycle" class="w-5 h-5 text-atl-red"></i>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-900 mb-1">Matéria-prima simples e acessível</h3>
+              <p class="text-gray-600 text-sm leading-relaxed">Cimento, areia, brita e água. Insumos disponíveis em qualquer região do Brasil, sem dependência de importação.</p>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <div class="w-10 h-10 bg-atl-red/10 rounded-lg flex items-center justify-center flex-shrink-0">
+              <i data-lucide="bar-chart-3" class="w-5 h-5 text-atl-red"></i>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-900 mb-1">Escala = margem maior</h3>
+              <p class="text-gray-600 text-sm leading-relaxed">Custo de produção baixo, revenda local garantida. Quanto maior a produção, maior a margem operacional.</p>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <div class="w-10 h-10 bg-atl-red/10 rounded-lg flex items-center justify-center flex-shrink-0">
+              <i data-lucide="map-pin" class="w-5 h-5 text-atl-red"></i>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-900 mb-1">Vantagem local impossível de replicar</h3>
+              <p class="text-gray-600 text-sm leading-relaxed">Entrega rápida e frete baixo para clientes próximos. Competidores menores não conseguem competir com escala industrial.</p>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-400 mt-6">*Estimativa baseada em produção padrão linha 432. Varia conforme volume, mercado local e operação.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PRODUTOS
+═══════════════════════════════════════════ -->
+<section id="produtos" class="py-20 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-6">
+
+    <div class="text-center mb-12 reveal">
+      <div class="stag mb-4">Linha completa</div>
+      <h2 class="font-display font-black text-4xl lg:text-6xl text-atl-navy-dark leading-none">
+        Escolha a máquina <span class="text-atl-red">certa</span><br>para o seu volume
+      </h2>
+      <p class="text-gray-500 mt-4 max-w-xl mx-auto">Do modelo econômico à linha hidráulica industrial. Cada máquina para um perfil de produção específico.</p>
+
+      <div class="flex flex-wrap justify-center gap-3 mt-8" id="filter-btns">
+        <button class="filter-btn bg-atl-navy-dark text-white px-5 py-2 rounded-full font-medium text-sm transition-all" data-filter="all">Todas</button>
+        <button class="filter-btn bg-white text-gray-600 border border-gray-200 px-5 py-2 rounded-full font-medium text-sm transition-all" data-filter="economica">Econômica</button>
+        <button class="filter-btn bg-white text-gray-600 border border-gray-200 px-5 py-2 rounded-full font-medium text-sm transition-all" data-filter="pneumatica">Pneumática</button>
+        <button class="filter-btn bg-white text-gray-600 border border-gray-200 px-5 py-2 rounded-full font-medium text-sm transition-all" data-filter="industrial">Industrial</button>
+        <button class="filter-btn bg-white text-gray-600 border border-gray-200 px-5 py-2 rounded-full font-medium text-sm transition-all" data-filter="hidraulica">Hidráulica</button>
+      </div>
+    </div>
+
+    <div class="relative">
+      <div class="overflow-hidden">
+        <div id="products-track" class="flex gap-6" style="transition:transform .5s cubic-bezier(.25,.1,.25,1)">
+
+          <!-- ELZ 2012 -->
+          <div class="pcard bg-white rounded-2xl overflow-hidden flex-shrink-0 w-72" data-cat="economica">
+            <div class="relative overflow-hidden h-48">
+              <img src="https://placehold.co/400x300/F0F4FF/002B69?text=ELZ+2012" alt="Máquina ELZ 2012" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+              <div class="pcard-overlay absolute inset-0 bg-atl-navy-dark/80 flex items-center justify-center">
+                <a href="#contato" class="btn-red font-display font-bold px-6 py-2.5 rounded-lg text-sm uppercase">Solicitar orçamento</a>
+              </div>
+            </div>
+            <div class="p-5">
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <span class="text-xs font-bold text-atl-red uppercase tracking-wider">Econômica</span>
+                  <h3 class="font-display font-black text-xl text-atl-navy-dark">ELZ 2012</h3>
+                </div>
+                <div class="bg-atl-navy-dark/8 rounded-lg px-3 py-1 text-center">
+                  <div class="font-display font-black text-atl-navy-dark text-lg leading-none">2.250</div>
+                  <div class="text-xs text-gray-500">blocos/dia</div>
+                </div>
+              </div>
+              <div class="pcard-specs space-y-2">
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="zap" class="w-4 h-4 text-atl-red flex-shrink-0"></i>Acionamento elétrico</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="layers" class="w-4 h-4 text-atl-red flex-shrink-0"></i>Blocos 14×19×39 e 14×19×19</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="check-circle" class="w-4 h-4 text-atl-red flex-shrink-0"></i>Conformidade ABNT</div>
+              </div>
+              <a href="#contato" class="block text-center bg-atl-navy-dark hover:bg-atl-navy-mid text-white font-display font-bold py-3 rounded-lg mt-4 uppercase text-sm tracking-wide transition-colors">Solicitar Orçamento</a>
+            </div>
+          </div>
+
+          <!-- 321 SP -->
+          <div class="pcard bg-white rounded-2xl overflow-hidden flex-shrink-0 w-72" data-cat="economica">
+            <div class="relative overflow-hidden h-48">
+              <img src="https://placehold.co/400x300/F0F4FF/002B69?text=321+SP+Econômica" alt="Máquina 321 SP Econômica" class="w-full h-full object-cover transition-transform duration-500">
+              <div class="pcard-overlay absolute inset-0 bg-atl-navy-dark/80 flex items-center justify-center">
+                <a href="#contato" class="btn-red font-display font-bold px-6 py-2.5 rounded-lg text-sm uppercase">Solicitar orçamento</a>
+              </div>
+            </div>
+            <div class="p-5">
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <span class="text-xs font-bold text-atl-red uppercase tracking-wider">SP Econômica</span>
+                  <h3 class="font-display font-black text-xl text-atl-navy-dark">321 SP</h3>
+                </div>
+                <div class="bg-atl-navy-dark/8 rounded-lg px-3 py-1 text-center">
+                  <div class="font-display font-black text-atl-navy-dark text-lg leading-none">3.000</div>
+                  <div class="text-xs text-gray-500">blocos/dia</div>
+                </div>
+              </div>
+              <div class="pcard-specs space-y-2">
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="zap" class="w-4 h-4 text-atl-red flex-shrink-0"></i>Sistema eletromecânico</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="layers" class="w-4 h-4 text-atl-red flex-shrink-0"></i>3 blocos por ciclo</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="check-circle" class="w-4 h-4 text-atl-red flex-shrink-0"></i>Ideal para pequenas fábricas</div>
+              </div>
+              <a href="#contato" class="block text-center bg-atl-navy-dark hover:bg-atl-navy-mid text-white font-display font-bold py-3 rounded-lg mt-4 uppercase text-sm tracking-wide transition-colors">Solicitar Orçamento</a>
+            </div>
+          </div>
+
+          <!-- 432 SP -->
+          <div class="pcard bg-white rounded-2xl overflow-hidden flex-shrink-0 w-72" data-cat="economica">
+            <div class="relative overflow-hidden h-48">
+              <img src="https://placehold.co/400x300/F0F4FF/002B69?text=432+SP+Econômica" alt="Máquina 432 SP Econômica" class="w-full h-full object-cover">
+              <div class="pcard-overlay absolute inset-0 bg-atl-navy-dark/80 flex items-center justify-center">
+                <a href="#contato" class="btn-red font-display font-bold px-6 py-2.5 rounded-lg text-sm uppercase">Solicitar orçamento</a>
+              </div>
+            </div>
+            <div class="p-5">
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <span class="text-xs font-bold text-atl-red uppercase tracking-wider">SP Econômica</span>
+                  <h3 class="font-display font-black text-xl text-atl-navy-dark">432 SP</h3>
+                </div>
+                <div class="bg-atl-navy-dark/8 rounded-lg px-3 py-1 text-center">
+                  <div class="font-display font-black text-atl-navy-dark text-lg leading-none">4.000</div>
+                  <div class="text-xs text-gray-500">blocos/dia</div>
+                </div>
+              </div>
+              <div class="pcard-specs space-y-2">
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="zap" class="w-4 h-4 text-atl-red flex-shrink-0"></i>Maior da linha SP</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="layers" class="w-4 h-4 text-atl-red flex-shrink-0"></i>4 blocos por ciclo</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="check-circle" class="w-4 h-4 text-atl-red flex-shrink-0"></i>Alto custo-benefício</div>
+              </div>
+              <a href="#contato" class="block text-center bg-atl-navy-dark hover:bg-atl-navy-mid text-white font-display font-bold py-3 rounded-lg mt-4 uppercase text-sm tracking-wide transition-colors">Solicitar Orçamento</a>
+            </div>
+          </div>
+
+          <!-- 321 ACP -->
+          <div class="pcard bg-white rounded-2xl overflow-hidden flex-shrink-0 w-72" data-cat="pneumatica">
+            <div class="relative overflow-hidden h-48">
+              <img src="https://placehold.co/400x300/EEF2FF/003B8E?text=321+ACP+Pneumática" alt="Máquina 321 ACP Pneumática" class="w-full h-full object-cover">
+              <div class="pcard-overlay absolute inset-0 bg-atl-navy-dark/80 flex items-center justify-center">
+                <a href="#contato" class="btn-red font-display font-bold px-6 py-2.5 rounded-lg text-sm uppercase">Solicitar orçamento</a>
+              </div>
+            </div>
+            <div class="p-5">
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">ACP Pneumática</span>
+                  <h3 class="font-display font-black text-xl text-atl-navy-dark">321 ACP</h3>
+                </div>
+                <div class="bg-blue-50 rounded-lg px-3 py-1 text-center">
+                  <div class="font-display font-black text-blue-700 text-lg leading-none">3.000</div>
+                  <div class="text-xs text-gray-500">blocos/dia</div>
+                </div>
+              </div>
+              <div class="pcard-specs space-y-2">
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="wind" class="w-4 h-4 text-blue-600 flex-shrink-0"></i>Compactação pneumática</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="shield" class="w-4 h-4 text-blue-600 flex-shrink-0"></i>Maior densidade de bloco</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="settings" class="w-4 h-4 text-blue-600 flex-shrink-0"></i>Guias reforçadas</div>
+              </div>
+              <a href="#contato" class="block text-center bg-atl-navy-dark hover:bg-atl-navy-mid text-white font-display font-bold py-3 rounded-lg mt-4 uppercase text-sm tracking-wide transition-colors">Solicitar Orçamento</a>
+            </div>
+          </div>
+
+          <!-- 432 ACP -->
+          <div class="pcard bg-white rounded-2xl overflow-hidden flex-shrink-0 w-72" data-cat="pneumatica">
+            <div class="relative overflow-hidden h-48">
+              <img src="https://placehold.co/400x300/EEF2FF/003B8E?text=432+ACP+Pneumática" alt="Máquina 432 ACP Pneumática" class="w-full h-full object-cover">
+              <div class="pcard-overlay absolute inset-0 bg-atl-navy-dark/80 flex items-center justify-center">
+                <a href="#contato" class="btn-red font-display font-bold px-6 py-2.5 rounded-lg text-sm uppercase">Solicitar orçamento</a>
+              </div>
+            </div>
+            <div class="p-5">
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">ACP Pneumática</span>
+                  <h3 class="font-display font-black text-xl text-atl-navy-dark">432 ACP</h3>
+                </div>
+                <div class="bg-blue-50 rounded-lg px-3 py-1 text-center">
+                  <div class="font-display font-black text-blue-700 text-lg leading-none">4.000</div>
+                  <div class="text-xs text-gray-500">blocos/dia</div>
+                </div>
+              </div>
+              <div class="pcard-specs space-y-2">
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="wind" class="w-4 h-4 text-blue-600 flex-shrink-0"></i>4 blocos/ciclo pneumático</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="shield" class="w-4 h-4 text-blue-600 flex-shrink-0"></i>Alta resistência estrutural</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="award" class="w-4 h-4 text-blue-600 flex-shrink-0"></i>Conformidade NBR 6136</div>
+              </div>
+              <a href="#contato" class="block text-center bg-atl-navy-dark hover:bg-atl-navy-mid text-white font-display font-bold py-3 rounded-lg mt-4 uppercase text-sm tracking-wide transition-colors">Solicitar Orçamento</a>
+            </div>
+          </div>
+
+          <!-- E-321 Industrial -->
+          <div class="pcard bg-white rounded-2xl overflow-hidden flex-shrink-0 w-72 relative" data-cat="industrial">
+            <div class="absolute top-3 right-3 z-10">
+              <span class="bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">Industrial</span>
+            </div>
+            <div class="relative overflow-hidden h-48">
+              <img src="https://placehold.co/400x300/FFFBEB/92400E?text=E-321+Industrial" alt="Máquina E-321 Industrial" class="w-full h-full object-cover">
+              <div class="pcard-overlay absolute inset-0 bg-atl-navy-dark/80 flex items-center justify-center">
+                <a href="#contato" class="btn-red font-display font-bold px-6 py-2.5 rounded-lg text-sm uppercase">Solicitar orçamento</a>
+              </div>
+            </div>
+            <div class="p-5">
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <span class="text-xs font-bold text-amber-600 uppercase tracking-wider">Industrial</span>
+                  <h3 class="font-display font-black text-xl text-atl-navy-dark">E-321</h3>
+                </div>
+                <div class="bg-amber-50 rounded-lg px-3 py-1 text-center">
+                  <div class="font-display font-black text-amber-700 text-lg leading-none">3.000</div>
+                  <div class="text-xs text-gray-500">blocos/dia</div>
+                </div>
+              </div>
+              <div class="pcard-specs space-y-2">
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="cpu" class="w-4 h-4 text-amber-600 flex-shrink-0"></i>Alta tecnologia de vibração</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="settings-2" class="w-4 h-4 text-amber-600 flex-shrink-0"></i>Base estrutural reforçada</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="activity" class="w-4 h-4 text-amber-600 flex-shrink-0"></i>Produção ininterrupta</div>
+              </div>
+              <a href="#contato" class="block text-center bg-atl-navy-dark hover:bg-atl-navy-mid text-white font-display font-bold py-3 rounded-lg mt-4 uppercase text-sm tracking-wide transition-colors">Solicitar Orçamento</a>
+            </div>
+          </div>
+
+          <!-- E-432 Industrial -->
+          <div class="pcard bg-white rounded-2xl overflow-hidden flex-shrink-0 w-72 relative" data-cat="industrial">
+            <div class="absolute top-3 right-3 z-10">
+              <span class="bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">Industrial</span>
+            </div>
+            <div class="relative overflow-hidden h-48">
+              <img src="https://placehold.co/400x300/FFFBEB/92400E?text=E-432+Industrial" alt="Máquina E-432 Industrial" class="w-full h-full object-cover">
+              <div class="pcard-overlay absolute inset-0 bg-atl-navy-dark/80 flex items-center justify-center">
+                <a href="#contato" class="btn-red font-display font-bold px-6 py-2.5 rounded-lg text-sm uppercase">Solicitar orçamento</a>
+              </div>
+            </div>
+            <div class="p-5">
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <span class="text-xs font-bold text-amber-600 uppercase tracking-wider">Industrial</span>
+                  <h3 class="font-display font-black text-xl text-atl-navy-dark">E-432</h3>
+                </div>
+                <div class="bg-amber-50 rounded-lg px-3 py-1 text-center">
+                  <div class="font-display font-black text-amber-700 text-lg leading-none">4.000</div>
+                  <div class="text-xs text-gray-500">blocos/dia</div>
+                </div>
+              </div>
+              <div class="pcard-specs space-y-2">
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="cpu" class="w-4 h-4 text-amber-600 flex-shrink-0"></i>Maior da linha elétrica</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="settings-2" class="w-4 h-4 text-amber-600 flex-shrink-0"></i>4 blocos/ciclo + vibrocompactação</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="award" class="w-4 h-4 text-amber-600 flex-shrink-0"></i>Alta durabilidade estrutural</div>
+              </div>
+              <a href="#contato" class="block text-center bg-atl-navy-dark hover:bg-atl-navy-mid text-white font-display font-bold py-3 rounded-lg mt-4 uppercase text-sm tracking-wide transition-colors">Solicitar Orçamento</a>
+            </div>
+          </div>
+
+          <!-- 432 HD -->
+          <div class="pcard bg-white rounded-2xl overflow-hidden flex-shrink-0 w-72 relative" data-cat="hidraulica">
+            <div class="absolute top-3 right-3 z-10">
+              <span class="bg-atl-red text-white text-xs font-bold px-3 py-1 rounded-full uppercase">Hidráulica</span>
+            </div>
+            <div class="relative overflow-hidden h-48">
+              <img src="https://placehold.co/400x300/002B69/FFFFFF?text=432+HD+Hidráulica" alt="Máquina 432 HD Hidráulica Compacta" class="w-full h-full object-cover">
+              <div class="pcard-overlay absolute inset-0 bg-atl-navy-dark/80 flex items-center justify-center">
+                <a href="#contato" class="btn-red font-display font-bold px-6 py-2.5 rounded-lg text-sm uppercase">Solicitar orçamento</a>
+              </div>
+            </div>
+            <div class="p-5">
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <span class="text-xs font-bold text-atl-red uppercase tracking-wider">HD Hidráulica</span>
+                  <h3 class="font-display font-black text-xl text-atl-navy-dark">432 HD</h3>
+                </div>
+                <div class="bg-atl-red/10 rounded-lg px-3 py-1 text-center">
+                  <div class="font-display font-black text-atl-red text-lg leading-none">4.000</div>
+                  <div class="text-xs text-gray-500">blocos/dia</div>
+                </div>
+              </div>
+              <div class="pcard-specs space-y-2">
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="droplets" class="w-4 h-4 text-atl-red flex-shrink-0"></i>Sistema hidráulico completo</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="weight" class="w-4 h-4 text-atl-red flex-shrink-0"></i>1 tonelada de compactação</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="minimize-2" class="w-4 h-4 text-atl-red flex-shrink-0"></i>Design compacto</div>
+              </div>
+              <a href="#contato" class="block text-center bg-atl-red hover:bg-atl-red-dark text-white font-display font-bold py-3 rounded-lg mt-4 uppercase text-sm tracking-wide transition-colors">Solicitar Orçamento</a>
+            </div>
+          </div>
+
+          <!-- 432 HATL -->
+          <div class="pcard bg-white rounded-2xl overflow-hidden flex-shrink-0 w-72 relative" data-cat="hidraulica">
+            <div class="absolute top-3 right-3 z-10">
+              <span class="bg-atl-red text-white text-xs font-bold px-3 py-1 rounded-full uppercase">Hidráulica</span>
+            </div>
+            <div class="relative overflow-hidden h-48">
+              <img src="https://placehold.co/400x300/002B69/FFFFFF?text=432+HATL" alt="Máquina 432 HATL Hidráulica" class="w-full h-full object-cover">
+              <div class="pcard-overlay absolute inset-0 bg-atl-navy-dark/80 flex items-center justify-center">
+                <a href="#contato" class="btn-red font-display font-bold px-6 py-2.5 rounded-lg text-sm uppercase">Solicitar orçamento</a>
+              </div>
+            </div>
+            <div class="p-5">
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <span class="text-xs font-bold text-atl-red uppercase tracking-wider">HATL Hidráulica</span>
+                  <h3 class="font-display font-black text-xl text-atl-navy-dark">432 HATL</h3>
+                </div>
+                <div class="bg-atl-red/10 rounded-lg px-3 py-1 text-center">
+                  <div class="font-display font-black text-atl-red text-lg leading-none">4.000</div>
+                  <div class="text-xs text-gray-500">blocos/dia</div>
+                </div>
+              </div>
+              <div class="pcard-specs space-y-2">
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="droplets" class="w-4 h-4 text-atl-red flex-shrink-0"></i>Vibração hidráulica de alta força</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="weight" class="w-4 h-4 text-atl-red flex-shrink-0"></i>3 toneladas de compactação</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><i data-lucide="shield-check" class="w-4 h-4 text-atl-red flex-shrink-0"></i>Blocos com resistência superior</div>
+              </div>
+              <a href="#contato" class="block text-center bg-atl-red hover:bg-atl-red-dark text-white font-display font-bold py-3 rounded-lg mt-4 uppercase text-sm tracking-wide transition-colors">Solicitar Orçamento</a>
+            </div>
+          </div>
+
+          <!-- 643 HATL — TOP DE LINHA -->
+          <div class="pcard bg-atl-navy-dark rounded-2xl overflow-hidden flex-shrink-0 w-72 relative ring-4 ring-atl-red" data-cat="hidraulica">
+            <div class="absolute top-3 right-3 z-10">
+              <span class="bg-atl-red text-white text-xs font-bold px-3 py-1 rounded-full uppercase animate-pulse">Top de linha</span>
+            </div>
+            <div class="relative overflow-hidden h-48">
+              <img src="https://placehold.co/400x300/001A42/CC1417?text=643+HATL+★" alt="Máquina 643 HATL — 6.000 blocos por dia" class="w-full h-full object-cover">
+              <div class="pcard-overlay absolute inset-0 bg-black/60 flex items-center justify-center">
+                <a href="#contato" class="btn-red font-display font-bold px-6 py-2.5 rounded-lg text-sm uppercase">Solicitar orçamento</a>
+              </div>
+            </div>
+            <div class="p-5">
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <span class="text-xs font-bold text-atl-red uppercase tracking-wider">HATL — Topo de linha</span>
+                  <h3 class="font-display font-black text-2xl text-white">643 HATL</h3>
+                </div>
+                <div class="bg-atl-red rounded-lg px-3 py-1 text-center">
+                  <div class="font-display font-black text-white text-xl leading-none">6.000</div>
+                  <div class="text-xs text-white/70">blocos/dia</div>
+                </div>
+              </div>
+              <div class="pcard-specs space-y-2">
+                <div class="flex items-center gap-2 text-sm text-gray-300"><i data-lucide="droplets" class="w-4 h-4 text-atl-red flex-shrink-0"></i>Compactação hidráulica de 3 toneladas</div>
+                <div class="flex items-center gap-2 text-sm text-gray-300"><i data-lucide="layers" class="w-4 h-4 text-atl-red flex-shrink-0"></i>6 blocos por ciclo</div>
+                <div class="flex items-center gap-2 text-sm text-gray-300"><i data-lucide="trophy" class="w-4 h-4 text-atl-red flex-shrink-0"></i>Máxima eficiência por turno</div>
+              </div>
+              <a href="#contato" class="block text-center bg-atl-red hover:bg-atl-red-dark text-white font-display font-bold py-3 rounded-lg mt-4 uppercase text-sm tracking-wide transition-colors">Solicitar Orçamento</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <button id="slider-prev" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-5 bg-white shadow-xl rounded-full w-12 h-12 flex items-center justify-center z-10 transition-all hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Anterior">
+        <i data-lucide="chevron-left" class="w-6 h-6 text-atl-navy-dark"></i>
+      </button>
+      <button id="slider-next" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-5 bg-white shadow-xl rounded-full w-12 h-12 flex items-center justify-center z-10 transition-all hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Próximo">
+        <i data-lucide="chevron-right" class="w-6 h-6 text-atl-navy-dark"></i>
+      </button>
+    </div>
+
+    <div id="slider-dots" class="flex justify-center gap-2 mt-8"></div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     POR QUE ATLÂNTICA
+═══════════════════════════════════════════ -->
+<section id="diferenciais" class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16 reveal">
+      <div class="stag mb-4">Nossos diferenciais</div>
+      <h2 class="font-display font-black text-4xl lg:text-6xl text-atl-navy-dark leading-none">
+        Por que a <span class="text-atl-red">Atlântica</span><br>é a escolha certa?
+      </h2>
+    </div>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 stagger">
+
+      <div class="fcard bg-white border-2 border-gray-100 rounded-2xl p-6">
+        <div class="fcard-icon w-14 h-14 bg-atl-navy-dark/8 rounded-xl flex items-center justify-center mb-5 text-atl-navy-dark">
+          <i data-lucide="droplets" class="w-7 h-7"></i>
+        </div>
+        <h3 class="font-display font-black text-xl text-atl-navy-dark mb-2">Tecnologia Hidráulica de Alta Pressão</h3>
+        <p class="text-gray-600 text-sm leading-relaxed">Compactação de até 3 toneladas por ciclo, gerando blocos com resistência superior e conformidade ABNT em cada peça.</p>
+      </div>
+
+      <div class="fcard bg-white border-2 border-gray-100 rounded-2xl p-6">
+        <div class="fcard-icon w-14 h-14 bg-atl-navy-dark/8 rounded-xl flex items-center justify-center mb-5 text-atl-navy-dark">
+          <i data-lucide="settings" class="w-7 h-7"></i>
+        </div>
+        <h3 class="font-display font-black text-xl text-atl-navy-dark mb-2">Guias Reforçadas para Produção Contínua</h3>
+        <p class="text-gray-600 text-sm leading-relaxed">Estrutura com guias em aço tratado que garante alinhamento perfeito em milhares de ciclos sem ajustes frequentes.</p>
+      </div>
+
+      <div class="fcard bg-white border-2 border-gray-100 rounded-2xl p-6">
+        <div class="fcard-icon w-14 h-14 bg-atl-navy-dark/8 rounded-xl flex items-center justify-center mb-5 text-atl-navy-dark">
+          <i data-lucide="award" class="w-7 h-7"></i>
+        </div>
+        <h3 class="font-display font-black text-xl text-atl-navy-dark mb-2">Conformidade ABNT Garantida</h3>
+        <p class="text-gray-600 text-sm leading-relaxed">Cada máquina projetada para produzir blocos dentro dos padrões NBR 6136 — obrigatório para obras com fiscalização técnica.</p>
+      </div>
+
+      <div class="fcard bg-white border-2 border-gray-100 rounded-2xl p-6">
+        <div class="fcard-icon w-14 h-14 bg-atl-navy-dark/8 rounded-xl flex items-center justify-center mb-5 text-atl-navy-dark">
+          <i data-lucide="wrench" class="w-7 h-7"></i>
+        </div>
+        <h3 class="font-display font-black text-xl text-atl-navy-dark mb-2">Assistência Técnica Especializada</h3>
+        <p class="text-gray-600 text-sm leading-relaxed">Equipe para instalação, treinamento e suporte pós-venda. Peças originais disponíveis em estoque para manutenção preventiva.</p>
+      </div>
+
+      <div class="fcard bg-white border-2 border-gray-100 rounded-2xl p-6">
+        <div class="fcard-icon w-14 h-14 bg-atl-navy-dark/8 rounded-xl flex items-center justify-center mb-5 text-atl-navy-dark">
+          <i data-lucide="package" class="w-7 h-7"></i>
+        </div>
+        <h3 class="font-display font-black text-xl text-atl-navy-dark mb-2">Linha Completa de Acessórios</h3>
+        <p class="text-gray-600 text-sm leading-relaxed">Betoneiras 400L, Misturador ATLANMIX 600L, compressores e esteiras transportadoras. Monte sua fábrica com um único fornecedor.</p>
+      </div>
+
+      <div class="fcard bg-white border-2 border-gray-100 rounded-2xl p-6">
+        <div class="fcard-icon w-14 h-14 bg-atl-navy-dark/8 rounded-xl flex items-center justify-center mb-5 text-atl-navy-dark">
+          <i data-lucide="clock" class="w-7 h-7"></i>
+        </div>
+        <h3 class="font-display font-black text-xl text-atl-navy-dark mb-2">+50 Anos de Experiência no Setor</h3>
+        <p class="text-gray-600 text-sm leading-relaxed">Décadas fabricando para o mercado brasileiro. Conhecimento acumulado sobre o que funciona em campo — não só no papel.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     DEPOIMENTOS EM VÍDEO (PLACEHOLDER)
+═══════════════════════════════════════════ -->
+<section id="depoimentos" class="py-20 bg-atl-navy-dark">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-12 reveal">
+      <div class="stag mb-4">Resultados reais</div>
+      <h2 class="font-display font-black text-4xl lg:text-6xl text-white leading-none">
+        Clientes que <span class="text-atl-red">transformaram</span><br>sua produção
+      </h2>
+      <p class="text-gray-400 mt-4">Depoimentos em vídeo de produtores que investiram na máquina certa</p>
+    </div>
+
+    <!-- PLACEHOLDER — substituir pelos embeds reais dos vídeos -->
+    <div class="grid md:grid-cols-3 gap-6 stagger">
+
+      <div class="vid-ph p-6 text-center group cursor-pointer">
+        <div class="w-16 h-16 bg-atl-red/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-atl-red transition-colors">
+          <i data-lucide="play" class="w-8 h-8 text-atl-red group-hover:text-white transition-colors"></i>
+        </div>
+        <div class="font-display font-black text-white text-lg mb-2">Depoimento 01</div>
+        <!-- ⬇ SUBSTITUIR: cole aqui o iframe do YouTube/Vimeo -->
+        <div class="text-yellow-400 text-xs font-mono mb-3">[PLACEHOLDER — inserir embed de vídeo real]</div>
+        <p class="text-gray-400 text-sm italic">"Em 4 meses triplicamos nossa produção e atendemos 3 construtoras novas."</p>
+        <div class="text-gray-500 text-xs mt-2">Cliente — Região Sul</div>
+      </div>
+
+      <div class="vid-ph p-6 text-center group cursor-pointer">
+        <div class="w-16 h-16 bg-atl-red/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-atl-red transition-colors">
+          <i data-lucide="play" class="w-8 h-8 text-atl-red group-hover:text-white transition-colors"></i>
+        </div>
+        <div class="font-display font-black text-white text-lg mb-2">Depoimento 02</div>
+        <div class="text-yellow-400 text-xs font-mono mb-3">[PLACEHOLDER — inserir embed de vídeo real]</div>
+        <p class="text-gray-400 text-sm italic">"Pátio cheio todo mês. A máquina não para e o bloco sai no padrão."</p>
+        <div class="text-gray-500 text-xs mt-2">Cliente — Região Sudeste</div>
+      </div>
+
+      <div class="vid-ph p-6 text-center group cursor-pointer">
+        <div class="w-16 h-16 bg-atl-red/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-atl-red transition-colors">
+          <i data-lucide="play" class="w-8 h-8 text-atl-red group-hover:text-white transition-colors"></i>
+        </div>
+        <div class="font-display font-black text-white text-lg mb-2">Depoimento 03</div>
+        <div class="text-yellow-400 text-xs font-mono mb-3">[PLACEHOLDER — inserir embed de vídeo real]</div>
+        <p class="text-gray-400 text-sm italic">"Assistência rápida. Qualquer problema, eles resolvem no mesmo dia."</p>
+        <div class="text-gray-500 text-xs mt-2">Cliente — Interior de SP</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FAQ
+═══════════════════════════════════════════ -->
+<section id="faq" class="py-20 bg-gray-50">
+  <div class="max-w-3xl mx-auto px-6">
+    <div class="text-center mb-12 reveal">
+      <div class="stag mb-4">Tire suas dúvidas</div>
+      <h2 class="font-display font-black text-4xl lg:text-5xl text-atl-navy-dark leading-none">
+        Perguntas <span class="text-atl-red">frequentes</span>
+      </h2>
+    </div>
+
+    <div class="space-y-1 reveal" style="transition-delay:.2s">
+
+      <div class="faq-item rounded-xl px-6 py-5 cursor-pointer" onclick="toggleFaq(this)">
+        <div class="flex items-center justify-between gap-4">
+          <h3 class="font-semibold text-gray-900">Qual é o investimento para montar uma fábrica de blocos com a Atlântica?</h3>
+          <i data-lucide="plus" class="faq-icon w-5 h-5 text-atl-red flex-shrink-0"></i>
+        </div>
+        <div class="faq-body">
+          <p class="text-gray-600 text-sm leading-relaxed pt-4">O investimento varia conforme o modelo e a estrutura completa de fábrica desejada. Temos opções para todos os perfis, de quem está começando até quem quer escalar uma operação industrial. Solicite seu orçamento e receba uma proposta personalizada.</p>
+        </div>
+      </div>
+
+      <div class="faq-item rounded-xl px-6 py-5 cursor-pointer" onclick="toggleFaq(this)">
+        <div class="flex items-center justify-between gap-4">
+          <h3 class="font-semibold text-gray-900">Qual modelo é ideal para quem está começando?</h3>
+          <i data-lucide="plus" class="faq-icon w-5 h-5 text-atl-red flex-shrink-0"></i>
+        </div>
+        <div class="faq-body">
+          <p class="text-gray-600 text-sm leading-relaxed pt-4">Para quem está iniciando, a linha ELZ 2012 ou 321 SP são excelentes pontos de entrada: custo mais acessível, operação simples e produção de até 3.000 blocos/dia — suficiente para atender o mercado local com boa margem.</p>
+        </div>
+      </div>
+
+      <div class="faq-item rounded-xl px-6 py-5 cursor-pointer" onclick="toggleFaq(this)">
+        <div class="flex items-center justify-between gap-4">
+          <h3 class="font-semibold text-gray-900">Os blocos produzidos são aprovados em obras com fiscalização?</h3>
+          <i data-lucide="plus" class="faq-icon w-5 h-5 text-atl-red flex-shrink-0"></i>
+        </div>
+        <div class="faq-body">
+          <p class="text-gray-600 text-sm leading-relaxed pt-4">Sim. Todas as nossas máquinas são projetadas para produzir blocos em conformidade com a NBR 6136 (ABNT). Com o traço correto e o processo dentro das especificações, os blocos atendem os requisitos técnicos de obras fiscalizadas.</p>
+        </div>
+      </div>
+
+      <div class="faq-item rounded-xl px-6 py-5 cursor-pointer" onclick="toggleFaq(this)">
+        <div class="flex items-center justify-between gap-4">
+          <h3 class="font-semibold text-gray-900">A Atlântica oferece instalação e treinamento?</h3>
+          <i data-lucide="plus" class="faq-icon w-5 h-5 text-atl-red flex-shrink-0"></i>
+        </div>
+        <div class="faq-body">
+          <p class="text-gray-600 text-sm leading-relaxed pt-4">Sim. Nossos técnicos acompanham a instalação e treinam a equipe para operar a máquina com eficiência. Também oferecemos suporte técnico pós-venda e fornecimento de peças originais para manutenção preventiva e corretiva.</p>
+        </div>
+      </div>
+
+      <div class="faq-item rounded-xl px-6 py-5 cursor-pointer" onclick="toggleFaq(this)">
+        <div class="flex items-center justify-between gap-4">
+          <h3 class="font-semibold text-gray-900">Qual é a diferença entre a linha hidráulica e as demais?</h3>
+          <i data-lucide="plus" class="faq-icon w-5 h-5 text-atl-red flex-shrink-0"></i>
+        </div>
+        <div class="faq-body">
+          <p class="text-gray-600 text-sm leading-relaxed pt-4">A linha hidráulica (HD e HATL) utiliza pistões hidráulicos para compactação, com forças de até 3 toneladas por ciclo. Isso resulta em blocos mais densos, mais resistentes e com menos variação de qualidade — ideal para obras exigentes ou para se diferenciar no mercado.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     CTA FINAL
+═══════════════════════════════════════════ -->
+<section class="py-24 bg-atl-navy-dark relative overflow-hidden">
+  <div class="absolute inset-0 opacity-10 pointer-events-none">
+    <div class="absolute top-0 left-0 w-96 h-96 bg-atl-red rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-atl-navy-mid rounded-full translate-x-1/2 translate-y-1/2"></div>
+  </div>
+  <div class="max-w-4xl mx-auto px-6 text-center relative z-10 reveal">
+    <div class="stag mb-6">Última chamada</div>
+    <h2 class="font-display font-black text-5xl lg:text-7xl text-white leading-none mb-6">
+      Sua fábrica pode<br>começar a produzir<br>
+      <span class="text-atl-red">ainda este mês.</span>
+    </h2>
+    <p class="text-gray-400 text-lg max-w-xl mx-auto mb-10">
+      Cada semana sem a máquina é receita perdida. Nossa equipe está pronta para criar a proposta ideal para o seu projeto.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="#contato" class="btn-red font-display font-black text-xl px-12 py-5 rounded-xl uppercase tracking-wide inline-block">
+        Quero minha proposta agora
+      </a>
+      <!-- PLACEHOLDER: substituir pelo WhatsApp real -->
+      <a href="https://wa.me/5500000000000" target="_blank" rel="noopener"
+        class="bg-green-600 hover:bg-green-700 text-white font-display font-black text-xl px-10 py-5 rounded-xl uppercase tracking-wide inline-flex items-center gap-3 transition-colors justify-center">
+        <i data-lucide="message-circle" class="w-6 h-6"></i>
+        WhatsApp direto
+      </a>
+    </div>
+    <p class="text-gray-500 text-sm mt-6">Resposta em até 24h úteis · Sem compromisso · Proposta personalizada</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════ -->
+<footer class="bg-black py-12">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid md:grid-cols-4 gap-8 mb-8">
+
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 bg-atl-red rounded-lg flex items-center justify-center">
+            <span class="font-display font-black text-white text-xl leading-none">A</span>
+          </div>
+          <div>
+            <div class="font-display font-bold text-white text-lg leading-none tracking-wide">ATLÂNTICA</div>
+            <div class="text-xs text-gray-500 tracking-widest uppercase">Máquinas para Blocos</div>
+          </div>
+        </div>
+        <p class="text-gray-500 text-sm leading-relaxed max-w-xs">
+          Fabricante nacional de máquinas para blocos de concreto com mais de 50 anos de mercado. Tecnologia, durabilidade e suporte técnico especializado.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="font-display font-bold text-white uppercase text-sm tracking-wider mb-4">Produtos</h4>
+        <ul class="space-y-2 text-sm text-gray-500">
+          <li><a href="#produtos" class="hover:text-white transition-colors">Linha SP Econômica</a></li>
+          <li><a href="#produtos" class="hover:text-white transition-colors">Linha ACP Pneumática</a></li>
+          <li><a href="#produtos" class="hover:text-white transition-colors">Linha Industrial</a></li>
+          <li><a href="#produtos" class="hover:text-white transition-colors">Linha Hidráulica HD / HATL</a></li>
+          <li><a href="#produtos" class="hover:text-white transition-colors">Acessórios e Periféricos</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-display font-bold text-white uppercase text-sm tracking-wider mb-4">Contato</h4>
+        <ul class="space-y-3 text-sm text-gray-500">
+          <li class="flex items-center gap-2">
+            <i data-lucide="phone" class="w-4 h-4 text-atl-red flex-shrink-0"></i>
+            <!-- PLACEHOLDER: número real -->
+            <span>(00) 0000-0000</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <i data-lucide="mail" class="w-4 h-4 text-atl-red flex-shrink-0"></i>
+            <!-- PLACEHOLDER: e-mail real -->
+            <span>contato@atlanticamaquinas.com.br</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <i data-lucide="map-pin" class="w-4 h-4 text-atl-red flex-shrink-0"></i>
+            <!-- PLACEHOLDER: endereço real -->
+            <span>São Paulo, Brasil</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+      <p class="text-gray-600 text-xs">© 2025 Atlântica Máquinas para Blocos. Todos os direitos reservados.</p>
+      <div class="flex gap-6 text-xs text-gray-600">
+        <a href="#" class="hover:text-white transition-colors">Política de Privacidade</a>
+        <a href="#" class="hover:text-white transition-colors">Termos de Uso</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════ -->
+<script>
+lucide.createIcons();
+
+// ── NAVBAR SCROLL ──
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 80);
+});
+
+// ── MOBILE MENU ──
+const menuToggle = document.getElementById('menu-toggle');
+const mobileMenu = document.getElementById('mobile-menu');
+menuToggle.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.remove('open')));
+
+// ── SCROLL REVEAL ──
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.stagger').forEach(el => revealObserver.observe(el));
+
+// ── COUNTER ANIMATION ──
+function animateCount(el, target, dur = 1400) {
+  const step = target / (dur / 16);
+  let v = 0;
+  const tick = () => {
+    v = Math.min(v + step, target);
+    el.textContent = Math.floor(v).toLocaleString('pt-BR');
+    if (v < target) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+const cntObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      animateCount(e.target, parseInt(e.target.dataset.target));
+      cntObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.counter-num').forEach(el => cntObserver.observe(el));
+
+// ── PRODUCT SLIDER ──
+const track   = document.getElementById('products-track');
+const prevBtn = document.getElementById('slider-prev');
+const nextBtn = document.getElementById('slider-next');
+const dotsWrap= document.getElementById('slider-dots');
+const CARD_W  = 288 + 24; // w-72 + gap-6
+let   cur     = 0;
+
+function visCount() { return Math.max(1, Math.floor(track.parentElement.offsetWidth / CARD_W)); }
+
+function allCards() { return Array.from(track.querySelectorAll('.pcard')).filter(c => c.style.display !== 'none'); }
+
+function maxIdx() { return Math.max(0, allCards().length - visCount()); }
+
+function setSlider(idx) {
+  cur = Math.max(0, Math.min(idx, maxIdx()));
+  track.style.transform = `translateX(-${cur * CARD_W}px)`;
+  prevBtn.disabled = cur === 0;
+  nextBtn.disabled = cur >= maxIdx();
+  document.querySelectorAll('.sdot').forEach((d, i) => {
+    d.classList.toggle('bg-atl-red', i === cur);
+    d.classList.toggle('bg-gray-300', i !== cur);
+  });
+}
+
+function buildDots() {
+  dotsWrap.innerHTML = '';
+  const total = maxIdx() + 1;
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('button');
+    d.className = `sdot w-3 h-3 rounded-full transition-colors ${i === 0 ? 'bg-atl-red' : 'bg-gray-300'}`;
+    d.setAttribute('aria-label', `Ir para ${i + 1}`);
+    d.addEventListener('click', () => setSlider(i));
+    dotsWrap.appendChild(d);
+  }
+}
+
+prevBtn.addEventListener('click', () => setSlider(cur - 1));
+nextBtn.addEventListener('click', () => setSlider(cur + 1));
+
+// Swipe support
+let tx = 0;
+track.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+track.addEventListener('touchend', e => {
+  const d = tx - e.changedTouches[0].clientX;
+  if (Math.abs(d) > 50) setSlider(d > 0 ? cur + 1 : cur - 1);
+}, { passive: true });
+
+buildDots();
+setSlider(0);
+
+// ── FILTER BUTTONS ──
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => {
+      b.className = 'filter-btn bg-white text-gray-600 border border-gray-200 px-5 py-2 rounded-full font-medium text-sm transition-all';
+    });
+    btn.className = 'filter-btn bg-atl-navy-dark text-white px-5 py-2 rounded-full font-medium text-sm transition-all';
+
+    const filter = btn.dataset.filter;
+    track.querySelectorAll('.pcard').forEach(c => {
+      c.style.display = (filter === 'all' || c.dataset.cat === filter) ? '' : 'none';
+    });
+    cur = 0;
+    buildDots();
+    setSlider(0);
+  });
+});
+
+// ── FAQ ACCORDION ──
+function toggleFaq(item) {
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(f => f.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+
+// ── PHONE MASK ──
+document.getElementById('f-phone').addEventListener('input', function () {
+  let v = this.value.replace(/\D/g, '').slice(0, 11);
+  if (v.length > 6)      v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+  else if (v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
+  else if (v.length > 0) v = `(${v}`;
+  this.value = v;
+});
+
+// ── FORM SUBMIT ──
+document.getElementById('lead-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+  let ok = true;
+  this.querySelectorAll('[required]').forEach(field => {
+    const err = field.nextElementSibling;
+    if (!field.value.trim()) {
+      field.classList.add('border-red-400');
+      if (err) err.classList.remove('hidden');
+      ok = false;
+    } else {
+      field.classList.remove('border-red-400');
+      if (err) err.classList.add('hidden');
+    }
+  });
+  if (ok) {
+    // PLACEHOLDER: integrar com webhook (Mailchimp, ActiveCampaign, RD Station, etc.)
+    this.classList.add('hidden');
+    document.getElementById('form-success').classList.remove('hidden');
+    lucide.createIcons();
+  }
+});
+
+// ── SMOOTH SCROLL ──
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) window.scrollTo({ top: t.getBoundingClientRect().top + scrollY - 80, behavior: 'smooth' });
+  });
+});
+
+window.addEventListener('load', () => lucide.createIcons());
+</script>
+</body>
+</html>

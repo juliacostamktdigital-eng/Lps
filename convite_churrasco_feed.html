@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Convite Churrasco VLoca — Feed</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Arial Black', Arial, sans-serif;
+  }
+
+  .feed-card {
+    width: 540px;
+    height: 540px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* — Background photo — */
+  .bg-photo {
+    position: absolute;
+    inset: 0;
+    background-image: url('vloca_feed_ref.png');
+    background-size: cover;
+    background-position: center 20%;
+    filter: brightness(0.45) saturate(0.8);
+  }
+
+  /* — Gradient overlay — */
+  .bg-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom,
+        rgba(10, 14, 42, 0.72) 0%,
+        rgba(10, 14, 42, 0.10) 35%,
+        rgba(10, 14, 42, 0.10) 55%,
+        rgba(10, 14, 42, 0.90) 80%,
+        rgba(10, 14, 42, 1.00) 100%
+      );
+  }
+
+  /* — Content layer — */
+  .content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 32px 36px 30px;
+  }
+
+  /* TOP */
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .badge {
+    background: #FF6500;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 4px;
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.95;
+  }
+
+  .logo-area svg {
+    width: 110px;
+    height: auto;
+  }
+
+  /* MIDDLE */
+  .middle {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  .invite-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #FF6500;
+    margin-bottom: 10px;
+  }
+
+  .headline {
+    font-size: 38px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.02;
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+    margin-bottom: 14px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  }
+
+  .body-text {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.82);
+    line-height: 1.55;
+    max-width: 340px;
+  }
+
+  /* BOTTOM */
+  .bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .perks-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .perk {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    padding: 7px 12px;
+  }
+
+  .perk span {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .info-cta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .info-block {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .info-date {
+    font-size: 18px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.3px;
+    text-transform: uppercase;
+  }
+
+  .info-place {
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.3px;
+  }
+
+  .cta-btn {
+    background: #FF6500;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    padding: 14px 20px;
+    border-radius: 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+<div class="feed-card">
+
+  <!-- Background -->
+  <div class="bg-photo"></div>
+  <div class="bg-overlay"></div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- TOP -->
+    <div class="top">
+      <div class="badge">🎟️ &nbsp;Convite Exclusivo</div>
+      <div class="logo-area">
+        <!-- VLoca Logo SVG inline -->
+        <svg viewBox="0 0 444 114" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M131.702 65.3682L120.149 82.7532C118.093 85.8435 114.629 87.7038 110.921 87.7038H52.7627L65.3441 68.7705C66.7576 66.6471 69.1381 65.3682 71.6899 65.3682H131.702Z" fill="url(#f1)"/>
+          <path d="M50.8231 17.1292L35.9776 39.4648L18.7699 65.368L14.2844 72.1238C13.8439 72.7908 12.8097 72.5399 12.724 71.7444L12.0142 65.368L9.14419 39.4648L6.66585 17.1292H6.59854L4.19976 20.7396L0.723966 25.9716C0.307850 26.5958 0.130391 27.3423 0.209942 28.0828L1.47053 39.4587L4.34662 65.3619L6.40884 83.9647L6.81884 87.6975L7.30839 92.1096C7.63883 95.0652 11.4818 96.0015 13.1279 93.5231L31.8409 65.3619L48.1061 40.8784C48.6936 39.991 49.691 39.4587 50.7619 39.4587H148.922L160.476 22.0675C161.883 19.9502 160.366 17.123 157.82 17.123H50.8292L50.8231 17.1292Z" fill="url(#f2)"/>
+          <path d="M196.276 72L178.111 15.7386H193.865L204.795 54.4786L215.806 15.7386H231.56L213.395 72H196.276ZM250.37 58.0954H269.74V72H235.983V15.7386H250.37V58.0954ZM320.391 64.7664C314.711 70.3925 307.746 73.2056 299.494 73.2056C291.242 73.2056 284.25 70.3925 278.517 64.7664C272.837 59.0867 269.997 52.121 269.997 43.8693C269.997 35.6176 272.837 28.6787 278.517 23.0526C284.25 17.3728 291.242 14.533 299.494 14.533C307.746 14.533 314.711 17.3728 320.391 23.0526C326.125 28.6787 328.991 35.6176 328.991 43.8693C328.991 52.121 326.125 59.0867 320.391 64.7664ZM288.644 54.8804C291.537 57.7203 295.154 59.1402 299.494 59.1402C303.834 59.1402 307.451 57.7203 310.345 54.8804C313.238 51.987 314.685 48.3166 314.685 43.8693C314.685 39.4219 313.238 35.7784 310.345 32.9385C307.451 30.045 303.834 28.5983 299.494 28.5983C295.154 28.5983 291.537 30.045 288.644 32.9385C285.75 35.7784 284.304 39.4219 284.304 43.8693C284.304 48.3166 285.75 51.987 288.644 54.8804ZM362.832 73.2056C354.366 73.2056 347.346 70.4193 341.774 64.8468C336.255 59.2206 333.495 52.2281 333.495 43.8693C333.495 35.5104 336.255 28.5447 341.774 22.9722C347.346 17.346 354.366 14.533 362.832 14.533C367.922 14.533 372.637 15.7386 376.977 18.1498C381.317 20.561 384.72 23.8027 387.185 27.875L374.727 35.0282C373.655 33.0457 372.048 31.4918 369.904 30.3665C367.815 29.1877 365.457 28.5983 362.832 28.5983C358.331 28.5983 354.687 30.0183 351.901 32.8581C349.168 35.6444 347.802 39.3148 347.802 43.8693C347.802 48.4238 349.168 52.121 351.901 54.9608C354.687 57.7471 358.331 59.1402 362.832 59.1402C365.457 59.1402 367.815 58.5776 369.904 57.4524C372.048 56.2736 373.655 54.6661 374.727 52.63L387.185 59.8636C384.72 63.9894 381.317 67.258 376.977 69.6692C372.691 72.0268 367.975 73.2056 362.832 73.2056ZM426.654 72L424.243 63.8823H405.516L403.105 72H387.512L406.079 15.7386H423.6L442.166 72H426.654ZM409.213 51.5048H420.546L414.839 32.3759L409.213 51.5048Z" fill="white"/>
+          <defs>
+            <linearGradient id="f1" x1="57" y1="68" x2="68" y2="103" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#FF6500"/><stop offset="0.5" stop-color="#FF8C00"/><stop offset="1" stop-color="#FF6500"/>
+            </linearGradient>
+            <linearGradient id="f2" x1="9" y1="26" x2="63" y2="131" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#FF6500"/><stop offset="0.5" stop-color="#FF8C00"/><stop offset="1" stop-color="#FF6500"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+
+    <!-- MIDDLE -->
+    <div class="middle">
+      <div class="invite-label">Churrasco VIP · 23 de maio</div>
+      <div class="headline">Você foi<br>convidado.<br>E não é<br>qualquer.</div>
+      <div class="body-text">
+        A VLoca abre as portas pra você.<br>
+        Vem comer, conhecer a equipe<br>e sair com uma Yamaha 0KM.
+      </div>
+    </div>
+
+    <!-- BOTTOM -->
+    <div class="bottom">
+      <div class="perks-row">
+        <div class="perk"><span>🍖 Churrasco grátis</span></div>
+        <div class="perk"><span>🍺 Cerveja inclusa</span></div>
+        <div class="perk"><span>🏍️ Yamaha 0KM</span></div>
+      </div>
+      <div class="info-cta-row">
+        <div class="info-block">
+          <div class="info-date">Sáb · 23/05 · 11h30</div>
+          <div class="info-place">📍 Av. C-171, 1079 · Jardim América · Goiânia</div>
+        </div>
+        <div class="cta-btn">Confirmar<br>presença</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

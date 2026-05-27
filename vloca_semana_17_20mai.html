@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VLoca — Semana 17 a 20/05</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px;
+  }
+
+  .card {
+    background: #ffffff;
+    width: 820px;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.10);
+    border: 1px solid #f0f0f0;
+  }
+
+  /* HEADER */
+  .header {
+    background: #111111;
+    padding: 36px 48px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .header-left h1 {
+    font-size: 28px;
+    font-weight: 900;
+    color: #FF6B00;
+    letter-spacing: -0.5px;
+  }
+
+  .header-left p {
+    font-size: 13px;
+    color: #999;
+    margin-top: 4px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .header-badge {
+    background: #FF6B00;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* KPI ROW */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .kpi {
+    padding: 36px 40px;
+    border-right: 1px solid #f0f0f0;
+    position: relative;
+  }
+
+  .kpi:last-child { border-right: none; }
+
+  .kpi-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+
+  .kpi-value {
+    font-size: 52px;
+    font-weight: 900;
+    color: #111;
+    line-height: 1;
+    letter-spacing: -2px;
+  }
+
+  .kpi-value.orange { color: #FF6B00; }
+
+  .kpi-sub {
+    font-size: 13px;
+    color: #888;
+    margin-top: 8px;
+    font-weight: 500;
+  }
+
+  .kpi-accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+  }
+
+  .kpi:nth-child(1) .kpi-accent { background: #FF6B00; }
+  .kpi:nth-child(2) .kpi-accent { background: #222; }
+  .kpi:nth-child(3) .kpi-accent { background: #FF6B00; }
+
+  /* FUNIL */
+  .funnel-section {
+    padding: 40px 48px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 28px;
+  }
+
+  .funnel {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .funnel-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+  }
+
+  .funnel-bar-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  .funnel-bar {
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .funnel-step:nth-child(1) .funnel-bar {
+    background: #FF6B00;
+    width: 160px;
+    height: 64px;
+  }
+
+  .funnel-step:nth-child(3) .funnel-bar {
+    background: #222;
+    width: 120px;
+    height: 48px;
+  }
+
+  .funnel-step:nth-child(5) .funnel-bar {
+    background: #FF6B00;
+    width: 80px;
+    height: 32px;
+  }
+
+  .funnel-bar-num {
+    font-size: 22px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -1px;
+  }
+
+  .funnel-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .funnel-pct {
+    font-size: 11px;
+    color: #aaa;
+    font-weight: 500;
+    margin-top: 4px;
+  }
+
+  .funnel-arrow {
+    font-size: 22px;
+    color: #ddd;
+    flex: 0 0 32px;
+    text-align: center;
+    padding-bottom: 32px;
+  }
+
+  /* TAXA */
+  .rates-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .rate-block {
+    padding: 32px 40px;
+    border-right: 1px solid #f0f0f0;
+  }
+
+  .rate-block:last-child { border-right: none; }
+
+  .rate-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .rate-bar-bg {
+    background: #f4f4f4;
+    border-radius: 100px;
+    height: 10px;
+    width: 100%;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+
+  .rate-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: #FF6B00;
+  }
+
+  .rate-value {
+    font-size: 22px;
+    font-weight: 900;
+    color: #111;
+    letter-spacing: -0.5px;
+  }
+
+  .rate-desc {
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 2px;
+  }
+
+  /* FOOTER */
+  .footer {
+    background: #111;
+    padding: 20px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-brand {
+    font-size: 13px;
+    font-weight: 800;
+    color: #FF6B00;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .footer-date {
+    font-size: 12px;
+    color: #666;
+    font-weight: 500;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <h1>VLoca</h1>
+      <p>Relatório Semanal · Meta Ads</p>
+    </div>
+    <div class="header-badge">17 – 20 Mai 2026</div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="kpi-accent"></div>
+      <div class="kpi-label">Total de Leads</div>
+      <div class="kpi-value orange">87</div>
+      <div class="kpi-sub">captados na semana</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent"></div>
+      <div class="kpi-label">Leads SQL</div>
+      <div class="kpi-value">9</div>
+      <div class="kpi-sub">interesse real · docs enviados</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent"></div>
+      <div class="kpi-label">Locações</div>
+      <div class="kpi-value orange">3</div>
+      <div class="kpi-sub">contratos fechados</div>
+    </div>
+  </div>
+
+  <!-- FUNIL -->
+  <div class="funnel-section">
+    <div class="section-title">Funil da Semana</div>
+    <div class="funnel">
+
+      <div class="funnel-step">
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar"><span class="funnel-bar-num">87</span></div>
+        </div>
+        <div class="funnel-label">Leads</div>
+        <div class="funnel-pct">topo do funil</div>
+      </div>
+
+      <div class="funnel-arrow">›</div>
+
+      <div class="funnel-step">
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar"><span class="funnel-bar-num">9</span></div>
+        </div>
+        <div class="funnel-label">SQL</div>
+        <div class="funnel-pct">10,3% dos leads</div>
+      </div>
+
+      <div class="funnel-arrow">›</div>
+
+      <div class="funnel-step">
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar"><span class="funnel-bar-num">3</span></div>
+        </div>
+        <div class="funnel-label">Locações</div>
+        <div class="funnel-pct">33,3% dos SQL</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TAXAS -->
+  <div class="rates-row">
+    <div class="rate-block">
+      <div class="rate-label">Taxa Lead → SQL</div>
+      <div class="rate-bar-bg">
+        <div class="rate-bar-fill" style="width: 10.3%"></div>
+      </div>
+      <div class="rate-value">10,3%</div>
+      <div class="rate-desc">9 de 87 leads qualificados</div>
+    </div>
+    <div class="rate-block">
+      <div class="rate-label">Taxa SQL → Locação</div>
+      <div class="rate-bar-bg">
+        <div class="rate-bar-fill" style="width: 33.3%"></div>
+      </div>
+      <div class="rate-value">33,3%</div>
+      <div class="rate-desc">3 de 9 SQL convertidos</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-brand">VLoca · Tráfego Pago</div>
+    <div class="footer-date">Semana 17 – 20 de maio de 2026</div>
+  </div>
+
+</div>
+
+</body>
+</html>

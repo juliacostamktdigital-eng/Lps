@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Auditoria Documentos Kommo</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0d0f18;color:#dde1f0;padding:32px 24px}
+h1{font-size:22px;font-weight:800;color:#fff}
+.subtitle{font-size:12px;color:#5a607a;margin:4px 0 28px}
+
+.resumo{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px}
+.card{background:#161926;border-radius:10px;padding:16px 20px;border:1px solid #1f2438;min-width:130px}
+.card-n{font-size:28px;font-weight:900;color:#40e0b0;line-height:1}
+.card-l{font-size:11px;color:#5a607a;margin-top:4px}
+
+table{width:100%;border-collapse:collapse}
+thead th{background:#111420;color:#4a5270;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;padding:10px 14px;text-align:left;border-bottom:1px solid #1c2035}
+tbody tr{border-bottom:1px solid #161926}
+tbody tr:hover td{background:#131625}
+td{padding:12px 14px;font-size:12.5px;vertical-align:top}
+
+.lead-link{color:#7aacff;font-weight:600;font-size:13px;text-decoration:none}
+.lead-link:hover{text-decoration:underline}
+.lead-sub{color:#4a5270;font-size:11px;margin-top:2px}
+.badges-row{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.badge{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:600}
+.b-arq{background:#0d2e22;color:#40e0b0}
+.b-ser{background:#1a2040;color:#7aacff}
+.b-doc{background:#2e1f00;color:#ffca28}
+
+.etapa{font-size:11px;padding:3px 8px;border-radius:4px}
+.et-neg{background:#0d2e22;color:#40e0b0}
+.et-won{background:#1a3a00;color:#86e840}
+.et-mql{background:#1a2040;color:#7aacff}
+.et-std{background:#1a1d2e;color:#a0a8c8}
+
+.td-notas{max-width:400px}
+.nota{background:#111420;border-radius:6px;padding:8px 10px;margin-bottom:6px;border-left:2px solid #2d3250}
+.nota-tipo{font-size:10px;color:#5a607a;text-transform:uppercase;letter-spacing:.5px}
+.nota-data{font-size:10px;color:#4a5270;margin-left:8px}
+.nota-texto{font-size:11.5px;color:#c8cedf;margin-top:4px;font-style:italic;line-height:1.5}
+
+.btn-abrir{display:inline-block;background:#1e2540;color:#7aacff;padding:5px 12px;border-radius:6px;text-decoration:none;font-size:11px;font-weight:600}
+.btn-abrir:hover{background:#2a3560}
+
+.footer{margin-top:20px;color:#2e3450;font-size:11px;text-align:center;padding:12px}
+.vazio{text-align:center;padding:48px;color:#4a5270;font-size:14px}
+</style>
+</head>
+<body>
+
+<h1>Auditoria — Leads que Enviaram Documentos</h1>
+<p class="subtitle">Periodo: 17/05/2026 ate 21/05/2026 | Gerado em 21/05/2026, 12:19:37</p>
+
+<div class="resumo">
+  <div class="card"><div class="card-n">8</div><div class="card-l">Leads com documentos</div></div>
+  <div class="card"><div class="card-n">0</div><div class="card-l">Com arquivo anexado</div></div>
+  <div class="card"><div class="card-n">1</div><div class="card-l">Via integracao</div></div>
+  <div class="card"><div class="card-n">11</div><div class="card-l">Notas encontradas</div></div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Lead</th>
+      <th>Etapa</th>
+      <th>Valor</th>
+      <th>Qtd notas</th>
+      <th>Conteudo das notas</th>
+      <th>Acao</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>
+        <a href="https://rodrigocampos716.kommo.com/leads/detail/58282131" target="_blank" class="lead-link">Lead #58282131</a>
+        <div class="lead-sub">-</div>
+        <div class="badges-row"><span class="badge b-ser">Integracao</span><span class="badge b-doc">Mencao: assinatura</span></div>
+      </td>
+      <td><span class="etapa et-std">Bloqueio Executado</span></td>
+      <td>-</td>
+      <td>3</td>
+      <td class="td-notas">
+      <div class="nota">
+        <span class="nota-tipo">service_message</span>
+        <span class="nota-data">07/05/2026, 14:11</span>
+        <div class="nota-texto">"Assinatura criada — R$ 200.00
+Link: https://www.asaas.com/i/f7y3eyy40k904ja6"</div>
+      </div>
+      <div class="nota">
+        <span class="nota-tipo">service_message</span>
+        <span class="nota-data">07/05/2026, 14:11</span>
+        <div class="nota-texto">"🔄 Assinatura criada — R$ 200.00 (WEEKLY)
+Próximo vencimento: 2026-06-12"</div>
+      </div>
+      <div class="nota">
+        <span class="nota-tipo">service_message</span>
+        <span class="nota-data">07/05/2026, 14:11</span>
+        <div class="nota-texto">"🔄 Assinatura criada — R$ 200.00 (WEEKLY)
+Próximo vencimento: 2026-06-12"</div>
+      </div></td>
+      <td><a href="https://rodrigocampos716.kommo.com/leads/detail/58282131" target="_blank" class="btn-abrir">Abrir</a></td>
+    </tr>
+    <tr>
+      <td>
+        <a href="https://rodrigocampos716.kommo.com/leads/detail/52962153" target="_blank" class="lead-link">Lead #52962153</a>
+        <div class="lead-sub">-</div>
+        <div class="badges-row"><span class="badge b-doc">Mencao: fotos</span></div>
+      </td>
+      <td><span class="etapa et-std">Venda perdida</span></td>
+      <td>-</td>
+      <td>2</td>
+      <td class="td-notas">
+      <div class="nota">
+        <span class="nota-tipo">common</span>
+        <span class="nota-data">02/03/2026, 15:18</span>
+        <div class="nota-texto">"Olá, Luiz Felipe, pode me responder por aqui para darmos continuidade da conversa que tivemos pelo meu outro contato. Vou te mandar as fotos por aqui!"</div>
+      </div>
+      <div class="nota">
+        <span class="nota-tipo">common</span>
+        <span class="nota-data">02/03/2026, 15:20</span>
+        <div class="nota-texto">"Cliente solicitou fotos da moto"</div>
+      </div></td>
+      <td><a href="https://rodrigocampos716.kommo.com/leads/detail/52962153" target="_blank" class="btn-abrir">Abrir</a></td>
+    </tr>
+    <tr>
+      <td>
+        <a href="https://rodrigocampos716.kommo.com/leads/detail/53478212" target="_blank" class="lead-link">Emiliano Silva</a>
+        <div class="lead-sub">-</div>
+        <div class="badges-row"><span class="badge b-doc">Mencao: contrato</span></div>
+      </td>
+      <td><span class="etapa et-std">DISTRATO</span></td>
+      <td>-</td>
+      <td>1</td>
+      <td class="td-notas">
+      <div class="nota">
+        <span class="nota-tipo">common</span>
+        <span class="nota-data">10/04/2026, 16:11</span>
+        <div class="nota-texto">"Cliente questiona sobre ir a outras cidades que extrapolam o limite diário do raio permitido. Após o consultar a diretoria, (Rodrigo e Gustavo) fui informado que não está sem autorizado passar do km e"</div>
+      </div></td>
+      <td><a href="https://rodrigocampos716.kommo.com/leads/detail/53478212" target="_blank" class="btn-abrir">Abrir</a></td>
+    </tr>
+    <tr>
+      <td>
+        <a href="https://rodrigocampos716.kommo.com/leads/detail/55184600" target="_blank" class="lead-link">Dante Legierre de Almeida</a>
+        <div class="lead-sub">-</div>
+        <div class="badges-row"><span class="badge b-doc">Mencao: mandou</span></div>
+      </td>
+      <td><span class="etapa et-std">Venda perdida</span></td>
+      <td>-</td>
+      <td>1</td>
+      <td class="td-notas">
+      <div class="nota">
+        <span class="nota-tipo">common</span>
+        <span class="nota-data">23/03/2026, 14:01</span>
+        <div class="nota-texto">"Cliente parou de dar retorno. Rodrigo mandou template. Aguardo contato do cliente."</div>
+      </div></td>
+      <td><a href="https://rodrigocampos716.kommo.com/leads/detail/55184600" target="_blank" class="btn-abrir">Abrir</a></td>
+    </tr>
+    <tr>
+      <td>
+        <a href="https://rodrigocampos716.kommo.com/leads/detail/56524314" target="_blank" class="lead-link">Valdemir Alves</a>
+        <div class="lead-sub">-</div>
+        <div class="badges-row"><span class="badge b-doc">Mencao: contrato</span></div>
+      </td>
+      <td><span class="etapa et-std">Venda perdida</span></td>
+      <td>-</td>
+      <td>1</td>
+      <td class="td-notas">
+      <div class="nota">
+        <span class="nota-tipo">common</span>
+        <span class="nota-data">07/04/2026, 16:38</span>
+        <div class="nota-texto">"Cliente ficou interessado, mas já tem contrato com outra locadora, ficou de mandar os dados e depois não deu retorno!"</div>
+      </div></td>
+      <td><a href="https://rodrigocampos716.kommo.com/leads/detail/56524314" target="_blank" class="btn-abrir">Abrir</a></td>
+    </tr>
+    <tr>
+      <td>
+        <a href="https://rodrigocampos716.kommo.com/leads/detail/56955716" target="_blank" class="lead-link">Marcos Souza</a>
+        <div class="lead-sub">-</div>
+        <div class="badges-row"><span class="badge b-doc">Mencao: rg</span></div>
+      </td>
+      <td><span class="etapa et-std">Venda perdida</span></td>
+      <td>-</td>
+      <td>1</td>
+      <td class="td-notas">
+      <div class="nota">
+        <span class="nota-tipo">common</span>
+        <span class="nota-data">14/04/2026, 09:30</span>
+        <div class="nota-texto">"Perguntou o modelo de moto e depois não respondeu mais. Lead frio."</div>
+      </div></td>
+      <td><a href="https://rodrigocampos716.kommo.com/leads/detail/56955716" target="_blank" class="btn-abrir">Abrir</a></td>
+    </tr>
+    <tr>
+      <td>
+        <a href="https://rodrigocampos716.kommo.com/leads/detail/56975932" target="_blank" class="lead-link">Valdeir Borges</a>
+        <div class="lead-sub">-</div>
+        <div class="badges-row"><span class="badge b-doc">Mencao: cnh</span></div>
+      </td>
+      <td><span class="etapa et-std">Venda perdida</span></td>
+      <td>-</td>
+      <td>1</td>
+      <td class="td-notas">
+      <div class="nota">
+        <span class="nota-tipo">common</span>
+        <span class="nota-data">11/04/2026, 10:38</span>
+        <div class="nota-texto">"Cliente está com a CNH vencida. Informou que assim que renovar, retornará o contato."</div>
+      </div></td>
+      <td><a href="https://rodrigocampos716.kommo.com/leads/detail/56975932" target="_blank" class="btn-abrir">Abrir</a></td>
+    </tr>
+    <tr>
+      <td>
+        <a href="https://rodrigocampos716.kommo.com/leads/detail/57484070" target="_blank" class="lead-link">Joely alves de melo</a>
+        <div class="lead-sub">-</div>
+        <div class="badges-row"><span class="badge b-doc">Mencao: contrato</span></div>
+      </td>
+      <td><span class="etapa et-std">Venda perdida</span></td>
+      <td>-</td>
+      <td>1</td>
+      <td class="td-notas">
+      <div class="nota">
+        <span class="nota-tipo">common</span>
+        <span class="nota-data">27/04/2026, 14:56</span>
+        <div class="nota-texto">"Cliente tem contrato na LocaVibe. Está esperando o contrato acabar para poder locar outra. Segundo ele é no começo de maio."</div>
+      </div></td>
+      <td><a href="https://rodrigocampos716.kommo.com/leads/detail/57484070" target="_blank" class="btn-abrir">Abrir</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="footer">Detectado por palavras-chave em notas + arquivos anexados + integracoes | Periodo: 17/05/2026 - 21/05/2026</div>
+</body>
+</html>

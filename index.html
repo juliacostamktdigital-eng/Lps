@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfólio de Documentos — Julia Costa</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f0f13;
+      color: #e2e2e8;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-bottom: 1px solid #2a2a3e;
+      padding: 48px 32px 40px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #fff;
+    }
+
+    header p {
+      margin-top: 8px;
+      font-size: 0.95rem;
+      color: #8888aa;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      background: #7c3aed22;
+      border: 1px solid #7c3aed55;
+      color: #a78bfa;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+
+    .section-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #555577;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #1e1e2e;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .card {
+      background: #16161f;
+      border: 1px solid #22223a;
+      border-radius: 12px;
+      padding: 20px 22px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    }
+
+    .card:hover {
+      border-color: #7c3aed66;
+      background: #1c1c2e;
+      transform: translateY(-2px);
+    }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .card-body { flex: 1; min-width: 0; }
+
+    .card-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #d4d4e8;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-meta {
+      font-size: 0.75rem;
+      color: #55556a;
+      margin-top: 4px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 8px;
+    }
+
+    /* colors por cliente */
+    .lp    { background:#0ea5e922; color:#38bdf8; border:1px solid #0ea5e944; }
+    .brief { background:#10b98122; color:#34d399; border:1px solid #10b98144; }
+    .play  { background:#f59e0b22; color:#fbbf24; border:1px solid #f59e0b44; }
+    .doc   { background:#8b5cf622; color:#a78bfa; border:1px solid #8b5cf644; }
+    .rel   { background:#ec489922; color:#f472b6; border:1px solid #ec489944; }
+    .rot   { background:#64748b22; color:#94a3b8; border:1px solid #64748b44; }
+
+    .icon-lp    { background:#0ea5e911; }
+    .icon-brief { background:#10b98111; }
+    .icon-play  { background:#f59e0b11; }
+    .icon-doc   { background:#8b5cf611; }
+    .icon-rel   { background:#ec489911; }
+    .icon-rot   { background:#64748b11; }
+
+    footer {
+      text-align: center;
+      padding: 32px;
+      color: #33334a;
+      font-size: 0.75rem;
+      border-top: 1px solid #1a1a2a;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Portfólio de Documentos</h1>
+  <p>Julia Costa — Marketing Digital</p>
+  <span class="badge">GitHub Pages</span>
+</header>
+
+<main>
+
+  <!-- LANDING PAGES -->
+  <p class="section-title">Landing Pages</p>
+  <div class="grid">
+
+    <a class="card" href="lp_fivecred.html" target="_blank">
+      <div class="card-icon icon-lp">🏦</div>
+      <div class="card-body">
+        <div class="card-title">LP FiveCred</div>
+        <div class="card-meta">Landing Page · Crédito Consignado</div>
+        <span class="tag lp">Landing Page</span>
+      </div>
+    </a>
+
+    <a class="card" href="lp_atlantica_maquinas.html" target="_blank">
+      <div class="card-icon icon-lp">⚙️</div>
+      <div class="card-body">
+        <div class="card-title">LP Atlântica Máquinas</div>
+        <div class="card-meta">Landing Page · Equipamentos</div>
+        <span class="tag lp">Landing Page</span>
+      </div>
+    </a>
+
+    <a class="card" href="lp_tecnipool.html" target="_blank">
+      <div class="card-icon icon-lp">🏊</div>
+      <div class="card-body">
+        <div class="card-title">LP Tecnipool</div>
+        <div class="card-meta">Landing Page · Piscinas</div>
+        <span class="tag lp">Landing Page</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- BRIEFINGS -->
+  <p class="section-title">Briefings</p>
+  <div class="grid">
+
+    <a class="card" href="Briefing_Completo_KidysPark_SDR_IA.html" target="_blank">
+      <div class="card-icon icon-brief">🎡</div>
+      <div class="card-body">
+        <div class="card-title">Briefing KidysPark — SDR IA</div>
+        <div class="card-meta">Briefing Completo · SDR + IA</div>
+        <span class="tag brief">Briefing</span>
+      </div>
+    </a>
+
+    <a class="card" href="Briefing_KidysPark_MetaAds.html" target="_blank">
+      <div class="card-icon icon-brief">📣</div>
+      <div class="card-body">
+        <div class="card-title">Briefing KidysPark — Meta Ads</div>
+        <div class="card-meta">Briefing · Meta Ads</div>
+        <span class="tag brief">Briefing</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- PLAYBOOKS -->
+  <p class="section-title">Playbooks e Apresentações</p>
+  <div class="grid">
+
+    <a class="card" href="Playbook_CRM_FiveCred_v2.html" target="_blank">
+      <div class="card-icon icon-play">📘</div>
+      <div class="card-body">
+        <div class="card-title">Playbook CRM FiveCred v2</div>
+        <div class="card-meta">Playbook · Versão Final</div>
+        <span class="tag play">Playbook</span>
+      </div>
+    </a>
+
+    <a class="card" href="Playbook_CRM_FiveCred.html" target="_blank">
+      <div class="card-icon icon-play">📗</div>
+      <div class="card-body">
+        <div class="card-title">Playbook CRM FiveCred</div>
+        <div class="card-meta">Playbook · Versão 1</div>
+        <span class="tag play">Playbook</span>
+      </div>
+    </a>
+
+    <a class="card" href="Roteiro_Apresentacao_Playbook_FiveCred.html" target="_blank">
+      <div class="card-icon icon-play">🎤</div>
+      <div class="card-body">
+        <div class="card-title">Roteiro Apresentação FiveCred</div>
+        <div class="card-meta">Apresentação · Playbook CRM</div>
+        <span class="tag play">Roteiro</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- DOCUMENTOS TÉCNICOS -->
+  <p class="section-title">Documentos Técnicos</p>
+  <div class="grid">
+
+    <a class="card" href="DCC_Atlantica_Maquinas.html" target="_blank">
+      <div class="card-icon icon-doc">📋</div>
+      <div class="card-body">
+        <div class="card-title">DCC — Atlântica Máquinas</div>
+        <div class="card-meta">Diagnóstico de Comunicação</div>
+        <span class="tag doc">DCC</span>
+      </div>
+    </a>
+
+    <a class="card" href="UCM_Atlantica_Maquinas.html" target="_blank">
+      <div class="card-icon icon-doc">🗂️</div>
+      <div class="card-body">
+        <div class="card-title">UCM — Atlântica Máquinas</div>
+        <div class="card-meta">Unidade de Comunicação de Marca</div>
+        <span class="tag doc">UCM</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- RELATÓRIOS -->
+  <p class="section-title">Relatórios</p>
+  <div class="grid">
+
+    <a class="card" href="relatorio_auditoria_kommo.html" target="_blank">
+      <div class="card-icon icon-rel">🔍</div>
+      <div class="card-body">
+        <div class="card-title">Auditoria Kommo CRM</div>
+        <div class="card-meta">Relatório · Auditoria Completa</div>
+        <span class="tag rel">Relatório</span>
+      </div>
+    </a>
+
+    <a class="card" href="relatorio_documentos_17_21mai.html" target="_blank">
+      <div class="card-icon icon-rel">📊</div>
+      <div class="card-body">
+        <div class="card-title">Relatório Documentos Mai/26</div>
+        <div class="card-meta">Relatório · 17–21 maio 2026</div>
+        <span class="tag rel">Relatório</span>
+      </div>
+    </a>
+
+    <a class="card" href="vloca_semana_17_20mai.html" target="_blank">
+      <div class="card-icon icon-rel">🚗</div>
+      <div class="card-body">
+        <div class="card-title">VLoca — Semana 17–20 mai</div>
+        <div class="card-meta">Relatório Semanal · VLoca</div>
+        <span class="tag rel">Relatório</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- ROTEIROS E OUTROS -->
+  <p class="section-title">Roteiros e Outros</p>
+  <div class="grid">
+
+    <a class="card" href="VLoca_Roteiros_Promo_Ajustados.html" target="_blank">
+      <div class="card-icon icon-rot">🎬</div>
+      <div class="card-body">
+        <div class="card-title">Roteiros Promo VLoca</div>
+        <div class="card-meta">Roteiros · Versão Ajustada</div>
+        <span class="tag rot">Roteiro</span>
+      </div>
+    </a>
+
+    <a class="card" href="convite_churrasco_vloca.html" target="_blank">
+      <div class="card-icon icon-rot">🎉</div>
+      <div class="card-body">
+        <div class="card-title">Convite Churrasco VLoca</div>
+        <div class="card-meta">Arte · Convite</div>
+        <span class="tag rot">Convite</span>
+      </div>
+    </a>
+
+    <a class="card" href="convite_churrasco_feed.html" target="_blank">
+      <div class="card-icon icon-rot">🍖</div>
+      <div class="card-body">
+        <div class="card-title">Convite Churrasco Feed</div>
+        <div class="card-meta">Arte · Feed Instagram</div>
+        <span class="tag rot">Convite</span>
+      </div>
+    </a>
+
+  </div>
+
+</main>
+
+<footer>
+  Julia Costa · Marketing Digital · 2026
+</footer>
+
+</body>
+</html>

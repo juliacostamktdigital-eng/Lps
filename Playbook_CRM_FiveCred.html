@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playbook Comercial CRM — FiveCred</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; color: #1a1a1a; line-height: 1.6; }
+
+  /* CAPA */
+  .capa {
+    background: linear-gradient(135deg, #FF6600 0%, #cc4400 100%);
+    color: white; text-align: center; padding: 80px 40px;
+    min-height: 340px; display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+  }
+  .capa .logo { font-size: 48px; font-weight: 900; letter-spacing: -2px; margin-bottom: 8px; }
+  .capa .logo span { color: #fff; }
+  .capa h1 { font-size: 28px; font-weight: 700; margin: 16px 0 8px; letter-spacing: 1px; }
+  .capa h2 { font-size: 16px; font-weight: 400; opacity: 0.9; margin-bottom: 24px; }
+  .capa .badge { background: rgba(255,255,255,0.2); border: 2px solid white; border-radius: 20px; padding: 6px 20px; font-size: 13px; font-weight: 600; display: inline-block; }
+
+  /* LAYOUT */
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px 60px; }
+
+  /* SECOES */
+  .section { background: white; border-radius: 12px; padding: 40px; margin: 32px 0; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+  .section-title {
+    font-size: 22px; font-weight: 800; color: #FF6600;
+    border-bottom: 3px solid #FF6600; padding-bottom: 12px; margin-bottom: 28px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .section-sub { font-size: 17px; font-weight: 700; color: #222; margin: 28px 0 14px; }
+
+  /* REGRA DE OURO */
+  .golden-rule {
+    background: #fff8f0; border-left: 5px solid #FF6600;
+    border-radius: 0 8px 8px 0; padding: 18px 22px; margin: 20px 0;
+    font-weight: 700; font-size: 15px; color: #cc4400;
+  }
+
+  /* PIPELINE CARDS */
+  .pipeline { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin: 20px 0; }
+  .pipe-card { border-radius: 10px; padding: 18px; text-align: center; }
+  .pipe-card.bot { background: #fff3e8; border: 2px solid #FF6600; }
+  .pipe-card.atencao { background: #fff8e1; border: 2px solid #ffc107; }
+  .pipe-card.vendedor { background: #e8f5e9; border: 2px solid #43a047; }
+  .pipe-card.encerrado { background: #fce4ec; border: 2px solid #e53935; }
+  .pipe-card h4 { font-size: 13px; font-weight: 800; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .pipe-card p { font-size: 12px; color: #555; }
+  .pipe-card.bot h4 { color: #FF6600; }
+  .pipe-card.atencao h4 { color: #f57f17; }
+  .pipe-card.vendedor h4 { color: #2e7d32; }
+  .pipe-card.encerrado h4 { color: #c62828; }
+
+  /* ETAPA BLOCO */
+  .etapa { border: 1px solid #e0e0e0; border-radius: 10px; margin: 16px 0; overflow: hidden; }
+  .etapa-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; }
+  .etapa-header.bot { background: #fff3e8; }
+  .etapa-header.atencao { background: #fff8e1; }
+  .etapa-header.vendedor { background: #e8f5e9; }
+  .etapa-header.encerrado { background: #fce4ec; }
+  .etapa-header h3 { font-size: 15px; font-weight: 800; }
+  .etapa-header .tag { font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; }
+  .tag-bot { background: #FF6600; color: white; }
+  .tag-vendedor { background: #43a047; color: white; }
+  .tag-atencao { background: #ffc107; color: #333; }
+  .tag-encerrado { background: #e53935; color: white; }
+  .etapa-body { padding: 16px 20px; }
+  .etapa-body .gatilho { font-size: 13px; color: #555; margin-bottom: 10px; }
+  .etapa-body .gatilho strong { color: #FF6600; }
+  .regra-item { display: flex; gap: 10px; margin: 8px 0; font-size: 13px; }
+  .regra-item .icone { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+
+  /* TABELA CAMPOS */
+  .campos-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+  .campos-table th { background: #FF6600; color: white; padding: 10px 14px; text-align: left; font-weight: 700; }
+  .campos-table td { padding: 10px 14px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+  .campos-table tr:nth-child(even) td { background: #fafafa; }
+  .campos-table .campo-nome { font-weight: 700; color: #222; }
+  .campos-table .campo-tipo { color: #888; font-size: 12px; }
+  .campos-table .campo-por { color: #555; }
+
+  /* BOT MENSAGEM */
+  .bot-msg { background: #fff3e8; border-left: 4px solid #FF6600; border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 14px 0; }
+  .bot-msg .label { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #FF6600; margin-bottom: 8px; letter-spacing: 0.5px; }
+  .bot-msg .texto { font-size: 14px; color: #333; white-space: pre-line; line-height: 1.7; }
+  .bot-msg .botoes { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .btn-opcao { background: white; border: 2px solid #FF6600; color: #FF6600; border-radius: 20px; padding: 5px 14px; font-size: 12px; font-weight: 700; }
+  .btn-encerra { background: white; border: 2px solid #ccc; color: #888; border-radius: 20px; padding: 5px 14px; font-size: 12px; font-weight: 700; }
+
+  /* SETA */
+  .seta { text-align: center; font-size: 22px; color: #FF6600; margin: 6px 0; }
+  .seta-label { text-align: center; font-size: 12px; color: #888; font-style: italic; margin-bottom: 4px; }
+
+  /* CONDICIONAL */
+  .condicional { display: flex; gap: 16px; margin: 10px 0; flex-wrap: wrap; }
+  .cond-item { flex: 1; min-width: 160px; border-radius: 8px; padding: 12px 16px; }
+  .cond-item.qualifica { background: #e8f5e9; border: 1.5px solid #43a047; }
+  .cond-item.desqualifica { background: #fce4ec; border: 1.5px solid #e53935; }
+  .cond-item .cond-label { font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; }
+  .cond-item.qualifica .cond-label { color: #2e7d32; }
+  .cond-item.desqualifica .cond-label { color: #c62828; }
+  .cond-item .cond-text { font-size: 13px; }
+
+  /* FOLLOW */
+  .follow-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 16px 0; }
+  .follow-table th { background: #1a1a1a; color: white; padding: 10px 14px; text-align: left; font-size: 12px; font-weight: 700; }
+  .follow-table td { padding: 12px 14px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+  .follow-table tr:nth-child(even) td { background: #fafafa; }
+  .follow-table .dia { font-weight: 800; color: #FF6600; }
+
+  /* MAPA */
+  .mapa-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .mapa-table th { background: #FF6600; color: white; padding: 9px 12px; text-align: left; }
+  .mapa-table td { padding: 9px 12px; border-bottom: 1px solid #f0f0f0; }
+  .mapa-table tr:nth-child(even) td { background: #fafafa; }
+  .mapa-table .step { font-weight: 800; color: #FF6600; }
+
+  /* FUNIL HEADER */
+  .funil-header { background: linear-gradient(135deg, #FF6600, #cc4400); color: white; border-radius: 10px; padding: 20px 28px; margin: 32px 0 20px; }
+  .funil-header h2 { font-size: 20px; font-weight: 900; letter-spacing: 0.5px; }
+  .funil-header p { font-size: 13px; opacity: 0.9; margin-top: 4px; }
+
+  /* REPROVADO BOX */
+  .reprovado-box { background: #fce4ec; border: 2px solid #e53935; border-radius: 10px; padding: 18px 22px; margin: 14px 0; }
+  .reprovado-box h4 { color: #c62828; font-size: 14px; font-weight: 800; margin-bottom: 8px; }
+  .reprovado-box p { font-size: 13px; color: #333; }
+
+  /* APROVADO BOX */
+  .aprovado-box { background: #e8f5e9; border: 2px solid #43a047; border-radius: 10px; padding: 18px 22px; margin: 14px 0; }
+  .aprovado-box h4 { color: #2e7d32; font-size: 14px; font-weight: 800; margin-bottom: 8px; }
+  .aprovado-box p { font-size: 13px; color: #333; }
+
+  /* DIVISOR */
+  .divider { border: none; border-top: 2px dashed #f0f0f0; margin: 28px 0; }
+
+  /* CHECKLIST */
+  .check-list { list-style: none; }
+  .check-list li { padding: 8px 0; font-size: 13px; border-bottom: 1px solid #f5f5f5; display: flex; align-items: flex-start; gap: 10px; }
+  .check-list li:before { content: "☑"; color: #FF6600; font-size: 15px; flex-shrink: 0; }
+
+  /* INFO BOX */
+  .info-box { background: #fff8f0; border: 1px solid #ffd0a0; border-radius: 8px; padding: 16px 20px; margin: 14px 0; font-size: 13px; }
+  .info-box strong { color: #FF6600; }
+
+  /* REGRA DEFINITIVA */
+  .regra-definitiva { background: #1a1a1a; color: white; border-radius: 10px; padding: 24px 28px; margin: 20px 0; }
+  .regra-definitiva h3 { font-size: 16px; font-weight: 800; color: #FF6600; margin-bottom: 14px; text-transform: uppercase; }
+  .regra-definitiva p, .regra-definitiva li { font-size: 13px; color: #ccc; line-height: 1.8; }
+  .regra-definitiva ul { padding-left: 20px; }
+
+  /* VERSAO RODAPE */
+  .rodape { text-align: center; padding: 40px; color: #aaa; font-size: 12px; }
+  .rodape strong { color: #FF6600; }
+</style>
+</head>
+<body>
+
+<!-- CAPA -->
+<div class="capa">
+  <div class="logo">F<span style="color:#fff3e8;">ive</span>Cred</div>
+  <h1>PLAYBOOK COMERCIAL — CRM</h1>
+  <h2>Atendimento, Automacao e Mensagens | Kommo</h2>
+  <div class="badge">Versao 1.1 — Maio 2026</div>
+</div>
+
+<div class="container">
+
+<!-- 1. OBJETIVO -->
+<div class="section">
+  <div class="section-title">1. Objetivo</div>
+  <p style="font-size:15px; color:#444; line-height:1.8; margin-bottom:18px;">
+    Este playbook define o processo comercial completo da FiveCred: da entrada do lead ate o fechamento. Cobre a estrutura do CRM Kommo, os campos obrigatorios por etapa, o fluxo de atendimento e todas as mensagens padronizadas para cada frente de produto — CGI, Emprestimo na Conta de Luz, FGTS e Consignado CLT.
+  </p>
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
+    <div style="background:#fff3e8; border-radius:8px; padding:16px;">
+      <div style="font-weight:800; color:#FF6600; margin-bottom:6px;">Mais conversao</div>
+      <div style="font-size:13px; color:#555;">Sem aumentar investimento em midia — o bot qualifica, o consultor fecha</div>
+    </div>
+    <div style="background:#fff3e8; border-radius:8px; padding:16px;">
+      <div style="font-weight:800; color:#FF6600; margin-bottom:6px;">Atendimento padronizado</div>
+      <div style="font-size:13px; color:#555;">Rapido e personalizado por frente de produto e perfil do lead</div>
+    </div>
+    <div style="background:#fff3e8; border-radius:8px; padding:16px;">
+      <div style="font-weight:800; color:#FF6600; margin-bottom:6px;">Clareza para o time</div>
+      <div style="font-size:13px; color:#555;">O que fazer em cada etapa, sem duvidas sobre quando o consultor entra</div>
+    </div>
+    <div style="background:#fff3e8; border-radius:8px; padding:16px;">
+      <div style="font-weight:800; color:#FF6600; margin-bottom:6px;">Dados confiaveis</div>
+      <div style="font-size:13px; color:#555;">Campos obrigatorios por etapa para analise real de funil e melhoria continua</div>
+    </div>
+  </div>
+  <div class="golden-rule">
+    REGRA DE OURO: Nunca use template depois que o lead respondeu. A conversa tem que parecer humana.
+  </div>
+</div>
+
+<!-- 2. PIPELINE -->
+<div class="section">
+  <div class="section-title">2. Pipeline do CRM — Etapas do Funil</div>
+  <p style="font-size:14px; color:#666; margin-bottom:20px;">O funil e unico para todos os produtos. O que muda entre os funis e o fluxo do bot e as perguntas qualificatorias. Cada etapa tem criterio claro de entrada, acao obrigatoria e quem executa.</p>
+
+  <div class="pipeline">
+    <div class="pipe-card bot"><h4>Bot automatico</h4><p>Etapas 1 e 3 — nenhuma acao manual necessaria</p></div>
+    <div class="pipe-card atencao"><h4>Atencao / Fallback</h4><p>Etapa 2 — apenas se o bot travar ou resposta fora do padrao</p></div>
+    <div class="pipe-card vendedor"><h4>Consultor assume</h4><p>Etapas 4 e 5 — lead qualificado e negociacao</p></div>
+    <div class="pipe-card encerrado"><h4>Encerramento</h4><p>Etapas 6, 7, 8 e 9 — fechado, perdido, reprovado ou futuro</p></div>
+  </div>
+
+  <!-- ETAPA 1 -->
+  <div class="etapa">
+    <div class="etapa-header bot">
+      <h3>1. Novo Lead</h3>
+      <span class="tag tag-bot">Bot Automatico</span>
+    </div>
+    <div class="etapa-body">
+      <div class="gatilho"><strong>Gatilho:</strong> Lead entra via formulario Meta ou Google.</div>
+      <div class="regra-item"><span class="icone">🤖</span><span><strong>Bot:</strong> Dispara automaticamente em ate 1 minuto — qualquer horario, 24h por dia. Nenhuma acao manual.</span></div>
+      <div class="regra-item"><span class="icone">🤖</span><span><strong>Bot:</strong> Mensagens de boas-vindas em sequencia cadenciada para nao parecer robo.</span></div>
+      <div class="regra-item"><span class="icone">🤖</span><span><strong>Bot:</strong> Lead fica nesta etapa ate iniciar a conversa e comecar a responder.</span></div>
+    </div>
+  </div>
+
+  <!-- ETAPA 2 -->
+  <div class="etapa">
+    <div class="etapa-header atencao">
+      <h3>2. Aguardando Atendimento</h3>
+      <span class="tag tag-atencao">Fallback — Consultor entra aqui</span>
+    </div>
+    <div class="etapa-body">
+      <div class="gatilho"><strong>Gatilho:</strong> Um dos dois cenarios abaixo:</div>
+      <div class="regra-item"><span class="icone">→</span><span>Bot travou ou deu erro de envio (API do Meta)</span></div>
+      <div class="regra-item"><span class="icone">→</span><span>Lead respondeu algo fora do padrao dos botoes</span></div>
+      <div style="margin-top:12px;">
+        <div class="regra-item"><span class="icone">⚠️</span><span><strong>Atencao:</strong> Este e o UNICO momento de fallback. O bot envia "vou te passar para um consultor" e move o lead.</span></div>
+        <div class="regra-item"><span class="icone">⏱️</span><span><strong>Consultor:</strong> Assume em ate 5 minutos apos o lead chegar nesta etapa.</span></div>
+        <div class="regra-item"><span class="icone">🔒</span><span><strong>Fora desses dois casos:</strong> o bot conduz tudo. Nao existe atendimento manual antes do lead chegar ao Interesse Real.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ETAPA 3 -->
+  <div class="etapa">
+    <div class="etapa-header bot">
+      <h3>3. Em Qualificacao (Bot)</h3>
+      <span class="tag tag-bot">Bot Automatico</span>
+    </div>
+    <div class="etapa-body">
+      <div class="gatilho"><strong>Gatilho:</strong> Lead respondeu a segmentacao inicial e avanca pelas perguntas do bot.</div>
+      <div class="regra-item"><span class="icone">🤖</span><span><strong>Bot:</strong> Identifica o produto de interesse e direciona para o funil correto (CGI, Conta de Luz, FGTS ou CLT).</span></div>
+      <div class="regra-item"><span class="icone">🤖</span><span><strong>Bot:</strong> Realiza as perguntas qualificatorias especificas de cada produto.</span></div>
+      <div class="regra-item"><span class="icone">⚠️</span><span><strong>Atencao:</strong> O Consultor NAO entra aqui. Interromper o fluxo manualmente reduz a taxa de resposta.</span></div>
+      <div class="regra-item"><span class="icone">🤖</span><span><strong>Bot:</strong> Se o lead der resposta inesperada, move automaticamente para Aguardando Atendimento.</span></div>
+    </div>
+  </div>
+
+  <!-- ETAPA 4 -->
+  <div class="etapa">
+    <div class="etapa-header vendedor">
+      <h3>4. Interesse Real (MQL)</h3>
+      <span class="tag tag-vendedor">Consultor Assume Aqui</span>
+    </div>
+    <div class="etapa-body">
+      <div class="gatilho"><strong>Gatilho:</strong> Lead completou o funil do produto e passou por todos os criterios qualificatorios sem desqualificacao.</div>
+      <div class="regra-item"><span class="icone">📋</span><span><strong>Consultor:</strong> Tarefa criada automaticamente com prazo de 5 minutos. Status muda para Aguardando Atendimento.</span></div>
+      <div class="regra-item"><span class="icone">📋</span><span><strong>Consultor:</strong> Recebe o lead com contexto completo: produto de interesse, respostas qualificatorias e dados de contato.</span></div>
+      <div class="regra-item"><span class="icone">⚠️</span><span><strong>Atencao:</strong> A conversa a partir daqui e 100% manual e personalizada. Nunca use template depois que o lead chegou aqui.</span></div>
+    </div>
+  </div>
+
+  <!-- ETAPA 5 -->
+  <div class="etapa">
+    <div class="etapa-header vendedor">
+      <h3>5. Negociacao (SQL)</h3>
+      <span class="tag tag-vendedor">Consultor</span>
+    </div>
+    <div class="etapa-body">
+      <div class="gatilho"><strong>Gatilho:</strong> Lead demonstrou intencao clara de fechar:</div>
+      <div class="regra-item"><span class="icone">→</span><span>Perguntou sobre prazos, taxas ou valores especificos</span></div>
+      <div class="regra-item"><span class="icone">→</span><span>Enviou documentos para analise</span></div>
+      <div class="regra-item"><span class="icone">→</span><span>Pediu simulacao ou proposta</span></div>
+      <div style="margin-top:10px;">
+        <div class="regra-item"><span class="icone">💼</span><span><strong>Consultor:</strong> Apresentar condicoes apenas depois de entender a situacao do lead — nunca abrir com valores sem antes ouvir a necessidade.</span></div>
+        <div class="regra-item"><span class="icone">⚠️</span><span><strong>Atencao:</strong> Preencher obrigatoriamente no Kommo: produto de interesse, documentos enviados, valor simulado e principal objecao.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ETAPA 6 -->
+  <div class="etapa">
+    <div class="etapa-header vendedor">
+      <h3>6. Venda Ganha</h3>
+      <span class="tag tag-vendedor">Fechado</span>
+    </div>
+    <div class="etapa-body">
+      <div class="gatilho"><strong>Gatilho:</strong> Proposta aprovada e contrato assinado.</div>
+      <div class="regra-item"><span class="icone">✅</span><span><strong>Consultor:</strong> Registrar no Kommo: produto contratado, valor aprovado, data da operacao e forma de liberacao do credito.</span></div>
+    </div>
+  </div>
+
+  <!-- ETAPA 7 -->
+  <div class="etapa">
+    <div class="etapa-header encerrado">
+      <h3>7. Venda Perdida</h3>
+      <span class="tag tag-encerrado">Encerrado</span>
+    </div>
+    <div class="etapa-body">
+      <div class="gatilho"><strong>Gatilho:</strong> Lead encerrou o contato:</div>
+      <div class="regra-item"><span class="icone">→</span><span>Sem resposta apos D+1 / D+2 / D+3 / D+4</span></div>
+      <div class="regra-item"><span class="icone">→</span><span>Clicou no botao "Nao tenho interesse" em qualquer mensagem</span></div>
+      <div class="regra-item"><span class="icone">→</span><span>Declarou sem interesse durante conversa com o consultor</span></div>
+      <div style="margin-top:10px;">
+        <div class="regra-item"><span class="icone">📊</span><span><strong>Importante:</strong> Registrar o motivo da perda no Kommo — dado estrategico para melhorar o funil.</span></div>
+        <div class="regra-item"><span class="icone">🤖</span><span><strong>Bot:</strong> Leads sem resposta total entram automaticamente no Funil de Nutricao (D+15 / D+30 / D+45).</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ETAPA 8 -->
+  <div class="etapa">
+    <div class="etapa-header encerrado">
+      <h3>8. Reprovado</h3>
+      <span class="tag tag-encerrado">Encerrado</span>
+    </div>
+    <div class="etapa-body">
+      <div class="gatilho"><strong>Gatilho:</strong> Lead fora do perfil minimo de qualquer produto:</div>
+      <div class="regra-item"><span class="icone">→</span><span>Nao possui imovel (CGI) / companhia sem convenio (Conta de Luz) / nao aderiu ao saque-aniversario (FGTS) / nao e CLT (Consignado)</span></div>
+      <div class="regra-item"><span class="icone">🤖</span><span><strong>Bot:</strong> Encerra automaticamente com mensagem empatica e convida o lead a retornar quando regularizar.</span></div>
+      <div class="regra-item"><span class="icone">📊</span><span><strong>Importante:</strong> Registrar motivo no Kommo. Muitos leads reprovados indicam necessidade de ajuste no formulario.</span></div>
+    </div>
+  </div>
+
+  <!-- ETAPA 9 -->
+  <div class="etapa">
+    <div class="etapa-header atencao">
+      <h3>9. Venda Futura</h3>
+      <span class="tag tag-atencao">Retorno Agendado</span>
+    </div>
+    <div class="etapa-body">
+      <div class="gatilho"><strong>Gatilho:</strong> Lead tem interesse real mas nao pode fechar agora:</div>
+      <div class="regra-item"><span class="icone">→</span><span>Aguardando regularizar documentacao</span></div>
+      <div class="regra-item"><span class="icone">→</span><span>Questao financeira momentanea</span></div>
+      <div class="regra-item"><span class="icone">→</span><span>Indeciso — quer pensar mais</span></div>
+      <div style="margin-top:10px;">
+        <div class="regra-item"><span class="icone">📅</span><span><strong>Consultor:</strong> Data de retorno OBRIGATORIA no Kommo. Sem data = lead vai ser esquecido.</span></div>
+        <div class="regra-item"><span class="icone">📋</span><span><strong>Consultor:</strong> Criar tarefa de lembrete para o dia combinado com contexto da conversa anotada.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGRA DEFINITIVA -->
+  <div class="regra-definitiva">
+    <h3>Regra Definitiva — Quando o Consultor Assume</h3>
+    <p>O consultor so entra em dois momentos:</p>
+    <ul style="margin-top:10px;">
+      <li><strong style="color:#FF6600;">1. Fallback de erro:</strong> Bot travou ou lead respondeu fora do padrao → Bot envia "vou te passar para um consultor" → Consultor assume em ate 5 minutos</li>
+      <li style="margin-top:8px;"><strong style="color:#FF6600;">2. Lead qualificado:</strong> Completou o funil do produto sem desqualificacao → Tarefa criada automaticamente com prazo de 5 minutos → Consultor recebe com perfil e dados ja registrados</li>
+    </ul>
+    <p style="margin-top:12px; color:#999;">Fora desses dois casos, o bot conduz tudo. Nao interromper o fluxo manual entre Novo Lead e Interesse Real.</p>
+  </div>
+</div>
+
+<!-- 3. CAMPOS OBRIGATORIOS -->
+<div class="section">
+  <div class="section-title">3. Campos Obrigatorios por Etapa — Kommo</div>
+  <div class="info-box">
+    <strong>Por que preencher os campos importa:</strong> Cada campo alimenta o painel de dados do Kommo. Sem dados corretos, a gente fica no achismo e o achismo nao escala. Os campos abaixo foram escolhidos porque cada um responde uma pergunta critica sobre o lead, o processo ou o resultado.
+  </div>
+
+  <div class="section-sub">Novo Lead (Bot)</div>
+  <table class="campos-table">
+    <tr><th>Campo</th><th>Tipo</th><th>Por que e importante</th></tr>
+    <tr><td class="campo-nome">Nome completo</td><td class="campo-tipo">Texto livre</td><td class="campo-por">Personalizar todas as mensagens com o nome do lead. Base de tudo.</td></tr>
+    <tr><td class="campo-nome">Produto de interesse</td><td class="campo-tipo">Lista (CGI / Conta de Luz / FGTS / CLT)</td><td class="campo-por">Direciona para o funil correto e orienta o consultor na abordagem.</td></tr>
+    <tr><td class="campo-nome">Fonte do lead</td><td class="campo-tipo">Lista (Meta / Google / Indicacao / Organico)</td><td class="campo-por">Identifica qual canal traz leads mais qualificados para otimizar investimento.</td></tr>
+    <tr><td class="campo-nome">Data de entrada</td><td class="campo-tipo">Data automatica</td><td class="campo-por">Mede o tempo total do ciclo de vendas do lead ao fechamento.</td></tr>
+  </table>
+
+  <div class="section-sub">Aguardando Atendimento (Fallback)</div>
+  <table class="campos-table">
+    <tr><th>Campo</th><th>Tipo</th><th>Por que e importante</th></tr>
+    <tr><td class="campo-nome">Respondeu qual mensagem</td><td class="campo-tipo">Lista (Bot / Msg D+1 / D+2 / D+3 / D+4)</td><td class="campo-por">Indica qual mensagem gerou resposta — permite otimizar a regua com dados reais.</td></tr>
+    <tr><td class="campo-nome">Horario da resposta</td><td class="campo-tipo">Data/hora automatica</td><td class="campo-por">Mede o tempo de resposta do consultor. Benchmark: ate 5 minutos.</td></tr>
+    <tr><td class="campo-nome">Tom inicial do lead</td><td class="campo-tipo">Lista (Interessado / Curioso / Frio / Agressivo)</td><td class="campo-por">Calibrar o tom da conversa com base no humor do lead aumenta a conversao.</td></tr>
+  </table>
+
+  <div class="section-sub">Em Qualificacao (Bot) — Campos por Produto</div>
+  <table class="campos-table">
+    <tr><th>Campo</th><th>Tipo</th><th>Por que e importante</th></tr>
+    <tr><td class="campo-nome">Valor de credito desejado</td><td class="campo-tipo">Texto / Lista</td><td class="campo-por">Define se o lead esta na faixa do produto e qual simulacao apresentar.</td></tr>
+    <tr><td class="campo-nome">Criterio qualificatorio 1</td><td class="campo-tipo">Lista (Sim / Nao)</td><td class="campo-por">Principal criterio de elegibilidade por produto (imovel, conta de luz, saque-aniversario, CLT).</td></tr>
+    <tr><td class="campo-nome">Criterio qualificatorio 2</td><td class="campo-tipo">Lista (Sim / Nao)</td><td class="campo-por">Criterio secundario de elegibilidade (quitado, residencial, saldo liberado, mais de 6 meses).</td></tr>
+    <tr><td class="campo-nome">Principal dor relatada</td><td class="campo-tipo">Texto livre</td><td class="campo-por">O que motivou o lead. Ouro para personalizar a oferta e quebrar objecoes na negociacao.</td></tr>
+  </table>
+
+  <div class="section-sub">Interesse Real (MQL)</div>
+  <table class="campos-table">
+    <tr><th>Campo</th><th>Tipo</th><th>Por que e importante</th></tr>
+    <tr><td class="campo-nome">Produto confirmado</td><td class="campo-tipo">Lista (CGI / Conta de Luz / FGTS / CLT)</td><td class="campo-por">Confirma o funil e orienta o consultor no script correto.</td></tr>
+    <tr><td class="campo-nome">Valor de interesse</td><td class="campo-tipo">Valor (R$)</td><td class="campo-por">Base para a simulacao. Evita abrir conversa sem saber o objetivo do lead.</td></tr>
+    <tr><td class="campo-nome">Situacao de credito</td><td class="campo-tipo">Lista (Limpo / Com restricao / Nao informou)</td><td class="campo-por">Orienta o discurso. Leads com restricao precisam ouvir o diferencial do produto logo.</td></tr>
+    <tr><td class="campo-nome">Ja conhece a FiveCred?</td><td class="campo-tipo">Lista (Sim / Nao / Viu anuncio)</td><td class="campo-por">Mede reconhecimento de marca. Quem ja conhece avanca mais rapido.</td></tr>
+  </table>
+
+  <div class="section-sub">Negociacao (SQL)</div>
+  <table class="campos-table">
+    <tr><th>Campo</th><th>Tipo</th><th>Por que e importante</th></tr>
+    <tr><td class="campo-nome">Documentos enviados?</td><td class="campo-tipo">Lista (Sim / Aguardando / Nao)</td><td class="campo-por">Controle do processo. Sem documentos nao ha como dar continuidade a proposta.</td></tr>
+    <tr><td class="campo-nome">Simulacao apresentada?</td><td class="campo-tipo">Lista (Sim / Nao / Parcialmente)</td><td class="campo-por">Se o lead sumiu apos a simulacao, o valor pode ser a objecao — dado de melhoria.</td></tr>
+    <tr><td class="campo-nome">Principal objecao</td><td class="campo-tipo">Lista (Preco / Prazo / Documentacao / Duvida tecnica / Outro)</td><td class="campo-por">Identifica objecoes mais frequentes para criar scripts e materiais especificos.</td></tr>
+    <tr><td class="campo-nome">Proposta enviada?</td><td class="campo-tipo">Lista (Sim / Aguardando aprovacao / Nao)</td><td class="campo-por">Controla o estagio real da negociacao no sistema.</td></tr>
+  </table>
+
+  <div class="section-sub">Venda Ganha</div>
+  <table class="campos-table">
+    <tr><th>Campo</th><th>Tipo</th><th>Por que e importante</th></tr>
+    <tr><td class="campo-nome">Produto contratado</td><td class="campo-tipo">Lista (CGI / Conta de Luz / FGTS / CLT)</td><td class="campo-por">Alimenta o relatorio de receita e mostra qual produto tem mais adesao.</td></tr>
+    <tr><td class="campo-nome">Valor aprovado</td><td class="campo-tipo">Valor (R$)</td><td class="campo-por">Controle financeiro e conciliacao da operacao.</td></tr>
+    <tr><td class="campo-nome">Data da operacao</td><td class="campo-tipo">Data</td><td class="campo-por">Controle do ciclo e do calendario de receita.</td></tr>
+    <tr><td class="campo-nome">Documentacao completa?</td><td class="campo-tipo">Lista (Completa / Pendente)</td><td class="campo-por">Garante que o processo esta 100% regularizado antes do credito ser liberado.</td></tr>
+  </table>
+
+  <div class="section-sub">Venda Perdida</div>
+  <table class="campos-table">
+    <tr><th>Campo</th><th>Tipo</th><th>Por que e importante</th></tr>
+    <tr><td class="campo-nome">Motivo da perda</td><td class="campo-tipo">Lista (Sem resposta / Desistiu / Preco / Perfil / Documentacao / Outro)</td><td class="campo-por"><strong>O motivo da perda e a informacao mais estrategica do funil.</strong> Revela onde melhorar: produto, comunicacao, qualificacao ou preco.</td></tr>
+  </table>
+
+  <div class="section-sub">Reprovado</div>
+  <table class="campos-table">
+    <tr><th>Campo</th><th>Tipo</th><th>Por que e importante</th></tr>
+    <tr><td class="campo-nome">Motivo da reprovacao</td><td class="campo-tipo">Lista (Sem imovel / Sem CLT / Sem saque-aniversario / Cia sem convenio / Faixa etaria / Outro)</td><td class="campo-por">Valida a qualidade dos leads vindos de midia. Muitos reprovados = formulario precisa de mais filtros.</td></tr>
+    <tr><td class="campo-nome">Informado ao lead?</td><td class="campo-tipo">Lista (Sim / Nao)</td><td class="campo-por">Lead bem tratado na reprovacao pode indicar a FiveCred para alguem que se qualifica.</td></tr>
+  </table>
+
+  <div class="section-sub">Venda Futura</div>
+  <table class="campos-table">
+    <tr><th>Campo</th><th>Tipo</th><th>Por que e importante</th></tr>
+    <tr><td class="campo-nome">Motivo do adiamento</td><td class="campo-tipo">Lista (Financeiro / Documentacao / Indeciso / Outro)</td><td class="campo-por">Permite um retorno mais assertivo na data combinada.</td></tr>
+    <tr><td class="campo-nome">Data de retorno combinada</td><td class="campo-tipo">Data (OBRIGATORIA)</td><td class="campo-por">Sem data definida, o lead vai ser esquecido. Esse campo e o compromisso que garante o retorno.</td></tr>
+  </table>
+</div>
+
+<!-- 4. FLUXO OPERACIONAL -->
+<div class="section">
+  <div class="section-title">4. Fluxo Operacional</div>
+
+  <div class="section-sub">4.1 Entrada do Lead</div>
+  <ul class="check-list">
+    <li>Lead entra via formulario do anuncio (Meta ou Google)</li>
+    <li>Sistema dispara o BOT automaticamente (D+0)</li>
+    <li>Bot identifica o produto de interesse e inicia o funil correto</li>
+    <li>Lead fica em: Novo Lead</li>
+  </ul>
+
+  <div class="section-sub">4.2 Se o lead NAO responder</div>
+  <ul class="check-list">
+    <li>D+1 (24h) → Mensagem de follow com angulo dor + acolhimento</li>
+    <li>D+2 (48h) → Mensagem com resultado + prova social</li>
+    <li>D+3 (72h) → Mensagem com diferencial do produto especifico</li>
+    <li>D+4 (96h) → Mensagem de encerramento com porta aberta</li>
+    <li>Apos D+4 sem resposta → Venda Perdida (Sem Resposta)</li>
+  </ul>
+
+  <div class="section-sub">4.3 Quando o Lead Responde e Chega ao Interesse Real</div>
+  <div class="golden-rule">
+    REGRA DE OURO: Parar a regua imediatamente. Consultor assume em ate 5 minutos. Iniciar conversa manual, sem copiar e colar. Seguir o script correto para o produto identificado.
+  </div>
+
+  <div class="section-sub">4.4 Prioridade de Atendimento</div>
+  <div style="counter-reset: lista; display:flex; flex-direction:column; gap:8px; margin-top:10px;">
+    <div style="display:flex; gap:12px; align-items:center; background:#fff3e8; padding:10px 16px; border-radius:8px;"><span style="background:#FF6600; color:white; font-weight:800; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0;">1</span><span style="font-size:13px;"><strong>Negociacao (SQL)</strong> — prontos para fechar</span></div>
+    <div style="display:flex; gap:12px; align-items:center; background:#fff8f0; padding:10px 16px; border-radius:8px;"><span style="background:#FF6600; color:white; font-weight:800; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0;">2</span><span style="font-size:13px;"><strong>Aguardando Atendimento</strong> — responderam agora</span></div>
+    <div style="display:flex; gap:12px; align-items:center; background:#fff8f0; padding:10px 16px; border-radius:8px;"><span style="background:#FF6600; color:white; font-weight:800; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0;">3</span><span style="font-size:13px;"><strong>Interesse Real (MQL)</strong> — engajados</span></div>
+    <div style="display:flex; gap:12px; align-items:center; background:#fff8f0; padding:10px 16px; border-radius:8px;"><span style="background:#FF6600; color:white; font-weight:800; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0;">4</span><span style="font-size:13px;"><strong>Venda Futura</strong> — retorno na data combinada</span></div>
+  </div>
+
+  <div class="section-sub">4.5 Regras Operacionais</div>
+  <ul class="check-list">
+    <li>Nunca disparar mensagens em massa ao mesmo tempo</li>
+    <li>Intervalo minimo de 2 a 5 minutos entre disparos manuais</li>
+    <li>Sempre usar o nome do lead nas mensagens</li>
+    <li>Nunca abrir conversa com valor ou simulacao — ouvir a dor primeiro</li>
+    <li>Nunca enviar mensagem longa no primeiro contato manual</li>
+    <li>Campos obrigatorios do Kommo preenchidos ANTES de mover a etapa</li>
+  </ul>
+
+  <div class="section-sub">4.6 Checklist Diario do Consultor — Kommo</div>
+  <div class="info-box">
+    <strong>Ao iniciar o expediente, siga esta sequencia. A ordem importa: priorize quem ja respondeu antes de prospectar novos.</strong>
+  </div>
+  <ul class="check-list">
+    <li><strong>RESPONDER CHATS:</strong> Filtrar chats atribuidos, verificar etapa Aguardando Atendimento, responder e marcar como respondido ate zerar todos os pendentes</li>
+    <li><strong>CALENDARIO DO DIA:</strong> Analisar tarefas do dia no Kommo, responder chats vinculados, criar novas tarefas para leads com retorno futuro, executar e marcar como concluidas</li>
+    <li><strong>FUNIL — REVISAO DE LEADS:</strong> Ver leads sem tarefa criada (nenhum lead pode ficar sem proximo passo), mover cards quando criterio for cumprido, preencher campos obrigatorios antes de mover</li>
+  </ul>
+  <div class="golden-rule">REGRA DE OURO: Nenhum lead fica sem tarefa e sem proxima etapa definida. Se o lead esta parado sem acao, ele some do radar e a venda se perde.</div>
+</div>
+
+<!-- 5. ARQUITETURA DE BOT -->
+<div class="section">
+  <div class="section-title">5. Arquitetura de Bot — Roteamento por Tag de Produto</div>
+  <p style="font-size:13px; color:#666; margin-bottom:20px;">A FiveCred opera com um unico numero WhatsApp para todos os produtos. O roteamento entre os funis e feito automaticamente por tag — cada campanha (Meta ou Google) identifica o produto no momento em que o lead entra no Kommo. Nao e necessario perguntar ao lead qual produto ele quer.</p>
+
+  <div class="regra-definitiva">
+    <h3>Como funciona o roteamento</h3>
+    <ul>
+      <li>Cada formulario de anuncio possui um campo oculto (UTM ou campo hidden) identificando o produto: <strong>produto=CGI</strong>, <strong>produto=LUZ</strong>, <strong>produto=FGTS</strong> ou <strong>produto=CLT</strong>.</li>
+      <li>Quando o lead entra no Kommo via integracao com Meta ou Google, o sistema aplica automaticamente a tag correspondente ao produto da campanha.</li>
+      <li>A automacao do Kommo le a tag e dispara o bot especifico daquele produto — sem precisar fazer nenhuma pergunta de segmentacao.</li>
+      <li>O lead recebe uma saudacao personalizada ja referenciando o produto pelo qual se cadastrou, gerando mais confianca e menos atrito.</li>
+    </ul>
+  </div>
+
+  <div class="section-sub">Mapa de Automacoes — 1 bot por produto</div>
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin:16px 0;">
+    <div style="background:#fff3e8; border:2px solid #FF6600; border-radius:10px; padding:16px;">
+      <div style="font-weight:800; color:#FF6600; font-size:13px; margin-bottom:6px;">Tag [CGI]</div>
+      <div style="font-size:12px; color:#555;">Campanha CGI → lead entra com tag [CGI] → <strong>Bot CGI dispara</strong> → Saudacao CGI → Perguntas CGI-01 a CGI-04</div>
+    </div>
+    <div style="background:#fff3e8; border:2px solid #FF6600; border-radius:10px; padding:16px;">
+      <div style="font-weight:800; color:#FF6600; font-size:13px; margin-bottom:6px;">Tag [LUZ]</div>
+      <div style="font-size:12px; color:#555;">Campanha Conta de Luz → lead entra com tag [LUZ] → <strong>Bot LUZ dispara</strong> → Saudacao LUZ → Perguntas LUZ-01 a LUZ-04</div>
+    </div>
+    <div style="background:#fff3e8; border:2px solid #FF6600; border-radius:10px; padding:16px;">
+      <div style="font-weight:800; color:#FF6600; font-size:13px; margin-bottom:6px;">Tag [FGTS]</div>
+      <div style="font-size:12px; color:#555;">Campanha FGTS → lead entra com tag [FGTS] → <strong>Bot FGTS dispara</strong> → Saudacao FGTS → Perguntas FGTS-01 a FGTS-03</div>
+    </div>
+    <div style="background:#fff3e8; border:2px solid #FF6600; border-radius:10px; padding:16px;">
+      <div style="font-weight:800; color:#FF6600; font-size:13px; margin-bottom:6px;">Tag [CLT]</div>
+      <div style="font-size:12px; color:#555;">Campanha CLT → lead entra com tag [CLT] → <strong>Bot CLT dispara</strong> → Saudacao CLT → Perguntas CLT-01 a CLT-03</div>
+    </div>
+  </div>
+
+  <div class="section-sub">Fallback — Lead Sem Tag (Organico ou Direto)</div>
+  <p style="font-size:13px; color:#666; margin-bottom:14px;">Para leads que chegam pelo WhatsApp diretamente (sem campanha), ou cujo formulario nao trouxe a tag, o bot de fallback dispara com a pergunta de segmentacao.</p>
+
+  <div class="bot-msg">
+    <div class="label">Fallback — Boas-Vindas Generica (Lead sem Tag)</div>
+    <div class="texto">Oi, [Contato: Primeiro nome]! Aqui e da FiveCred, especialistas em credito e solucoes financeiras.
+
+Recebi seu contato aqui e quero te ajudar da melhor forma. Para isso, me conta rapidinho: qual linha de credito voce esta buscando?</div>
+    <div class="botoes">
+      <div class="btn-opcao">Credito com Garantia de Imovel</div>
+      <div class="btn-opcao">Emprestimo na Conta de Luz</div>
+      <div class="btn-opcao">Antecipacao de FGTS</div>
+      <div class="btn-opcao">Consignado CLT</div>
+      <div class="btn-encerra">Nao tenho interesse</div>
+    </div>
+  </div>
+
+  <div class="condicional">
+    <div class="cond-item qualifica"><div class="cond-label">CGI → aplica tag [CGI]</div><div class="cond-text">Segue para Funil CGI (Secao 6), Step CGI-00</div></div>
+    <div class="cond-item qualifica"><div class="cond-label">Conta de Luz → aplica tag [LUZ]</div><div class="cond-text">Segue para Funil Conta de Luz (Secao 7), Step LUZ-00</div></div>
+    <div class="cond-item qualifica"><div class="cond-label">FGTS → aplica tag [FGTS]</div><div class="cond-text">Segue para Funil FGTS (Secao 8), Step FGTS-00</div></div>
+    <div class="cond-item qualifica"><div class="cond-label">CLT → aplica tag [CLT]</div><div class="cond-text">Segue para Funil CLT (Secao 9), Step CLT-00</div></div>
+  </div>
+
+  <div class="bot-msg">
+    <div class="label">Fallback — Resposta Fora do Padrao</div>
+    <div class="texto">Entendi! Vou te passar para um de nossos consultores agora. Um momentinho!</div>
+  </div>
+  <p style="font-size:12px; color:#888; margin-top:6px;">→ Move lead para AGUARDANDO ATENDIMENTO</p>
+</div>
+
+<!-- 6. FUNIL CGI -->
+<div class="funil-header">
+  <h2>Secao 6 — Funil CGI: Credito com Garantia de Imovel</h2>
+  <p>Ativado automaticamente via tag [CGI] quando o lead entra pelo formulario da campanha CGI. Foco em valor necessario, posse e situacao do imovel.</p>
+</div>
+<div class="section">
+  <div class="info-box">
+    <strong>Produto CGI:</strong> Credito de R$ 50 mil ate R$ 5 milhoes. Requer imovel proprio ou de familiar direto, quitado ou em financiamento, com valor acima de R$ 150 mil. Formalizacao 100% digital.
+  </div>
+
+  <div class="section-sub">Move status para "Em Qualificacao"</div>
+
+  <!-- SAUDACAO CGI -->
+  <div class="bot-msg">
+    <div class="label">CGI — Saudacao Inicial (Step CGI-00)</div>
+    <div class="texto">Oi, [Contato: Primeiro nome]! Aqui e da FiveCred, especialistas em credito inteligente.
+
+Recebi seu cadastro para o Credito com Garantia de Imovel (CGI) e fico feliz em te ajudar! O CGI e uma das formas mais inteligentes de acessar credito com taxas muito menores do que o mercado convencional — de R$ 50 mil ate R$ 5 milhoes, usando seu imovel como garantia. Processo 100% digital.
+
+Vou fazer algumas perguntinhas rapidas para verificar se voce ja se enquadra. Pode ser?</div>
+    <div class="botoes">
+      <div class="btn-opcao">Pode ser!</div>
+      <div class="btn-encerra">Nao tenho interesse</div>
+    </div>
+  </div>
+  <p style="font-size:12px; color:#888; margin: 4px 0 16px;">→ "Nao tenho interesse" → Encerramento (Secao 10). "Pode ser!" → Segue para CGI-01.</p>
+
+  <!-- PERGUNTA 1 CGI: VALOR -->
+  <div class="bot-msg">
+    <div class="label">CGI — Qual valor de credito voce precisa? (Step CGI-01)</div>
+    <div class="texto">Otimo, [Contato: Primeiro nome]! O Credito com Garantia de Imovel da FiveCred e uma das formas mais inteligentes de acessar credito com taxas bem menores do que o mercado convencional.
+
+Me conta: qual o valor de credito que voce esta buscando?</div>
+    <div class="botoes">
+      <div class="btn-opcao">A partir de R$ 50 mil</div>
+      <div class="btn-opcao">A partir de R$ 100 mil</div>
+      <div class="btn-opcao">A partir de R$ 300 mil</div>
+      <div class="btn-opcao">A partir de R$ 500 mil</div>
+    </div>
+  </div>
+  <p style="font-size:12px; color:#888; margin: 4px 0 16px;">→ Todas as opcoes qualificam. Seguir para proxima pergunta.</p>
+
+  <!-- PERGUNTA 2 CGI: IMOVEL -->
+  <div class="bot-msg">
+    <div class="label">CGI — Possui imovel? (Step CGI-02)</div>
+    <div class="texto">Perfeito! Para o Credito com Garantia de Imovel, precisamos de um imovel como garantia da operacao.
+
+Voce possui imovel em seu nome ou de um familiar direto?</div>
+    <div class="botoes">
+      <div class="btn-opcao">Sim, possuo</div>
+      <div class="btn-encerra">Nao tenho imovel</div>
+    </div>
+  </div>
+
+  <div class="condicional">
+    <div class="cond-item qualifica"><div class="cond-label">Sim, possuo → Continua</div><div class="cond-text">Segue para proxima pergunta (Step CGI-03)</div></div>
+    <div class="cond-item desqualifica"><div class="cond-label">Nao tenho imovel → Reprovado</div><div class="cond-text">Segue para mensagem de encerramento CGI</div></div>
+  </div>
+
+  <div class="reprovado-box">
+    <h4>Reprovado CGI — Sem Imovel</h4>
+    <p>Entendido, [Contato: Primeiro nome]! Para o Credito com Garantia de Imovel, o imovel e o requisito obrigatorio da operacao. Mas voce sabia que temos outras opcoes de credito que podem te ajudar? Pode me informar se tem interesse em saber mais sobre Emprestimo na Conta de Luz, Antecipacao de FGTS ou Consignado CLT?</p>
+    <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+      <div class="btn-opcao" style="font-size:11px;">Quero conhecer outras opcoes</div>
+      <div class="btn-encerra" style="font-size:11px;">Nao, obrigado</div>
+    </div>
+  </div>
+
+  <!-- PERGUNTA 3 CGI: QUITADO -->
+  <div class="bot-msg">
+    <div class="label">CGI — Imovel quitado? (Step CGI-03)</div>
+    <div class="texto">Excelente! Ter um imovel ja e o principal passo para acessar o nosso Credito com Garantia de Imovel.
+
+O imovel esta quitado?</div>
+    <div class="botoes">
+      <div class="btn-opcao">Sim, esta quitado</div>
+      <div class="btn-opcao">Ainda nao, esta em financiamento</div>
+    </div>
+  </div>
+  <p style="font-size:12px; color:#888; margin: 4px 0 16px;">→ Ambas as opcoes seguem para a proxima pergunta. Imovel em financiamento pode ser aceito dependendo do saldo devedor.</p>
+
+  <!-- PERGUNTA 4 CGI: VALOR DO IMOVEL -->
+  <div class="bot-msg">
+    <div class="label">CGI — Valor do Imovel (Step CGI-04)</div>
+    <div class="texto">Entendido! Ultima pergunta para eu verificar o credito disponivel para voce.
+
+Qual o valor aproximado do seu imovel?</div>
+    <div class="botoes">
+      <div class="btn-encerra">Abaixo de R$ 150 mil</div>
+      <div class="btn-opcao">Acima de R$ 150 mil</div>
+    </div>
+  </div>
+
+  <div class="condicional">
+    <div class="cond-item qualifica"><div class="cond-label">Acima de R$ 150 mil → MQL</div><div class="cond-text">Lead qualificado. Bot cria tarefa para o consultor (5 min). Move para INTERESSE REAL.</div></div>
+    <div class="cond-item desqualifica"><div class="cond-label">Abaixo de R$ 150 mil → Reprovado</div><div class="cond-text">Valor do imovel nao atinge o minimo da operacao. Encerrar com empatia.</div></div>
+  </div>
+
+  <div class="reprovado-box">
+    <h4>Reprovado CGI — Valor do Imovel Abaixo do Minimo</h4>
+    <p>Entendido, [Contato: Primeiro nome]! Para o Credito com Garantia de Imovel, o valor minimo do imovel e de R$ 150 mil. No momento o seu imovel nao se enquadra nessa condicao. Mas fique tranquilo — temos outras linhas de credito que podem te ajudar sem necessidade de imovel como garantia. Posso te apresentar?</p>
+    <div style="margin-top:10px; display:flex; gap:8px;">
+      <div class="btn-opcao" style="font-size:11px;">Sim, quero conhecer</div>
+      <div class="btn-encerra" style="font-size:11px;">Nao, obrigado</div>
+    </div>
+  </div>
+
+  <div class="aprovado-box">
+    <h4>CGI — Lead Qualificado (MQL) — Envio para o Consultor</h4>
+    <p>Perfeito, [Contato: Primeiro nome]! Suas informacoes foram verificadas com sucesso. Agora e so aguardar um momentinho que um dos nossos consultores especializados em Credito com Garantia de Imovel vai entrar em contato com voce. Ele vai te apresentar as melhores condicoes e tirar todas as duvidas. Ja ja nosso time te chama aqui!</p>
+  </div>
+  <p style="font-size:12px; color:#888;">→ Status: move para INTERESSE REAL. Bot cria Tarefa para o consultor (5 min).</p>
+</div>
+
+<!-- 7. FUNIL CONTA DE LUZ -->
+<div class="funil-header">
+  <h2>Secao 7 — Funil Emprestimo na Conta de Luz</h2>
+  <p>Ativado automaticamente via tag [LUZ] quando o lead entra pelo formulario da campanha Conta de Luz. Foco em companhia conveniada, titularidade e situacao da fatura.</p>
+</div>
+<div class="section">
+  <div class="info-box">
+    <strong>Produto Conta de Luz:</strong> Credito de R$ 400 a R$ 4.000 (varia por CIA). Desconto diretamente na conta de energia. Companhias conveniadas: CPFL, RGE, COELBA, CELPE, COSERN, ELEKTRO, ENEL. Idades de 21 a 84 anos. Sujeito a consulta SPC.
+  </div>
+
+  <div class="section-sub">Move status para "Em Qualificacao"</div>
+
+  <!-- SAUDACAO CONTA DE LUZ -->
+  <div class="bot-msg">
+    <div class="label">Conta de Luz — Saudacao Inicial (Step LUZ-00)</div>
+    <div class="texto">Oi, [Contato: Primeiro nome]! Aqui e da FiveCred, especialistas em credito inteligente.
+
+Recebi seu cadastro para o Emprestimo na Conta de Luz e fico feliz em te ajudar! E uma das formas mais praticas de conseguir credito — o desconto e feito direto na sua fatura de energia, sem burocracia e com aprovacao rapida. Credito de R$ 400 a R$ 4.000.
+
+Vou fazer algumas perguntinhas rapidas para verificar se voce se enquadra. Pode ser?</div>
+    <div class="botoes">
+      <div class="btn-opcao">Pode ser!</div>
+      <div class="btn-encerra">Nao tenho interesse</div>
+    </div>
+  </div>
+  <p style="font-size:12px; color:#888; margin: 4px 0 16px;">→ "Nao tenho interesse" → Encerramento (Secao 10). "Pode ser!" → Segue para LUZ-01.</p>
+
+  <!-- PERGUNTA 1 CONTA DE LUZ: VALOR -->
+  <div class="bot-msg">
+    <div class="label">Conta de Luz — Qual valor de credito? (Step LUZ-01)</div>
+    <div class="texto">Otimo, [Contato: Primeiro nome]! Qual o valor que voce precisa?</div>
+    <div class="botoes">
+      <div class="btn-opcao">Entre R$ 400 e R$ 4.000</div>
+      <div class="btn-encerra">Acima de R$ 4.000</div>
+    </div>
+  </div>
+
+  <div class="condicional">
+    <div class="cond-item qualifica"><div class="cond-label">Entre R$400 e R$4.000 → Continua</div><div class="cond-text">Segue para proxima pergunta (Step LUZ-02)</div></div>
+    <div class="cond-item desqualifica"><div class="cond-label">Acima de R$ 4.000 → Reorientar</div><div class="cond-text">O produto tem limite de R$4.000. Oferecer produto alternativo (CGI se tiver imovel).</div></div>
+  </div>
+
+  <div class="bot-msg">
+    <div class="label">Conta de Luz — Valor Acima do Limite (Step LUZ-01B)</div>
+    <div class="texto">Entendido, [Contato: Primeiro nome]! O Emprestimo na Conta de Luz atende ate R$ 4.000. Para valores maiores, temos outras solucoes que podem te atender melhor.
+
+Voce teria interesse em conhecer o Credito com Garantia de Imovel ou outra linha de credito da FiveCred?</div>
+    <div class="botoes">
+      <div class="btn-opcao">Sim, quero conhecer</div>
+      <div class="btn-encerra">Nao, obrigado</div>
+    </div>
+  </div>
+
+  <!-- PERGUNTA 2 CONTA DE LUZ: COMPANHIA -->
+  <div class="bot-msg">
+    <div class="label">Conta de Luz — Qual a sua companhia? (Step LUZ-02)</div>
+    <div class="texto">Otimo! Agora preciso saber qual e a sua companhia de energia eletrica para verificar se temos convenio na sua regiao.</div>
+    <div class="botoes">
+      <div class="btn-opcao">CPFL</div>
+      <div class="btn-opcao">RGE</div>
+      <div class="btn-opcao">COELBA</div>
+      <div class="btn-opcao">CELPE</div>
+      <div class="btn-opcao">COSERN</div>
+      <div class="btn-opcao">ELEKTRO</div>
+      <div class="btn-opcao">ENEL</div>
+      <div class="btn-encerra">Outra companhia</div>
+    </div>
+  </div>
+
+  <div class="condicional">
+    <div class="cond-item qualifica"><div class="cond-label">CIA conveniada → Continua</div><div class="cond-text">CPFL / RGE / COELBA / CELPE / COSERN / ELEKTRO / ENEL — Segue para Step LUZ-03</div></div>
+    <div class="cond-item desqualifica"><div class="cond-label">Outra → Reprovado</div><div class="cond-text">Companhia nao possui convenio com a FiveCred</div></div>
+  </div>
+
+  <div class="reprovado-box">
+    <h4>Reprovado Conta de Luz — Companhia Sem Convenio</h4>
+    <p>Entendido, [Contato: Primeiro nome]! No momento, o Emprestimo na Conta de Luz esta disponivel apenas para clientes das companhias CPFL, RGE, COELBA, CELPE, COSERN, ELEKTRO e ENEL. Infelizmente sua companhia ainda nao faz parte das nossas conveniadas. Mas posso te apresentar outras opcoes de credito da FiveCred?</p>
+    <div style="margin-top:10px; display:flex; gap:8px;">
+      <div class="btn-opcao" style="font-size:11px;">Sim, quero conhecer</div>
+      <div class="btn-encerra" style="font-size:11px;">Nao, obrigado</div>
+    </div>
+  </div>
+
+  <!-- PERGUNTA 3 CONTA DE LUZ: TITULARIDADE -->
+  <div class="bot-msg">
+    <div class="label">Conta de Luz — Titularidade (Step LUZ-03)</div>
+    <div class="texto">Otimo! A conta de energia esta em seu nome e e uma unidade residencial?</div>
+    <div class="botoes">
+      <div class="btn-opcao">Sim, esta no meu nome e e residencial</div>
+      <div class="btn-encerra">Nao</div>
+    </div>
+  </div>
+
+  <div class="condicional">
+    <div class="cond-item qualifica"><div class="cond-label">Sim → Continua</div><div class="cond-text">Segue para Step LUZ-04</div></div>
+    <div class="cond-item desqualifica"><div class="cond-label">Nao → Reprovado</div><div class="cond-text">A conta precisa estar no nome do solicitante e ser residencial</div></div>
+  </div>
+
+  <div class="reprovado-box">
+    <h4>Reprovado Conta de Luz — Titularidade</h4>
+    <p>Entendido, [Contato: Primeiro nome]! Para o Emprestimo na Conta de Luz, a fatura de energia precisa estar em seu nome e ser de uma unidade residencial. Caso regularize essa situacao, pode nos chamar a qualquer momento. Posso te apresentar outras opcoes de credito?</p>
+    <div style="margin-top:10px; display:flex; gap:8px;">
+      <div class="btn-opcao" style="font-size:11px;">Sim, quero conhecer</div>
+      <div class="btn-encerra" style="font-size:11px;">Nao, obrigado</div>
+    </div>
+  </div>
+
+  <!-- PERGUNTA 4 CONTA DE LUZ: PARCELAMENTO -->
+  <div class="bot-msg">
+    <div class="label">Conta de Luz — Parcelamento Ativo (Step LUZ-04)</div>
+    <div class="texto">Quase la, [Contato: Primeiro nome]! Ultima verificacao:
+
+Sua fatura de energia possui algum parcelamento ativo?</div>
+    <div class="botoes">
+      <div class="btn-encerra">Sim, possui parcelamento</div>
+      <div class="btn-opcao">Nao, esta em dia</div>
+    </div>
+  </div>
+
+  <div class="condicional">
+    <div class="cond-item qualifica"><div class="cond-label">Nao → MQL</div><div class="cond-text">Lead qualificado. Bot cria tarefa para consultor (5 min). Move para INTERESSE REAL.</div></div>
+    <div class="cond-item desqualifica"><div class="cond-label">Sim → Avaliar</div><div class="cond-text">Parcelamento ativo pode impedir ou limitar a operacao dependendo da CIA e valor.</div></div>
+  </div>
+
+  <div class="bot-msg">
+    <div class="label">Conta de Luz — Possui Parcelamento (Step LUZ-04B)</div>
+    <div class="texto">Entendido! Faturas com parcelamento ativo passam por uma analise especifica antes de serem aprovadas. Dependendo do valor e da sua companhia de energia, pode ainda ser possivel a aprovacao.
+
+Vou te passar para um de nossos consultores que vai verificar sua situacao individualmente. Um momentinho!</div>
+  </div>
+  <p style="font-size:12px; color:#888; margin:4px 0 16px;">→ Move para AGUARDANDO ATENDIMENTO. Consultor avalia caso a caso conforme as regras de cada CIA.</p>
+
+  <div class="aprovado-box">
+    <h4>Conta de Luz — Lead Qualificado (MQL)</h4>
+    <p>Perfeito, [Contato: Primeiro nome]! Suas informacoes foram verificadas e voce se enquadra no Emprestimo na Conta de Luz da FiveCred. Agora e so aguardar — um de nossos consultores vai entrar em contato para apresentar sua simulacao personalizada e cuidar de todo o processo. Ja ja nosso time te chama aqui!</p>
+  </div>
+  <p style="font-size:12px; color:#888;">→ Status: move para INTERESSE REAL. Bot cria Tarefa para o consultor (5 min).</p>
+</div>
+
+<!-- 8. FUNIL FGTS -->
+<div class="funil-header">
+  <h2>Secao 8 — Funil Antecipacao de FGTS</h2>
+  <p>Ativado automaticamente via tag [FGTS] quando o lead entra pelo formulario da campanha FGTS. Foco em modalidade saque-aniversario, saldo disponivel e historico de antecipacoes.</p>
+</div>
+<div class="section">
+  <div class="info-box">
+    <strong>Produto FGTS:</strong> Antecipacao do saque-aniversario do FGTS. Exige adesao a modalidade ha mais de 90 dias, saldo disponivel para antecipacao e intervalo de pelo menos 12 meses desde a ultima antecipacao.
+  </div>
+
+  <div class="section-sub">Move status para "Em Qualificacao"</div>
+
+  <div class="bot-msg">
+    <div class="label">FGTS — Saudacao Inicial (Step FGTS-00)</div>
+    <div class="texto">Oi, [Contato: Primeiro nome]! Aqui e da FiveCred, especialistas em credito inteligente.
+
+Recebi seu cadastro para a Antecipacao de FGTS e ja vou te ajudar! E uma das formas mais rapidas de ter acesso ao seu proprio dinheiro — voce antecipa as parcelas do saque-aniversario direto na conta, com taxas menores e processo 100% digital.
+
+Vou fazer algumas perguntinhas rapidas para verificar se voce se enquadra. Pode ser?</div>
+    <div class="botoes">
+      <div class="btn-opcao">Pode ser!</div>
+      <div class="btn-encerra">Nao tenho interesse</div>
+    </div>
+  </div>
+  <p style="font-size:12px; color:#888; margin: 4px 0 16px;">→ "Nao tenho interesse" → Encerramento (Secao 10). "Pode ser!" → Segue para FGTS-01.</p>
+
+  <!-- PERGUNTA 1 FGTS: SAQUE-ANIVERSARIO -->
+  <div class="bot-msg">
+    <div class="label">FGTS — Adesao ao Saque-Aniversario (Step FGTS-01)</div>
+    <div class="texto">Para antecipar o FGTS, e necessario ter aderido a modalidade saque-aniversario. Voce ja aderiu ao saque-aniversario ha mais de 90 dias?</div>
+    <div class="botoes">
+      <div class="btn-opcao">Sim, ja aderiu ha mais de 90 dias</div>
+      <div class="btn-encerra">Nao ou nao sei</div>
+    </div>
+  </div>
+
+  <div class="condicional">
+    <div class="cond-item qualifica"><div class="cond-label">Sim → Continua</div><div class="cond-text">Segue para Step FGTS-02</div></div>
+    <div class="cond-item desqualifica"><div class="cond-label">Nao → Reprovado</div><div class="cond-text">Sem a adesao ha mais de 90 dias nao e possivel antecipar</div></div>
+  </div>
+
+  <div class="reprovado-box">
+    <h4>Reprovado FGTS — Saque-Aniversario</h4>
+    <p>Entendido, [Contato: Primeiro nome]! Para antecipar o FGTS, e preciso ter aderido a modalidade saque-aniversario ha pelo menos 90 dias pelo aplicativo do FGTS (Caixa Tem). Se voce ainda nao aderiu, pode fazer agora pelo app e retornar quando completar os 90 dias — teremos prazer em te atender! Posso te apresentar outras opcoes de credito enquanto isso?</p>
+    <div style="margin-top:10px; display:flex; gap:8px;">
+      <div class="btn-opcao" style="font-size:11px;">Sim, quero conhecer outras opcoes</div>
+      <div class="btn-encerra" style="font-size:11px;">Nao, obrigado</div>
+    </div>
+  </div>
+
+  <!-- PERGUNTA 2 FGTS: SALDO -->
+  <div class="bot-msg">
+    <div class="label">FGTS — Saldo Disponivel (Step FGTS-02)</div>
+    <div class="texto">Otimo! Voce sabe se possui saldo liberado no FGTS disponivel para antecipacao?
+
+Voce pode verificar pelo aplicativo FGTS (Caixa Tem) em "Saque-Aniversario" → "Simular Antecipacao".</div>
+    <div class="botoes">
+      <div class="btn-opcao">Sim, tenho saldo disponivel</div>
+      <div class="btn-encerra">Nao tenho saldo / Nao sei</div>
+    </div>
+  </div>
+
+  <div class="condicional">
+    <div class="cond-item qualifica"><div class="cond-label">Sim → Continua</div><div class="cond-text">Segue para Step FGTS-03</div></div>
+    <div class="cond-item desqualifica"><div class="cond-label">Nao sei → Consultor avalia</div><div class="cond-text">Move para Aguardando Atendimento para o consultor orientar como verificar</div></div>
+  </div>
+
+  <!-- PERGUNTA 3 FGTS: ANTECIPACAO RECENTE -->
+  <div class="bot-msg">
+    <div class="label">FGTS — Antecipacao Recente (Step FGTS-03)</div>
+    <div class="texto">Quase la! Ultima verificacao:
+
+Voce realizou alguma antecipacao de FGTS nos ultimos 12 meses?</div>
+    <div class="botoes">
+      <div class="btn-encerra">Sim, realizei nos ultimos 12 meses</div>
+      <div class="btn-opcao">Nao, a mais de 12 meses ou nunca antecipei</div>
+    </div>
+  </div>
+
+  <div class="condicional">
+    <div class="cond-item qualifica"><div class="cond-label">Nao → MQL</div><div class="cond-text">Lead qualificado. Bot cria tarefa para consultor (5 min). Move para INTERESSE REAL.</div></div>
+    <div class="cond-item desqualifica"><div class="cond-label">Sim → Reprovado</div><div class="cond-text">Intervalo minimo de 12 meses entre antecipacoes nao cumprido</div></div>
+  </div>
+
+  <div class="reprovado-box">
+    <h4>Reprovado FGTS — Antecipacao Recente</h4>
+    <p>Entendido, [Contato: Primeiro nome]! O intervalo minimo entre antecipacoes de FGTS e de 12 meses. Assim que esse periodo for completado, pode nos chamar e a gente cuida de tudo rapidinho! Posso te apresentar outras opcoes de credito enquanto isso?</p>
+    <div style="margin-top:10px; display:flex; gap:8px;">
+      <div class="btn-opcao" style="font-size:11px;">Sim, quero conhecer outras opcoes</div>
+      <div class="btn-encerra" style="font-size:11px;">Nao, obrigado</div>
+    </div>
+  </div>
+
+  <div class="aprovado-box">
+    <h4>FGTS — Lead Qualificado (MQL)</h4>
+    <p>Que otimo, [Contato: Primeiro nome]! Tudo certo — voce se enquadra na Antecipacao de FGTS da FiveCred. Em poucos minutos um dos nossos consultores vai entrar em contato para fazer sua simulacao e cuidar de todo o processo 100% digital. Ja ja nosso time te chama aqui!</p>
+  </div>
+  <p style="font-size:12px; color:#888;">→ Status: move para INTERESSE REAL. Bot cria Tarefa para o consultor (5 min).</p>
+</div>
+
+<!-- 9. FUNIL CLT -->
+<div class="funil-header">
+  <h2>Secao 9 — Funil Consignado CLT (Credito do Trabalhador)</h2>
+  <p>Ativado automaticamente via tag [CLT] quando o lead entra pelo formulario da campanha Consignado CLT. Foco em valor, vinculo empregaticio e tempo de registro.</p>
+</div>
+<div class="section">
+  <div class="info-box">
+    <strong>Produto Consignado CLT:</strong> Credito de R$ 500 a R$ 25.000 para trabalhadores CLT. Desconto automatico em folha. Margem de ate 35% do salario. Prazo de 6, 12 ou 24 meses. Taxa de 4,98% a.m. Minimo de 6 meses de vinculo. Empresa empregadora deve ter no minimo 3 anos de atividade e CNPJ regular.
+  </div>
+
+  <div class="section-sub">Move status para "Em Qualificacao"</div>
+
+  <div class="bot-msg">
+    <div class="label">CLT — Saudacao Inicial (Step CLT-00)</div>
+    <div class="texto">Oi, [Contato: Primeiro nome]! Aqui e da FiveCred, especialistas em credito inteligente.
+
+Recebi seu cadastro para o Credito do Trabalhador e fico feliz em te ajudar! E exclusivo para quem tem carteira assinada e oferece condicoes muito melhores do que emprestimo pessoal convencional — desconto direto na folha, processo 100% digital e aprovacao rapida. Credito de R$ 500 ate R$ 25.000.
+
+Vou fazer algumas perguntinhas rapidas para verificar se voce se enquadra. Pode ser?</div>
+    <div class="botoes">
+      <div class="btn-opcao">Pode ser!</div>
+      <div class="btn-encerra">Nao tenho interesse</div>
+    </div>
+  </div>
+  <p style="font-size:12px; color:#888; margin: 4px 0 16px;">→ "Nao tenho interesse" → Encerramento (Secao 10). "Pode ser!" → Segue para CLT-01.</p>
+
+  <!-- PERGUNTA 1 CLT: VALOR -->
+  <div class="bot-msg">
+    <div class="label">CLT — Qual valor de credito? (Step CLT-01)</div>
+    <div class="texto">Qual o valor de credito que voce esta buscando?</div>
+    <div class="botoes">
+      <div class="btn-encerra">Abaixo de R$ 500,00</div>
+      <div class="btn-opcao">Entre R$ 500 e R$ 25.000</div>
+    </div>
+  </div>
+
+  <div class="condicional">
+    <div class="cond-item qualifica"><div class="cond-label">Entre R$500 e R$25.000 → Continua</div><div class="cond-text">Segue para Step CLT-02</div></div>
+    <div class="cond-item desqualifica"><div class="cond-label">Abaixo de R$500 → Reorientar</div><div class="cond-text">Valor abaixo do minimo do produto. Oferecer outras opcoes.</div></div>
+  </div>
+
+  <div class="bot-msg">
+    <div class="label">CLT — Valor Abaixo do Minimo (Step CLT-01B)</div>
+    <div class="texto">Entendido, [Contato: Primeiro nome]! O Credito do Trabalhador atende a partir de R$ 500. Para valores menores, posso te orientar sobre outras opcoes disponíveis na FiveCred. Quer conhecer?</div>
+    <div class="botoes">
+      <div class="btn-opcao">Sim, quero conhecer</div>
+      <div class="btn-encerra">Nao, obrigado</div>
+    </div>
+  </div>
+
+  <!-- PERGUNTA 2 CLT: REGIME CLT -->
+  <div class="bot-msg">
+    <div class="label">CLT — Trabalha Registrado? (Step CLT-02)</div>
+    <div class="texto">Voce trabalha registrado(a) em regime CLT (carteira assinada)?</div>
+    <div class="botoes">
+      <div class="btn-opcao">Sim, tenho carteira assinada</div>
+      <div class="btn-encerra">Nao, sou autonomo / MEI / PJ</div>
+    </div>
+  </div>
+
+  <div class="condicional">
+    <div class="cond-item qualifica"><div class="cond-label">Sim → Continua</div><div class="cond-text">Segue para Step CLT-03</div></div>
+    <div class="cond-item desqualifica"><div class="cond-label">Nao → Reprovado</div><div class="cond-text">Produto exclusivo para trabalhadores CLT</div></div>
+  </div>
+
+  <div class="reprovado-box">
+    <h4>Reprovado CLT — Sem Vinculo CLT</h4>
+    <p>Entendido, [Contato: Primeiro nome]! O Credito do Trabalhador e exclusivo para quem tem carteira assinada (CLT). Se voce for autonomo, MEI ou PJ, temos outras opcoes que podem te atender. Posso apresentar?</p>
+    <div style="margin-top:10px; display:flex; gap:8px;">
+      <div class="btn-opcao" style="font-size:11px;">Sim, quero conhecer outras opcoes</div>
+      <div class="btn-encerra" style="font-size:11px;">Nao, obrigado</div>
+    </div>
+  </div>
+
+  <!-- PERGUNTA 3 CLT: TEMPO DE REGISTRO -->
+  <div class="bot-msg">
+    <div class="label">CLT — Tempo de Registro (Step CLT-03)</div>
+    <div class="texto">Otimo! Voce esta registrado(a) nessa empresa ha mais de 6 meses?</div>
+    <div class="botoes">
+      <div class="btn-opcao">Sim, ha mais de 6 meses</div>
+      <div class="btn-encerra">Nao, ha menos de 6 meses</div>
+    </div>
+  </div>
+
+  <div class="condicional">
+    <div class="cond-item qualifica"><div class="cond-label">Sim → MQL</div><div class="cond-text">Lead qualificado. Bot cria tarefa para consultor (5 min). Move para INTERESSE REAL.</div></div>
+    <div class="cond-item desqualifica"><div class="cond-label">Nao → Reprovado</div><div class="cond-text">Minimo de 6 meses de vinculo nao cumprido</div></div>
+  </div>
+
+  <div class="reprovado-box">
+    <h4>Reprovado CLT — Tempo de Registro Insuficiente</h4>
+    <p>Entendido, [Contato: Primeiro nome]! O Credito do Trabalhador requer no minimo 6 meses de vinculo com a empresa atual. Assim que completar esse periodo, pode nos chamar — teremos prazer em te atender rapidinho! Posso te apresentar outras opcoes enquanto isso?</p>
+    <div style="margin-top:10px; display:flex; gap:8px;">
+      <div class="btn-opcao" style="font-size:11px;">Sim, quero conhecer outras opcoes</div>
+      <div class="btn-encerra" style="font-size:11px;">Nao, obrigado</div>
+    </div>
+  </div>
+
+  <div class="aprovado-box">
+    <h4>CLT — Lead Qualificado (MQL)</h4>
+    <p>Perfeito, [Contato: Primeiro nome]! Tudo certo — voce se enquadra no Credito do Trabalhador da FiveCred. Um dos nossos consultores vai entrar em contato em instantes para fazer sua simulacao personalizada e cuidar de todo o processo. O desconto e direto na folha, 100% digital e sem burocracia. Ja ja nosso time te chama aqui!</p>
+  </div>
+  <p style="font-size:12px; color:#888;">→ Status: move para INTERESSE REAL. Bot cria Tarefa para o consultor (5 min).</p>
+</div>
+
+<!-- 10. ENCERRAMENTO -->
+<div class="section">
+  <div class="section-title">10. Mensagens de Encerramento</div>
+
+  <div class="section-sub">Encerramento 1 — Sem Interesse desde o Inicio</div>
+  <div class="bot-msg">
+    <div class="label">Encerramento — Sem Interesse</div>
+    <div class="texto">Sem problema, [Contato: Primeiro nome]! Agradeco pelo seu tempo e por conversar com a gente.
+
+Neste momento vou encerrar seu atendimento por aqui para nao ficar te incomodando. Mas se no futuro voce precisar de credito inteligente, com condicoes diferenciadas e atendimento personalizado, pode nos chamar a qualquer hora.
+
+Sera um prazer te atender.
+
+Grande abraco,
+Equipe FiveCred</div>
+  </div>
+  <p style="font-size:12px; color:#888; margin:4px 0 16px;">→ Move lead para VENDA PERDIDA (Sem Interesse). Bot encerrado.</p>
+
+  <div class="section-sub">Encerramento 2 — Reprovado Sem Alternativa</div>
+  <div class="bot-msg">
+    <div class="label">Encerramento — Reprovado</div>
+    <div class="texto">Entendido, [Contato: Primeiro nome]! Infelizmente no momento o seu perfil nao se enquadra em nenhuma das nossas linhas de credito disponiveis.
+
+Mas nao se preocupe — a situacao pode mudar e quando isso acontecer, pode nos chamar aqui. Teremos prazer em te atender com prioridade.
+
+Grande abraco,
+Equipe FiveCred</div>
+  </div>
+  <p style="font-size:12px; color:#888; margin:4px 0 16px;">→ Move lead para REPROVADO. Bot encerrado.</p>
+</div>
+
+<!-- 11. REGUA DE FOLLOW -->
+<div class="section">
+  <div class="section-title">11. Regua de Follow — Leads Sem Resposta</div>
+  <p style="font-size:14px; color:#666; margin-bottom:20px;">Para leads que NAO responderam a mensagem inicial. Cadencia automatica de 4 mensagens (D+1 a D+4), cada uma com angulo diferente para maximizar a taxa de resposta. Todas incluem o botao "Nao tenho interesse".</p>
+
+  <div class="golden-rule">IMPORTANTE: Todas as mensagens de follow incluem o botao "Nao tenho interesse". Quando o lead clicar, a cadencia para e o lead move para Venda Perdida. Isso evita denuncia do numero.</div>
+
+  <table class="follow-table">
+    <tr><th>Quando</th><th>Angulo</th><th>Resumo da Mensagem</th></tr>
+    <tr>
+      <td><div class="dia">D+1 — 24h</div></td>
+      <td>Dor + Acolhimento</td>
+      <td>Vi que voce nao respondeu — correria do dia a dia? Me conta o que voce precisa que te ajudo direto ao ponto.</td>
+    </tr>
+    <tr>
+      <td><div class="dia">D+2 — 48h</div></td>
+      <td>Resultado + Prova Social</td>
+      <td>Quem antecipa o credito certo no momento certo muda o jogo. Temos ajudado muita gente a resolver em menos de 24h com processo 100% digital.</td>
+    </tr>
+    <tr>
+      <td><div class="dia">D+3 — 72h</div></td>
+      <td>Diferencial do Produto</td>
+      <td>Sabia que nosso processo e 100% digital, sem burocracia e com condicoes diferenciadas? Basta responder aqui que ja te encaminho para um consultor.</td>
+    </tr>
+    <tr>
+      <td><div class="dia">D+4 — 96h</div></td>
+      <td>Encerramento</td>
+      <td>Como nao tive retorno, vou encerrar por aqui para nao te incomodar. Mas se precisar de credito no futuro, e so nos chamar — porta sempre aberta.</td>
+    </tr>
+  </table>
+
+  <div class="section-sub">Mensagens Completas — Regua de Follow</div>
+
+  <div class="bot-msg">
+    <div class="label">Mensagem D+1 — Dor + Acolhimento (24h depois)</div>
+    <div class="texto">Oi, [Nome]! Vi que voce nao respondeu e imaginei que pode ter sido correria do dia a dia mesmo.
+
+Conseguiu ver o que te mandei? Me conta o que voce precisa que te ajudo direto ao ponto, sem enrolacao.</div>
+    <div class="botoes">
+      <div class="btn-opcao">Quero saber mais</div>
+      <div class="btn-encerra">Nao tenho interesse</div>
+    </div>
+  </div>
+
+  <div class="bot-msg">
+    <div class="label">Mensagem D+2 — Resultado + Prova Social (48h depois)</div>
+    <div class="texto">Oi, [Nome]! Quem resolve o credito certo no momento certo muda completamente a situacao financeira.
+
+Aqui na FiveCred ja ajudamos centenas de pessoas a acessar credito de forma rapida, digital e sem burocracia — com condicoes que o mercado convencional raramente oferece.
+
+Posso fazer uma simulacao gratuita pra voce agora?</div>
+    <div class="botoes">
+      <div class="btn-opcao">Sim, quero a simulacao</div>
+      <div class="btn-encerra">Nao tenho interesse</div>
+    </div>
+  </div>
+
+  <div class="bot-msg">
+    <div class="label">Mensagem D+3 — Diferencial (72h depois)</div>
+    <div class="texto">Oi, [Nome]! Voce sabia que nosso processo e 100% digital, rapido e sem sair de casa?
+
+Desde a simulacao ate a liberacao do credito, tudo pelo celular. Sem papelada, sem filas e com atendimento personalizado.
+
+Ainda da tempo de voce garantir o credito hoje. Basta responder aqui!</div>
+    <div class="botoes">
+      <div class="btn-opcao">Quero garantir agora</div>
+      <div class="btn-encerra">Nao tenho interesse</div>
+    </div>
+  </div>
+
+  <div class="bot-msg">
+    <div class="label">Mensagem D+4 — Encerramento (96h depois)</div>
+    <div class="texto">Oi, [Nome]! Como nao tive seu retorno, vou encerrar seu atendimento por aqui para nao ficar te chamando a toa.
+
+Mas fica tranquilo: se precisar de credito no futuro, e so me chamar aqui. Teremos prazer em te atender com prioridade.
+
+Grande abraco,
+Equipe FiveCred</div>
+    <div class="botoes">
+      <div class="btn-opcao">Quero conversar</div>
+      <div class="btn-encerra">Nao tenho interesse</div>
+    </div>
+  </div>
+</div>
+
+<!-- 12. MAPA RESUMIDO DO FLUXO -->
+<div class="section">
+  <div class="section-title">12. Mapa Resumido do Fluxo</div>
+
+  <div class="section-sub">Entradas — Por Tag de Produto (Campanha)</div>
+  <table class="mapa-table">
+    <tr><th>Tag</th><th>Origem</th><th>Primeiro Step do Bot</th></tr>
+    <tr><td class="step">[CGI]</td><td>Formulario campanha CGI (Meta/Google)</td><td>→ CGI-00 (Saudacao CGI)</td></tr>
+    <tr><td class="step">[LUZ]</td><td>Formulario campanha Conta de Luz</td><td>→ LUZ-00 (Saudacao Conta de Luz)</td></tr>
+    <tr><td class="step">[FGTS]</td><td>Formulario campanha FGTS</td><td>→ FGTS-00 (Saudacao FGTS)</td></tr>
+    <tr><td class="step">[CLT]</td><td>Formulario campanha CLT</td><td>→ CLT-00 (Saudacao CLT)</td></tr>
+    <tr><td class="step">Sem Tag</td><td>WhatsApp direto / lead organico</td><td>→ Fallback: Segmentacao por produto</td></tr>
+    <tr><td class="step">Fallback</td><td>Resposta fora do padrao</td><td>→ AGUARDANDO ATENDIMENTO</td></tr>
+  </table>
+
+  <div class="section-sub" style="margin-top:24px;">Fluxo de Qualificacao — Funil CGI</div>
+  <table class="mapa-table">
+    <tr><th>Step</th><th>Mensagem / Acao</th><th>Destinos por Resposta</th></tr>
+    <tr><td class="step">CGI-00</td><td>Saudacao: recebeu cadastro + apresenta produto CGI</td><td>Pode ser! → CGI-01 | Nao tenho interesse → Encerramento</td></tr>
+    <tr><td class="step">CGI-01</td><td>Qual valor de credito precisa?</td><td>Qualquer opcao → CGI-02</td></tr>
+    <tr><td class="step">CGI-02</td><td>Possui imovel?</td><td>Sim → CGI-03 | Nao → Reprovado CGI (oferta alternativa)</td></tr>
+    <tr><td class="step">CGI-03</td><td>Imovel quitado?</td><td>Sim / Nao → CGI-04 (ambos)</td></tr>
+    <tr><td class="step">CGI-04</td><td>Valor do imovel</td><td>Acima R$150k → MQL | Abaixo → Reprovado CGI</td></tr>
+  </table>
+
+  <div class="section-sub" style="margin-top:24px;">Fluxo de Qualificacao — Funil Conta de Luz</div>
+  <table class="mapa-table">
+    <tr><th>Step</th><th>Mensagem / Acao</th><th>Destinos por Resposta</th></tr>
+    <tr><td class="step">LUZ-00</td><td>Saudacao: recebeu cadastro + apresenta produto Conta de Luz</td><td>Pode ser! → LUZ-01 | Nao tenho interesse → Encerramento</td></tr>
+    <tr><td class="step">LUZ-01</td><td>Qual valor de credito precisa?</td><td>R$400-R$4.000 → LUZ-02 | Acima → Reorientar</td></tr>
+    <tr><td class="step">LUZ-02</td><td>Qual companhia de energia?</td><td>Conveniada → LUZ-03 | Outra → Reprovado Luz</td></tr>
+    <tr><td class="step">LUZ-03</td><td>Conta em seu nome e residencial?</td><td>Sim → LUZ-04 | Nao → Reprovado Luz</td></tr>
+    <tr><td class="step">LUZ-04</td><td>Possui parcelamento ativo?</td><td>Nao → MQL | Sim → Aguardando Atendimento</td></tr>
+  </table>
+
+  <div class="section-sub" style="margin-top:24px;">Fluxo de Qualificacao — Funil FGTS</div>
+  <table class="mapa-table">
+    <tr><th>Step</th><th>Mensagem / Acao</th><th>Destinos por Resposta</th></tr>
+    <tr><td class="step">FGTS-00</td><td>Saudacao: recebeu cadastro + apresenta produto FGTS</td><td>Pode ser! → FGTS-01 | Nao tenho interesse → Encerramento</td></tr>
+    <tr><td class="step">FGTS-01</td><td>Aderiu ao saque-aniversario ha +90 dias?</td><td>Sim → FGTS-02 | Nao → Reprovado FGTS</td></tr>
+    <tr><td class="step">FGTS-02</td><td>Possui saldo disponivel?</td><td>Sim → FGTS-03 | Nao sei → Aguardando Atendimento</td></tr>
+    <tr><td class="step">FGTS-03</td><td>Antecipacao nos ultimos 12 meses?</td><td>Nao → MQL | Sim → Reprovado FGTS</td></tr>
+  </table>
+
+  <div class="section-sub" style="margin-top:24px;">Fluxo de Qualificacao — Funil CLT</div>
+  <table class="mapa-table">
+    <tr><th>Step</th><th>Mensagem / Acao</th><th>Destinos por Resposta</th></tr>
+    <tr><td class="step">CLT-00</td><td>Saudacao: recebeu cadastro + apresenta produto CLT</td><td>Pode ser! → CLT-01 | Nao tenho interesse → Encerramento</td></tr>
+    <tr><td class="step">CLT-01</td><td>Qual valor de credito precisa?</td><td>R$500-R$25.000 → CLT-02 | Abaixo → Reorientar</td></tr>
+    <tr><td class="step">CLT-02</td><td>Trabalha registrado CLT?</td><td>Sim → CLT-03 | Nao → Reprovado CLT</td></tr>
+    <tr><td class="step">CLT-03</td><td>Registrado ha mais de 6 meses?</td><td>Sim → MQL | Nao → Reprovado CLT</td></tr>
+  </table>
+
+  <div class="section-sub" style="margin-top:24px;">Desfechos e Regua de Follow</div>
+  <table class="mapa-table">
+    <tr><th>Step</th><th>Mensagem / Acao</th><th>Destinos por Resposta</th></tr>
+    <tr><td class="step">MQL</td><td>Lead qualificado — Envio para consultor</td><td>Cria tarefa 5 min + move para INTERESSE REAL</td></tr>
+    <tr><td class="step">Reprovado</td><td>Encerramento por perfil fora do produto</td><td>→ Status REPROVADO. Oferece produto alternativo.</td></tr>
+    <tr><td class="step">Encerrado</td><td>Sem interesse declarado</td><td>→ Status VENDA PERDIDA. Bot encerrado.</td></tr>
+    <tr><td class="step">D+1 a D+4</td><td>Regua de follow — sem resposta</td><td>Resposta → Para regua + Aguardando Atendimento | Nao tenho interesse → Venda Perdida</td></tr>
+  </table>
+</div>
+
+<div class="rodape">
+  <p><strong>FiveCred</strong> | Playbook Comercial CRM — Kommo | Versao 1.1 | Maio 2026</p>
+  <p style="margin-top:6px;">Documento confidencial — uso interno da equipe comercial e consultores FiveCred.</p>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tecnipool — Pioneira em Acessibilidade Aquática no Brasil</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      color: #1a1a2e;
+      background: #fff;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ===== TOKENS ===== */
+    :root {
+      --blue:       #004AAD;
+      --blue-light: #00B3FF;
+      --gray:       #969494;
+      --white:      #FFFFFF;
+      --dark:       #001C5C;
+      --bg-light:   #F2F6FB;
+      --bg-tint:    #EAF3FF;
+      --shadow:     0 4px 20px rgba(0,74,173,0.10);
+      --radius:     12px;
+    }
+
+    /* ===== TYPOGRAPHY ===== */
+    h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; line-height: 1.15; }
+    h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 700; line-height: 1.25; }
+    h3 { font-size: 1.1rem; font-weight: 700; }
+    p  { font-size: 1rem; line-height: 1.7; color: #444; }
+
+    /* ===== LAYOUT HELPERS ===== */
+    .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+    .section { padding: 80px 0; }
+    .section-tag {
+      display: block;
+      width: 60px; height: 3px;
+      background: var(--blue-light);
+      margin: 0 auto 12px;
+      border-radius: 2px;
+    }
+    .section-title { color: var(--blue); text-align: center; margin-bottom: 48px; }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      display: inline-block;
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all .2s ease;
+      border: 2px solid transparent;
+    }
+    .btn-primary {
+      background: var(--blue);
+      color: var(--white);
+      border-color: var(--blue);
+    }
+    .btn-primary:hover { background: #003a8a; border-color: #003a8a; }
+    .btn-outline {
+      background: transparent;
+      color: var(--blue);
+      border-color: var(--blue);
+    }
+    .btn-outline:hover { background: var(--blue); color: var(--white); }
+    .btn-light {
+      background: var(--blue-light);
+      color: var(--white);
+      border-color: var(--blue-light);
+    }
+    .btn-light:hover { background: #009add; border-color: #009add; }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--white);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      padding: 16px 0;
+    }
+    .navbar .container { display: flex; align-items: center; justify-content: space-between; }
+    .navbar-logo { display: flex; align-items: center; gap: 10px; }
+    .navbar-logo-text {
+      font-weight: 700; font-size: 1.3rem;
+      color: var(--blue); letter-spacing: 1px;
+    }
+    .navbar-logo-sub { font-size: .7rem; color: var(--gray); letter-spacing: .5px; }
+    .navbar-cta { display: flex; gap: 12px; }
+    @media (max-width: 600px) {
+      .navbar-cta .btn-outline { display: none; }
+      .btn { padding: 11px 20px; font-size: .9rem; }
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: var(--white);
+      overflow: hidden;
+      padding: 60px 0 0;
+      position: relative;
+    }
+    .hero .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 40px;
+      min-height: 520px;
+    }
+    .hero-text { padding-bottom: 60px; }
+    .hero-text h1 { color: var(--blue); margin-bottom: 20px; }
+    .hero-text p {
+      font-size: 1.1rem; color: #555;
+      margin-bottom: 32px;
+      line-height: 1.75;
+    }
+    .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 20px; }
+    .hero-micro { font-size: .82rem; color: var(--gray); }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+      height: 100%;
+    }
+    .hero-img-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+    }
+    .hero-img-wrap img {
+      width: 100%;
+      border-radius: 20px 20px 0 0;
+      object-fit: cover;
+      object-position: center top;
+      max-height: 580px;
+      box-shadow: -12px 0 40px rgba(0,74,173,0.15);
+    }
+    .badge {
+      position: absolute;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      border-radius: 50%;
+      font-weight: 700; text-align: center;
+      color: var(--white);
+      line-height: 1.2;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+    .badge-patent {
+      background: var(--blue);
+      width: 96px; height: 96px;
+      font-size: .7rem;
+      top: 24px; left: -20px;
+      transform: rotate(-12deg);
+    }
+    .badge-patent span { font-size: 1.1rem; }
+    .badge-install {
+      background: var(--blue-light);
+      width: 80px; height: 80px;
+      font-size: .62rem;
+      bottom: 60px; left: -30px;
+      transform: rotate(8deg);
+    }
+    .badge-install span { font-size: .85rem; }
+
+    @media (max-width: 860px) {
+      .hero .container { grid-template-columns: 1fr; text-align: center; }
+      .hero-ctas { justify-content: center; }
+      .hero-visual { justify-content: center; }
+      .hero-img-wrap { max-width: 340px; }
+      .badge-patent { left: 10px; }
+      .badge-install { left: 0; }
+    }
+
+    /* ===== LOGOS / CLIENTES ===== */
+    .logos-section { background: var(--white); padding: 32px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
+    .logos-title { text-align: center; font-size: .75rem; font-weight: 400; color: var(--gray); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; }
+    .logos-track-wrap { overflow: hidden; }
+    .logos-track {
+      display: flex; gap: 48px; align-items: center;
+      animation: scrollLogos 22s linear infinite;
+      width: max-content;
+    }
+    .logos-track:hover { animation-play-state: paused; }
+    .logo-item {
+      font-weight: 700; font-size: .95rem;
+      color: var(--gray); letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: .6;
+      white-space: nowrap;
+      padding: 0 12px;
+    }
+    @keyframes scrollLogos {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ===== SOLUÇÃO ===== */
+    .solution { background: var(--blue); }
+    .solution .container {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .solution-text .accent { display: block; width: 50px; height: 3px; background: var(--blue-light); margin-bottom: 16px; border-radius: 2px; }
+    .solution-text h2 { color: var(--white); margin-bottom: 20px; }
+    .solution-text p { color: rgba(255,255,255,0.88); font-size: 1.05rem; margin-bottom: 16px; }
+    .solution-text p strong { color: var(--white); }
+    .solution-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+    }
+    .solution-img-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 380px;
+    }
+    .solution-img-wrap img {
+      width: 100%;
+      border-radius: var(--radius);
+      object-fit: cover;
+      max-height: 440px;
+      object-position: center center;
+      opacity: .92;
+      filter: brightness(1.05) contrast(1.02);
+    }
+    .solution-stat {
+      position: absolute;
+      bottom: -16px;
+      left: -20px;
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 16px 22px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .solution-stat-num { font-size: 2rem; font-weight: 700; color: var(--blue); line-height: 1; }
+    .solution-stat-label { font-size: .7rem; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; }
+    @media (max-width: 860px) {
+      .solution .container { grid-template-columns: 1fr; }
+      .solution-visual { margin-top: 32px; }
+    }
+
+    /* ===== PILARES ===== */
+    .pilares { background: var(--white); }
+    .pilares-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    .pilar-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      box-shadow: var(--shadow);
+      transition: transform .2s ease;
+    }
+    .pilar-card:hover { transform: translateY(-4px); }
+    .pilar-icon {
+      width: 52px; height: 52px;
+      background: var(--bg-tint);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 18px;
+    }
+    .pilar-icon svg { width: 26px; height: 26px; stroke: var(--blue); fill: none; stroke-width: 1.8; }
+    .pilar-card h3 { color: var(--blue); margin-bottom: 10px; }
+    .pilar-card p { font-size: .9rem; color: #666; line-height: 1.6; }
+    @media (max-width: 860px) { .pilares-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .pilares-grid { grid-template-columns: 1fr; } }
+
+    /* ===== PRODUTOS ===== */
+    .produtos { background: var(--bg-light); }
+    .produtos-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    .produto-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: visible;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      padding-top: 80px;
+    }
+    .produto-img-wrap {
+      position: absolute;
+      top: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 140px;
+      height: 140px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .produto-img-wrap img {
+      max-height: 140px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 20px rgba(0,74,173,0.18));
+    }
+    .produto-placeholder {
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-light) 100%);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .produto-placeholder svg { width: 48px; height: 48px; stroke: rgba(255,255,255,0.9); fill: none; stroke-width: 1.5; }
+    .produto-body { padding: 12px 24px 24px; flex: 1; display: flex; flex-direction: column; }
+    .produto-tag {
+      display: inline-block;
+      background: var(--bg-tint);
+      color: var(--blue);
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+    .produto-body h3 { color: var(--blue); font-size: 1.15rem; margin-bottom: 4px; }
+    .produto-subtitle { font-size: .8rem; font-style: italic; color: var(--gray); margin-bottom: 10px; }
+    .produto-body > p { font-size: .88rem; color: #555; margin-bottom: 14px; line-height: 1.55; }
+    .produto-bullets { list-style: none; margin-bottom: 20px; display: flex; flex-direction: column; gap: 6px; }
+    .produto-bullets li {
+      font-size: .85rem; color: #444;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .produto-bullets li::before {
+      content: '';
+      width: 16px; height: 16px; flex-shrink: 0;
+      background: var(--blue-light);
+      border-radius: 50%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+      background-size: 10px; background-position: center; background-repeat: no-repeat;
+    }
+    .produto-btn {
+      display: block;
+      text-align: center;
+      padding: 11px;
+      border: 2px solid var(--blue);
+      border-radius: 8px;
+      color: var(--blue);
+      font-weight: 700;
+      font-size: .9rem;
+      margin-top: auto;
+      transition: all .2s ease;
+    }
+    .produto-btn:hover { background: var(--blue); color: var(--white); }
+    .produtos-cta { text-align: center; margin-top: 48px; }
+    .produtos-cta p { color: var(--gray); margin-bottom: 14px; }
+    @media (max-width: 1100px) { .produtos-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px)  { .produtos-grid { grid-template-columns: 1fr; } }
+
+    /* ===== DEPOIMENTOS ===== */
+    .depoimentos { background: var(--bg-tint); }
+    .depo-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+    }
+    .depo-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      box-shadow: var(--shadow);
+    }
+    .depo-initial {
+      font-size: 3rem; font-weight: 700;
+      color: var(--blue);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .depo-quote {
+      font-style: italic;
+      font-size: .9rem;
+      color: #333;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .depo-name { font-weight: 700; font-size: .85rem; color: var(--blue); }
+    .depo-context { font-size: .78rem; color: var(--gray); margin-top: 2px; }
+    @media (max-width: 1060px) { .depo-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px)  { .depo-grid { grid-template-columns: 1fr; } }
+
+    /* ===== PARCEIRO ===== */
+    .parceiro { background: var(--white); text-align: center; }
+    .parceiro h2 { color: var(--blue); margin-bottom: 16px; }
+    .parceiro p { max-width: 600px; margin: 0 auto 32px; color: #555; }
+    .parceiro-ctas { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+
+    /* ===== FORMULÁRIO ===== */
+    .form-section { background: var(--blue); }
+    .form-section .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+    .form-text .accent { display: block; width: 50px; height: 3px; background: var(--blue-light); margin-bottom: 16px; border-radius: 2px; }
+    .form-text h2 { color: var(--white); margin-bottom: 16px; }
+    .form-text p { color: rgba(255,255,255,0.80); font-size: 1rem; margin-bottom: 32px; }
+    .form-trust { display: flex; flex-direction: column; gap: 10px; }
+    .form-trust-item { display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,0.75); font-size: .88rem; }
+    .trust-icon { width: 20px; height: 20px; background: var(--blue-light); border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .trust-icon svg { width: 11px; height: 11px; stroke: white; fill: none; stroke-width: 3; }
+    .form-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 36px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: .8rem; font-weight: 700; color: var(--blue); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #D0E4F7;
+      border-radius: 8px;
+      font-family: 'Roboto', sans-serif;
+      font-size: .95rem;
+      color: #333;
+      transition: border-color .2s;
+      outline: none;
+      background: #fff;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--blue); }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .form-submit { width: 100%; padding: 15px; border: none; border-radius: 8px; background: var(--blue-light); color: var(--white); font-family: 'Roboto', sans-serif; font-weight: 700; font-size: 1.05rem; cursor: pointer; transition: background .2s; margin-top: 4px; }
+    .form-submit:hover { background: #009add; }
+    .form-micro { display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap; }
+    .form-micro span { font-size: .75rem; color: var(--gray); display: flex; align-items: center; gap: 4px; }
+    @media (max-width: 860px) { .form-section .container { grid-template-columns: 1fr; } .form-row { grid-template-columns: 1fr; } }
+
+    /* ===== FOOTER ===== */
+    footer { background: var(--dark); padding: 48px 0 24px; }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    .footer-brand-name { font-weight: 700; font-size: 1.2rem; color: var(--white); letter-spacing: 1.5px; margin-bottom: 4px; }
+    .footer-brand-sub { font-size: .75rem; color: rgba(255,255,255,.45); letter-spacing: .5px; margin-bottom: 16px; }
+    .footer-brand-desc { font-size: .85rem; color: rgba(255,255,255,.55); line-height: 1.6; }
+    .footer-col h4 { font-size: .75rem; color: rgba(255,255,255,.4); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 16px; }
+    .footer-col a { display: block; font-size: .88rem; color: rgba(255,255,255,.6); margin-bottom: 8px; transition: color .2s; }
+    .footer-col a:hover { color: var(--white); }
+    .footer-divider { border: none; border-top: 1px solid rgba(255,255,255,.08); margin-bottom: 24px; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; font-size: .78rem; color: rgba(255,255,255,.35); flex-wrap: wrap; gap: 8px; }
+    @media (max-width: 700px) { .footer-top { grid-template-columns: 1fr; } }
+
+    /* ===== WHATSAPP FLOAT ===== */
+    .wa-float {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      z-index: 200;
+      width: 56px; height: 56px;
+      background: #25D366;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(37,211,102,.45);
+      transition: transform .2s;
+    }
+    .wa-float:hover { transform: scale(1.08); }
+    .wa-float svg { width: 28px; height: 28px; fill: white; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="container">
+    <div class="navbar-logo">
+      <div>
+        <div class="navbar-logo-text">TECNIPOOL<sup style="font-size:.5em">®</sup></div>
+        <div class="navbar-logo-sub">ACESSIBILIDADE AQUÁTICA</div>
+      </div>
+    </div>
+    <div class="navbar-cta">
+      <a href="#produtos" class="btn btn-outline">Ver Produtos</a>
+      <a href="#formulario" class="btn btn-primary">Solicitar Orçamento</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-text">
+      <h1>Pioneira em Acessibilidade Aquática no Brasil</h1>
+      <p>Mais de 1.500 instalações em residências, clínicas, hotéis e clubes. Tecnologia 100% hidráulica, instalação sem obra e conformidade total com a NBR 9050.</p>
+      <div class="hero-ctas">
+        <a href="#formulario" class="btn btn-primary">Solicitar Orçamento</a>
+        <a href="#formulario" class="btn btn-outline">Falar com Especialista</a>
+      </div>
+      <p class="hero-micro">Sem compromisso. Atendimento em até 24h.</p>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-img-wrap">
+        <div class="badge badge-patent">
+          <span>100%</span>
+          Patenteado
+        </div>
+        <div class="badge badge-install">
+          <span>Instalação</span>
+          Simples
+        </div>
+        <img
+          src="accesspool_borda_plana.jpg"
+          alt="AccessPool — Elevador Aquático Tecnipool instalado em piscina de cobertura"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGOS -->
+<section class="logos-section">
+  <div class="container">
+    <p class="logos-title">Confiado por marcas que exigem excelência</p>
+  </div>
+  <div class="logos-track-wrap">
+    <div class="logos-track">
+      <span class="logo-item">Votorantim</span>
+      <span class="logo-item">Novotel</span>
+      <span class="logo-item">SESC</span>
+      <span class="logo-item">Unimed</span>
+      <span class="logo-item">Teixeira Holzmann</span>
+      <span class="logo-item">Clínica Poolterapia</span>
+      <span class="logo-item">Votorantim</span>
+      <span class="logo-item">Novotel</span>
+      <span class="logo-item">SESC</span>
+      <span class="logo-item">Unimed</span>
+      <span class="logo-item">Teixeira Holzmann</span>
+      <span class="logo-item">Clínica Poolterapia</span>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUÇÃO -->
+<section class="solution section">
+  <div class="container">
+    <div class="solution-text">
+      <span class="accent"></span>
+      <h2>Acessibilidade aquática com autonomia, segurança e conforto</h2>
+      <p>A Tecnipool desenvolveu uma solução que permite entrar e sair da piscina com total independência, sem depender de terceiros, sem risco de choque e sem obras invasivas.</p>
+      <p>O sistema opera exclusivamente com a <strong>pressão da água da rede</strong>. Sem motores elétricos. Sem baterias. Instalado em um único dia.</p>
+    </div>
+    <div class="solution-visual">
+      <div class="solution-img-wrap">
+        <img
+          src="accesspool_borda_plana.jpg"
+          alt="AccessPool em uso — acessibilidade aquática com autonomia total"
+        />
+        <div class="solution-stat">
+          <div class="solution-stat-num">1.500+</div>
+          <div class="solution-stat-label">instalações no Brasil</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILARES -->
+<section class="pilares section">
+  <div class="container">
+    <span class="section-tag"></span>
+    <h2 class="section-title">Engenharia Exclusiva Tecnipool</h2>
+    <div class="pilares-grid">
+
+      <div class="pilar-card">
+        <div class="pilar-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 015 5c0 4-5 11-5 11S7 11 7 7a5 5 0 015-5z"/><circle cx="12" cy="7" r="2"/></svg>
+        </div>
+        <h3>100% Hidráulico</h3>
+        <p>Funciona com a pressão da água da rede, sem conexão elétrica, sem baterias e com risco zero de choque.</p>
+      </div>
+
+      <div class="pilar-card">
+        <div class="pilar-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+        </div>
+        <h3>Instalação sem Obra</h3>
+        <p>A piscina permanece cheia. A impermeabilização não é tocada. Concluído em horas, sem transtorno.</p>
+      </div>
+
+      <div class="pilar-card">
+        <div class="pilar-icon">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <h3>Aço Inox Premium</h3>
+        <p>Estrutura em aço inoxidável de alta qualidade, resistente ao cloro e ao uso intenso. Projetado para durar.</p>
+      </div>
+
+      <div class="pilar-card">
+        <div class="pilar-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Norma NBR 9050</h3>
+        <p>Conformidade total com a legislação de acessibilidade brasileira. Documentação técnica completa inclusa.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PRODUTOS -->
+<section class="produtos section" id="produtos">
+  <div class="container">
+    <span class="section-tag"></span>
+    <h2 class="section-title">Soluções para cada projeto</h2>
+    <div class="produtos-grid">
+
+      <!-- AccessPool Borda Plana -->
+      <div class="produto-card">
+        <div class="produto-img-wrap">
+          <img src="accesspool_borda_plana.jpg" alt="AccessPool Borda Plana" style="border-radius:8px;" />
+        </div>
+        <div class="produto-body">
+          <span class="produto-tag">Borda Plana</span>
+          <h3>AccessPool</h3>
+          <p class="produto-subtitle">Residências e uso pessoal</p>
+          <p>Acessibilidade autônoma para piscinas de borda nivelada. O usuário aciona sozinho, sem auxílio.</p>
+          <ul class="produto-bullets">
+            <li>Capacidade até 150 kg</li>
+            <li>Acionamento pelo próprio usuário</li>
+            <li>Instalação rápida e limpa</li>
+          </ul>
+          <a href="#formulario" class="produto-btn">Ver Detalhes</a>
+        </div>
+      </div>
+
+      <!-- AccessPool Borda Elevada -->
+      <div class="produto-card">
+        <div class="produto-img-wrap">
+          <div class="produto-placeholder">
+            <svg viewBox="0 0 24 24"><path d="M20 9V7a2 2 0 00-2-2h-6l-2-2H4a2 2 0 00-2 2v12c0 1.1.9 2 2 2h16a2 2 0 002-2v-7"/><circle cx="12" cy="14" r="3"/></svg>
+          </div>
+        </div>
+        <div class="produto-body">
+          <span class="produto-tag">Borda Elevada</span>
+          <h3>AccessPool Borda Elevada</h3>
+          <p class="produto-subtitle">Para muretas e desníveis</p>
+          <p>A mesma tecnologia hidráulica adaptada para piscinas com borda elevada, sem comprometer o projeto original.</p>
+          <ul class="produto-bullets">
+            <li>Sistema hidráulico patenteado</li>
+            <li>Compatível com diferentes alturas</li>
+            <li>Sem intervenção estrutural</li>
+          </ul>
+          <a href="#formulario" class="produto-btn">Ver Detalhes</a>
+        </div>
+      </div>
+
+      <!-- AccessX Plana -->
+      <div class="produto-card">
+        <div class="produto-img-wrap">
+          <div class="produto-placeholder">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          </div>
+        </div>
+        <div class="produto-body">
+          <span class="produto-tag">Uso Profissional</span>
+          <h3>AccessX</h3>
+          <p class="produto-subtitle">Clínicas e fisioterapia aquática</p>
+          <p>Desenvolvido para ambientes de alta demanda. Operação eficiente, estrutura robusta e design compacto.</p>
+          <ul class="produto-bullets">
+            <li>Operação silenciosa</li>
+            <li>Aço inox de alto padrão</li>
+            <li>Conformidade NBR 9050</li>
+          </ul>
+          <a href="#formulario" class="produto-btn">Ver Detalhes</a>
+        </div>
+      </div>
+
+      <!-- AccessX Elevada -->
+      <div class="produto-card">
+        <div class="produto-img-wrap">
+          <div class="produto-placeholder">
+            <svg viewBox="0 0 24 24"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+          </div>
+        </div>
+        <div class="produto-body">
+          <span class="produto-tag">Alta Capacidade</span>
+          <h3>AccessX Elevada</h3>
+          <p class="produto-subtitle">Projetos com desnível</p>
+          <p>Alta capacidade operacional com estabilidade total. Ideal para projetos que exigem performance e segurança contínua.</p>
+          <ul class="produto-bullets">
+            <li>Alta capacidade de carga</li>
+            <li>Estrutura estável e durável</li>
+            <li>Documentação técnica completa</li>
+          </ul>
+          <a href="#formulario" class="produto-btn">Ver Detalhes</a>
+        </div>
+      </div>
+
+    </div>
+    <div class="produtos-cta">
+      <p>Não sabe qual modelo é o ideal?</p>
+      <a href="#formulario" class="btn btn-primary">Falar com um Especialista</a>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="depoimentos section">
+  <div class="container">
+    <span class="section-tag"></span>
+    <h2 class="section-title">Autonomia que transforma vidas</h2>
+    <div class="depo-grid">
+
+      <div class="depo-card">
+        <div class="depo-initial">N.</div>
+        <p class="depo-quote">"Recuperei minha independência dentro da própria casa. Hoje uso a piscina todos os dias, sozinha, com segurança e prazer."</p>
+        <div class="depo-name">Natalina dos Passos</div>
+        <div class="depo-context">Goianésia, GO</div>
+      </div>
+
+      <div class="depo-card">
+        <div class="depo-initial">M.</div>
+        <p class="depo-quote">"A instalação foi rápida, limpa e sem transtorno. Minha mãe voltou a aproveitar a piscina com total segurança."</p>
+        <div class="depo-name">Marcos Antônio</div>
+        <div class="depo-context">Cliente residencial</div>
+      </div>
+
+      <div class="depo-card">
+        <div class="depo-initial">C.</div>
+        <p class="depo-quote">"Robustez, operação silenciosa e qualidade de acabamento que impressionam. Exatamente o que nossa clínica precisava."</p>
+        <div class="depo-name">Camila Rodrigues</div>
+        <div class="depo-context">Clínica Poolterapia, São Paulo</div>
+      </div>
+
+      <div class="depo-card">
+        <div class="depo-initial">D.</div>
+        <p class="depo-quote">"Manutenção zero, autonomia total e documentação para compliance. Parceiro ideal para projetos de acessibilidade."</p>
+        <div class="depo-name">Danilo Stábile</div>
+        <div class="depo-context">Teixeira Holzmann</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PARCEIRO -->
+<section class="parceiro section">
+  <div class="container">
+    <span class="section-tag" style="margin-left:0;margin-right:0;"></span>
+    <h2>Seja um Parceiro Tecnipool</h2>
+    <p>Arquitetos, engenheiros, construtoras e revendedores encontram na Tecnipool suporte técnico completo, documentação e tecnologia exclusiva para projetos de acessibilidade aquática.</p>
+    <div class="parceiro-ctas">
+      <a href="#formulario" class="btn btn-primary">Quero ser um Parceiro</a>
+      <a href="#formulario" class="btn btn-outline">Saiba mais</a>
+    </div>
+  </div>
+</section>
+
+<!-- FORMULÁRIO -->
+<section class="form-section section" id="formulario">
+  <div class="container">
+    <div class="form-text">
+      <span class="accent"></span>
+      <h2>Solicite seu Orçamento</h2>
+      <p>Fale com um especialista Tecnipool. Consultoria técnica gratuita e orçamento sem compromisso.</p>
+      <div class="form-trust">
+        <div class="form-trust-item">
+          <div class="trust-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          Resposta em até 24h
+        </div>
+        <div class="form-trust-item">
+          <div class="trust-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          Sem pressão de venda
+        </div>
+        <div class="form-trust-item">
+          <div class="trust-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          Atendimento por especialista
+        </div>
+      </div>
+    </div>
+    <div class="form-card">
+      <form>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nome</label>
+            <input type="text" placeholder="Seu nome completo" />
+          </div>
+          <div class="form-group">
+            <label>WhatsApp</label>
+            <input type="tel" placeholder="(00) 00000-0000" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" placeholder="seu@email.com" />
+          </div>
+          <div class="form-group">
+            <label>Cidade</label>
+            <input type="text" placeholder="Sua cidade" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Tipo de projeto</label>
+          <select>
+            <option value="">Selecione...</option>
+            <option>Residencial</option>
+            <option>Clínica / Fisioterapia</option>
+            <option>Hotel / Resort</option>
+            <option>Construtora / Incorporadora</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Mensagem (opcional)</label>
+          <textarea placeholder="Descreva seu projeto ou dúvida..."></textarea>
+        </div>
+        <button type="submit" class="form-submit">Solicitar Orçamento</button>
+        <div class="form-micro">
+          <span>✓ Sem spam</span>
+          <span>✓ Dados protegidos</span>
+          <span>✓ Resposta em até 24h</span>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-name">TECNIPOOL<sup style="font-size:.5em">®</sup></div>
+        <div class="footer-brand-sub">ACESSIBILIDADE AQUÁTICA</div>
+        <p class="footer-brand-desc">Pioneira em elevadores aquáticos no Brasil. Tecnologia 100% hidráulica, patenteada e com mais de 1.500 instalações realizadas.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navegação</h4>
+        <a href="#">Quem Somos</a>
+        <a href="#produtos">Produtos</a>
+        <a href="#formulario">Parceiros</a>
+        <a href="#formulario">Contato</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contato</h4>
+        <a href="tel:+554532642408">+55 (45) 3264-2408</a>
+        <a href="mailto:vendas@tecnipool.com.br">vendas@tecnipool.com.br</a>
+        <a href="#">Medianeira, Paraná</a>
+      </div>
+    </div>
+    <hr class="footer-divider" />
+    <div class="footer-bottom">
+      <span>© 2025 Tecnipool. Todos os direitos reservados.</span>
+      <span>Política de Privacidade</span>
+    </div>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOAT -->
+<a href="https://wa.me/554532642408" class="wa-float" target="_blank" aria-label="Falar pelo WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+</body>
+</html>

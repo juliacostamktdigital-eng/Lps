@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>UCM — Atlântica Máquinas | V4 Company</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; color: #1a1a1a; font-size: 14px; line-height: 1.75; }
+  .cover { background: #002B69; color: #fff; padding: 64px 80px; }
+  .cover-label { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: #CC1417; margin-bottom: 8px; }
+  .cover h1 { font-size: 46px; font-weight: 900; line-height: 1.1; }
+  .cover h1 span { color: #CC1417; }
+  .cover-sub { font-size: 16px; color: #aaa; margin-top: 12px; }
+  .cover-meta { display: flex; gap: 60px; margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.12); }
+  .meta-item .label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #555; }
+  .meta-item .value { font-size: 14px; color: #ccc; margin-top: 4px; }
+  .content { max-width: 940px; margin: 0 auto; padding: 60px 40px; }
+  .fase { background: #fff; border-radius: 12px; padding: 40px 44px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+  .fase-label { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: #CC1417; margin-bottom: 6px; }
+  .fase h2 { font-size: 24px; font-weight: 800; color: #002B69; margin-bottom: 28px; padding-bottom: 12px; border-bottom: 2px solid #CC1417; }
+  .problema { background: #f8faff; border-left: 4px solid #002B69; border-radius: 0 8px 8px 0; padding: 20px 24px; margin-bottom: 20px; }
+  .problema h3 { font-size: 15px; font-weight: 700; color: #002B69; margin-bottom: 10px; }
+  .problema .descricao { margin-bottom: 12px; color: #444; }
+  .impacto { background: #fff3f3; border-left: 3px solid #CC1417; padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 13px; color: #555; }
+  .impacto-label { font-weight: 700; color: #CC1417; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+  .persona-card { background: #f8faff; border-radius: 10px; padding: 26px 30px; margin-bottom: 20px; border: 1px solid #dce8ff; }
+  .persona-nome { font-size: 17px; font-weight: 800; color: #002B69; margin-bottom: 3px; }
+  .persona-tipo { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #CC1417; margin-bottom: 14px; }
+  .persona-perfil { color: #444; margin-bottom: 16px; }
+  .persona-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .persona-bloco h4 { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #002B69; margin-bottom: 8px; font-weight: 700; }
+  .persona-bloco ul { padding-left: 16px; }
+  .persona-bloco li { margin-bottom: 5px; color: #444; font-size: 13px; }
+  .full-col { grid-column: 1 / -1; }
+  .alternativa { background: #fff8f0; border-left: 4px solid #CC1417; border-radius: 0 8px 8px 0; padding: 20px 24px; margin-bottom: 16px; }
+  .alternativa h3 { font-size: 14px; font-weight: 700; color: #002B69; margin-bottom: 8px; }
+  .alternativa p { color: #555; font-size: 13px; }
+  .gatilho { background: #002B69; border-radius: 10px; padding: 22px 26px; margin-bottom: 14px; }
+  .gatilho h3 { font-size: 14px; font-weight: 700; color: #CC1417; margin-bottom: 8px; }
+  .gatilho p { color: #c8d4e8; font-size: 13px; line-height: 1.7; }
+  .dif-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-top: 20px; }
+  .dif-card { background: #f8faff; border-radius: 10px; padding: 20px 22px; border: 1px solid #dce8ff; }
+  .dif-num { font-size: 26px; font-weight: 900; color: #CC1417; }
+  .dif-card h4 { font-size: 13px; font-weight: 700; color: #002B69; margin: 8px 0 6px; }
+  .dif-card p { font-size: 12px; color: #666; line-height: 1.6; }
+  .intro-text { color: #555; margin-bottom: 24px; }
+  .footer { text-align: center; padding: 40px; color: #aaa; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-label">Use Case Map</div>
+  <h1>Atlântica <span>Máquinas</span></h1>
+  <div class="cover-sub">Fabricante de Máquinas para Blocos e Pavimentos de Concreto</div>
+  <div class="cover-meta">
+    <div class="meta-item"><div class="label">Projeto</div><div class="value">V4 Company / Sotóbi</div></div>
+    <div class="meta-item"><div class="label">Versão</div><div class="value">Maio 2026</div></div>
+    <div class="meta-item"><div class="label">Responsável</div><div class="value">Julia Costa</div></div>
+    <div class="meta-item"><div class="label">Status</div><div class="value">Documento vivo, revisão mensal</div></div>
+  </div>
+</div>
+
+<div class="content">
+
+  <div class="fase">
+    <div class="fase-label">Fase 1</div>
+    <h2>Problemas</h2>
+
+    <div class="problema">
+      <h3>Problema Específico 1: O Custo que Corrói a Margem</h3>
+      <p class="descricao">Construtoras, empresas de pré-moldados e prefeituras que compram blocos de fornecedores externos enfrentam custo fixo alto e margem comprimida. Em cada obra, o bloco é um insumo essencial que sai do caixa da empresa, não da sua linha de produção. Quem não fabrica paga o preço de quem fabrica mais a margem do intermediário, sem controle sobre o valor unitário.</p>
+      <div class="impacto">
+        <div class="impacto-label">Impacto</div>
+        Margem reduzida em cada obra. Dependência de terceiros sem controle de preço, prazo ou qualidade. Impossibilidade de escalar produção com previsibilidade de custo.
+      </div>
+    </div>
+
+    <div class="problema">
+      <h3>Problema Específico 2: O Medo da Máquina Errada</h3>
+      <p class="descricao">Quem quer montar uma fábrica de blocos pela primeira vez encontra um bloqueio real: o mercado está cheio de máquinas baratas que prometem muito e entregam pouco. Equipamentos que quebram com facilidade, não compactam direito, produzem blocos fora do padrão ABNT ou ficam parados por falta de peça de reposição. O risco percebido é alto e trava a decisão de compra, especialmente quando envolve as economias da família.</p>
+      <div class="impacto">
+        <div class="impacto-label">Impacto</div>
+        Paralisia na tomada de decisão. Desconfiança generalizada com fornecedores de máquina. Necessidade de validação presencial antes de investir.
+      </div>
+    </div>
+
+    <div class="problema">
+      <h3>Problema Específico 3: A Dependência que Paralisa Obras</h3>
+      <p class="descricao">Fornecedores externos de bloco são imprevisíveis: atrasam, mudam preço sem aviso e podem não entregar no padrão técnico exigido. Um lote rejeitado na vistoria técnica paralisa o serviço, gera retrabalho e prejudica o prazo de entrega da obra ao cliente final. A dependência de terceiros cria um risco permanente que o empresário carrega em todo projeto que toca.</p>
+      <div class="impacto">
+        <div class="impacto-label">Impacto</div>
+        Atrasos em obra. Custo extra com rejeição de material fora de norma. Perda de controle sobre qualidade e ritmo de produção.
+      </div>
+    </div>
+  </div>
+
+  <div class="fase">
+    <div class="fase-label">Fase 2</div>
+    <h2>Personas</h2>
+
+    <div class="persona-card">
+      <div class="persona-nome">Roberto</div>
+      <div class="persona-tipo">O Empreendedor Iniciante</div>
+      <p class="persona-perfil"><strong>Perfil:</strong> 30 a 48 anos. Trabalhador autônomo ou pequeno prestador de serviço na construção civil: pedreiro, calceteiro, auxiliar de obra. Quer sair da informalidade e montar negócio próprio. Capital disponível entre R$ 25.000 e R$ 80.000, fruto de anos de economia.</p>
+      <div class="persona-grid">
+        <div class="persona-bloco">
+          <h4>Dores</h4>
+          <ul>
+            <li>Não sabe por onde começar</li>
+            <li>Medo de comprar máquina errada e perder o dinheiro guardado</li>
+            <li>Precisa convencer cônjuge ou família sobre o investimento</li>
+            <li>Não sabe se tem mercado local suficiente na sua cidade</li>
+            <li>Nunca teve experiência com fabricação de bloco</li>
+          </ul>
+        </div>
+        <div class="persona-bloco">
+          <h4>Desejos</h4>
+          <ul>
+            <li>Ter negócio próprio com renda consistente e previsível</li>
+            <li>Independência financeira e profissional</li>
+            <li>Vender para construtoras e pedreiros da região</li>
+            <li>Sair da dependência de patrão ou empreiteiro</li>
+          </ul>
+        </div>
+        <div class="persona-bloco full-col">
+          <h4>Objeções</h4>
+          <ul>
+            <li>"Preciso ter experiência para operar a máquina?"</li>
+            <li>"Tem mercado aqui na minha cidade?"</li>
+            <li>"E se a máquina quebrar, quem resolve?"</li>
+            <li>"Consigo financiar o equipamento?"</li>
+            <li>"É seguro investir tanto dinheiro nisso?"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="persona-card">
+      <div class="persona-nome">Marcos</div>
+      <div class="persona-tipo">O Construtor que Quer Produção Própria</div>
+      <p class="persona-perfil"><strong>Perfil:</strong> 35 a 55 anos. Dono de construtora ou empresa de pré-moldados de médio porte. Já usa blocos em escala e compra de fornecedores externos. Capital disponível entre R$ 80.000 e R$ 300.000. Toma decisão de forma analítica e quer saber o custo de produção antes de comprar.</p>
+      <div class="persona-grid">
+        <div class="persona-bloco">
+          <h4>Dores</h4>
+          <ul>
+            <li>Custo com blocos terceirizados corrói a margem da obra</li>
+            <li>Fornecedores que atrasam ou entregam fora do padrão ABNT</li>
+            <li>Falta de controle sobre qualidade e volume de entrega</li>
+            <li>Dependência de terceiros em projetos de grande escala</li>
+          </ul>
+        </div>
+        <div class="persona-bloco">
+          <h4>Desejos</h4>
+          <ul>
+            <li>Internalizar produção e reduzir custo por bloco</li>
+            <li>Garantir conformidade técnica ABNT sem depender de terceiros</li>
+            <li>Escalar produção com previsibilidade de custo</li>
+            <li>Autonomia total sobre o insumo principal da obra</li>
+          </ul>
+        </div>
+        <div class="persona-bloco full-col">
+          <h4>Objeções</h4>
+          <ul>
+            <li>"Vale o investimento comparado a continuar comprando de terceiros?"</li>
+            <li>"Em quanto tempo a máquina se paga?"</li>
+            <li>"Precisa de operador especializado?"</li>
+            <li>"A produção cobre a demanda da minha obra?"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="persona-card">
+      <div class="persona-nome">Prefeitura e Empresa de Pavimentação</div>
+      <div class="persona-tipo">O Comprador Técnico e Institucional</div>
+      <p class="persona-perfil"><strong>Perfil:</strong> Departamentos de obras municipais e empresas especializadas em pavimentação urbana. Precisam de blocos e pavimentos em larga escala com conformidade técnica rigorosa e comprovada.</p>
+      <div class="persona-grid">
+        <div class="persona-bloco">
+          <h4>Dores</h4>
+          <ul>
+            <li>Custo alto com licitações e fornecedores externos</li>
+            <li>Prazos não cumpridos em contratos de obras públicas</li>
+            <li>Necessidade de conformidade técnica ABNT em toda a produção</li>
+          </ul>
+        </div>
+        <div class="persona-bloco">
+          <h4>Desejos</h4>
+          <ul>
+            <li>Produção própria para reduzir custo e garantir abastecimento</li>
+            <li>Autonomia de produção para obras contínuas sem dependência</li>
+            <li>Conformidade técnica garantida internamente</li>
+          </ul>
+        </div>
+        <div class="persona-bloco full-col">
+          <h4>Objeções</h4>
+          <ul>
+            <li>"A máquina atende as especificações técnicas exigidas em licitação?"</li>
+            <li>"Há suporte para instalação e treinamento de operadores?"</li>
+            <li>"Qual o prazo de entrega e as condições de garantia?"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fase">
+    <div class="fase-label">Fase 3</div>
+    <h2>Alternativas (Soluções Atuais e Suas Falhas)</h2>
+
+    <div class="alternativa">
+      <h3>1. Máquinas Importadas (sem suporte nacional)</h3>
+      <p><strong>Limitação:</strong> Peças de reposição demoram semanas ou meses para chegar, paralisando a fábrica do cliente. Sem assistência técnica local quando há problema. Blocos produzidos podem não atender as normas ABNT. Não há showroom para visitar antes de comprar e validar a qualidade real. O preço inicial menor esconde o custo total de manutenção, paralisação e retrabalho.</p>
+    </div>
+
+    <div class="alternativa">
+      <h3>2. Concorrentes Nacionais sem Tradição</h3>
+      <p><strong>Limitação:</strong> Pouca experiência comprovada no mercado. Suporte técnico limitado ou inexistente após a venda. Sem histórico equivalente para transmitir credibilidade ao comprador inseguro. O cliente não tem como saber se o atendimento pós-venda vai existir depois da compra.</p>
+    </div>
+
+    <div class="alternativa">
+      <h3>3. Continuar Comprando Blocos de Fornecedores Externos</h3>
+      <p><strong>Limitação:</strong> Custo permanentemente alto, com margem comprimida em cada obra. Total dependência de prazo, preço e qualidade de terceiro. Impossibilidade de escalar a produção com previsibilidade de custo. O empresário paga para sempre o preço de quem não tem máquina própria.</p>
+    </div>
+  </div>
+
+  <div class="fase">
+    <div class="fase-label">Fase 4</div>
+    <h2>Frequência Natural</h2>
+    <p class="intro-text">A necessidade é ativada por gatilhos de <strong>desejo de empreender</strong> ou <strong>pressão operacional</strong>. A dor se torna aguda quando o custo de não ter máquina própria supera o medo de investir.</p>
+
+    <div class="gatilho">
+      <h3>Gatilho 1: Desejo de Ter Negócio Próprio (Roberto)</h3>
+      <p>O trabalhador da construção civil decide que quer parar de trabalhar para o outro e montar algo seu. A busca começa ativa: "como montar fábrica de blocos", "máquina para fazer bloco de concreto", "negócio próprio na construção civil". Nesse momento a Atlântica precisa aparecer como a resposta mais confiável e estruturada do mercado.</p>
+    </div>
+
+    <div class="gatilho">
+      <h3>Gatilho 2: Projeto de Grande Escala se Aproximando (Marcos)</h3>
+      <p>O dono de construtora percebe que a obra vai consumir volume alto de blocos e o custo com fornecedor externo vai pesar no resultado. Começa a calcular se vale ter a máquina própria. A decisão passa pelo ROI, mas a confiança no fabricante da máquina é o fator que define.</p>
+    </div>
+
+    <div class="gatilho">
+      <h3>Gatilho 3: Problema com Fornecedor Atual (Marcos e Prefeitura)</h3>
+      <p>Atraso na entrega. Lote rejeitado na vistoria técnica. Aumento de preço sem aviso. Esse gatilho cria urgência real para buscar alternativa de produção própria. O cliente chega mais motivado, com clareza sobre o problema e pronto para ouvir uma solução concreta.</p>
+    </div>
+
+    <div class="gatilho">
+      <h3>Gatilho 4: Busca Ativa (Todos os Perfis)</h3>
+      <p>O momento em que o cliente vai ao Google e digita: "máquina para fazer bloco de concreto", "fábrica de blocos própria", "máquina hidráulica para blocos". O segmento tem cerca de 40.000 buscas por mês e a Atlântica precisa aparecer como resposta de autoridade nesse exato ponto de decisão.</p>
+    </div>
+  </div>
+
+  <div class="fase">
+    <div class="fase-label">Fase 5</div>
+    <h2>Por que Atlântica Máquinas?</h2>
+    <p class="intro-text">A <strong>Atlântica Máquinas</strong> existe para ser a parceira mais confiável de quem quer produzir blocos de concreto com qualidade, escala e suporte real. Não vendemos só equipamento. Entregamos a estrutura completa para o cliente montar e operar sua fábrica com segurança desde o primeiro dia.</p>
+
+    <div class="dif-grid">
+      <div class="dif-card">
+        <div class="dif-num">50+</div>
+        <h4>Anos de Mercado</h4>
+        <p>Credibilidade que nenhum concorrente consegue copiar rapidamente. O argumento de fechamento que funciona com o comprador inseguro: "50 anos não são 50 dias."</p>
+      </div>
+      <div class="dif-card">
+        <div class="dif-num">6.000</div>
+        <h4>Blocos por Dia</h4>
+        <p>Tecnologia hidráulica de alta performance com compactação real. Blocos que saem dentro do padrão, sem trinca, sem esfarelamento, sem rejeição em obra.</p>
+      </div>
+      <div class="dif-card">
+        <div class="dif-num">ABNT</div>
+        <h4>Matrizes Normalizadas</h4>
+        <p>Blocos produzidos dentro do padrão técnico exigido em qualquer obra. O cliente final aprova, a vistoria aprova, sem surpresa.</p>
+      </div>
+      <div class="dif-card">
+        <div class="dif-num">SP</div>
+        <h4>Showroom Físico</h4>
+        <p>O comprador visita, vê a máquina funcionando e quebra a insegurança antes de investir. Clientes viajam de MG, BA e outros estados para conhecer presencialmente.</p>
+      </div>
+      <div class="dif-card">
+        <div class="dif-num">Rápido</div>
+        <h4>Peças Sempre Disponíveis</h4>
+        <p>Peças de reposição nacionais que chegam rápido. A fábrica do cliente não para esperando importação, ao contrário das máquinas importadas.</p>
+      </div>
+      <div class="dif-card">
+        <div class="dif-num">1x</div>
+        <h4>Linha Completa</h4>
+        <p>Máquina, betoneira, misturador, compressor, esteira transportadora. O cliente monta a fábrica inteira em um único fornecedor, sem depender de outros.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Use Case Map — Atlântica Máquinas | V4 Company / Sotóbi | Maio 2026 | Documento vivo, revisão mensal</div>
+
+</body>
+</html>

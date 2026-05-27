@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Briefing — Kidys Park | Meta Ads</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0f0f0f; color: #e8e8e8; }
+
+  .cover {
+    background: linear-gradient(135deg, #1a1a1a 0%, #0f2b0f 50%, #1a1a00 100%);
+    padding: 80px 60px;
+    border-bottom: 3px solid #4CAF50;
+  }
+  .cover-tag { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: #4CAF50; margin-bottom: 16px; }
+  .cover-title { font-size: 48px; font-weight: 800; line-height: 1.1; color: #fff; margin-bottom: 8px; }
+  .cover-title span { color: #FFD600; }
+  .cover-sub { font-size: 16px; color: #aaa; margin-top: 16px; }
+  .cover-meta { display: flex; gap: 40px; margin-top: 40px; flex-wrap: wrap; }
+  .cover-meta-item { }
+  .cover-meta-item .label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #666; }
+  .cover-meta-item .value { font-size: 14px; color: #ccc; margin-top: 4px; }
+
+  .section { padding: 60px; border-bottom: 1px solid #1e1e1e; }
+  .section-tag { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: #4CAF50; margin-bottom: 8px; }
+  .section-title { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 32px; }
+
+  .context-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+  .context-card { background: #161616; border: 1px solid #252525; border-radius: 8px; padding: 20px; }
+  .context-card .label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #555; margin-bottom: 8px; }
+  .context-card .value { font-size: 14px; color: #ddd; line-height: 1.5; }
+
+  .rule-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .rule-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; color: #bbb; }
+  .rule-list li::before { content: "—"; color: #FFD600; flex-shrink: 0; }
+
+  /* DELIVERABLE CARDS */
+  .deliverables { display: flex; flex-direction: column; gap: 48px; }
+
+  .del-card { background: #131313; border: 1px solid #222; border-radius: 12px; overflow: hidden; }
+  .del-header { padding: 24px 32px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid #1e1e1e; }
+  .del-number { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; }
+  .del-number.green { background: #1a3d1a; color: #4CAF50; border: 1px solid #4CAF50; }
+  .del-number.yellow { background: #2b2500; color: #FFD600; border: 1px solid #FFD600; }
+  .del-number.blue { background: #0a1929; color: #42A5F5; border: 1px solid #42A5F5; }
+  .del-number.gray { background: #1e1e1e; color: #aaa; border: 1px solid #333; }
+  .del-title { font-size: 18px; font-weight: 700; color: #fff; }
+  .del-subtitle { font-size: 12px; color: #555; margin-top: 2px; }
+  .del-badge { margin-left: auto; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: 1px; }
+  .badge-ia { background: #1a2a1a; color: #66BB6A; border: 1px solid #2d4a2d; }
+  .badge-footage { background: #1a1a2a; color: #7986CB; border: 1px solid #2d2d4a; }
+  .badge-static { background: #2a1a00; color: #FFB74D; border: 1px solid #4a2d00; }
+
+  .del-body { padding: 32px; }
+
+  .takes { display: flex; flex-direction: column; gap: 24px; }
+  .take { background: #0d0d0d; border: 1px solid #1a1a1a; border-radius: 8px; padding: 24px; }
+  .take-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .take-num { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #555; }
+  .take-name { font-size: 14px; font-weight: 600; color: #ddd; }
+  .take-dur { margin-left: auto; font-size: 11px; color: #444; }
+
+  .take-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 700px) { .take-grid { grid-template-columns: 1fr; } }
+
+  .take-block { }
+  .take-block .block-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #555; margin-bottom: 8px; }
+  .take-block .block-content { font-size: 13px; color: #aaa; line-height: 1.6; }
+
+  .narration-box { background: #0a1a0a; border-left: 3px solid #4CAF50; padding: 16px 20px; border-radius: 0 6px 6px 0; margin-top: 16px; }
+  .narration-box.blue { background: #050f1a; border-left-color: #42A5F5; }
+  .narration-box.yellow { background: #100d00; border-left-color: #FFD600; }
+  .narration-box .narration-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #4CAF50; margin-bottom: 8px; }
+  .narration-box.blue .narration-label { color: #42A5F5; }
+  .narration-box.yellow .narration-label { color: #FFD600; }
+  .narration-box .narration-text { font-size: 14px; color: #ddd; line-height: 1.7; font-style: italic; }
+  .narration-time { font-size: 11px; color: #555; margin-right: 8px; }
+
+  .prompt-box { background: #080808; border: 1px solid #1a1a1a; border-radius: 8px; padding: 20px; margin-top: 16px; }
+  .prompt-box .prompt-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #333; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .prompt-box .prompt-label span { color: #FFD600; }
+  .prompt-box .prompt-text { font-size: 12px; color: #777; line-height: 1.7; font-family: 'Courier New', monospace; }
+
+  .caption-box { background: #0a0a00; border: 1px dashed #2a2a00; border-radius: 6px; padding: 14px 18px; margin-top: 12px; }
+  .caption-box .cap-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #3a3a00; margin-bottom: 6px; }
+  .caption-box .cap-text { font-size: 13px; color: #888; }
+
+  /* STATICS */
+  .statics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+  .static-card { background: #131313; border: 1px solid #222; border-radius: 10px; overflow: hidden; }
+  .static-card-header { padding: 20px 24px; border-bottom: 1px solid #1e1e1e; }
+  .static-card-title { font-size: 15px; font-weight: 700; color: #fff; }
+  .static-card-sub { font-size: 12px; color: #555; margin-top: 2px; }
+  .static-card-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+  .static-field .sf-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #444; margin-bottom: 6px; }
+  .static-field .sf-value { font-size: 13px; color: #bbb; line-height: 1.5; }
+  .headline-display { font-size: 16px; font-weight: 800; color: #fff; line-height: 1.3; }
+  .cta-display { display: inline-block; padding: 8px 16px; border-radius: 4px; font-size: 12px; font-weight: 700; background: #1a3d1a; color: #4CAF50; border: 1px solid #4CAF50; margin-top: 4px; }
+
+  /* SPECS */
+  .specs-table { width: 100%; border-collapse: collapse; }
+  .specs-table th { text-align: left; padding: 10px 16px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #555; background: #0d0d0d; }
+  .specs-table td { padding: 12px 16px; font-size: 13px; color: #bbb; border-top: 1px solid #1a1a1a; }
+  .specs-table tr:hover td { background: #111; }
+
+  .alert-box { background: #1a0a00; border: 1px solid #3a1a00; border-radius: 8px; padding: 16px 20px; margin-top: 32px; }
+  .alert-box .alert-title { font-size: 12px; font-weight: 700; color: #FF7043; letter-spacing: 1px; margin-bottom: 6px; }
+  .alert-box .alert-text { font-size: 13px; color: #aaa; line-height: 1.6; }
+
+  .footer { padding: 40px 60px; text-align: center; color: #333; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-tag">Briefing Criativo</div>
+  <div class="cover-title">Kidys Park <span>×</span> Meta Ads</div>
+  <div class="cover-sub">Vídeos IA + Estáticos — Campanha de Vendas B2B</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <div class="label">Cliente</div>
+      <div class="value">Kidys Park</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="label">Responsável</div>
+      <div class="value">Murilo</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="label">Público-alvo</div>
+      <div class="value">Donos de restaurantes e espaços</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="label">Praças</div>
+      <div class="value">SP · MG · RJ · PR · GO · SC · MS</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="label">Total de peças</div>
+      <div class="value">4 vídeos + 3 estáticos</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="label">Data</div>
+      <div class="value">Maio 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTEXTO -->
+<div class="section">
+  <div class="section-tag">Contexto</div>
+  <div class="section-title">Diretrizes da Campanha</div>
+  <div class="context-grid">
+    <div class="context-card">
+      <div class="label">Objetivo</div>
+      <div class="value">Geração de leads qualificados — donos de espaços interessados em instalar um produto Kidys Park</div>
+    </div>
+    <div class="context-card">
+      <div class="label">Tom de comunicação</div>
+      <div class="value">Direto, provocativo, foco em resultado financeiro. Dono do espaço como protagonista da decisão</div>
+    </div>
+    <div class="context-card">
+      <div class="label">Estilo de copy</div>
+      <div class="value">Equação financeira: criança entretida = pais ficam = mesa consome mais = receita. Frases curtas e afirmativas</div>
+    </div>
+    <div class="context-card">
+      <div class="label">CTA padrão</div>
+      <div class="value">"Solicite seu orçamento" ou "Entre em contato agora" — sem preço nos anúncios</div>
+    </div>
+  </div>
+  <div style="margin-top: 32px;">
+    <div class="section-tag" style="margin-bottom: 12px;">Regras obrigatórias</div>
+    <ul class="rule-list">
+      <li>Nunca mostrar preço nos anúncios</li>
+      <li>Não alterar cores, estrutura ou detalhes dos produtos nas geraçoes de IA</li>
+      <li>Vídeos IA: usar a foto oficial de cada produto como referência no Gemini/Veo 3</li>
+      <li>Evitar menção direta a "Copa do Mundo" ou FIFA nos prompts Gemini — usar "tema esportivo brasileiro" ou "antes dos jogos"</li>
+      <li>Narração: voz masculina, grave, confiante — mesma voz e estilo em todos os vídeos</li>
+      <li>Formato: 9:16 vertical, 1080×1920px</li>
+    </ul>
+  </div>
+</div>
+
+<!-- VÍDEOS -->
+<div class="section">
+  <div class="section-tag">Entregável 1 de 2</div>
+  <div class="section-title">Vídeos — 4 Roteiros</div>
+  <div class="deliverables">
+
+    <!-- VIDEO 01 -->
+    <div class="del-card">
+      <div class="del-header">
+        <div class="del-number yellow">01</div>
+        <div>
+          <div class="del-title">Produto Verde/Amarelo — Copa</div>
+          <div class="del-subtitle">Playground verde e amarelo com escorregador tubular</div>
+        </div>
+        <div class="del-badge badge-ia">VÍDEO IA</div>
+      </div>
+      <div class="del-body">
+        <div style="font-size: 12px; color: #555; margin-bottom: 24px;">2 takes × 10 segundos · Gemini/Veo 3 · Foto do produto como referência</div>
+
+        <div class="takes">
+          <!-- TAKE 01 -->
+          <div class="take">
+            <div class="take-header">
+              <div class="take-num">Take 01</div>
+              <div class="take-name">Dor / Hook</div>
+              <div class="take-dur">10s</div>
+            </div>
+            <div class="take-grid">
+              <div class="take-block">
+                <div class="block-label">Visual</div>
+                <div class="block-content">Câmera estática, plano aberto frontal. Produto centralizado. Dolly-in suave. Confete verde e amarelo entrando a partir do 4º segundo. Spotlight quente no final. Área inferior livre para texto.</div>
+              </div>
+              <div class="take-block">
+                <div class="block-label">Áudio</div>
+                <div class="block-content">Trilha esportiva brasileira crescendo suavemente. Narração em voz over masculina, grave, tom de locutor esportivo.</div>
+              </div>
+            </div>
+            <div class="narration-box yellow">
+              <div class="narration-label">Narração</div>
+              <div class="narration-text">
+                <span class="narration-time">[1s]</span>"Família escolheu o restaurante que tinha o produto."<br>
+                <span class="narration-time">[5s]</span>"Ficou mais. Gastou mais."<br>
+                <span class="narration-time">[8s]</span>"Era pra ser no seu espaço."
+              </div>
+            </div>
+            <div class="caption-box" style="margin-top: 16px;">
+              <div class="cap-label">Texto na tela (CapCut)</div>
+              <div class="cap-text">"Era pra ser no seu espaço." — terço inferior · bold · branco · aparece no 8s</div>
+            </div>
+            <div class="prompt-box">
+              <div class="prompt-label">Prompt Gemini <span>(cole com a foto anexada)</span></div>
+              <div class="prompt-text">Crie um vídeo na vertical 9:16, 10 segundos, utilizando exatamente a imagem fornecida. Não altere nada no produto — barras tubulares amarelas, tela verde, escorregador tubular verde e amarelo, todos os detalhes exatamente como na foto. Câmera estática, plano aberto frontal com o produto centralizado. Nos primeiros 5 segundos dolly-in suave em direção ao produto. Iluminação profissional frontal com rim light dourado lateral nas barras amarelas. Confete verde e amarelo caindo levemente a partir do 4º segundo. Nos últimos 3 segundos câmera para, spotlight intenso cai sobre o produto, brilho quente nas barras amarelas. Área inferior do frame completamente livre e limpa para texto. Fundo levemente escurecido. Áudio: trilha esportiva brasileira crescendo suavemente. Narração em voz over masculina, grave, confiante, tom de locutor esportivo: no 1º segundo — "Família escolheu o restaurante que tinha o produto." no 5º segundo — "Ficou mais. Gastou mais." no 8º segundo, pausado — "Era pra ser no seu espaço."</div>
+            </div>
+          </div>
+
+          <!-- TAKE 02 -->
+          <div class="take">
+            <div class="take-header">
+              <div class="take-num">Take 02</div>
+              <div class="take-name">Showcase + CTA</div>
+              <div class="take-dur">10s</div>
+            </div>
+            <div class="take-grid">
+              <div class="take-block">
+                <div class="block-label">Visual</div>
+                <div class="block-content">Primeiros 3s: close no escorregador tubular verde, tracking shot direita→esquerda revelando toda a estrutura. Próximos 4s: orbit lento ao redor do produto, confete verde e amarelo ao fundo, fundo escuro com névoa. Últimos 3s: plano aberto frontal, produto imponente, área inferior livre.</div>
+              </div>
+              <div class="take-block">
+                <div class="block-label">Áudio</div>
+                <div class="block-content">Trilha esportiva crescendo até pico nos últimos 2s. Efeito de rugido de torcida nos últimos 2s. Narração masculina, grave, mesma voz do Take 01.</div>
+              </div>
+            </div>
+            <div class="narration-box yellow">
+              <div class="narration-label">Narração</div>
+              <div class="narration-text">
+                <span class="narration-time">[1s]</span>"A Kidys Park projeta, fabrica e instala."<br>
+                <span class="narration-time">[4s]</span>"Produto sob medida. Instalação inclusa. Garantia de fábrica."<br>
+                <span class="narration-time">[8s]</span>"Ainda dá tempo de instalar antes dos jogos."
+              </div>
+            </div>
+            <div class="caption-box" style="margin-top: 16px;">
+              <div class="cap-label">Texto na tela (CapCut)</div>
+              <div class="cap-text">"Solicite seu orçamento" — terço inferior · bold maior · branco · fade-in no 8s</div>
+            </div>
+            <div class="prompt-box">
+              <div class="prompt-label">Prompt Gemini <span>(cole com a foto anexada)</span></div>
+              <div class="prompt-text">Crie um vídeo na vertical 9:16, 10 segundos, utilizando exatamente a imagem fornecida. Não altere nada no produto — barras tubulares amarelas, tela verde, escorregador tubular verde e amarelo, todos os detalhes exatamente como na foto. Primeiros 3 segundos: close no escorregador tubular verde, câmera abre lentamente em tracking shot lateral da direita para a esquerda revelando toda a estrutura do produto. Iluminação de estúdio com luz frontal e rim light lateral dourado nas barras amarelas. Próximos 4 segundos: câmera faz orbit lento ao redor do produto partindo da esquerda, passando pela frente e terminando levemente à direita. Produto sempre em foco. Fundo neutro escuro com névoa leve de cenografia. Luz dinâmica acompanha o movimento. Confete verde e amarelo cai suavemente ao fundo. Últimos 3 segundos: câmera estabiliza em plano aberto frontal. Produto centralizado e imponente. Luz quente e profissional. Leve brilho nas estruturas amarelas. Área livre no terço inferior do frame para texto. Áudio: trilha empolgante tema esportivo brasileiro crescendo até o final com pico nos últimos 2 segundos. Confete caindo ao fundo. Nos últimos 2 segundos rugido leve de torcida crescendo. Narração masculina, grave, locutor esportivo — mesma voz do vídeo anterior: [1s] "A Kidys Park projeta, fabrica e instala." [4s] "Produto sob medida. Instalação inclusa. Garantia de fábrica." [8s, pausado] "Ainda dá tempo de instalar antes dos jogos."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIDEO 02 -->
+    <div class="del-card">
+      <div class="del-header">
+        <div class="del-number blue">02</div>
+        <div>
+          <div class="del-title">Produto Azul — Vendas | Vídeo IA</div>
+          <div class="del-subtitle">Playground azul com piscina de bolinhas e tobogã duplo</div>
+        </div>
+        <div class="del-badge badge-ia">VÍDEO IA</div>
+      </div>
+      <div class="del-body">
+        <div style="font-size: 12px; color: #555; margin-bottom: 24px;">3 takes × 10 segundos · Gemini/Veo 3 · Foto do produto como referência</div>
+
+        <div class="takes">
+          <!-- TAKE 01 -->
+          <div class="take">
+            <div class="take-header">
+              <div class="take-num">Take 01</div>
+              <div class="take-name">Hook — Piscina de bolinhas</div>
+              <div class="take-dur">10s</div>
+            </div>
+            <div class="take-grid">
+              <div class="take-block">
+                <div class="block-label">Visual</div>
+                <div class="block-content">Close na piscina de bolinhas azul — foco nas bolinhas e borda azul. Leve zoom-out revelando o tobogã duplo ao fundo. Últimos 3s: câmera estabiliza com a piscina centralizada. Iluminação quente, fundo desfocado.</div>
+              </div>
+              <div class="take-block">
+                <div class="block-label">Áudio</div>
+                <div class="block-content">Trilha dinâmica e confiante crescendo ao longo dos 10s. Sem efeitos de som extras. Narração masculina, grave, tom direto de negócios.</div>
+              </div>
+            </div>
+            <div class="narration-box blue">
+              <div class="narration-label">Narração</div>
+              <div class="narration-text">
+                "Essa piscina de bolinhas dentro do seu espaço — a criança não sai daqui. Enquanto ela brinca, os pais ficam na mesa pedindo mais. Não é produto. É receita."
+              </div>
+            </div>
+            <div class="caption-box" style="margin-top: 16px;">
+              <div class="cap-label">Texto na tela (CapCut)</div>
+              <div class="cap-text">"Não é produto. É receita." — terço inferior · bold · branco com fundo escuro semitransparente</div>
+            </div>
+            <div class="prompt-box">
+              <div class="prompt-label">Prompt Gemini <span>(cole com a foto anexada)</span></div>
+              <div class="prompt-text">Crie um vídeo na vertical 9:16, 10 segundos, utilizando exatamente a imagem fornecida. Não altere nada no produto — estrutura de barras cinzas, tela azul e verde, piscina de bolinhas azul, tobogã duplo azul e amarelo, todos os detalhes exatamente como na foto. Câmera começa em close na piscina de bolinhas azul, foco nas bolinhas e na borda azul da estrutura. Leve zoom-out revelando o tobogã duplo azul e amarelo ao fundo. Iluminação quente e profissional, fundo levemente desfocado. Nos últimos 3 segundos câmera estabiliza em plano aberto com a piscina centralizada. Área livre no terço inferior do frame para texto. Áudio: trilha dinâmica e confiante crescendo ao longo dos 10 segundos, sem efeitos extras. Narração em voz over masculina, grave, tom direto de negócios: "Essa piscina de bolinhas dentro do seu espaço — a criança não sai daqui. Enquanto ela brinca, os pais ficam na mesa pedindo mais. Não é produto. É receita."</div>
+            </div>
+          </div>
+
+          <!-- TAKE 02 -->
+          <div class="take">
+            <div class="take-header">
+              <div class="take-num">Take 02</div>
+              <div class="take-name">Tour — Conjunto completo</div>
+              <div class="take-dur">10s</div>
+            </div>
+            <div class="take-grid">
+              <div class="take-block">
+                <div class="block-label">Visual</div>
+                <div class="block-content">Tracking shot lateral esquerda→direita. Começa no tobogã duplo → passa pelos múltiplos andares de escalada → fecha no túnel de crawling. Movimento contínuo e fluido. Últimos 2s: para em plano aberto mostrando o conjunto completo. Névoa leve ao fundo.</div>
+              </div>
+              <div class="take-block">
+                <div class="block-label">Áudio</div>
+                <div class="block-content">Trilha empolgante e positiva, estável durante o tour. Narração masculina, mesma voz.</div>
+              </div>
+            </div>
+            <div class="narration-box blue">
+              <div class="narration-label">Narração</div>
+              <div class="narration-text">
+                "Piscina de bolinhas, tobogã duplo, múltiplos andares pra escalar — tudo num espaço só. A família que tem criança escolhe o estabelecimento que tem isso. Não é opinião. É comportamento de consumidor."
+              </div>
+            </div>
+            <div class="caption-box" style="margin-top: 16px;">
+              <div class="cap-label">Texto na tela (CapCut)</div>
+              <div class="cap-text">"Tudo num espaço só." — terço inferior · bold · branco</div>
+            </div>
+            <div class="prompt-box">
+              <div class="prompt-label">Prompt Gemini <span>(cole com a foto anexada)</span></div>
+              <div class="prompt-text">Crie um vídeo na vertical 9:16, 10 segundos, utilizando exatamente a imagem fornecida. Não altere nada no produto. Tracking shot lateral da esquerda para a direita: começa no tobogã duplo azul e amarelo, passa pelos múltiplos andares de escalada com barras e redes azuis, fecha no túnel de crawling. Movimento contínuo e fluido, câmera sempre em deslocamento. Iluminação vibrante e quente. Névoa leve ao fundo para profundidade. Nos últimos 2 segundos câmera para em plano aberto mostrando o conjunto completo. Área livre no terço inferior para texto. Áudio: trilha empolgante e positiva, estável durante o tour. Narração masculina, grave, mesma voz — mesma voz do vídeo anterior: "Piscina de bolinhas, tobogã duplo, múltiplos andares pra escalar — tudo num espaço só. A família que tem criança escolhe o estabelecimento que tem isso. Não é opinião. É comportamento de consumidor."</div>
+            </div>
+          </div>
+
+          <!-- TAKE 03 -->
+          <div class="take">
+            <div class="take-header">
+              <div class="take-num">Take 03</div>
+              <div class="take-name">CTA Final</div>
+              <div class="take-dur">10s</div>
+            </div>
+            <div class="take-grid">
+              <div class="take-block">
+                <div class="block-label">Visual</div>
+                <div class="block-content">Câmera estática, plano aberto frontal. Produto centralizado. Dolly-in suave nos primeiros 5s. Últimos 3s: câmera para, spotlight cai sobre o produto. Área inferior do frame livre e limpa para CTA.</div>
+              </div>
+              <div class="take-block">
+                <div class="block-label">Áudio</div>
+                <div class="block-content">Trilha crescendo com energia, pico nos últimos 2s. Corte seco no final. Narração masculina, mesma voz.</div>
+              </div>
+            </div>
+            <div class="narration-box blue">
+              <div class="narration-label">Narração</div>
+              <div class="narration-text">
+                "A Kidys Park instala, tem garantia de fábrica e transforma espaço parado em receita. Vai deixar essa oportunidade passar? Entre em contato com a gente agora."
+              </div>
+            </div>
+            <div class="caption-box" style="margin-top: 16px;">
+              <div class="cap-label">Texto na tela (CapCut)</div>
+              <div class="cap-text">"Solicite seu orçamento" — terço inferior · bold maior · branco · fade-in no 8s</div>
+            </div>
+            <div class="prompt-box">
+              <div class="prompt-label">Prompt Gemini <span>(cole com a foto anexada)</span></div>
+              <div class="prompt-text">Crie um vídeo na vertical 9:16, 10 segundos, utilizando exatamente a imagem fornecida. Não altere nada no produto. Câmera estática, plano aberto frontal com o produto centralizado. Dolly-in suave nos primeiros 5 segundos. Iluminação profissional frontal com rim light lateral. Nos últimos 3 segundos câmera para, spotlight intenso cai sobre o produto. Área inferior do frame completamente livre e limpa para texto de CTA. Áudio: trilha crescendo com energia, pico forte nos últimos 2 segundos, corte seco no final. Narração masculina, grave, mesma voz dos vídeos anteriores: "A Kidys Park instala, tem garantia de fábrica e transforma espaço parado em receita. Vai deixar essa oportunidade passar? Entre em contato com a gente agora."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIDEO 03 -->
+    <div class="del-card">
+      <div class="del-header">
+        <div class="del-number green">03</div>
+        <div>
+          <div class="del-title">Campo de Futebol + Conjunto — Vendas | Vídeo IA</div>
+          <div class="del-subtitle">Mini campo + trampolim + air hockey</div>
+        </div>
+        <div class="del-badge badge-ia">VÍDEO IA</div>
+      </div>
+      <div class="del-body">
+        <div style="font-size: 12px; color: #555; margin-bottom: 24px;">3 takes × 10 segundos · Gemini/Veo 3 · Foto do produto como referência</div>
+
+        <div class="takes">
+          <div class="take">
+            <div class="take-header">
+              <div class="take-num">Take 01</div>
+              <div class="take-name">Hook — Campo de futebol</div>
+              <div class="take-dur">10s</div>
+            </div>
+            <div class="take-grid">
+              <div class="take-block">
+                <div class="block-label">Visual</div>
+                <div class="block-content">Close no mini campo de futebol — foco na grama sintética e no golzinho. Leve zoom-out revelando a estrutura metálica completa. Últimos 3s: câmera estabiliza em plano aberto com o campo centralizado. Iluminação quente, fundo desfocado.</div>
+              </div>
+              <div class="take-block">
+                <div class="block-label">Áudio</div>
+                <div class="block-content">Trilha dinâmica e confiante crescendo ao longo dos 10s. Sem efeitos extras. Narração masculina, grave, tom direto.</div>
+              </div>
+            </div>
+            <div class="narration-box">
+              <div class="narration-label">Narração</div>
+              <div class="narration-text">
+                "Esse campo dentro do seu restaurante — o cliente não sai daqui. Enquanto ele joga, os pais ficam na mesa pedindo mais. Não é produto. É receita."
+              </div>
+            </div>
+            <div class="caption-box" style="margin-top: 16px;">
+              <div class="cap-label">Texto na tela (CapCut)</div>
+              <div class="cap-text">"Não é produto. É receita." — terço inferior · bold · branco com fundo escuro semitransparente</div>
+            </div>
+            <div class="prompt-box">
+              <div class="prompt-label">Prompt Gemini <span>(cole com a foto anexada)</span></div>
+              <div class="prompt-text">Crie um vídeo na vertical 9:16, 10 segundos, utilizando exatamente a imagem fornecida. Não altere nada no produto — estrutura metálica branca, grama sintética verde, golzinho, todos os detalhes exatamente como na foto. Câmera começa em close no mini campo de futebol com grama sintética e golzinho, foco nos detalhes da estrutura. Leve zoom-out revelando o campo completo. Iluminação quente e profissional, fundo levemente desfocado. Nos últimos 3 segundos câmera estabiliza em plano aberto com o campo centralizado. Área livre no terço inferior para texto. Áudio: trilha dinâmica e confiante crescendo ao longo dos 10 segundos. Narração em voz over masculina, grave, tom direto de negócios: "Esse campo dentro do seu restaurante — o cliente não sai daqui. Enquanto ele joga, os pais ficam na mesa pedindo mais. Não é produto. É receita."</div>
+            </div>
+          </div>
+
+          <div class="take">
+            <div class="take-header">
+              <div class="take-num">Take 02</div>
+              <div class="take-name">Tour — Conjunto completo</div>
+              <div class="take-dur">10s</div>
+            </div>
+            <div class="take-grid">
+              <div class="take-block">
+                <div class="block-label">Visual</div>
+                <div class="block-content">Tracking shot lateral esquerda→direita. Começa no tobogã tubular → passa pelo trampolim → fecha na mesa de air hockey. Movimento contínuo. Últimos 2s: para em plano aberto com o conjunto completo. Névoa leve ao fundo.</div>
+              </div>
+              <div class="take-block">
+                <div class="block-label">Áudio</div>
+                <div class="block-content">Trilha empolgante e positiva, estável durante o tour. Narração masculina, mesma voz.</div>
+              </div>
+            </div>
+            <div class="narration-box">
+              <div class="narration-label">Narração</div>
+              <div class="narration-text">
+                "Tobogã, trampolim, campo de futebol e air hockey — tudo num espaço só. A família que tem criança escolhe o estabelecimento que tem isso. Não é opinião. É comportamento de consumidor."
+              </div>
+            </div>
+            <div class="caption-box" style="margin-top: 16px;">
+              <div class="cap-label">Texto na tela (CapCut)</div>
+              <div class="cap-text">"Tudo num espaço só." — terço inferior · bold · branco</div>
+            </div>
+            <div class="prompt-box">
+              <div class="prompt-label">Prompt Gemini <span>(cole com a foto anexada)</span></div>
+              <div class="prompt-text">Crie um vídeo na vertical 9:16, 10 segundos, utilizando exatamente a imagem fornecida. Não altere nada no produto. Tracking shot lateral da esquerda para a direita: começa no tobogã tubular, passa pelo trampolim, fecha na mesa de air hockey. Movimento contínuo e fluido. Iluminação vibrante e quente. Névoa leve ao fundo. Nos últimos 2 segundos câmera para em plano aberto mostrando o conjunto completo. Área livre no terço inferior para texto. Áudio: trilha empolgante e positiva estável. Narração masculina, grave, mesma voz: "Tobogã, trampolim, campo de futebol e air hockey — tudo num espaço só. A família que tem criança escolhe o estabelecimento que tem isso. Não é opinião. É comportamento de consumidor."</div>
+            </div>
+          </div>
+
+          <div class="take">
+            <div class="take-header">
+              <div class="take-num">Take 03</div>
+              <div class="take-name">CTA Final</div>
+              <div class="take-dur">10s</div>
+            </div>
+            <div class="take-grid">
+              <div class="take-block">
+                <div class="block-label">Visual</div>
+                <div class="block-content">Câmera estática, plano aberto frontal. Produto centralizado. Dolly-in suave nos primeiros 5s. Últimos 3s: câmera para, spotlight cai sobre o produto. Área inferior livre para CTA.</div>
+              </div>
+              <div class="take-block">
+                <div class="block-label">Áudio</div>
+                <div class="block-content">Trilha crescendo com energia, pico nos últimos 2s. Corte seco no final. Narração masculina, mesma voz.</div>
+              </div>
+            </div>
+            <div class="narration-box">
+              <div class="narration-label">Narração</div>
+              <div class="narration-text">
+                "A Kidys Park instala, tem garantia de fábrica e transforma espaço parado em receita. Vai deixar essa oportunidade passar? Entre em contato com a gente agora."
+              </div>
+            </div>
+            <div class="caption-box" style="margin-top: 16px;">
+              <div class="cap-label">Texto na tela (CapCut)</div>
+              <div class="cap-text">"Solicite seu orçamento" — terço inferior · bold maior · branco · fade-in no 8s</div>
+            </div>
+            <div class="prompt-box">
+              <div class="prompt-label">Prompt Gemini <span>(cole com a foto anexada)</span></div>
+              <div class="prompt-text">Crie um vídeo na vertical 9:16, 10 segundos, utilizando exatamente a imagem fornecida. Não altere nada no produto. Câmera estática, plano aberto frontal com o produto centralizado. Dolly-in suave nos primeiros 5 segundos. Iluminação profissional frontal com rim light dourado lateral. Nos últimos 3 segundos câmera para, spotlight intenso cai sobre o produto. Área inferior completamente livre para CTA. Áudio: trilha crescendo com energia, pico forte nos últimos 2 segundos, corte seco. Narração masculina, grave, mesma voz: "A Kidys Park instala, tem garantia de fábrica e transforma espaço parado em receita. Vai deixar essa oportunidade passar? Entre em contato com a gente agora."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIDEO 04 -->
+    <div class="del-card">
+      <div class="del-header">
+        <div class="del-number gray">04</div>
+        <div>
+          <div class="del-title">Produto Azul — Vendas | Vídeo com Footage Original</div>
+          <div class="del-subtitle">Usar vídeo original gravado no local — edição no CapCut</div>
+        </div>
+        <div class="del-badge badge-footage">FOOTAGE ORIGINAL</div>
+      </div>
+      <div class="del-body">
+        <div style="font-size: 12px; color: #555; margin-bottom: 24px;">3 takes × 10 segundos · Edição no CapCut · Footage original + narração em off</div>
+
+        <div class="takes">
+          <div class="take">
+            <div class="take-header">
+              <div class="take-num">Take 01</div>
+              <div class="take-name">Hook — Piscina de bolinhas</div>
+              <div class="take-dur">10s</div>
+            </div>
+            <div class="take-grid">
+              <div class="take-block">
+                <div class="block-label">Corte do footage</div>
+                <div class="block-content">Usar trecho do vídeo original com close na piscina de bolinhas azul. Editar para começar no close e abrir revelando o tobogã ao fundo. Últimos 3s: freeze frame ou slow motion no plano aberto.</div>
+              </div>
+              <div class="take-block">
+                <div class="block-label">Edição CapCut</div>
+                <div class="block-content">Grading: aumentar saturação do azul, contraste leve. Trilha dinâmica sobreposta. Narração em off gravada separado e inserida no CapCut.</div>
+              </div>
+            </div>
+            <div class="narration-box blue">
+              <div class="narration-label">Narração</div>
+              <div class="narration-text">
+                "Essa piscina de bolinhas dentro do seu espaço — a criança não sai daqui. Enquanto ela brinca, os pais ficam na mesa pedindo mais. Não é produto. É receita."
+              </div>
+            </div>
+            <div class="caption-box" style="margin-top: 16px;">
+              <div class="cap-label">Texto na tela (CapCut)</div>
+              <div class="cap-text">"Não é produto. É receita." — terço inferior · bold · branco com fundo escuro semitransparente</div>
+            </div>
+          </div>
+
+          <div class="take">
+            <div class="take-header">
+              <div class="take-num">Take 02</div>
+              <div class="take-name">Tour — Conjunto completo</div>
+              <div class="take-dur">10s</div>
+            </div>
+            <div class="take-grid">
+              <div class="take-block">
+                <div class="block-label">Corte do footage</div>
+                <div class="block-content">Usar trecho com movimento lateral mostrando tobogã duplo → andares → túnel. Se não houver um único trecho contínuo, cortar 3 clipes curtos (3s + 3s + 4s) em sequência fluida.</div>
+              </div>
+              <div class="take-block">
+                <div class="block-label">Edição CapCut</div>
+                <div class="block-content">Transições suaves entre clipes. Grading quente e vibrante. Trilha positiva sobreposta. Narração em off inserida.</div>
+              </div>
+            </div>
+            <div class="narration-box blue">
+              <div class="narration-label">Narração</div>
+              <div class="narration-text">
+                "Piscina de bolinhas, tobogã duplo, múltiplos andares pra escalar — tudo num espaço só. A família que tem criança escolhe o estabelecimento que tem isso. Não é opinião. É comportamento de consumidor."
+              </div>
+            </div>
+            <div class="caption-box" style="margin-top: 16px;">
+              <div class="cap-label">Texto na tela (CapCut)</div>
+              <div class="cap-text">"Tudo num espaço só." — terço inferior · bold · branco</div>
+            </div>
+          </div>
+
+          <div class="take">
+            <div class="take-header">
+              <div class="take-num">Take 03</div>
+              <div class="take-name">CTA Final</div>
+              <div class="take-dur">10s</div>
+            </div>
+            <div class="take-grid">
+              <div class="take-block">
+                <div class="block-label">Corte do footage</div>
+                <div class="block-content">Usar trecho mais aberto do vídeo original mostrando o produto completo de frente. Aplicar slow motion leve. Últimos 3s: zoom-out sutil ou freeze frame com spotlight adicionado no CapCut.</div>
+              </div>
+              <div class="take-block">
+                <div class="block-label">Edição CapCut</div>
+                <div class="block-content">Trilha crescendo com pico nos últimos 2s. Corte seco no final. Narração em off inserida. Texto de CTA com animação fade-in no 8s.</div>
+              </div>
+            </div>
+            <div class="narration-box blue">
+              <div class="narration-label">Narração</div>
+              <div class="narration-text">
+                "A Kidys Park instala, tem garantia de fábrica e transforma espaço parado em receita. Vai deixar essa oportunidade passar? Entre em contato com a gente agora."
+              </div>
+            </div>
+            <div class="caption-box" style="margin-top: 16px;">
+              <div class="cap-label">Texto na tela (CapCut)</div>
+              <div class="cap-text">"Solicite seu orçamento" — terço inferior · bold maior · branco · fade-in no 8s</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end deliverables -->
+</div><!-- end section videos -->
+
+<!-- ESTÁTICOS -->
+<div class="section">
+  <div class="section-tag">Entregável 2 de 2</div>
+  <div class="section-title">Estáticos — 3 Peças</div>
+  <div style="font-size: 13px; color: #555; margin-bottom: 32px;">Pouca copy. Produto como herói. Texto mínimo e impactante. Fundo limpo ou estúdio.</div>
+
+  <div class="statics-grid">
+
+    <div class="static-card">
+      <div class="static-card-header">
+        <div class="static-card-title">Peça 01 — Produto Verde/Amarelo</div>
+        <div class="static-card-sub">Playground verde e amarelo com escorregador tubular</div>
+      </div>
+      <div class="static-card-body">
+        <div class="static-field">
+          <div class="sf-label">Headline principal</div>
+          <div class="headline-display">"Era pra ser no seu espaço."</div>
+        </div>
+        <div class="static-field">
+          <div class="sf-label">Subheadline</div>
+          <div class="sf-value">A Kidys Park projeta, fabrica e instala.</div>
+        </div>
+        <div class="static-field">
+          <div class="sf-label">CTA</div>
+          <div><span class="cta-display">Solicite seu orçamento</span></div>
+        </div>
+        <div class="static-field">
+          <div class="sf-label">Direção visual</div>
+          <div class="sf-value">Produto hero em 70% do frame. Fundo escuro ou gradiente neutro. Paleta verde e amarelo do produto já faz o trabalho visual. Texto no terço inferior.</div>
+        </div>
+        <div class="static-field">
+          <div class="sf-label">Formato</div>
+          <div class="sf-value">9:16 (1080×1920) + 4:5 (1080×1350)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="static-card">
+      <div class="static-card-header">
+        <div class="static-card-title">Peça 02 — Produto Azul</div>
+        <div class="static-card-sub">Playground azul com piscina de bolinhas e tobogã duplo</div>
+      </div>
+      <div class="static-card-body">
+        <div class="static-field">
+          <div class="sf-label">Headline principal</div>
+          <div class="headline-display">"Criança entretida = mesa que não para."</div>
+        </div>
+        <div class="static-field">
+          <div class="sf-label">Subheadline</div>
+          <div class="sf-value">Piscina de bolinhas, tobogã duplo e muito mais. Instalação inclusa.</div>
+        </div>
+        <div class="static-field">
+          <div class="sf-label">CTA</div>
+          <div><span class="cta-display" style="background:#0a1929;color:#42A5F5;border-color:#42A5F5;">Solicite seu orçamento</span></div>
+        </div>
+        <div class="static-field">
+          <div class="sf-label">Direção visual</div>
+          <div class="sf-value">Hero shot da piscina de bolinhas em primeiro plano, tobogã duplo ao fundo. Fundo escuro para contrastar com o azul vivo do produto. Texto no terço inferior.</div>
+        </div>
+        <div class="static-field">
+          <div class="sf-label">Formato</div>
+          <div class="sf-value">9:16 (1080×1920) + 4:5 (1080×1350)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="static-card">
+      <div class="static-card-header">
+        <div class="static-card-title">Peça 03 — Campo de Futebol</div>
+        <div class="static-card-sub">Mini campo + trampolim + air hockey</div>
+      </div>
+      <div class="static-card-body">
+        <div class="static-field">
+          <div class="sf-label">Headline principal</div>
+          <div class="headline-display">"Não é produto. É receita."</div>
+        </div>
+        <div class="static-field">
+          <div class="sf-label">Subheadline</div>
+          <div class="sf-value">Campo de futebol, trampolim e air hockey no seu espaço. A Kidys Park instala tudo.</div>
+        </div>
+        <div class="static-field">
+          <div class="sf-label">CTA</div>
+          <div><span class="cta-display">Solicite seu orçamento</span></div>
+        </div>
+        <div class="static-field">
+          <div class="sf-label">Direção visual</div>
+          <div class="sf-value">Hero shot do campo de futebol com perspectiva levemente baixa para valorizar a grama sintética e a estrutura. Conjunto completo visível ao fundo. Texto no terço inferior.</div>
+        </div>
+        <div class="static-field">
+          <div class="sf-label">Formato</div>
+          <div class="sf-value">9:16 (1080×1920) + 4:5 (1080×1350)</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SPECS TÉCNICAS -->
+<div class="section">
+  <div class="section-tag">Referência</div>
+  <div class="section-title">Especificações Técnicas</div>
+  <table class="specs-table">
+    <tr>
+      <th>Item</th>
+      <th>Vídeos IA</th>
+      <th>Vídeo Footage</th>
+      <th>Estáticos</th>
+    </tr>
+    <tr>
+      <td>Formato principal</td>
+      <td>9:16 vertical</td>
+      <td>9:16 vertical</td>
+      <td>9:16 + 4:5</td>
+    </tr>
+    <tr>
+      <td>Resolução</td>
+      <td>1080×1920px</td>
+      <td>1080×1920px</td>
+      <td>1080×1920 / 1080×1350</td>
+    </tr>
+    <tr>
+      <td>Duração por take</td>
+      <td>10 segundos</td>
+      <td>10 segundos</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td>Ferramenta de geração</td>
+      <td>Gemini / Veo 3</td>
+      <td>CapCut</td>
+      <td>IA de imagem / Canva / Figma</td>
+    </tr>
+    <tr>
+      <td>Voz narração</td>
+      <td>Masculina, grave — mesma em todos</td>
+      <td>Masculina, grave — gravar em off</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td>Fonte dos textos</td>
+      <td colspan="3">Bold, sem serifa — branco sobre fundo escuro. Definir família tipográfica com identidade Kidys Park.</td>
+    </tr>
+    <tr>
+      <td>Regra de copy</td>
+      <td colspan="3">Sem preço. Sem comparação com concorrentes. CTA sempre "Solicite seu orçamento" ou "Entre em contato agora".</td>
+    </tr>
+  </table>
+
+  <div class="alert-box">
+    <div class="alert-title">ATENÇÃO — GEMINI / VEO 3</div>
+    <div class="alert-text">
+      Se o Gemini bloquear o prompt: (1) substitua "antes dos jogos" por "antes da temporada"; (2) substitua "torcida" por "celebração ao fundo"; (3) substitua qualquer nome de produto que remeta a criança ("brinquedão", "brinquedo") por "produto". O visual permanece idêntico — apenas o texto do prompt muda.
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Kidys Park × Meta Ads — Briefing Criativo · Maio 2026
+</div>
+
+</body>
+</html>

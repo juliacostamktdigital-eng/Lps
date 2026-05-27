@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>DCC — Atlântica Máquinas | V4 Company</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; color: #1a1a1a; font-size: 14px; line-height: 1.75; }
+  .cover { background: #002B69; color: #fff; padding: 64px 80px; }
+  .cover-label { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: #CC1417; margin-bottom: 8px; }
+  .cover h1 { font-size: 46px; font-weight: 900; line-height: 1.1; }
+  .cover h1 span { color: #CC1417; }
+  .cover-sub { font-size: 16px; color: #aaa; margin-top: 12px; }
+  .cover-meta { display: flex; gap: 60px; margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.12); }
+  .meta-item .label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #555; }
+  .meta-item .value { font-size: 14px; color: #ccc; margin-top: 4px; }
+  .etapa-header { background: #CC1417; color: #fff; padding: 16px 40px; margin: 40px 0 0; }
+  .etapa-header h2 { font-size: 13px; letter-spacing: 4px; text-transform: uppercase; font-weight: 700; }
+  .content { max-width: 940px; margin: 0 auto; padding: 0 40px 60px; }
+  .secao { background: #fff; border-radius: 0 0 12px 12px; padding: 36px 40px; margin-bottom: 4px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+  .secao + .secao { border-radius: 12px; margin-top: 16px; }
+  .secao-num { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: #CC1417; margin-bottom: 4px; }
+  .secao h3 { font-size: 20px; font-weight: 800; color: #002B69; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #e8eef8; }
+  p { color: #444; margin-bottom: 10px; }
+  ul { padding-left: 20px; margin-bottom: 14px; }
+  li { margin-bottom: 6px; color: #444; }
+  strong { color: #1a1a1a; }
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0; }
+  .kpi { background: #f8faff; border-radius: 8px; padding: 16px; text-align: center; border: 1px solid #dce8ff; }
+  .kpi-num { font-size: 24px; font-weight: 900; color: #002B69; }
+  .kpi-desc { font-size: 11px; color: #888; margin-top: 4px; }
+  .pilar { background: #f8faff; border-left: 4px solid #002B69; border-radius: 0 8px 8px 0; padding: 16px 20px; margin-bottom: 12px; }
+  .pilar h4 { font-size: 14px; font-weight: 700; color: #002B69; margin-bottom: 6px; }
+  .pilar p { margin: 0; color: #555; font-size: 13px; }
+  .produto { background: #f8faff; border-radius: 8px; padding: 18px 20px; margin-bottom: 10px; border: 1px solid #dce8ff; }
+  .produto-nome { font-size: 14px; font-weight: 700; color: #002B69; margin-bottom: 4px; }
+  .produto-spec { font-size: 12px; color: #CC1417; font-weight: 600; margin-bottom: 6px; }
+  .produto p { font-size: 13px; margin: 0; color: #555; }
+  .persona-mini { background: #f8faff; border-radius: 10px; padding: 20px 24px; margin-bottom: 14px; border: 1px solid #dce8ff; }
+  .persona-mini h4 { font-size: 15px; font-weight: 800; color: #002B69; margin-bottom: 2px; }
+  .persona-mini .tipo { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #CC1417; margin-bottom: 10px; }
+  .persona-mini ul { padding-left: 16px; margin: 0; }
+  .persona-mini li { font-size: 13px; color: #444; margin-bottom: 4px; }
+  .highlight { background: #fff8f0; border-left: 4px solid #CC1417; padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 14px 0; color: #333; font-style: italic; }
+  .tom-attr { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+  .tom-card { background: #f8faff; border-radius: 8px; padding: 14px 16px; border: 1px solid #dce8ff; }
+  .tom-card h4 { font-size: 12px; font-weight: 700; color: #002B69; margin-bottom: 6px; letter-spacing: 1px; text-transform: uppercase; }
+  .tom-card p { font-size: 13px; color: #555; margin: 0; }
+  .ancora-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+  .ancora { background: #002B69; color: #fff; border-radius: 20px; padding: 5px 14px; font-size: 12px; font-weight: 600; }
+  .dos-donts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  .dos { background: #f0fff4; border-radius: 8px; padding: 16px 18px; }
+  .donts { background: #fff3f3; border-radius: 8px; padding: 16px 18px; }
+  .dos h4 { color: #1a7a3e; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+  .donts h4 { color: #CC1417; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+  .dos li, .donts li { font-size: 13px; margin-bottom: 5px; }
+  .dos li { color: #1a4d2e; }
+  .donts li { color: #7a1a1a; }
+  .arquetipo { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .arq-card { border-radius: 10px; padding: 20px 22px; }
+  .arq-primary { background: #002B69; color: #fff; }
+  .arq-secondary { background: #f8faff; border: 1px solid #dce8ff; }
+  .arq-card .tipo { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; opacity: 0.7; }
+  .arq-card h4 { font-size: 17px; font-weight: 900; margin-bottom: 10px; }
+  .arq-primary h4 { color: #CC1417; }
+  .arq-secondary h4 { color: #002B69; }
+  .arq-card p { font-size: 13px; line-height: 1.65; margin: 0; }
+  .arq-primary p { color: #c8d4e8; }
+  .arq-secondary p { color: #555; }
+  .manifesto { margin-top: 12px; padding: 10px 14px; border-radius: 6px; font-style: italic; font-size: 13px; }
+  .arq-primary .manifesto { background: rgba(255,255,255,0.1); color: #fff; }
+  .arq-secondary .manifesto { background: #e8f0ff; color: #002B69; }
+  .copy-block { background: #002B69; border-radius: 10px; padding: 24px 28px; margin-bottom: 16px; }
+  .copy-block .label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #CC1417; margin-bottom: 8px; }
+  .copy-block .headline { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 8px; line-height: 1.3; }
+  .copy-block .body-text { font-size: 13px; color: #c8d4e8; line-height: 1.7; }
+  .copy-block .cta { display: inline-block; margin-top: 12px; background: #CC1417; color: #fff; padding: 8px 20px; border-radius: 6px; font-size: 13px; font-weight: 700; }
+  .canal { background: #f8faff; border-radius: 10px; padding: 20px 24px; margin-bottom: 14px; border: 1px solid #dce8ff; }
+  .canal h4 { font-size: 14px; font-weight: 700; color: #002B69; margin-bottom: 10px; }
+  .canal ul { padding-left: 16px; margin: 0; }
+  .canal li { font-size: 13px; color: #444; margin-bottom: 5px; }
+  .perf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .perf-bem { background: #f0fff4; border-radius: 8px; padding: 16px 18px; border: 1px solid #b2dfca; }
+  .perf-mal { background: #fff3f3; border-radius: 8px; padding: 16px 18px; border: 1px solid #f5c6c6; }
+  .perf-bem h4 { color: #1a7a3e; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+  .perf-mal h4 { color: #CC1417; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+  .perf-bem li { font-size: 13px; color: #1a4d2e; margin-bottom: 5px; }
+  .perf-mal li { font-size: 13px; color: #7a1a1a; margin-bottom: 5px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  th { background: #002B69; color: #fff; padding: 10px 14px; text-align: left; font-size: 12px; }
+  td { padding: 10px 14px; border-bottom: 1px solid #f0f0f0; font-size: 13px; color: #444; }
+  tr:nth-child(even) td { background: #f8faff; }
+  .footer { text-align: center; padding: 40px; color: #aaa; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-label">Documento de Concepção de Copy</div>
+  <h1>Atlântica <span>Máquinas</span></h1>
+  <div class="cover-sub">Fabricante de Máquinas para Blocos e Pavimentos de Concreto</div>
+  <div class="cover-meta">
+    <div class="meta-item"><div class="label">Versão</div><div class="value">Maio 2026</div></div>
+    <div class="meta-item"><div class="label">Responsável</div><div class="value">Julia Costa</div></div>
+    <div class="meta-item"><div class="label">Projeto</div><div class="value">V4 Company / Sotóbi</div></div>
+    <div class="meta-item"><div class="label">Status</div><div class="value">Documento vivo, revisão mensal</div></div>
+  </div>
+</div>
+
+<div class="content">
+
+  <div style="margin-top:40px;background:#1a3a6e;padding:16px 40px;border-radius:12px 12px 0 0;">
+    <span style="font-size:13px;letter-spacing:4px;text-transform:uppercase;color:#fff;font-weight:700;">ETAPA BASE</span>
+  </div>
+
+  <div class="secao">
+    <div class="secao-num">Seção 1</div>
+    <h3>Sobre a Empresa: Visão Geral e Propósito</h3>
+    <p>A Atlântica Máquinas é uma fabricante brasileira de equipamentos para produção de blocos de concreto e pavimentos, com mais de 50 anos de operação contínua. Sede em São Paulo (SP), com showroom aberto a visitação e atendimento direto de fábrica para todo o Brasil.</p>
+    <p>Produto principal: máquinas hidráulicas para blocos de concreto, com produção de até 6.000 unidades por dia. Linha completa que vai do modelo de entrada (manual semi-automático) ao industrial hidráulico de alta performance.</p>
+    <p><strong>Site:</strong> www.atlanmaq.com.br<br>
+    <strong>Endereço:</strong> Rua Bartolomeu Soares, 65A, Ponte Rasa, São Paulo/SP<br>
+    <strong>Telefone:</strong> (11) 2041-3283<br>
+    <strong>WhatsApp:</strong> (11) 97083-2789</p>
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-num">50+</div><div class="kpi-desc">Anos de mercado</div></div>
+      <div class="kpi"><div class="kpi-num">6.000</div><div class="kpi-desc">Blocos/dia (modelo industrial)</div></div>
+      <div class="kpi"><div class="kpi-num">ABNT</div><div class="kpi-desc">Conformidade total</div></div>
+      <div class="kpi"><div class="kpi-num">Brasil</div><div class="kpi-desc">Entrega em todo o país</div></div>
+    </div>
+    <p><strong>Missão:</strong> Oferecer equipamentos duráveis, com suporte técnico real, para que cada cliente monte e opere sua fábrica de blocos com segurança e resultado.</p>
+    <p><strong>Visão:</strong> Ser a referência nacional em máquinas para blocos de concreto, reconhecida pela engenharia nacional e pelo atendimento consultivo que não some após a venda.</p>
+  </div>
+
+  <div class="secao">
+    <div class="secao-num">Seção 2</div>
+    <h3>Stakeholders Relevantes</h3>
+
+    <div class="pilar">
+      <h4>Wendel e James: Sócios-proprietários e Diretores</h4>
+      <p>Responsáveis pelas decisões estratégicas da empresa. Wendel é o principal ponto focal para alinhamentos internos de alto nível. Perfil mais analítico e menos presente no operacional de marketing.</p>
+    </div>
+    <div class="pilar">
+      <h4>Lucas Santos Batista: Gerente Geral</h4>
+      <p>Principal interface entre a operação interna e a agência V4 / Sotóbi. Aprova criativos, copies, landing pages e estratégias de campanha. Seus feedbacks devem ser aplicados imediatamente em todo o material. Tem posicionamento claro sobre o que funciona no atendimento com o lead.</p>
+    </div>
+    <div class="pilar">
+      <h4>Equipe de Vendas</h4>
+      <p>Marcelo Assis, Odirlei, Douglas Mendes, Aguinaldo Souza, Vitor (consultores gerais), Andreza (foco em acessórios e peças), Kauê (SDR e apoio logístico). O perfil do lead exige atendimento humano imediato após o primeiro contato automatizado.</p>
+    </div>
+    <div class="pilar">
+      <h4>Agência V4 Company / Sotóbi</h4>
+      <p>Larissa Alrely da Silva (Account, gestão do projeto), Árthur Durrewald Bueno (Gestor de Tráfego), Ruan Silva (Coordenador), equipe de design (Diego Bueno, Bruno).</p>
+    </div>
+  </div>
+
+  <div class="secao">
+    <div class="secao-num">Seção 3</div>
+    <h3>Pilares Estratégicos da Marca</h3>
+
+    <div class="pilar">
+      <h4>1. Tradição e Credibilidade</h4>
+      <p>Mais de 50 anos de mercado transmitem segurança ao comprador. Esse é o ativo mais diferenciador da marca e deve estar presente em toda comunicação como âncora de confiança. Argumento de fechamento validado: "50 anos não são 50 dias."</p>
+    </div>
+    <div class="pilar">
+      <h4>2. Tecnologia Hidráulica Nacional</h4>
+      <p>Compactação real, máquina que aguenta turnos inteiros, blocos que saem sem trinca, sem esfarelamento, sem rejeição em obra. "Robustez não é só ferro, é engenharia nacional." Diferencial técnico que concorrentes sem histórico não conseguem comprovar.</p>
+    </div>
+    <div class="pilar">
+      <h4>3. Venda Direta de Fábrica</h4>
+      <p>Sem atravessadores. O cliente compra direto do fabricante, com melhor custo-benefício e relação direta com quem fabrica e conhece cada peça do equipamento.</p>
+    </div>
+    <div class="pilar">
+      <h4>4. Suporte Técnico Completo</h4>
+      <p>Peças de reposição nacionais com disponibilidade rápida. Orientação técnica na instalação e início de produção. O cliente não fica sem suporte depois da compra.</p>
+    </div>
+    <div class="pilar">
+      <h4>5. Linha Completa em um Único Fornecedor</h4>
+      <p>Máquina, betoneira, misturador, compressor, esteira transportadora. O cliente monta a fábrica inteira sem precisar buscar outros fornecedores.</p>
+    </div>
+  </div>
+
+  <div class="secao">
+    <div class="secao-num">Seção 4</div>
+    <h3>Produtos e Serviços: Como Comunicar</h3>
+
+    <div class="produto">
+      <div class="produto-nome">Modelo ELZ 2012: Manual Semi-automático</div>
+      <div class="produto-spec">Até 2.250 blocos de 10 por dia</div>
+      <p>Para quem está começando com produção pequena ou uso próprio na obra. <strong>Como comunicar:</strong> modelo de entrada acessível, nunca "menor" ou "inferior". Comunicar como "ideal para quem está começando".</p>
+    </div>
+    <div class="produto">
+      <div class="produto-nome">Modelo E-321 Industrial: Manual Semi-automático</div>
+      <div class="produto-spec">Até 3.000 blocos de 10 por dia</div>
+      <p>Para quem quer iniciar já com volume. <strong>Como comunicar:</strong> produção relevante desde o começo, sem precisar de tecnologia hidráulica.</p>
+    </div>
+    <div class="produto">
+      <div class="produto-nome">Modelo E-432 Industrial: Manual Semi-automático</div>
+      <div class="produto-spec">Até 4.000 blocos de 10 por dia</div>
+      <p>Para pequena e média fábrica em ampliação de produção. <strong>Como comunicar:</strong> volume expressivo com operação acessível.</p>
+    </div>
+    <div class="produto">
+      <div class="produto-nome">Modelo 432 HD Compact: Hidráulica</div>
+      <div class="produto-spec">Até 4.000 blocos de 10 por dia | Compactação 1 tonelada</div>
+      <p>Para fábrica profissional que quer eficiência e acabamento superior. <strong>Como comunicar:</strong> entrada no nível hidráulico, qualidade de compactação acima dos manuais.</p>
+    </div>
+    <div class="produto">
+      <div class="produto-nome">Modelo 432 HATL: Hidráulica</div>
+      <div class="produto-spec">Até 4.000 blocos de 10 por dia | Compactação 3 toneladas</div>
+      <p>Para fábricas profissionais com foco em pavimento e alta qualidade de compactação. <strong>Como comunicar:</strong> qualidade máxima de compactação para quem leva a sério.</p>
+    </div>
+    <div class="produto" style="border:2px solid #CC1417;">
+      <div class="produto-nome">Modelo 643 HATL: Hidráulica Industrial <span style="background:#CC1417;color:#fff;font-size:11px;padding:2px 8px;border-radius:4px;margin-left:8px;">PRODUTO PRIORITÁRIO</span></div>
+      <div class="produto-spec">Até 6.000 blocos de 10 por dia | Compactação 3 toneladas</div>
+      <p>Para fábricas de médio e grande porte em operação profissional. <strong>Como comunicar:</strong> máximo de produção, tecnologia completa, para quem quer escalar. Produto prioritário nas campanhas para aumentar ticket médio.</p>
+    </div>
+
+    <p style="margin-top:16px;"><strong>Regra de dados financeiros:</strong> nunca comunicar ROI ou payback em prazo específico sem contexto consultivo. Substituir por transparência: "Nosso consultor calcula junto com você."</p>
+    <p><strong>Formas de pagamento disponíveis:</strong> PIX, transferência bancária, cartão de crédito, financiamento BNDES e BNB.</p>
+  </div>
+
+  <div class="secao">
+    <div class="secao-num">Seção 5</div>
+    <h3>Personas e Comitê de Decisão</h3>
+
+    <div class="persona-mini">
+      <h4>Roberto</h4>
+      <div class="tipo">Empreendedor Iniciante, Topo de Funil</div>
+      <p><strong>Perfil:</strong> 30 a 48 anos. Autônomo da construção civil. Capital entre R$ 25.000 e R$ 80.000. Decide com cônjuge ou família.</p>
+      <p><strong>Motivação central:</strong> ter negócio próprio e independência financeira.</p>
+      <p><strong>Como decide:</strong> precisa de validação técnica e emocional. Quer ver, visitar, conversar com alguém de confiança antes de fechar.</p>
+      <p><strong>Canal prioritário:</strong> Meta Ads (vídeo vertical, impacto emocional).</p>
+      <p><strong>Velocidade:</strong> lenta. Precisa construir confiança antes de agir.</p>
+    </div>
+
+    <div class="persona-mini">
+      <h4>Marcos</h4>
+      <div class="tipo">Construtor / Empresa de Pré-moldados, Fundo de Funil</div>
+      <p><strong>Perfil:</strong> 35 a 55 anos. Dono de construtora ou empresa de pré-moldados. Capital entre R$ 80.000 e R$ 300.000. Já usa blocos em escala.</p>
+      <p><strong>Motivação central:</strong> reduzir custo de insumo e ganhar autonomia de produção.</p>
+      <p><strong>Como decide:</strong> análise de custo-benefício. Quer dados técnicos e cálculo de retorno antes de fechar.</p>
+      <p><strong>Canal prioritário:</strong> busca ativa no Google e indicação.</p>
+      <p><strong>Velocidade:</strong> mais rápida, se a proposta técnica for consistente.</p>
+    </div>
+
+    <div class="persona-mini">
+      <h4>Prefeitura e Empresa de Pavimentação</h4>
+      <div class="tipo">Comprador Técnico e Institucional</div>
+      <p><strong>Perfil:</strong> Departamentos de obras e empresas de pavimentação. Decisão técnica e burocrática, com exigência de conformidade ABNT.</p>
+      <p><strong>Motivação central:</strong> autonomia de produção, redução de custo por licitação e conformidade técnica garantida.</p>
+      <p><strong>Canal prioritário:</strong> contato direto e indicação técnica.</p>
+    </div>
+  </div>
+
+  <div class="secao">
+    <div class="secao-num">Seção 6</div>
+    <h3>Proposta de Valor e Benefícios</h3>
+    <div class="highlight">
+      "Com a Atlântica, você monta sua fábrica de blocos com tecnologia que dura, suporte que não some e mais de 50 anos de prática do seu lado."
+    </div>
+    <p><strong>Para Roberto:</strong></p>
+    <ul>
+      <li>Operação simples: não precisa de experiência anterior para operar</li>
+      <li>Suporte técnico na instalação e início de produção</li>
+      <li>Financiamento via BNDES e BNB: facilita acesso ao investimento</li>
+      <li>Showroom físico em São Paulo: visita antes de comprar, quebra insegurança</li>
+    </ul>
+    <p><strong>Para Marcos:</strong></p>
+    <ul>
+      <li>Redução de custo por bloco: deixa de comprar para produzir internamente</li>
+      <li>Conformidade técnica ABNT garantida, sem rejeição em obra</li>
+      <li>Produção de até 6.000 blocos por dia: escala para grandes demandas</li>
+      <li>Linha completa: monta a fábrica inteira em um único fornecedor</li>
+    </ul>
+  </div>
+
+  <div style="margin-top:40px;background:#1a3a6e;padding:16px 40px;border-radius:12px 12px 0 0;">
+    <span style="font-size:13px;letter-spacing:4px;text-transform:uppercase;color:#fff;font-weight:700;">SOBRE COPY</span>
+  </div>
+
+  <div class="secao">
+    <div class="secao-num">Seção 7</div>
+    <h3>Tom de Voz</h3>
+    <p><strong>Tom central:</strong> direto, técnico e acessível. Confiante sem ser arrogante. Consultivo sem ser frio. O lead é humano: manda áudio, manda foto, liga sem avisar. O copy deve refletir isso.</p>
+    <div class="tom-attr">
+      <div class="tom-card">
+        <h4>Técnico com Clareza</h4>
+        <p>Números reais, especificações reais, sem jargão desnecessário. O comprador quer saber: produção por dia, custo, conformidade técnica.</p>
+      </div>
+      <div class="tom-card">
+        <h4>Próximo</h4>
+        <p>Fala com o comprador como um parceiro que entende o negócio dele. Não como um vendedor que quer fechar a qualquer custo.</p>
+      </div>
+      <div class="tom-card">
+        <h4>Focado em Resultado</h4>
+        <p>Produção por dia, custo por bloco, retorno sobre investimento. O cliente quer saber o que vai ganhar, não apenas o que a máquina faz.</p>
+      </div>
+      <div class="tom-card">
+        <h4>Confiante</h4>
+        <p>50 anos de prática como âncora. Não é promessa: é histórico comprovado. A confiança vem do que já foi feito, não do que vai ser.</p>
+      </div>
+    </div>
+    <p><strong>O que nunca é o tom da Atlântica:</strong></p>
+    <ul>
+      <li>Urgência artificial: "última chance", "vagas limitadas" sem contexto real</li>
+      <li>Promessa de enriquecimento rápido ou ROI garantido em prazo fixo</li>
+      <li>Informalidade excessiva ou gírias</li>
+      <li>Tom robótico ou corporativo distante</li>
+      <li>Bots completos no WhatsApp: o perfil do lead rejeita automação total</li>
+    </ul>
+  </div>
+
+  <div class="secao">
+    <div class="secao-num">Seção 8</div>
+    <h3>Direcionais de Linguagem e Base de Comunicação</h3>
+    <p><strong>Expressões âncora (usar sempre):</strong></p>
+    <div class="ancora-list">
+      <span class="ancora">Mais de 50 anos de mercado</span>
+      <span class="ancora">Tecnologia hidráulica</span>
+      <span class="ancora">Até 6.000 blocos por dia</span>
+      <span class="ancora">Matrizes conforme ABNT</span>
+      <span class="ancora">Suporte técnico especializado</span>
+      <span class="ancora">Venda direta de fábrica</span>
+      <span class="ancora">Robustez não é só ferro, é engenharia nacional</span>
+    </div>
+    <p style="margin-top:16px;"><strong>Narrativa estrutural recomendada:</strong></p>
+    <ol style="padding-left:20px;">
+      <li style="margin-bottom:6px;color:#444;"><strong>Hook:</strong> problema ou desejo identificado (custo alto, vontade de empreender)</li>
+      <li style="margin-bottom:6px;color:#444;"><strong>Identificação:</strong> o cliente se reconhece na situação apresentada</li>
+      <li style="margin-bottom:6px;color:#444;"><strong>Solução:</strong> máquina própria, do fabricante mais experiente do Brasil</li>
+      <li style="margin-bottom:6px;color:#444;"><strong>Prova:</strong> 50 anos, showroom real, depoimentos de clientes reais</li>
+      <li style="margin-bottom:6px;color:#444;"><strong>CTA:</strong> ação de baixo comprometimento ("Falar com consultor", "Montar meu projeto")</li>
+    </ol>
+    <p style="margin-top:16px;"><strong>Frases validadas em campanha (mai/2026):</strong></p>
+    <ul>
+      <li>"Há mais de 50 anos fabricando máquinas para produção de blocos."</li>
+      <li>"Monte sua fábrica de blocos. Produza até 6.000 unidades por dia."</li>
+      <li>"Sua fábrica de blocos começa com uma conversa."</li>
+      <li>"50 anos fabricando. Um motivo: a máquina tem que funcionar de verdade."</li>
+      <li>"Robustez não é só ferro, é engenharia nacional."</li>
+    </ul>
+  </div>
+
+  <div class="secao">
+    <div class="secao-num">Seção 9</div>
+    <h3>Do's and Don'ts</h3>
+    <div class="dos-donts">
+      <div class="dos">
+        <h4>Do's: Usar Sempre</h4>
+        <ul>
+          <li>"Mais de 50 anos de mercado"</li>
+          <li>"Tecnologia hidráulica" em destaque</li>
+          <li>Especificações técnicas reais (blocos por dia)</li>
+          <li>Showroom como prova física e quebra de objeção</li>
+          <li>Suporte técnico pós-venda como diferencial</li>
+          <li>Foco em máquinas hidráulicas (maior ticket)</li>
+          <li>CTA consultivo e de baixo comprometimento</li>
+          <li>Financiamento BNDES e BNB como facilitador</li>
+          <li>Matrizes ABNT como garantia de aprovação em obra</li>
+          <li>Depoimentos de clientes reais em vídeo</li>
+        </ul>
+      </div>
+      <div class="donts">
+        <h4>Don'ts: Nunca Usar</h4>
+        <ul>
+          <li>ROI ou payback em prazo fixo sem contexto consultivo</li>
+          <li>"Mais de 40 anos" (sempre "mais de 50 anos")</li>
+          <li>Prometer volume sem relação com o modelo específico</li>
+          <li>Tom de medo ou perda para acionar o lead</li>
+          <li>Bot completo no WhatsApp após o primeiro contato</li>
+          <li>Focar nos modelos manuais como produto principal</li>
+          <li>Urgência artificial sem contexto real</li>
+          <li>Promessa de enriquecimento rápido</li>
+          <li>"Negócio fácil" sem substância técnica</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="secao">
+    <div class="secao-num">Seção 10</div>
+    <h3>Arquétipo</h3>
+    <div class="arquetipo">
+      <div class="arq-card arq-primary">
+        <div class="tipo">Arquétipo Primário</div>
+        <h4>O CRIADOR</h4>
+        <p>A Atlântica não vende uma máquina. Ela entrega a infraestrutura para o cliente construir seu próprio negócio do zero. Cada máquina vendida é uma fábrica nova nascendo no Brasil.</p>
+        <div class="manifesto">"Você não compra uma máquina. Você começa uma fábrica."</div>
+      </div>
+      <div class="arq-card arq-secondary">
+        <div class="tipo">Arquétipo Secundário</div>
+        <h4>O SÁBIO</h4>
+        <p>Mais de 50 anos de prática acumulada. A Atlântica já testou, já aprendeu, já aperfeiçoou o que outros ainda estão tentando descobrir. O conhecimento é o que não se pode copiar rapidamente.</p>
+        <div class="manifesto">"Não precisamos inventar. Desenvolvemos ao longo de décadas o que outros ainda estão tentando descobrir."</div>
+      </div>
+    </div>
+    <p style="margin-top:16px;"><strong>Como se manifesta no copy:</strong></p>
+    <ul>
+      <li>Prova antes de promessa: especificações técnicas reais, não apenas entusiasmo</li>
+      <li>Segurança como benefício, não como argumento de venda</li>
+      <li>O cliente não "aposta": ele entra em algo que já foi testado por décadas</li>
+    </ul>
+  </div>
+
+  <div class="secao">
+    <div class="secao-num">Seção 11</div>
+    <h3>Banco de Mensagens e Copy Estratégica</h3>
+
+    <div class="copy-block">
+      <div class="label">Headline Principal</div>
+      <div class="headline">Há mais de 50 anos fabricando máquinas para quem produz de verdade.</div>
+      <div class="body-text">Monte sua fábrica de blocos. Produza até 6.000 unidades por dia com tecnologia hidráulica, conformidade ABNT e suporte técnico especializado.</div>
+      <span class="cta">Quero montar minha fábrica agora</span>
+    </div>
+
+    <div class="copy-block">
+      <div class="label">Para Roberto (Empreendedor Iniciante)</div>
+      <div class="headline">Você não precisa de experiência. Precisa da máquina certa e do suporte certo.</div>
+      <div class="body-text">As máquinas da Atlântica têm operação simples e vêm com suporte técnico na instalação e início de produção. Você aprende rápido e começa a produzir com segurança.</div>
+      <span class="cta">Falar com consultor e montar meu projeto</span>
+    </div>
+
+    <div class="copy-block">
+      <div class="label">Para Marcos (Construtor / Empresa)</div>
+      <div class="headline">Pare de comprar bloco de terceiro. Comece a fabricar o seu.</div>
+      <div class="body-text">Com a Atlântica, você produz até 6.000 blocos por dia, dentro da norma ABNT, com custo de produção muito abaixo do que paga hoje ao fornecedor externo.</div>
+      <span class="cta">Quero calcular meu custo de produção</span>
+    </div>
+
+    <p style="margin-top:20px;"><strong>Hooks para Meta Ads (vídeo vertical):</strong></p>
+    <ul>
+      <li>"Você quer montar uma fábrica de blocos mas não sabe por onde começar." (Roberto)</li>
+      <li>"Quanto você gasta por mês comprando bloco de fornecedor externo?" (Marcos)</li>
+      <li>"Mais de 50 anos fabricando. Um único motivo: a máquina tem que funcionar de verdade." (institucional)</li>
+      <li>"Mais de 50 anos de tradição, atendimento personalizado e você tem o seu próprio negócio." (Flávio Prado)</li>
+    </ul>
+    <p><strong>CTA principais validados:</strong></p>
+    <ul>
+      <li>"Quero montar minha fábrica agora"</li>
+      <li>"Falar com consultor"</li>
+      <li>"Receber contato"</li>
+      <li>"Monte seu projeto"</li>
+    </ul>
+  </div>
+
+  <div class="secao">
+    <div class="secao-num">Seção 12</div>
+    <h3>Direcionais por Canal</h3>
+
+    <div class="canal">
+      <h4>Meta Ads (foco em Roberto, topo de funil)</h4>
+      <ul>
+        <li>Objetivo: geração de lead via formulário nativo e direcionamento para LP</li>
+        <li>Produto prioritário: máquinas hidráulicas (para elevar ticket médio de R$ 23.630 para meta de R$ 35-51k)</li>
+        <li>Formato: vídeo vertical com Flávio Prado (embaixador validado) e depoimentos de clientes reais</li>
+        <li>Hook emocional para Roberto: desejo de negócio próprio e independência</li>
+        <li>Hook racional para Marcos: custo de compra vs. custo de produção própria</li>
+        <li>Nunca comunicar ROI específico no anúncio</li>
+        <li>Budget referência: R$ 4.220/mês (mai/2026) | Meta: 800-1.000 leads/mês | CPL alvo: R$ 9</li>
+        <li>Resultado mai/2026: 441 leads | CPL R$ 9,97 | 10 vendas | Faturamento R$ 236.300</li>
+      </ul>
+    </div>
+
+    <div class="canal">
+      <h4>Instagram Orgânico</h4>
+      <ul>
+        <li>Reels com prioridade absoluta: valem 11x mais que posts estáticos no algoritmo</li>
+        <li>60% das interações vêm de não seguidores: o conteúdo está saindo da bolha corretamente</li>
+        <li>97% das visualizações vêm de tráfego pago: fortalecer o orgânico com Reels frequentes</li>
+        <li>Depoimentos de clientes em vídeo: formato com maior resultado identificado</li>
+        <li>Taxa de clique para conversa: 4,3% (meta: 6%)</li>
+      </ul>
+    </div>
+
+    <div class="canal">
+      <h4>WhatsApp e CRM</h4>
+      <ul>
+        <li>Primeiro contato: automação de boas-vindas e envio do catálogo</li>
+        <li>Imediatamente após primeira resposta do lead: atendimento humano assume</li>
+        <li>Perfil do lead: altamente humano, manda áudios, fotos, liga sem avisar</li>
+        <li>Bot completo é inviável para esse perfil: rejeita automação total</li>
+        <li>SLA de atendimento: o lead esfria rápido, tempo de resposta é crítico</li>
+      </ul>
+    </div>
+
+    <div class="canal">
+      <h4>Landing Page</h4>
+      <ul>
+        <li>Headline: "Há mais de 50 anos fabricando máquinas para produção de blocos"</li>
+        <li>Formulário com qualificação: "Em qual fase você está?" (Ainda analisando / Quero começar / Já tenho fábrica e quero escalar)</li>
+        <li>CTA: "Quero montar minha fábrica agora"</li>
+        <li>Taxa atual: 13% de cliques que viram lead (referência positiva, manter)</li>
+        <li>Não comunicar faturamento projetado ou payback específico na LP</li>
+      </ul>
+    </div>
+
+    <div class="canal">
+      <h4>Google (oportunidade não explorada)</h4>
+      <ul>
+        <li>Segmento com aproximadamente 40.000 buscas/mês</li>
+        <li>Atlântica praticamente invisível: 268 keywords indexadas, apenas 1 no topo</li>
+        <li>Reforma estratégica do site em desenvolvimento</li>
+        <li>Oportunidade grande de captura de demanda ativa (Marcos) via Google Search</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="secao">
+    <div class="secao-num">Seção 13</div>
+    <h3>Benchmarking e Estratégia Competitiva</h3>
+
+    <table>
+      <tr>
+        <th>Concorrente</th>
+        <th>Vantagem Deles</th>
+        <th>Vulnerabilidade</th>
+        <th>Estratégia Atlântica</th>
+      </tr>
+      <tr>
+        <td>Máquinas Importadas (chinesas)</td>
+        <td>Preço inicial menor</td>
+        <td>Sem suporte local, peças demoradas, risco de não conformidade ABNT, sem showroom para visitar</td>
+        <td>Posicionar pelo custo total (não só pelo preço inicial) e pelo suporte real pós-venda</td>
+      </tr>
+      <tr>
+        <td>Concorrentes Nacionais Menores</td>
+        <td>Preço competitivo</td>
+        <td>Sem tradição equivalente, suporte limitado, menor credibilidade técnica</td>
+        <td>50 anos como âncora irrefutável de credibilidade. Showroom físico como prova real</td>
+      </tr>
+    </table>
+    <p style="margin-top:16px;"><strong>Posicionamento geral:</strong> não concorrer em preço. Ocupar o espaço da tradição, tecnologia e suporte real que concorrentes não conseguem replicar porque demandam tempo e histórico.</p>
+  </div>
+
+  <div class="secao">
+    <div class="secao-num">Seção 14</div>
+    <h3>Novidades do Mercado e do Setor</h3>
+    <ul>
+      <li><strong>Oportunidade de SEO e Google:</strong> segmento com cerca de 40.000 buscas/mês, Atlântica com apenas 268 keywords indexadas e 1 no topo. Reforma estratégica do site em desenvolvimento.</li>
+      <li><strong>Automação de CRM:</strong> implementação de automação de primeiro contato no WhatsApp (boas-vindas e catálogo) em andamento. Fundamental para reduzir tempo de resposta sem perder o toque humano.</li>
+      <li><strong>Instagram:</strong> 97% das visualizações via tráfego pago. Reels como formato prioritário. Depoimento de cliente em vídeo sendo produzido para feed orgânico e remarketing.</li>
+      <li><strong>Foco de campanhas em junho:</strong> criativos com máquinas hidráulicas para elevar ticket médio de R$ 23.630 para meta de R$ 35.000 a R$ 51.000.</li>
+      <li><strong>Novo catálogo e nova LP:</strong> em finalização para aprovação de Lucas antes do próximo check-in.</li>
+    </ul>
+  </div>
+
+  <div class="secao">
+    <div class="secao-num">Seção 15</div>
+    <h3>Copies que Performaram Bem ou Mal</h3>
+    <div class="perf-grid">
+      <div class="perf-bem">
+        <h4>Aprovadas / Performaram Bem</h4>
+        <ul>
+          <li>Headline LP: "Há mais de 50 anos fabricando máquinas para produção de blocos"</li>
+          <li>Subheadline: "Monte sua fábrica de blocos. Produza até 6.000 unidades por dia."</li>
+          <li>Seção LP "Por que a fábrica de blocos?": alta demanda, margem de até 100%, retorno rápido</li>
+          <li>CTA: "Quero montar minha fábrica agora"</li>
+          <li>Vídeos com Flávio Prado como embaixador da marca</li>
+          <li>Resultado mai/2026: CPL R$ 9,97 (meta R$ 9), 10 vendas, faturamento R$ 236.300</li>
+        </ul>
+      </div>
+      <div class="perf-mal">
+        <h4>A Testar ou Evitar</h4>
+        <ul>
+          <li>Promessa de ROI específico sem contexto consultivo</li>
+          <li>Foco em modelos manuais como produto principal (reduz ticket médio)</li>
+          <li>Copy com urgência artificial sem contexto real</li>
+          <li>Bot completo no WhatsApp: perfil do lead rejeita automação total</li>
+          <li>Campanhas sem foco em produto: criativos genéricos sem destaque ao modelo específico</li>
+        </ul>
+      </div>
+    </div>
+
+    <p style="margin-top:20px;padding:14px;background:#f8faff;border-radius:8px;border:1px solid #dce8ff;"><strong>Atenção operacional:</strong> o ticket médio atual (R$ 23.630) está abaixo da meta (R$ 35-51k) porque o mix vendido foi predominantemente de modelos menores. A partir de junho, campanhas focam em máquinas hidráulicas para corrigir esse desvio.</p>
+  </div>
+
+</div>
+
+<div class="footer">DCC — Documento de Concepção de Copy | Atlântica Máquinas | V4 Company / Sotóbi | Maio 2026 | Última atualização: 25/05/2026 | Próxima revisão: junho/2026</div>
+
+</body>
+</html>
