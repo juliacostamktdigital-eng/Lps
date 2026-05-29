@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfólio Mercado Público — Tawá Veículos Especiais</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0d2b5a;--navy2:#1a4a8a;
+  --gold:#f5a623;--green:#1e8c4e;--green-lt:#eaf7ef;
+  --bg:#f2f6fc;--white:#fff;--border:#d4e0f0;
+  --text:#1c2940;--muted:#5a6e8a;
+  --radius:14px;
+  --shadow:0 4px 20px rgba(13,43,90,.09);
+  --shadow-lg:0 8px 40px rgba(13,43,90,.17);
+}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:var(--text);background:var(--bg);line-height:1.6;font-size:15px}
+
+/* NAV */
+.topnav{position:sticky;top:0;z-index:200;background:var(--navy);box-shadow:0 2px 16px rgba(0,0,0,.25)}
+.topnav-inner{max-width:1120px;margin:0 auto;padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.topnav-brand{color:#fff;font-weight:900;font-size:15px;text-decoration:none;letter-spacing:.4px}
+.topnav-links{display:flex;gap:2px;list-style:none}
+.topnav-links a{color:rgba(255,255,255,.72);font-size:11.5px;font-weight:700;text-decoration:none;padding:5px 9px;border-radius:6px;transition:all .18s}
+.topnav-links a:hover{color:#fff;background:rgba(255,255,255,.14)}
+.hamburger{display:none;background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:4px}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#081830 0%,#0d2b5a 45%,#1a4a8a 100%);color:#fff;padding:64px 20px 56px;text-align:center}
+.hero-tag{display:inline-block;background:rgba(245,166,35,.18);border:1px solid rgba(245,166,35,.4);color:#f5a623;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:20px}
+.hero h1{font-size:clamp(26px,5.5vw,46px);font-weight:900;line-height:1.08;letter-spacing:-1px}
+.hero h1 em{color:#f5a623;font-style:normal}
+.hero-desc{font-size:16px;color:rgba(255,255,255,.72);margin:14px auto 0;max-width:560px;line-height:1.65}
+.hero-stats{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:44px}
+.stat{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:18px 24px;min-width:120px}
+.stat-num{font-size:28px;font-weight:900;color:#f5a623}
+.stat-lbl{font-size:10.5px;color:rgba(255,255,255,.6);margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
+
+/* LAYOUT */
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.section{padding:52px 0}
+.sec-label{font-size:11px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px}
+.sec-title{font-size:clamp(20px,3vw,26px);font-weight:900;color:var(--navy);margin-bottom:10px}
+.sec-desc{font-size:14px;color:var(--muted);max-width:640px;margin-bottom:28px}
+
+/* FEATURE CARDS */
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.feat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.feat-icon{font-size:22px;margin-bottom:10px}
+.feat-card h3{font-size:14px;font-weight:800;color:var(--navy);margin-bottom:6px}
+.feat-card p{font-size:13px;color:var(--muted);line-height:1.55}
+
+/* CALLOUT */
+.callout{background:#eef4fb;border-left:4px solid var(--navy2);padding:14px 18px;border-radius:0 10px 10px 0;font-size:13.5px;color:#2a3a5a;margin:24px 0}
+.callout strong{color:var(--navy)}
+
+/* STEPS */
+.steps-list{list-style:none;display:flex;flex-direction:column}
+.step{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.step:last-child{border-bottom:none}
+.step-num{width:34px;height:34px;background:var(--navy2);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;flex-shrink:0;margin-top:1px}
+.step h3{font-size:14px;font-weight:800;color:var(--navy);margin-bottom:3px}
+.step p{font-size:13px;color:var(--muted)}
+
+/* ATAS BANNER */
+.atas-banner{background:linear-gradient(135deg,#081830 0%,#0d2b5a 50%,#1a4a8a 100%);color:#fff;padding:40px 20px 32px;text-align:center}
+.atas-banner h2{font-size:26px;font-weight:900}
+.atas-banner p{font-size:14px;color:rgba(255,255,255,.7);margin-top:8px}
+.ata-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:22px}
+.ata-pill{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.88);font-size:11px;font-weight:800;padding:6px 14px;border-radius:20px;text-decoration:none;transition:all .2s;letter-spacing:.5px;text-transform:uppercase}
+.ata-pill:hover{background:rgba(245,166,35,.25);border-color:#f5a623;color:#fff}
+
+/* ATA CARDS */
+.atas-wrap{max-width:1120px;margin:0 auto;padding:36px 20px 60px;display:flex;flex-direction:column;gap:40px}
+.ata-card{background:var(--white);border-radius:18px;box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden;transition:box-shadow .25s}
+.ata-card:hover{box-shadow:var(--shadow-lg)}
+
+.ata-head{background:linear-gradient(135deg,var(--navy) 0%,#1a4a8a 100%);padding:22px 26px 18px;color:#fff}
+.ata-head-inner{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.ata-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.ata-cb{display:inline-block;background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);font-size:10px;font-weight:800;padding:3px 10px;border-radius:14px;letter-spacing:.7px;text-transform:uppercase}
+.ata-cb.dpm{background:var(--green);color:#fff}
+.ata-title{font-size:19px;font-weight:900;line-height:1.2}
+.ata-consortium{font-size:12px;color:rgba(255,255,255,.6);margin-top:4px}
+.ata-price-block{text-align:right;flex-shrink:0}
+.ata-price-lbl{font-size:10px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.5px}
+.ata-price{font-size:24px;font-weight:900;color:#f5a623;white-space:nowrap}
+.ata-price-old{font-size:12px;color:rgba(255,255,255,.45);text-decoration:line-through}
+.ata-price-badge{font-size:10px;background:#c47d00;color:#fff;padding:2px 7px;border-radius:10px;margin-left:5px;font-weight:700}
+.ata-price-sub{font-size:10px;color:rgba(255,255,255,.5);margin-top:4px}
+
+.ata-body{padding:22px 26px}
+
+/* DPM box */
+.dpm-box{background:var(--green-lt);border-left:4px solid var(--green);padding:12px 16px;border-radius:0 8px 8px 0;font-size:13px;color:#0f5a32;margin-bottom:18px}
+.dpm-box strong{font-weight:800}
+
+/* Photo placeholders */
+.photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.photo-slot{background:#f0f4f9;border:1.5px dashed #9ab0cc;border-radius:10px;height:145px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:11px;color:#6a87a5;text-align:center;padding:12px;line-height:1.45}
+.photo-slot .ico{font-size:18px}
+
+/* Design note */
+.design-note{background:#fffbea;border:1.5px dashed #e6a800;padding:14px 16px;border-radius:10px;margin-bottom:16px}
+.design-note strong{display:block;font-size:11.5px;font-weight:800;color:#5a3800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.design-note ol{margin-left:16px}
+.design-note li{font-size:12.5px;color:#6b4700;line-height:1.6;margin-bottom:2px}
+.design-note .ref{font-size:11.5px;color:#8b6200;font-style:italic;margin-top:8px}
+
+/* Two column layout */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+
+/* Spec tables */
+.spec-label{font-size:11px;font-weight:800;color:var(--navy2);text-transform:uppercase;letter-spacing:.7px;margin:18px 0 8px;border-bottom:2px solid #e8f0fb;padding-bottom:5px}
+.spec-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.spec-tbl tr:nth-child(even){background:#f7fafd}
+.spec-tbl td{padding:9px 12px;border-bottom:1px solid #ecf0f8;vertical-align:top}
+.spec-tbl td:first-child{font-weight:700;color:var(--navy);width:40%}
+
+/* Price row */
+.price-row{background:linear-gradient(135deg,#f0f5fb,#e8f0fb);border:1px solid #c4d8f0;border-radius:10px;padding:14px 18px;margin-top:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.price-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+.price-val{font-size:26px;font-weight:900;color:var(--navy)}
+.price-detail{font-size:12px;color:var(--muted);margin-top:4px}
+.price-meta{text-align:right}
+.price-meta-main{font-size:12px;font-weight:800}
+.price-meta-sub{font-size:11px;color:var(--muted)}
+
+/* Inline badge */
+.ibadge{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px}
+.ibadge.green{background:var(--green);color:#fff}
+.ibadge.orange{background:#c47d00;color:#fff}
+
+/* Seller note */
+.seller-note{background:#eef4fb;border-left:4px solid var(--navy2);padding:14px 18px;border-radius:0 10px 10px 0;margin-top:18px}
+.seller-note-lbl{font-size:10px;font-weight:800;color:var(--navy2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px}
+.seller-note p{font-size:13px;color:#2a3a5a;line-height:1.6}
+
+/* CONTACT */
+.contact-band{background:linear-gradient(135deg,#081830 0%,#0d2b5a 55%,#1a4a8a 100%);color:#fff;padding:52px 20px 44px}
+.contact-inner{max-width:900px;margin:0 auto}
+.contact-inner h2{font-size:24px;font-weight:900;margin-bottom:6px}
+.contact-inner>p{font-size:14px;color:rgba(255,255,255,.65);margin-bottom:32px;max-width:560px}
+.contact-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.contact-card{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:16px 18px}
+.contact-card-lbl{font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;font-weight:700}
+.contact-card-val{font-size:15px;font-weight:700;color:#fff}
+.cta-band{background:#f5a623;color:#0a1e3d;text-align:center;padding:32px 20px}
+.cta-band h2{font-size:22px;font-weight:900}
+.cta-band p{font-size:14px;margin-top:6px;opacity:.8}
+.cta-num{font-size:20px;font-weight:900;margin-top:14px}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .topnav-links{display:none;flex-direction:column;position:fixed;top:56px;left:0;right:0;background:#081830;padding:12px 16px 16px;z-index:199;gap:2px}
+  .topnav-links.open{display:flex}
+  .topnav-links a{font-size:14px;padding:11px 14px}
+  .hamburger{display:block}
+  .ata-head-inner{flex-direction:column}
+  .ata-price-block{text-align:left}
+  .two-col{grid-template-columns:1fr}
+  .spec-tbl td:first-child{width:44%}
+  .price-meta{text-align:left}
+}
+@media(max-width:480px){
+  .photo-grid{grid-template-columns:1fr}
+  .photo-slot{height:110px}
+  .ata-title{font-size:17px}
+  .ata-price{font-size:20px}
+  .price-row{flex-direction:column}
+  .stat{min-width:90px;padding:14px 16px}
+  .stat-num{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="#topo" class="topnav-brand">TAWÁ VEÍCULOS ESPECIAIS</a>
+    <button class="hamburger" aria-label="Menu" onclick="document.querySelector('.topnav-links').classList.toggle('open')">☰</button>
+    <ul class="topnav-links">
+      <li><a href="#como-funciona">Como funciona</a></li>
+      <li><a href="#cimbaje">CIMBAJE</a></li>
+      <li><a href="#cimpla">CIMPLA</a></li>
+      <li><a href="#cirenor1">CIRENOR L1</a></li>
+      <li><a href="#cirenor3">CIRENOR L3</a></li>
+      <li><a href="#cispar">CISPAR</a></li>
+      <li><a href="#cisvir">CISVIR</a></li>
+      <li><a href="#codenop">CODENOP</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="topo">
+  <div class="hero-tag">Portfólio Mercado Público · 2025/2026</div>
+  <h1>Atas de Registro de Preços<br><em>Tawá Veículos Especiais</em></h1>
+  <p class="hero-desc">7 atas vigentes em consórcios de Minas Gerais, Paraná e Rio Grande do Sul. Adesão direta sem novo processo licitatório — Lei 14.133/2021.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">2.000+</div><div class="stat-lbl">Veículos ao setor público</div></div>
+    <div class="stat"><div class="stat-num">600+</div><div class="stat-lbl">Transformações governo</div></div>
+    <div class="stat"><div class="stat-num">26</div><div class="stat-lbl">Estados atendidos</div></div>
+    <div class="stat"><div class="stat-num">7</div><div class="stat-lbl">Atas vigentes</div></div>
+  </div>
+</section>
+
+<!-- POR QUE A TAWÁ -->
+<div class="wrap">
+  <div class="section">
+    <div class="sec-label">Diferenciais</div>
+    <div class="sec-title">Por que contratar pela Tawá</div>
+    <p class="sec-desc">Participamos de licitações em todo o território nacional, com atas vigentes para adesão imediata. Mais de 2.000 veículos ao setor público e equipe especializada em habilitação documental.</p>
+    <div class="feat-grid">
+      <div class="feat-card"><div class="feat-icon">📋</div><h3>Atas para adesão imediata</h3><p>7 atas em consórcios de MG, PR e RS. Municípios contratam sem novo processo licitatório pelo mecanismo de carona — Lei 14.133/2021.</p></div>
+      <div class="feat-card"><div class="feat-icon">⚡</div><h3>Pregões e licitações</h3><p>Participação ativa em pregões eletrônicos em todo o Brasil. Equipe especializada em habilitação documental e Termo de Referência.</p></div>
+      <div class="feat-card"><div class="feat-icon">🤝</div><h3>Suporte ao gestor público</h3><p>Apoio técnico e documental do empenho à liquidação — especificação técnica, entrega técnica e laudo de conformidade incluídos.</p></div>
+      <div class="feat-card"><div class="feat-icon">✅</div><h3>Conformidade legal ABNT</h3><p>Todos os veículos atendem normas ABNT, CONTRAN e INMETRO. Documentação completa para medição, liquidação e arquivo.</p></div>
+      <div class="feat-card"><div class="feat-icon">♿</div><h3>DPM — Acessibilidade</h3><p>Dispositivo para Pessoa com Mobilidade Reduzida disponível nas atas aplicáveis, atendendo legislação de acessibilidade sem custo adicional.</p></div>
+    </div>
+    <div class="callout" style="margin-top:28px"><strong>IMPORTANTE:</strong> As atas de registro de preço permitem que municípios e órgãos públicos adquiram os veículos sem necessidade de novo processo licitatório. O vendedor apresenta a ata vigente — o órgão formaliza a adesão e emite o empenho diretamente.</div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div style="background:var(--white);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="wrap">
+    <div class="section" id="como-funciona">
+      <div class="sec-label">Processo</div>
+      <div class="sec-title">Como funciona a adesão a uma ata</div>
+      <p class="sec-desc">Do primeiro contato até a entrega do veículo — processo desburocratizado pela Lei 14.133/2021.</p>
+      <ul class="steps-list">
+        <li class="step"><div class="step-num">1</div><div><h3>Identificação da ata</h3><p>O vendedor apresenta as atas disponíveis para o perfil do município. Gestor confirma necessidade e orçamento.</p></div></li>
+        <li class="step"><div class="step-num">2</div><div><h3>Consulta ao comercial</h3><p>Contato com a Tawá: (43) 3338-7221. Verificamos compatibilidade, vigência da ata e documentação necessária.</p></div></li>
+        <li class="step"><div class="step-num">3</div><div><h3>Solicitação de adesão</h3><p>O órgão solicita adesão formal ao consórcio gerenciador da ata. Processo desburocratizado pela Lei 14.133/2021.</p></div></li>
+        <li class="step"><div class="step-num">4</div><div><h3>Contrato e empenho</h3><p>Assinatura do contrato com prazo, valores e especificações. Emissão do empenho pelo órgão contratante.</p></div></li>
+        <li class="step"><div class="step-num">5</div><div><h3>Produção e entrega</h3><p>Início da preparação do veículo com acompanhamento técnico. Entrega com nota fiscal eletrônica no prazo contratado.</p></div></li>
+        <li class="step"><div class="step-num">6</div><div><h3>Aceite e liquidação</h3><p>Entrega com laudo técnico ao operador. Apoio completo na medição, liquidação e arquivo documental.</p></div></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ATAS BANNER -->
+<div class="atas-banner">
+  <h2>Atas de Registro de Preços Vigentes</h2>
+  <p>7 atas em Minas Gerais, Paraná e Rio Grande do Sul — adesão disponível agora</p>
+  <div class="ata-pills">
+    <a href="#cimbaje" class="ata-pill">CIMBAJE · MG</a>
+    <a href="#cimpla" class="ata-pill">CIMPLA/CIMINAS · MG</a>
+    <a href="#cirenor1" class="ata-pill">CIRENOR Lote 1 · RS</a>
+    <a href="#cirenor3" class="ata-pill">CIRENOR Lote 3 · RS</a>
+    <a href="#cispar" class="ata-pill">CISPAR · PR</a>
+    <a href="#cisvir" class="ata-pill">CISVIR · PR</a>
+    <a href="#codenop" class="ata-pill">CODENOP · PR</a>
+  </div>
+</div>
+
+<!-- ===== ATA 01 — CIMBAJE ===== -->
+<div class="atas-wrap">
+<div class="ata-card" id="cimbaje">
+  <div class="ata-head">
+    <div class="ata-head-inner">
+      <div>
+        <div class="ata-badges"><span class="ata-cb">ATA 01</span><span class="ata-cb">CIMBAJE · MG</span></div>
+        <div class="ata-title">Van Passageiro 10+1 · Bancos Fixos<br>Citroën Jumpy Cargo</div>
+        <div class="ata-consortium">Consórcio Intermunicipal Multifinalitário do Baixo Jequitinhonha · Jacinto/MG</div>
+      </div>
+      <div class="ata-price-block">
+        <div class="ata-price-lbl">Preço unit. registrado</div>
+        <div class="ata-price">R$ 221.000,00</div>
+        <div class="ata-price-sub">Ata 042/2025 · Vigência 12 meses · 18/06/2025</div>
+      </div>
+    </div>
+  </div>
+  <div class="ata-body">
+    <div class="design-note">
+      <strong>📐 Nota para o Designer — Imagens a gerar (3 a 4)</strong>
+      <ol>
+        <li>Vista exterior lateral — Citroën Jumpy Cargo, branca, plotagem fictícia CIMBAJE (logo consórcio Baixo Jequitinhonha/MG, faixa lateral).</li>
+        <li>Interior: bancos fixos em fileiras, janelas laterais, iluminação interna, 10 passageiros.</li>
+        <li>Vista frontal 3/4 — compacta, versátil, ideal para municípios menores.</li>
+        <li>Detalhe porta corredica lateral aberta com bancos visíveis.</li>
+      </ol>
+      <p class="ref">Referência: Citroën Jumpy Cargo, turbodiesel, tração dianteira, branca, 10+1 lugares, bancos fixos.</p>
+    </div>
+    <div class="photo-grid">
+      <div class="photo-slot"><span class="ico">📷</span>Foto 1 — Exterior lateral<br>plotagem CIMBAJE</div>
+      <div class="photo-slot"><span class="ico">📷</span>Foto 2 — Interior<br>bancos fixos 10+1</div>
+      <div class="photo-slot"><span class="ico">📷</span>Foto 3 — Vista frontal 3/4</div>
+      <div class="photo-slot"><span class="ico">📷</span>Foto 4 — Porta lateral aberta</div>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="spec-label">Dados processuais</div>
+        <table class="spec-tbl">
+          <tr><td>Consórcio</td><td>CIMBAJE — Consórcio Intermunicipal Multifinalitário do Baixo Jequitinhonha · Jacinto/MG</td></tr>
+          <tr><td>N.º da Ata</td><td>042/2025</td></tr>
+          <tr><td>Pregão Eletrônico</td><td>004/2025</td></tr>
+          <tr><td>Processo Administrativo</td><td>1441/2025</td></tr>
+          <tr><td>Data de assinatura</td><td>18 de junho de 2025</td></tr>
+          <tr><td>Vigência</td><td>12 meses a partir de 18/06/2025</td></tr>
+          <tr><td>Municípios participantes</td><td>Bandeira, Jacinto, Joaíma, Jordânia, Pedra Azul, Rio do Prado, Rubim, Santo Antônio do Jacinto — MG</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="spec-label">Especificação técnica</div>
+        <table class="spec-tbl">
+          <tr><td>Marca / Modelo</td><td>Citroën Jumpy Cargo</td></tr>
+          <tr><td>Motorização</td><td>Turbodiesel</td></tr>
+          <tr><td>Transmissão</td><td>Manual ou automático</td></tr>
+          <tr><td>Potência mínima</td><td>120 cv</td></tr>
+          <tr><td>Capacidade</td><td>10 passageiros + 1 motorista (10+1)</td></tr>
+          <tr><td>Tipo de banco</td><td>Bancos fixos</td></tr>
+          <tr><td>Cor</td><td>Branca</td></tr>
+          <tr><td>Quilometragem</td><td>0 km — fabricado no máximo há 6 meses</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="price-row">
+      <div>
+        <div class="price-lbl">Preço unitário registrado em licitação</div>
+        <div class="price-val">R$ 221.000,00</div>
+        <div class="price-detail">Licitação vencida · Adesão (carona) disponível · Prazo: conforme Autorização de Fornecimento</div>
+      </div>
+      <div class="price-meta">
+        <div class="price-meta-main" style="color:var(--navy2)">Menor preço da carteira</div>
+        <div class="price-meta-sub">Ideal para orçamentos restritos</div>
+      </div>
+    </div>
+    <div class="seller-note">
+      <div class="seller-note-lbl">Nota para o vendedor</div>
+      <p>Menor preço unitário da carteira — ideal para municípios com orçamento restrito. Bancos fixos atendem especificações do edital. Apresentar para secretários de saúde, assistência social e prefeitos da região do Baixo Jequitinhonha/MG.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ATA 02 — CIMPLA/CIMINAS ===== -->
+<div class="ata-card" id="cimpla">
+  <div class="ata-head">
+    <div class="ata-head-inner">
+      <div>
+        <div class="ata-badges"><span class="ata-cb">ATA 02</span><span class="ata-cb">CIMPLA / CIMINAS · MG</span><span class="ata-cb dpm">♿ DPM Incluído</span></div>
+        <div class="ata-title">Van Passageiro 12+1+1 DPM · Bancos Fixos<br>Mercedes-Benz Sprinter 417 CDI</div>
+        <div class="ata-consortium">Consórcio Interfederativo Minas Gerais · Araxá/MG</div>
+      </div>
+      <div class="ata-price-block">
+        <div class="ata-price-lbl">Preço unit. após reequilíbrio</div>
+        <div class="ata-price-old">R$ 288.000,00</div>
+        <div class="ata-price">R$ 331.200,00 <span class="ata-price-badge">+15%</span></div>
+        <div class="ata-price-sub">Ata 033/2024 · Vence 22/05/2026</div>
+      </div>
+    </div>
+  </div>
+  <div class="ata-body">
+    <div class="dpm-box"><strong>♿ DPM — Dispositivo para Pessoa com Mobilidade Reduzida incluído:</strong> Sistema de Acessibilidade DPM (Dispositivo de Poltrona Móvel) integrado ao veículo. O município atende automaticamente a legislação de acessibilidade ao contratar por esta ata — sem custo ou especificação adicional.</div>
+    <div class="design-note">
+      <strong>📐 Nota para o Designer — Imagens a gerar (3 a 4)</strong>
+      <ol>
+        <li>Vista exterior 3/4 dianteiro-lateral — Mercedes-Benz Sprinter 417 CDI, branca, plotagem fictícia CIMINAS (logo consórcio MG).</li>
+        <li>Interior completo: bancos fixos 12+1, bagageiro superior, iluminação LED, ar-condicionado visíveis.</li>
+        <li>Detalhe DPM: poltrona móvel em posição de acesso — cadeirante embarcando. Legenda "Acessibilidade incluída nesta ata".</li>
+        <li>Vista traseira com porta aberta mostrando capacidade e acabamento.</li>
+      </ol>
+      <p class="ref">Referência: Mercedes-Benz Sprinter 417 CDI, Furgão 10,5M³, branca, 12+1+1 DPM, bancos fixos, ar-condicionado.</p>
+    </div>
+    <div class="photo-grid">
+      <div class="photo-slot"><span class="ico">📷</span>Foto 1 — Exterior 3/4<br>plotagem CIMINAS</div>
+      <div class="photo-slot"><span class="ico">📷</span>Foto 2 — Interior<br>bancos fixos 12+1</div>
+      <div class="photo-slot"><span class="ico">♿</span>Foto 3 — Detalhe DPM<br>poltrona móvel / cadeirante</div>
+      <div class="photo-slot"><span class="ico">📷</span>Foto 4 — Vista traseira<br>porta aberta</div>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="spec-label">Dados processuais</div>
+        <table class="spec-tbl">
+          <tr><td>Consórcio</td><td>CIMPLA / CIMINAS — Consórcio Interfederativo Minas Gerais · Araxá/MG</td></tr>
+          <tr><td>N.º da Ata</td><td>033/2024 (com Termo Aditivo 01 de reequilíbrio e prorrogação)</td></tr>
+          <tr><td>Pregão Eletrônico</td><td>016/2024</td></tr>
+          <tr><td>Processo Administrativo</td><td>026/2024</td></tr>
+          <tr><td>Data de assinatura</td><td>22 de maio de 2024</td></tr>
+          <tr><td>Vigência</td><td>Prorrogada até 22 de maio de 2026</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="spec-label">Especificação técnica</div>
+        <table class="spec-tbl">
+          <tr><td>Marca / Modelo</td><td>Mercedes-Benz Sprinter 417 CDI — Furgão 10,5 M³</td></tr>
+          <tr><td>Potência mínima</td><td>150 cv — Turbo ou Bi-turbo, 4 cilindros em linha</td></tr>
+          <tr><td>Transmissão</td><td>Manual</td></tr>
+          <tr><td>Comprimento mínimo</td><td>5.930 mm · distância entre eixos mín. 3.665 mm</td></tr>
+          <tr><td>Capacidade</td><td>12 passageiros + 1 motorista + 1 DPM (12+1+1)</td></tr>
+          <tr><td>Tipo de banco</td><td>Bancos fixos com cinto de segurança</td></tr>
+          <tr><td>DPM</td><td>Sistema de Acessibilidade DPM — Dispositivo de Poltrona Móvel para cadeirante</td></tr>
+          <tr><td>Ar-condicionado</td><td>Incluído</td></tr>
+          <tr><td>Air bag</td><td>Motorista e passageiro</td></tr>
+          <tr><td>Cor</td><td>Branca · 0 km · fabricado no máximo há 6 meses</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="price-row">
+      <div>
+        <div class="price-lbl">Preço unitário atual (após reequilíbrio +15%)</div>
+        <div class="price-val">R$ 331.200,00 <span class="ibadge orange">Valor atual</span></div>
+        <div class="price-detail">Preço original: R$ 288.000,00 · Termo Aditivo 01 de 21/02/2025 · Var. FIPE · art. 124, II, d da Lei 14.133/2021</div>
+      </div>
+      <div class="price-meta">
+        <div class="price-meta-main" style="color:#c45000">⚠ Ata vence em 22/05/2026</div>
+        <div class="price-meta-sub">Ativar urgência na abordagem</div>
+      </div>
+    </div>
+    <div class="seller-note">
+      <div class="seller-note-lbl">Nota para o vendedor</div>
+      <p>Argumento principal: DPM incluído sem custo adicional. Municípios que precisam atender legislação de acessibilidade já estão cobertos. Ata próxima do vencimento (maio/2026) — acionar urgência na abordagem. Apresentar para secretários de saúde e assistência social.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ATA 03 — CIRENOR LOTE 1 ===== -->
+<div class="ata-card" id="cirenor1">
+  <div class="ata-head">
+    <div class="ata-head-inner">
+      <div>
+        <div class="ata-badges"><span class="ata-cb">ATA 03</span><span class="ata-cb">CIRENOR · Lote 01 · RS</span></div>
+        <div class="ata-title">Minibus Teto Alto 17+1<br>Mercedes-Benz Sprinter 517 CDI</div>
+        <div class="ata-consortium">Consórcio Intermunicipal da Região Nordeste · Sananduva/RS</div>
+      </div>
+      <div class="ata-price-block">
+        <div class="ata-price-lbl">Preço unit. registrado</div>
+        <div class="ata-price">R$ 373.500,00</div>
+        <div class="ata-price-sub">Ato Adm. 140/2026 · 09/04/2026 · 19 unidades</div>
+      </div>
+    </div>
+  </div>
+  <div class="ata-body">
+    <div class="design-note">
+      <strong>📐 Nota para o Designer — Imagens a gerar (3 a 4)</strong>
+      <ol>
+        <li>Vista exterior lateral — Mercedes-Benz Sprinter 517, teto alto, branca, plotagem fictícia CIRENOR (logo consórcio RS).</li>
+        <li>Interior 17 passageiros: fileiras de bancos, teto alto visível, iluminação LED, bagageiro overhead.</li>
+        <li>Vista frontal 3/4 mostrando teto elevado (pé direito alto como diferencial de conforto).</li>
+        <li>Detalhe porta traseira aberta — capacidade e acabamento interno.</li>
+      </ol>
+      <p class="ref">Referência: Mercedes-Benz Sprinter 517 CDI, Furgão 15,5M³, teto alto (UP1), branca, 17+1 lugares.</p>
+    </div>
+    <div class="photo-grid">
+      <div class="photo-slot"><span class="ico">📷</span>Foto 1 — Exterior lateral<br>plotagem CIRENOR</div>
+      <div class="photo-slot"><span class="ico">📷</span>Foto 2 — Interior 17+1<br>teto alto</div>
+      <div class="photo-slot"><span class="ico">📷</span>Foto 3 — Vista frontal 3/4<br>teto alto em destaque</div>
+      <div class="photo-slot"><span class="ico">📷</span>Foto 4 — Porta traseira aberta<br>capacidade interna</div>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="spec-label">Dados processuais</div>
+        <table class="spec-tbl">
+          <tr><td>Consórcio</td><td>CIRENOR — Consórcio Intermunicipal da Região Nordeste · Sananduva/RS</td></tr>
+          <tr><td>Ato Administrativo</td><td>140/2026</td></tr>
+          <tr><td>Pregão Eletrônico</td><td>02/2026</td></tr>
+          <tr><td>Processo Administrativo</td><td>03/2026</td></tr>
+          <tr><td>Lote</td><td>001</td></tr>
+          <tr><td>Data de assinatura</td><td>09 de abril de 2026 · Sananduva/RS</td></tr>
+          <tr><td>Vigência</td><td>12 meses a partir de 09/04/2026</td></tr>
+          <tr><td>Prazo de entrega</td><td>60 dias corridos após a Ordem de Fornecimento</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="spec-label">Especificação técnica</div>
+        <table class="spec-tbl">
+          <tr><td>Marca / Modelo</td><td>Mercedes-Benz Sprinter 517 CDI — Furgão 15,5 M³ · UP 1</td></tr>
+          <tr><td>Tipo</td><td>Minibus — Teto alto</td></tr>
+          <tr><td>Capacidade</td><td>17 passageiros + 1 motorista (17+1)</td></tr>
+          <tr><td>Garantia mínima</td><td>12 meses</td></tr>
+          <tr><td>Assistência técnica</td><td>Raio de até 350 km da sede do consórcio ou município adquirente</td></tr>
+          <tr><td>Cor</td><td>Branca · 0 km · hodômetro máximo 50 km</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="price-row">
+      <div>
+        <div class="price-lbl">Preço unitário registrado em licitação</div>
+        <div class="price-val">R$ 373.500,00</div>
+        <div class="price-detail">19 unidades registradas · 60 dias de entrega · Adesão disponível conforme art. 23 da Lei 14.133/2021</div>
+      </div>
+      <div class="price-meta">
+        <div class="price-meta-main" style="color:var(--green)">✓ Ata recente — abril/2026</div>
+        <div class="price-meta-sub">Vigência plena disponível</div>
+      </div>
+    </div>
+    <div class="seller-note">
+      <div class="seller-note-lbl">Nota para o vendedor</div>
+      <p>Ata recente (abril/2026) com vigência plena. Teto alto é diferencial para longas distâncias e maior conforto. Apresentar para municípios que precisam de capacidade 17+1. Citar assistência técnica assegurada em raio de 350 km.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ATA 04 — CIRENOR LOTE 3 ===== -->
+<div class="ata-card" id="cirenor3">
+  <div class="ata-head">
+    <div class="ata-head-inner">
+      <div>
+        <div class="ata-badges"><span class="ata-cb">ATA 04</span><span class="ata-cb">CIRENOR · Lote 03 · RS</span></div>
+        <div class="ata-title">Minibus Teto Alto 20+1 · Maior Capacidade<br>Mercedes-Benz Sprinter 517 CDI</div>
+        <div class="ata-consortium">Consórcio Intermunicipal da Região Nordeste · Sananduva/RS</div>
+      </div>
+      <div class="ata-price-block">
+        <div class="ata-price-lbl">Preço unit. registrado</div>
+        <div class="ata-price">R$ 386.000,00</div>
+        <div class="ata-price-sub">Ato Adm. 140/2026 · 09/04/2026 · 19 unidades</div>
+      </div>
+    </div>
+  </div>
+  <div class="ata-body">
+    <div class="design-note">
+      <strong>📐 Nota para o Designer — Imagens a gerar (3 a 4)</strong>
+      <ol>
+        <li>Vista exterior lateral — Sprinter 517 UP3, branca, plotagem CIRENOR. Mostrar dimensão maior vs Lote 01 (comparativo de escala opcional).</li>
+        <li>Interior amplo: 20 passageiros em fileiras, espaço entre bancos, teto alto, bagageiro overhead.</li>
+        <li>Vista frontal 3/4 — teto alto e comprimento da carroceria em evidência.</li>
+        <li>Detalhe bagageiro lateral ou overhead — capacidade de armazenamento em viagem.</li>
+      </ol>
+      <p class="ref">Referência: Mercedes-Benz Sprinter 517 CDI, Furgão 15,5M³ UP3, teto alto, branca, 20+1 lugares.</p>
+    </div>
+    <div class="photo-grid">
+      <div class="photo-slot"><span class="ico">📷</span>Foto 1 — Exterior lateral<br>plotagem CIRENOR</div>
+      <div class="photo-slot"><span class="ico">📷</span>Foto 2 — Interior 20+1<br>passageiros</div>
+      <div class="photo-slot"><span class="ico">📷</span>Foto 3 — Vista frontal 3/4</div>
+      <div class="photo-slot"><span class="ico">📷</span>Foto 4 — Detalhe bagageiro<br>capacidade</div>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="spec-label">Dados processuais</div>
+        <table class="spec-tbl">
+          <tr><td>Consórcio</td><td>CIRENOR — Consórcio Intermunicipal da Região Nordeste · Sananduva/RS</td></tr>
+          <tr><td>Ato Administrativo</td><td>140/2026</td></tr>
+          <tr><td>Pregão Eletrônico</td><td>02/2026</td></tr>
+          <tr><td>Processo Administrativo</td><td>03/2026</td></tr>
+          <tr><td>Lote</td><td>003</td></tr>
+          <tr><td>Data de assinatura</td><td>09 de abril de 2026 · Sananduva/RS</td></tr>
+          <tr><td>Vigência</td><td>12 meses a partir de 09/04/2026</td></tr>
+          <tr><td>Prazo de entrega</td><td>60 dias corridos após a Ordem de Fornecimento</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="spec-label">Especificação técnica</div>
+        <table class="spec-tbl">
+          <tr><td>Marca / Modelo</td><td>Mercedes-Benz Sprinter 517 CDI — Furgão 15,5 M³ · UP3</td></tr>
+          <tr><td>Tipo</td><td>Minibus — Teto alto · maior capacidade vs Lote 01</td></tr>
+          <tr><td>Capacidade</td><td>20 passageiros + 1 motorista (20+1)</td></tr>
+          <tr><td>Garantia mínima</td><td>12 meses</td></tr>
+          <tr><td>Cor</td><td>Branca · 0 km · hodômetro máximo 50 km</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="price-row">
+      <div>
+        <div class="price-lbl">Preço unitário registrado em licitação</div>
+        <div class="price-val">R$ 386.000,00</div>
+        <div class="price-detail">19 unidades registradas · 60 dias de entrega · Mesma ata CIRENOR 140/2026 do Lote 01 · Adesão disponível</div>
+      </div>
+      <div class="price-meta">
+        <div class="price-meta-main" style="color:var(--navy2)">Maior capacidade da carteira</div>
+        <div class="price-meta-sub">20+1 passageiros</div>
+      </div>
+    </div>
+    <div class="seller-note">
+      <div class="seller-note-lbl">Nota para o vendedor</div>
+      <p>Maior capacidade da carteira — 20+1. Ideal para substituir dois veículos menores por um único de maior capacidade. Mesma ata CIRENOR 140/2026 do Lote 01 — facilita apresentação conjunta ao cliente. Apresentar para municípios maiores e consórcios regionais de saúde.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ATA 05 — CISPAR ===== -->
+<div class="ata-card" id="cispar">
+  <div class="ata-head">
+    <div class="ata-head-inner">
+      <div>
+        <div class="ata-badges"><span class="ata-cb">ATA 05</span><span class="ata-cb">CISPAR · PR</span></div>
+        <div class="ata-title">Veículo Utilitário Pick-up Cabine Simples<br>Fiat Strada Freedom</div>
+        <div class="ata-consortium">Consórcio Intermunicipal de Saneamento do Paraná · Maringá/PR</div>
+      </div>
+      <div class="ata-price-block">
+        <div class="ata-price-lbl">Preço unit. registrado</div>
+        <div class="ata-price">R$ 110.000,00</div>
+        <div class="ata-price-sub">Ata 16/2025 · 09/01/2026 · 7 unidades</div>
+      </div>
+    </div>
+  </div>
+  <div class="ata-body">
+    <div class="design-note">
+      <strong>📐 Nota para o Designer — Imagens a gerar (3 a 4)</strong>
+      <ol>
+        <li>Vista exterior 3/4 dianteiro — Fiat Strada Freedom, branca, plotagem fictícia CISPAR (logo consórcio saneamento PR, identificação lateral).</li>
+        <li>Vista lateral completa — caçamba e cabine simples em destaque (perfil operacional/campo).</li>
+        <li>Vista traseira com caçamba aberta — uso típico em saneamento e obras municipais.</li>
+        <li>Interior cabine simples — painel, volante, banco duplo dianteiro.</li>
+      </ol>
+      <p class="ref">Referência: Fiat Strada Freedom, cabine simples, branca, pickup utilitária.</p>
+    </div>
+    <div class="photo-grid">
+      <div class="photo-slot"><span class="ico">📷</span>Foto 1 — Exterior 3/4<br>plotagem CISPAR</div>
+      <div class="photo-slot"><span class="ico">📷</span>Foto 2 — Vista lateral<br>caçamba e cabine</div>
+      <div class="photo-slot"><span class="ico">📷</span>Foto 3 — Vista traseira<br>caçamba aberta</div>
+      <div class="photo-slot"><span class="ico">📷</span>Foto 4 — Interior<br>cabine simples</div>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="spec-label">Dados processuais</div>
+        <table class="spec-tbl">
+          <tr><td>Consórcio</td><td>CISPAR — Consórcio Intermunicipal de Saneamento do Paraná · Maringá/PR</td></tr>
+          <tr><td>N.º da Ata</td><td>16/2025 — Item 01 (Pick-up Cabine Simples)</td></tr>
+          <tr><td>Pregão Eletrônico</td><td>16/2025 — SRP</td></tr>
+          <tr><td>Processo Licitatório</td><td>131/2025</td></tr>
+          <tr><td>Data de assinatura</td><td>09 de janeiro de 2026 · Maringá/PR</td></tr>
+          <tr><td>Vigência</td><td>12 meses a partir de 09/01/2026</td></tr>
+          <tr><td>Execução</td><td>Contratação diretamente pelos municípios consorciados — CISPAR como órgão gerenciador</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="spec-label">Especificação técnica</div>
+        <table class="spec-tbl">
+          <tr><td>Marca / Modelo</td><td>Fiat Strada Freedom — cabine simples</td></tr>
+          <tr><td>Tipo</td><td>Veículo pick-up utilitário</td></tr>
+          <tr><td>Perfil de uso</td><td>Operacional de campo — saneamento, fiscalização, obras municipais</td></tr>
+          <tr><td>Cor</td><td>Branca · 0 km</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="price-row">
+      <div>
+        <div class="price-lbl">Preço unitário registrado em licitação</div>
+        <div class="price-val">R$ 110.000,00</div>
+        <div class="price-detail">7 unidades máximas registradas · Adesão disponível por municípios consorciados ao CISPAR (PR)</div>
+      </div>
+      <div class="price-meta">
+        <div class="price-meta-main" style="color:var(--navy2)">Único pick-up da carteira</div>
+        <div class="price-meta-sub">Secretarias de obras e saneamento</div>
+      </div>
+    </div>
+    <div class="seller-note">
+      <div class="seller-note-lbl">Nota para o vendedor</div>
+      <p>Produto diferenciado na carteira — único veículo utilitário pick-up. Público: secretarias de obras, saneamento e meio ambiente. Menor preço unitário da carteira. Verificar municípios consorciados ao CISPAR antes da abordagem.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ATA 06 — CISVIR ===== -->
+<div class="ata-card" id="cisvir">
+  <div class="ata-head">
+    <div class="ata-head-inner">
+      <div>
+        <div class="ata-badges"><span class="ata-cb">ATA 06</span><span class="ata-cb">CISVIR · PR</span></div>
+        <div class="ata-title">Van Passageiro 10+1 · Bancos Reclináveis<br>Citroën Jumpy</div>
+        <div class="ata-consortium">Consórcio Intermunicipal de Saúde do Vale do Ivaí e Região · PR</div>
+      </div>
+      <div class="ata-price-block">
+        <div class="ata-price-lbl">Preço unit. registrado</div>
+        <div class="ata-price">R$ 232.000,00</div>
+        <div class="ata-price-sub">Pregão 90011/2025 · Homologado 09/01/2026 · 7 unidades</div>
+      </div>
+    </div>
+  </div>
+  <div class="ata-body">
+    <div class="design-note">
+      <strong>📐 Nota para o Designer — Imagens a gerar (3 a 4)</strong>
+      <ol>
+        <li>Vista exterior lateral — Citroën Jumpy, branca, plotagem fictícia CISVIR (saúde Vale do Ivaí/PR, identidade visual de saúde pública).</li>
+        <li>Interior: bancos reclináveis em fileiras — diferencial vs ATA 01 (fixos). Legenda "Bancos reclináveis — maior conforto".</li>
+        <li>Vista frontal 3/4 — ar-condicionado visivelmente instalado, aspecto de van de saúde.</li>
+        <li>Detalhe banco reclinado mostrando ângulo de reclinação e conforto do passageiro.</li>
+      </ol>
+      <p class="ref">Referência: Citroën Jumpy, furgão, diesel 115cv, direção hidráulica, ar-condicionado, branca, 10+1 bancos reclináveis.</p>
+    </div>
+    <div class="photo-grid">
+      <div class="photo-slot"><span class="ico">📷</span>Foto 1 — Exterior<br>plotagem CISVIR</div>
+      <div class="photo-slot"><span class="ico">📷</span>Foto 2 — Interior<br>bancos reclináveis 10+1</div>
+      <div class="photo-slot"><span class="ico">📷</span>Foto 3 — Vista frontal 3/4<br>ar-condicionado visível</div>
+      <div class="photo-slot"><span class="ico">📷</span>Foto 4 — Detalhe banco<br>reclinado · conforto</div>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="spec-label">Dados processuais</div>
+        <table class="spec-tbl">
+          <tr><td>Consórcio</td><td>CISVIR — Consórcio Intermunicipal de Saúde do Vale do Ivaí e Região · PR</td></tr>
+          <tr><td>Pregão</td><td>90011/2025 (UASG 929733)</td></tr>
+          <tr><td>Processo</td><td>2109</td></tr>
+          <tr><td>Data de homologação</td><td>09 de janeiro de 2026</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="spec-label">Especificação técnica</div>
+        <table class="spec-tbl">
+          <tr><td>Marca / Modelo</td><td>Citroën Jumpy — furgão</td></tr>
+          <tr><td>Motorização</td><td>Diesel · 115 cv</td></tr>
+          <tr><td>Direção</td><td>Hidráulica</td></tr>
+          <tr><td>Ar-condicionado</td><td>Incluído</td></tr>
+          <tr><td>Capacidade</td><td>10 passageiros + 1 motorista (10+1)</td></tr>
+          <tr><td>Tipo de banco</td><td>Bancos reclináveis <span class="ibadge green">diferencial vs ATA 01</span></td></tr>
+          <tr><td>Cor</td><td>Branca · 0 km</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="price-row">
+      <div>
+        <div class="price-lbl">Preço unitário registrado (melhor lance)</div>
+        <div class="price-val">R$ 232.000,00</div>
+        <div class="price-detail">7 unidades registradas · Adesão (carona) disponível</div>
+      </div>
+      <div class="price-meta">
+        <div class="price-meta-main" style="color:var(--navy2)">Bancos reclináveis incluídos</div>
+        <div class="price-meta-sub">Ar-condicionado de série</div>
+      </div>
+    </div>
+    <div class="seller-note">
+      <div class="seller-note-lbl">Nota para o vendedor</div>
+      <p>Mesmo modelo da ATA 01 (Jumpy) porém com bancos reclináveis — diferencial de conforto para o paciente e acompanhante em transporte de saúde. Ar-condicionado de série atende requisito técnico do consórcio de saúde. Apresentar para secretários de saúde e gestores de transporte de pacientes do Vale do Ivaí/PR.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ATA 07 — CODENOP ===== -->
+<div class="ata-card" id="codenop">
+  <div class="ata-head">
+    <div class="ata-head-inner">
+      <div>
+        <div class="ata-badges"><span class="ata-cb">ATA 07</span><span class="ata-cb">CODENOP · PR</span></div>
+        <div class="ata-title">Van Passageiro 15+1 · Bancos Reclináveis<br>Renault Master L3H2 Pro</div>
+        <div class="ata-consortium">Consórcio Público Intermunicipal do Território Nordeste do Paraná · São Jerônimo da Serra/PR</div>
+      </div>
+      <div class="ata-price-block">
+        <div class="ata-price-lbl">Preço unit. registrado</div>
+        <div class="ata-price">R$ 305.900,00</div>
+        <div class="ata-price-sub">Ata 011/2026 · 26/02/2026 · 50 unidades</div>
+      </div>
+    </div>
+  </div>
+  <div class="ata-body">
+    <div class="design-note">
+      <strong>📐 Nota para o Designer — Imagens a gerar (3 a 4)</strong>
+      <ol>
+        <li>Vista exterior lateral — Renault Master L3H2, branca, plotagem fictícia CODENOP (consórcio nordeste PR). Placa "16 Lugares" na dianteira.</li>
+        <li>Interior: poltronas reclináveis em fileiras, 15 passageiros, teto alto, bagageiros, cortinas, sistema de som com USB visivelmente instalado.</li>
+        <li>Vista frontal 3/4 — dimensão L3H2 (van longa teto alto), aspecto de transporte rodoviário/turismo.</li>
+        <li>Detalhe painel interno com tacógrafo — mostrar conformidade com legislação de transporte coletivo.</li>
+      </ol>
+      <p class="ref">Referência: Renault Master L3H2 Pro, diesel 125cv, 5 marchas, comprimento mín. 5.900mm, carroceria rodoviária/turismo teto alto, branca, 15+1 poltronas reclináveis.</p>
+    </div>
+    <div class="photo-grid">
+      <div class="photo-slot"><span class="ico">📷</span>Foto 1 — Exterior lateral<br>plotagem CODENOP</div>
+      <div class="photo-slot"><span class="ico">📷</span>Foto 2 — Interior<br>poltronas reclináveis 15+1</div>
+      <div class="photo-slot"><span class="ico">📷</span>Foto 3 — Vista frontal 3/4<br>dimensão L3H2</div>
+      <div class="photo-slot"><span class="ico">📷</span>Foto 4 — Detalhe painel<br>tacógrafo · sistema de som</div>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="spec-label">Dados processuais</div>
+        <table class="spec-tbl">
+          <tr><td>Consórcio</td><td>CODENOP — Consórcio Público Intermunicipal do Território Nordeste do Paraná · São Jerônimo da Serra/PR</td></tr>
+          <tr><td>N.º da Ata</td><td>011/2026 — Item 17</td></tr>
+          <tr><td>Pregão Eletrônico</td><td>12/2025</td></tr>
+          <tr><td>Processo Administrativo</td><td>26/2025</td></tr>
+          <tr><td>Data de assinatura</td><td>26 de fevereiro de 2026 · São Jerônimo da Serra/PR</td></tr>
+          <tr><td>Vigência</td><td>12 meses a partir de 26/02/2026</td></tr>
+          <tr><td>Prazo de entrega</td><td>Máximo 90 dias após a Autorização de Fornecimento</td></tr>
+          <tr><td>Municípios participantes</td><td>Andirá, Assaí, Bandeirantes, Congonhinhas, Cornélio Procópio, Curiúva, Leópolis, Nova América da Colina, Nova Fátima, Nova Santa Bárbara, Rancho Alegre, Ribeirão do Pinhal, Santa Amélia, Santa Cecília do Pavão, Santa Mariana, São Jerônimo da Serra, São Sebastião da Amoreira, Santo Antônio do Paraíso, Sapopema, Sertaneja, Uraí — PR</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="spec-label">Especificação técnica</div>
+        <table class="spec-tbl">
+          <tr><td>Marca / Modelo</td><td>Renault Master L3H2 Pro — sem ar-condicionado de série</td></tr>
+          <tr><td>Tipo</td><td>Van de passageiros — carroceria rodoviária/turismo · teto alto</td></tr>
+          <tr><td>Motorização</td><td>Diesel · potência mínima 125 cv</td></tr>
+          <tr><td>Transmissão</td><td>Mecânica — mínimo 5 marchas à frente</td></tr>
+          <tr><td>Direção</td><td>Hidráulica ou elétrica</td></tr>
+          <tr><td>Freios</td><td>A disco nas quatro rodas com ABS</td></tr>
+          <tr><td>Comprimento mínimo</td><td>5.900 mm</td></tr>
+          <tr><td>Capacidade</td><td>15 passageiros + 1 motorista (15+1)</td></tr>
+          <tr><td>Tipo de banco</td><td>Poltronas reclináveis em tecido com cintos em todas as posições</td></tr>
+          <tr><td>Itens de série</td><td>Tacógrafo · rádio com USB e autofalantes · luminárias de teto · bagageiros · cortinas · saídas de emergência · espelhos retrovisores · air bag motorista</td></tr>
+          <tr><td>Cor</td><td>Branca ou prata · 0 km · ano/modelo 2025/2025 ou superior</td></tr>
+          <tr><td>Garantia</td><td>12 meses a partir da entrada em operação</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="price-row">
+      <div>
+        <div class="price-lbl">Preço unitário registrado em licitação</div>
+        <div class="price-val">R$ 305.900,00</div>
+        <div class="price-detail">50 unidades registradas (maior volume da carteira) · 90 dias de entrega · Adesão (carona) disponível · Lei 14.133/2021</div>
+      </div>
+      <div class="price-meta">
+        <div class="price-meta-main" style="color:var(--navy2)">50 unidades disponíveis</div>
+        <div class="price-meta-sub">Maior volume da carteira</div>
+      </div>
+    </div>
+    <div class="seller-note">
+      <div class="seller-note-lbl">Nota para o vendedor</div>
+      <p>Maior volume registrado da carteira — 50 unidades. Cobertura abrangente: 21 municípios CODENOP no norte pioneiro do PR + possibilidade de carona. Poltronas reclináveis e tacógrafo tornam este veículo ideal para transporte escolar de maior distância e transporte de funcionários públicos. Apresentar como opção de custo-benefício em capacidade média (15+1).</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- /atas-wrap -->
+
+<!-- CONTACT -->
+<div class="contact-band">
+  <div class="contact-inner">
+    <h2>Contato — Comercial Governo</h2>
+    <p>Nosso consultor de governo está pronto para auxiliar em especificação técnica, habilitação documental e todo o processo de aquisição pública.</p>
+    <div class="contact-grid">
+      <div class="contact-card"><div class="contact-card-lbl">Telefone / WhatsApp</div><div class="contact-card-val">(43) 3338-7221</div></div>
+      <div class="contact-card"><div class="contact-card-lbl">E-mail</div><div class="contact-card-val">tawaveiculos@gmail.com</div></div>
+      <div class="contact-card"><div class="contact-card-lbl">Site</div><div class="contact-card-val">tawaveiculos.com.br/atas</div></div>
+      <div class="contact-card"><div class="contact-card-lbl">Instagram</div><div class="contact-card-val">@tawaveiculos</div></div>
+      <div class="contact-card"><div class="contact-card-lbl">Sede</div><div class="contact-card-val">R. José da Silva, 198 · Tarobá · Londrina/PR</div></div>
+      <div class="contact-card"><div class="contact-card-lbl">Atendimento</div><div class="contact-card-val">Nacional · Visita técnica em todo o Brasil</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="cta-band">
+  <h2>Consulte as Atas Vigentes Agora</h2>
+  <p>7 atas em consórcios de MG, PR e RS — adesão disponível sem novo processo licitatório</p>
+  <div class="cta-num">(43) 3338-7221 · tawaveiculos@gmail.com</div>
+</div>
+
+</body>
+</html>
