@@ -198,7 +198,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--g1);color:var(--g
 
     <!-- KPIs do mes -->
     <div class="card-label">Mes Atual — Resultados</div>
-    <div class="g4" id="cl-kpis" style="margin-bottom:20px;">
+    <div id="cl-kpis" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:20px;">
       <div class="ld"><div class="sp"></div></div>
     </div>
 
@@ -348,142 +348,115 @@ function parseCSV(text){
   });
 }
 
-function extractMetrics(csvText){
+function extractMetrics(csvText) {
   const rows = parseCSV(csvText);
   const now = new Date();
-  const mnPT = ['janeiro','fevereiro','marco','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
-  // normaliza texto removendo acentos
-  const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,' ').trim();
+  const curMonth = now.getMonth(); // 0=jan...5=jun
 
-  // Encontrar colunas de meses — primeiro achar linha com nomes de meses ou datas
-  let monthCols = []; // [{label, colIdx}]
-  for(let r=0;r<Math.min(10,rows.length);r++){
-    const row = rows[r];
-    const hasMon = row.some(c => mnPT.includes(norm(c)));
-    const hasDate = row.some(c => /^\d{2}\/\d{2}\/\d{4}$/.test(c.trim()));
-    if(hasMon){
-      row.forEach((c,i)=>{ if(i>0&&mnPT.includes(norm(c))) monthCols.push({label:norm(c),colIdx:i,idx:mnPT.indexOf(norm(c))}); });
-      break;
-    }
-    if(hasDate){
-      row.forEach((c,i)=>{ if(i>0&&/^\d{2}\/\d{2}\/\d{4}$/.test(c.trim())){
-        const m = parseInt(c.split('/')[1])-1;
-        monthCols.push({label:mnPT[m],colIdx:i,idx:m});
-      }});
-      break;
+  // Encontrar coluna do mes atual usando row 1 (datas DD/MM/YYYY)
+  let curCol = -1;
+  const dateRow = rows[1] || [];
+  const monthRow = rows[3] || [];
+
+  // Tentar via datas (row 1)
+  for (let i = 1; i < dateRow.length; i++) {
+    const d = dateRow[i].trim();
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(d)) {
+      const m = parseInt(d.split('/')[1]) - 1;
+      if (m === curMonth) { curCol = i; break; }
     }
   }
 
-  // Coluna do mes atual e dos ultimos 6 meses
-  const curMonth = now.getMonth();
-  const curMonthCols = monthCols.filter(m=>m.idx===curMonth);
-  const curCol = curMonthCols.length ? curMonthCols[curMonthCols.length-1].colIdx : -1;
+  // Fallback: via nomes de meses (row 3)
+  if (curCol < 0) {
+    const mnPT = ['janeiro','fevereiro','marco','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+    const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
+    for (let i = 1; i < monthRow.length; i++) {
+      if (mnPT.indexOf(norm(monthRow[i])) === curMonth) { curCol = i; break; }
+    }
+  }
 
-  // Pegar ultimos 6 meses de colunas (para historico)
-  const sortedCols = [...monthCols].sort((a,b)=>a.colIdx-b.colIdx);
-  const last6 = sortedCols.slice(-8);
+  if (curCol < 0) return null; // mes atual nao encontrado
 
-  // Extrair valor de uma linha de um colIdx
-  const getVal = (row, col) => col>=0 && col<row.length ? row[col].trim() : '';
-  const findRow = pattern => rows.find(r=>pattern.test(norm(r[0]||'')));
-
-  // Mapeamento de linhas
-  const rowMap = {
-    budget:    /^(total|budget\s*dispon|verba\s*total|budget\s*total)/,
-    invested:  /^investimento$/,
-    invMeta:   /^investimento\s*meta/,
-    invGoogle: /^investimento\s*google/,
-    leads:     /^leads?$/,
-    leadsMeta: /^leads?\(convers|leads?\s*\(conv/,
-    mql:       /^mql/,
-    sql:       /^sql/,
-    vendas:    /^vendas?\s*\(?manual\)?$|^pedidos$/,
-    receita:   /^receita\s*faturada|^receita$/,
-    cpl:       /^custo\s*por\s*lead$|^cpl$/,
-    cpm:       /^cpm$/,
-    ctr:       /^ctr$/,
-    impressoes:/^impresso/,
-    cliques:   /^cliques?\s*totais$|^cliques?\s*no\s*link$|^cliques?$/,
-    cplMql:    /^custo\s*por\s*mql$/,
-    cplSql:    /^custo\s*por\s*sql$/,
-    roas:      /^roas$/,
-    taxaConv:  /^taxa\s*de\s*conv.*clique.*lead/,
-    pctLeadMql:/^%\s*lead\s*-?\s*mql/,
-    pctMqlSql: /^%\s*mql\s*-?\s*sql/,
-    pctSqlVend:/^%\s*sql\s*-?\s*(vendas?|compra)/,
-    ticket:    /^ticket\s*medio/,
+  // Extrair valor de uma linha por indice
+  const rv = (rowIdx) => {
+    const row = rows[rowIdx];
+    if (!row || curCol >= row.length) return null;
+    const v = row[curCol].trim();
+    return v && !v.startsWith('#') ? v : null;
   };
 
-  const raws = {};
-  for(const [k,pat] of Object.entries(rowMap)){
-    const row = findRow(pat);
-    raws[k] = row || null;
+  // Historico: todas as colunas antes da atual
+  const history = [];
+  for (let c = 1; c < curCol; c++) {
+    const inv = brl(rows[4]?.[c]);
+    const lds = brl(rows[9]?.[c]);
+    const mql = brl(rows[10]?.[c]);
+    const sql = brl(rows[11]?.[c]);
+    const cpl = brl(rows[19]?.[c]);
+    const vendas = brl(rows[12]?.[c]);
+    const roas = brl(rows[14]?.[c]);
+    const monthLabel = monthRow[c] || '';
+    if (inv > 0 || lds > 0) {
+      history.push({ month: monthLabel, invested: inv, leads: lds, mql, sql, vendas, cpl, roas });
+    }
   }
 
-  const cv = (key) => {
-    const row = raws[key];
-    if(!row||curCol<0) return null;
-    const v = getVal(row, curCol);
-    return v && !v.includes('#') ? v : null;
-  };
-  const nb = (key) => brl(cv(key));
-
-  // Budget — varias tentativas
-  let budget = 0;
-  if(raws.budget){
-    const bRow = raws.budget;
-    const bv = bRow.slice(1).map(brl).filter(v=>v>100);
-    if(bv.length) budget = Math.max(...bv);
+  // LinkedIn: procurar depois do Google (row 50+)
+  let invLinkedin = 0, leadsLinkedin = 0, cplLinkedin = 0;
+  for (let r = 48; r < Math.min(rows.length, 65); r++) {
+    const label = (rows[r]?.[0] || '').toLowerCase();
+    if (label.includes('linkedin')) {
+      invLinkedin = brl(rv(r));
+      break;
+    }
   }
-
-  // Investimento do mes atual
-  let invested = nb('invested');
-  if(!invested && raws.invested){
-    const vs = raws.invested.slice(1).map(brl).filter(v=>v>0);
-    if(vs.length) invested = vs[vs.length-1];
-  }
-
-  // Leads
-  let leads = nb('leads');
-  if(!leads && raws.leads){
-    const vs = raws.leads.slice(1).map(brl).filter(v=>v>0);
-    if(vs.length) leads = vs[vs.length-1];
-  }
-
-  // Historico mensal
-  const history = last6.map(mc=>{
-    const gv = (key) => { const r=raws[key]; if(!r||mc.colIdx>=r.length) return 0; return brl(getVal(r,mc.colIdx))||0; };
-    return {
-      month: mc.label,
-      invested: gv('invested'),
-      leads: gv('leads'),
-      mql: gv('mql'),
-      sql: gv('sql'),
-      vendas: gv('vendas'),
-      cpl: gv('cpl'),
-      impressoes: gv('impressoes'),
-      roas: gv('roas'),
-    };
-  }).filter(h=>h.invested>0||h.leads>0);
-
-  const paceEsperado = (now.getDate()/new Date(now.getFullYear(),now.getMonth()+1,0).getDate())*100;
-  const paceReal = budget>0 ? (invested/budget)*100 : 0;
-  const desvio = paceReal - paceEsperado;
 
   return {
-    budget, invested, leads: leads||nb('leads'),
-    mql: nb('mql'), sql: nb('sql'),
-    vendas: nb('vendas'), receita: nb('receita'),
-    cpl: nb('cpl') || (invested&&leads ? invested/leads : 0),
-    cpm: nb('cpm'), ctr: cv('ctr'),
-    impressoes: nb('impressoes'), cliques: nb('cliques'),
-    cplMql: nb('cplMql'), cplSql: nb('cplSql'),
-    roas: nb('roas'), ticket: nb('ticket'),
-    taxaConv: cv('taxaConv'),
-    pctLeadMql: cv('pctLeadMql'), pctMqlSql: cv('pctMqlSql'),
-    pctSqlVend: cv('pctSqlVend'),
-    invMeta: nb('invMeta'), invGoogle: nb('invGoogle'),
-    paceReal, paceEsperado, desvio,
+    // Totais
+    invested:    brl(rv(4)),
+    impressoes:  brl(rv(6)),
+    sessoes:     brl(rv(7)),
+    cliques:     brl(rv(8)),
+    leads:       brl(rv(9)),
+    mql:         brl(rv(10)),
+    sql:         brl(rv(11)),
+    vendas:      brl(rv(12)),
+    receita:     brl(rv(13)),
+    roas:        brl(rv(14)),
+    taxaConvLead: rv(15),
+    cpc:         brl(rv(17)),
+    cpl:         brl(rv(19)),
+    cplMql:      brl(rv(20)),
+    cplSql:      brl(rv(21)),
+    ticket:      brl(rv(5)),
+    pctLeadMql:  rv(24),
+    pctMqlSql:   rv(25),
+    pctSqlVend:  rv(26),
+    // Meta
+    invMeta:     brl(rv(28)),
+    impMeta:     brl(rv(29)),
+    clkMeta:     brl(rv(30)),
+    ctrMeta:     rv(31),
+    leadsMeta:   brl(rv(32)),
+    taxaMeta:    rv(33),
+    cpcMeta:     brl(rv(35)),
+    cplMeta:     brl(rv(36)),
+    // Google
+    invGoogle:   brl(rv(39)),
+    impGoogle:   brl(rv(40)),
+    clkGoogle:   brl(rv(41)),
+    ctrGoogle:   rv(42),
+    leadsGoogle: brl(rv(43)),
+    taxaGoogle:  rv(44),
+    cpcGoogle:   brl(rv(46)),
+    cplGoogle:   brl(rv(47)),
+    // LinkedIn
+    invLinkedin, leadsLinkedin, cplLinkedin,
+    // Pace (sem budget nesta aba)
+    budget: 0, paceReal: 0, paceEsperado: ((now.getDate() / new Date(now.getFullYear(), now.getMonth()+1, 0).getDate()) * 100),
+    desvio: 0,
+    // Historico
     history,
   };
 }
@@ -643,14 +616,18 @@ function renderClient(t){
       {lbl:'Cliques',val:fmtN(m.cliques),sub:'totais'},
       {lbl:'CTR',val:fmtPct(m.ctr),sub:'taxa de clique'},
     ] : [
-      {lbl:'Investimento',val:fmtBRL(m.invested),sub:'do mes'},
-      {lbl:'Budget',val:fmtBRL(m.budget),sub:'disponivel'},
-      {lbl:'Leads',val:fmtN(m.leads),sub:'gerados'},
-      {lbl:'CPL',val:fmtBRL(m.cpl,2),sub:'custo por lead'},
-      {lbl:'MQL',val:m.mql?fmtN(m.mql):'—',sub:'qualificados'},
-      {lbl:'SQL',val:m.sql?fmtN(m.sql):'—',sub:'oportunidades'},
-      {lbl:'Impressoes',val:m.impressoes?fmtN(m.impressoes):'—',sub:''},
-      {lbl:'CTR',val:fmtPct(m.ctr),sub:'taxa de clique'},
+      {lbl:'Investimento',  val:fmtBRL(m.invested),              sub:'total do mes'},
+      {lbl:'Impressoes',    val:fmtN(m.impressoes),               sub:''},
+      {lbl:'Cliques Totais',val:fmtN(m.cliques),                 sub:''},
+      {lbl:'CTR',           val:m.ctrMeta||'—',                  sub:'Meta Ads'},
+      {lbl:'Leads',         val:fmtN(m.leads),                   sub:'gerados no mes'},
+      {lbl:'CPL',           val:fmtBRL(m.cpl,2),                 sub:'custo por lead'},
+      {lbl:'MQL',           val:m.mql?fmtN(m.mql):'—',          sub:'qualificados'},
+      {lbl:'SQL',           val:m.sql?fmtN(m.sql):'—',          sub:'oportunidades'},
+      {lbl:'Vendas',        val:m.vendas?fmtN(m.vendas):'—',     sub:'fechamentos'},
+      {lbl:'Lead - MQL',   val:m.pctLeadMql||'—',               sub:'conversao'},
+      {lbl:'MQL - SQL',    val:m.pctMqlSql||'—',                sub:'conversao'},
+      {lbl:'SQL - Venda',  val:m.pctSqlVend||'—',               sub:'conversao'},
     ];
     kpis.innerHTML=kpiList.map(k=>`
       <div class="metric">
@@ -700,26 +677,58 @@ function renderClient(t){
       </div>`).join('');
 
     // Canais
-    const chanEl=document.getElementById('cl-channels');
-    if(m.invMeta||m.invGoogle){
-      const total=m.invMeta+m.invGoogle||1;
-      chanEl.innerHTML=`
-        <div style="display:flex;gap:20px;flex-wrap:wrap;">
-          ${m.invMeta?`<div style="flex:1;min-width:180px;">
-            <div style="font-size:12px;font-weight:700;margin-bottom:8px;">Meta Ads</div>
-            <div style="font-size:20px;font-weight:800;">${fmtBRL(m.invMeta)}</div>
-            <div style="font-size:11px;color:var(--g5);">${((m.invMeta/total)*100).toFixed(0)}% do investimento</div>
-            <div style="height:4px;background:#1877F2;border-radius:99px;margin-top:8px;width:${((m.invMeta/m.budget||0)*100).toFixed(0)}%;max-width:100%;"></div>
-          </div>` : ''}
-          ${m.invGoogle?`<div style="flex:1;min-width:180px;">
-            <div style="font-size:12px;font-weight:700;margin-bottom:8px;">Google Ads</div>
-            <div style="font-size:20px;font-weight:800;">${fmtBRL(m.invGoogle)}</div>
-            <div style="font-size:11px;color:var(--g5);">${((m.invGoogle/total)*100).toFixed(0)}% do investimento</div>
-            <div style="height:4px;background:#4285F4;border-radius:99px;margin-top:8px;width:${((m.invGoogle/m.budget||0)*100).toFixed(0)}%;max-width:100%;"></div>
-          </div>` : ''}
-        </div>`;
+    const chanEl = document.getElementById('cl-channels');
+    const channels = [];
+    if (m.invMeta > 0 || m.leadsMeta > 0) channels.push({
+      name:'Meta Ads', color:'#1877F2', icon:'📘',
+      inv:m.invMeta, imp:m.impMeta, clk:m.clkMeta, ctr:m.ctrMeta,
+      leads:m.leadsMeta, taxa:m.taxaMeta, cpc:m.cpcMeta, cpl:m.cplMeta
+    });
+    if (m.invGoogle > 0 || m.leadsGoogle > 0) channels.push({
+      name:'Google Ads', color:'#4285F4', icon:'🔵',
+      inv:m.invGoogle, imp:m.impGoogle, clk:m.clkGoogle, ctr:m.ctrGoogle,
+      leads:m.leadsGoogle, taxa:m.taxaGoogle, cpc:m.cpcGoogle, cpl:m.cplGoogle
+    });
+    if (m.invLinkedin > 0) channels.push({
+      name:'LinkedIn Ads', color:'#0A66C2', icon:'💼',
+      inv:m.invLinkedin, imp:0, clk:0, ctr:null,
+      leads:m.leadsLinkedin, taxa:null, cpc:0, cpl:m.cplLinkedin
+    });
+
+    if (channels.length === 0) {
+      chanEl.innerHTML = '<p style="font-size:13px;color:var(--g4);">Sem dados por canal no mes atual.</p>';
     } else {
-      chanEl.innerHTML='<p style="font-size:13px;color:var(--g4);">Dados por canal nao disponíveis nesta planilha.</p>';
+      chanEl.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;">
+        ${channels.map(ch => `
+          <div style="border:1px solid ${ch.color}33;border-radius:10px;padding:16px;border-left:3px solid ${ch.color};">
+            <div style="font-size:13px;font-weight:700;color:${ch.color};margin-bottom:12px;">${ch.icon} ${ch.name}</div>
+            <table style="width:100%;font-size:12px;border-collapse:collapse;">
+              <tr><td style="color:var(--g5);padding:3px 0;">Investimento</td><td style="font-weight:700;text-align:right;">${fmtBRL(ch.inv)}</td></tr>
+              ${ch.imp?`<tr><td style="color:var(--g5);padding:3px 0;">Impressoes</td><td style="font-weight:600;text-align:right;">${fmtN(ch.imp)}</td></tr>`:''}
+              ${ch.clk?`<tr><td style="color:var(--g5);padding:3px 0;">Cliques</td><td style="font-weight:600;text-align:right;">${fmtN(ch.clk)}</td></tr>`:''}
+              ${ch.ctr?`<tr><td style="color:var(--g5);padding:3px 0;">CTR</td><td style="font-weight:600;text-align:right;">${ch.ctr}</td></tr>`:''}
+              ${ch.leads?`<tr><td style="color:var(--g5);padding:3px 0;">Leads</td><td style="font-weight:700;text-align:right;color:var(--black);">${fmtN(ch.leads)}</td></tr>`:''}
+              ${ch.cpl?`<tr><td style="color:var(--g5);padding:3px 0;">CPL</td><td style="font-weight:700;text-align:right;color:${ch.color};">${fmtBRL(ch.cpl,2)}</td></tr>`:''}
+              ${ch.cpc?`<tr><td style="color:var(--g5);padding:3px 0;">CPC</td><td style="font-weight:600;text-align:right;">${fmtBRL(ch.cpc,2)}</td></tr>`:''}
+              ${ch.taxa?`<tr><td style="color:var(--g5);padding:3px 0;">Conv.</td><td style="font-weight:600;text-align:right;">${ch.taxa}</td></tr>`:''}
+            </table>
+          </div>
+        `).join('')}
+      </div>`;
+    }
+
+    // Conversoes do funil
+    if (m.pctLeadMql || m.pctMqlSql || m.pctSqlVend) {
+      chanEl.innerHTML += `<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--g2);">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--g4);margin-bottom:10px;">Taxas de Conversao do Funil</div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:13px;">
+          ${m.pctLeadMql?`<div><span style="color:var(--g5);">Lead - MQL</span> <strong>${m.pctLeadMql}</strong></div>`:''}
+          ${m.pctMqlSql?`<div><span style="color:var(--g5);">MQL - SQL</span> <strong>${m.pctMqlSql}</strong></div>`:''}
+          ${m.pctSqlVend?`<div><span style="color:var(--g5);">SQL - Venda</span> <strong>${m.pctSqlVend}</strong></div>`:''}
+          ${m.cplMql?`<div><span style="color:var(--g5);">CP-MQL</span> <strong>${fmtBRL(m.cplMql,2)}</strong></div>`:''}
+          ${m.cplSql?`<div><span style="color:var(--g5);">CP-SQL</span> <strong>${fmtBRL(m.cplSql,2)}</strong></div>`:''}
+        </div>
+      </div>`;
     }
 
     // Historico tabela
