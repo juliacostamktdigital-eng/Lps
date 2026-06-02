@@ -232,7 +232,10 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--g1);color:var(--g
     </div>
 
     <!-- KPIs do mes -->
-    <div class="card-label">Mes Atual — Resultados</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+      <div class="card-label" id="cl-pace-month-label" style="margin-bottom:0;">Mes Atual — Resultados</div>
+      <div id="cl-pace-month-filter" style="display:flex;gap:5px;flex-wrap:wrap;"></div>
+    </div>
     <div id="cl-kpis" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:20px;">
       <div class="ld"><div class="sp"></div></div>
     </div>
@@ -246,7 +249,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--g1);color:var(--g
 
       <!-- Pace -->
       <div>
-        <div class="card" style="margin-bottom:14px;">
+        <div class="card" id="cl-pace-card" style="margin-bottom:14px;">
           <div class="card-label">Pace do Mes</div>
           <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:10px;">
             <div>
@@ -355,12 +358,13 @@ const PACE_STATUS = d => {
   return{lbl:'Atrasado',cls:'b-red'};
 };
 
-let allData = {}; // { ticker: { hs, metrics } }
+let allData = {}; // { ticker: { hs, metrics, allMonths } }
 let clientChart = null;
 let currentTicker = null;
 let currentMetric = 'leads';
 let comMonthFilter = 'all';
 let comercialCache = {};
+let paceMonthFilter = {}; // { ticker: 'current' | 'YYYY-MM' }
 
 // ─── HELPERS ───────────────────────────────────────────────────────────────
 function brl(s){
@@ -386,117 +390,118 @@ function parseCSV(text){
   });
 }
 
-function extractMetrics(csvText) {
+function extractAllMonths(csvText) {
   const rows = parseCSV(csvText);
   const now = new Date();
-  const curMonth = now.getMonth(); // 0=jan...5=jun
+  const curMonth = now.getMonth();
+  const curYear  = now.getFullYear();
 
-  // Encontrar coluna do mes atual usando row 1 (datas DD/MM/YYYY)
-  let curCol = -1;
-  const dateRow = rows[1] || [];
+  const yearRow  = rows[0] || [];
+  const dateRow  = rows[1] || [];
   const monthRow = rows[3] || [];
 
-  // Tentar via datas (row 1)
-  for (let i = 1; i < dateRow.length; i++) {
-    const d = dateRow[i].trim();
-    if (/^\d{2}\/\d{2}\/\d{4}$/.test(d)) {
-      const m = parseInt(d.split('/')[1]) - 1;
-      if (m === curMonth) { curCol = i; break; }
+  const mnPT = ['janeiro','fevereiro','marco','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  const normS = s => String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
+
+  const months = [];
+  let curIdx = -1;
+
+  for (let c = 1; c < Math.max(dateRow.length, monthRow.length, yearRow.length); c++) {
+    const dateStr = (dateRow[c] || '').trim();
+    const mName   = (monthRow[c] || '').trim();
+
+    let mo = null, yr = null;
+
+    // Primary: parse start date DD/MM/YYYY from row 1
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateStr)) {
+      const [, mm, yyyy] = dateStr.split('/');
+      mo = parseInt(mm) - 1;
+      yr = parseInt(yyyy);
     }
-  }
 
-  // Fallback: via nomes de meses (row 3)
-  if (curCol < 0) {
-    const mnPT = ['janeiro','fevereiro','marco','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
-    const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
-    for (let i = 1; i < monthRow.length; i++) {
-      if (mnPT.indexOf(norm(monthRow[i])) === curMonth) { curCol = i; break; }
+    // Fallback: month name (row 3) + year from row 0
+    if (mo === null) {
+      const mIdx = mnPT.indexOf(normS(mName));
+      if (mIdx < 0) continue;
+      mo = mIdx;
+      const yrRaw = (yearRow[c] || '').trim();
+      yr = yrRaw ? parseInt(yrRaw) : curYear;
     }
-  }
 
-  if (curCol < 0) return null; // mes atual nao encontrado
+    if (mo === null || isNaN(yr)) continue;
+    // Skip future months
+    if (yr > curYear || (yr === curYear && mo > curMonth)) continue;
 
-  // Extrair valor de uma linha por indice
-  const rv = (rowIdx) => {
-    const row = rows[rowIdx];
-    if (!row || curCol >= row.length) return null;
-    const v = row[curCol].trim();
-    return v && !v.startsWith('#') ? v : null;
-  };
+    const rv = ri => {
+      const row = rows[ri];
+      if (!row || c >= row.length) return null;
+      const v = (row[c] || '').trim();
+      return v && !v.startsWith('#') ? v : null;
+    };
 
-  // Historico: todas as colunas antes da atual
-  const history = [];
-  for (let c = 1; c < curCol; c++) {
-    const inv = brl(rows[4]?.[c]);
-    const lds = brl(rows[9]?.[c]);
-    const mql = brl(rows[10]?.[c]);
-    const sql = brl(rows[11]?.[c]);
-    const cpl = brl(rows[19]?.[c]);
-    const vendas = brl(rows[12]?.[c]);
-    const roas = brl(rows[14]?.[c]);
-    const monthLabel = monthRow[c] || '';
-    if (inv > 0 || lds > 0) {
-      history.push({ month: monthLabel, invested: inv, leads: lds, mql, sql, vendas, cpl, roas });
-    }
-  }
-
-  // LinkedIn: procurar depois do Google (row 50+)
-  let invLinkedin = 0, leadsLinkedin = 0, cplLinkedin = 0;
-  for (let r = 48; r < Math.min(rows.length, 65); r++) {
-    const label = (rows[r]?.[0] || '').toLowerCase();
-    if (label.includes('linkedin')) {
-      invLinkedin = brl(rv(r));
-      break;
-    }
-  }
-
-  return {
-    // Totais
-    invested:    brl(rv(4)),
-    impressoes:  brl(rv(6)),
-    sessoes:     brl(rv(7)),
-    cliques:     brl(rv(8)),
-    leads:       brl(rv(9)),
-    mql:         brl(rv(10)),
-    sql:         brl(rv(11)),
-    vendas:      brl(rv(12)),
-    receita:     brl(rv(13)),
-    roas:        brl(rv(14)),
-    taxaConvLead: rv(15),
-    cpc:         brl(rv(17)),
-    cpl:         brl(rv(19)),
-    cplMql:      brl(rv(20)),
-    cplSql:      brl(rv(21)),
-    ticket:      brl(rv(5)),
-    pctLeadMql:  rv(24),
-    pctMqlSql:   rv(25),
-    pctSqlVend:  rv(26),
-    // Meta
-    invMeta:     brl(rv(28)),
-    impMeta:     brl(rv(29)),
-    clkMeta:     brl(rv(30)),
-    ctrMeta:     rv(31),
-    leadsMeta:   brl(rv(32)),
-    taxaMeta:    rv(33),
-    cpcMeta:     brl(rv(35)),
-    cplMeta:     brl(rv(36)),
-    // Google
-    invGoogle:   brl(rv(39)),
-    impGoogle:   brl(rv(40)),
-    clkGoogle:   brl(rv(41)),
-    ctrGoogle:   rv(42),
-    leadsGoogle: brl(rv(43)),
-    taxaGoogle:  rv(44),
-    cpcGoogle:   brl(rv(46)),
-    cplGoogle:   brl(rv(47)),
     // LinkedIn
-    invLinkedin, leadsLinkedin, cplLinkedin,
-    // Pace (sem budget nesta aba)
-    budget: 0, paceReal: 0, paceEsperado: ((now.getDate() / new Date(now.getFullYear(), now.getMonth()+1, 0).getDate()) * 100),
-    desvio: 0,
-    // Historico
-    history,
-  };
+    let invLinkedin = 0, leadsLinkedin = 0, cplLinkedin = 0;
+    for (let r = 48; r < Math.min(rows.length, 65); r++) {
+      if ((rows[r]?.[0] || '').toLowerCase().includes('linkedin')) {
+        invLinkedin = brl(rv(r));
+        break;
+      }
+    }
+
+    const isCurrent = (mo === curMonth && yr === curYear);
+    const key = `${yr}-${String(mo+1).padStart(2,'0')}`;
+    const label = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'][mo] + ' ' + String(yr).slice(2);
+
+    const entry = {
+      key, label, isCurrent,
+      month: label, // compat renderHistory/renderChart
+      invested:    brl(rv(4)),
+      ticket:      brl(rv(5)),
+      impressoes:  brl(rv(6)),
+      sessoes:     brl(rv(7)),
+      cliques:     brl(rv(8)),
+      leads:       brl(rv(9)),
+      mql:         brl(rv(10)),
+      sql:         brl(rv(11)),
+      vendas:      brl(rv(12)),
+      receita:     brl(rv(13)),
+      roas:        brl(rv(14)),
+      taxaConvLead:rv(15),
+      cpc:         brl(rv(17)),
+      cpl:         brl(rv(19)),
+      cplMql:      brl(rv(20)),
+      cplSql:      brl(rv(21)),
+      pctLeadMql:  rv(24),
+      pctMqlSql:   rv(25),
+      pctSqlVend:  rv(26),
+      invMeta:     brl(rv(28)),
+      impMeta:     brl(rv(29)),
+      clkMeta:     brl(rv(30)),
+      ctrMeta:     rv(31),
+      leadsMeta:   brl(rv(32)),
+      taxaMeta:    rv(33),
+      cpcMeta:     brl(rv(35)),
+      cplMeta:     brl(rv(36)),
+      invGoogle:   brl(rv(39)),
+      impGoogle:   brl(rv(40)),
+      clkGoogle:   brl(rv(41)),
+      ctrGoogle:   rv(42),
+      leadsGoogle: brl(rv(43)),
+      taxaGoogle:  rv(44),
+      cpcGoogle:   brl(rv(46)),
+      cplGoogle:   brl(rv(47)),
+      invLinkedin, leadsLinkedin, cplLinkedin,
+      budget: 0, paceReal: 0, desvio: 0,
+      paceEsperado: isCurrent
+        ? ((now.getDate() / new Date(curYear, curMonth+1, 0).getDate()) * 100)
+        : 100,
+    };
+
+    if (isCurrent) curIdx = months.length;
+    months.push(entry);
+  }
+
+  return { months, curIdx };
 }
 
 // ─── DATA LOADING ──────────────────────────────────────────────────────────
@@ -532,10 +537,13 @@ async function loadAll(){
   await Promise.allSettled(tickers.map(async t=>{
     try{
       const csv=await fetch(`data/pace/${t}.csv?`+Date.now()).then(r=>r.text());
-      let metrics=csv.length>50 ? extractMetrics(csv) : null;
+      const parsed = csv.length>50 ? extractAllMonths(csv) : null;
+      const allMonths = parsed?.months || [];
+      let metrics = parsed && parsed.curIdx >= 0 ? allMonths[parsed.curIdx]
+                  : allMonths.length > 0 ? allMonths[allMonths.length-1] : null;
       // Cliente sem dados ativos: todos os indicadores zerados = onboarding/inativo
       if(metrics && metrics.invested===0 && metrics.leads===0 && metrics.vendas===0 && metrics.impressoes===0) metrics=null;
-      allData[t]={hs:hsMap[t]||null, metrics, name:CLIENTS[t].name, type:CLIENTS[t].type};
+      allData[t]={hs:hsMap[t]||null, metrics, allMonths, name:CLIENTS[t].name, type:CLIENTS[t].type};
     }catch(e){allData[t]={hs:hsMap[t]||null,metrics:null,name:CLIENTS[t].name,type:CLIENTS[t].type};}
   }));
 
@@ -639,6 +647,9 @@ function renderClient(t){
   document.getElementById('cl-pace-bar').style.width='0%';
   document.getElementById('cl-pace-needle').style.left='0%';
   document.getElementById('cl-pace-label').textContent='—';
+  document.getElementById('cl-pace-month-filter').innerHTML='';
+  document.getElementById('cl-pace-month-label').textContent='Mes Atual — Resultados';
+  paceMonthFilter[t] = 'current'; // reset ao mes atual ao trocar de cliente
   if(clientChart){clientChart.destroy();clientChart=null;}
 
   document.getElementById('cl-title').textContent=d.name;
@@ -650,154 +661,9 @@ function renderClient(t){
   hsBadge.className='badge';
   hsBadge.style.background=f.bg; hsBadge.style.color=f.color;
 
-  // KPIs
-  const kpis=document.getElementById('cl-kpis');
-  if(!m){ kpis.innerHTML='<p style="font-size:13px;color:var(--g4);">Sem dados de pace. Verifique se a planilha esta compartilhada.</p>'; }
-  else {
-    const pace=PACE_STATUS(m.desvio);
-    document.getElementById('cl-pace-badge').textContent=pace.lbl;
-    document.getElementById('cl-pace-badge').className='badge '+pace.cls;
-
-    // Alertas
-    const alerts=[];
-    if(hs&&(hs.flag==='Danger'||hs.flag==='Critical')) alerts.push(`Health Score em ${hs.flag} (${hs.score}/30) — acao necessaria.`);
-    if(m.desvio<-20) alerts.push(`Pace ${m.paceReal.toFixed(1)}% muito abaixo do esperado (${m.paceEsperado.toFixed(1)}%) — desvio de ${Math.abs(m.desvio).toFixed(1)}pp.`);
-    if(m.desvio>20)  alerts.push(`Pace acelerado (${m.paceReal.toFixed(1)}%) — risco de estourar o budget antes do fim do mes.`);
-    const alertEl=document.getElementById('cl-alerts');
-    alertEl.style.display=alerts.length?'':'none';
-    alertEl.innerHTML=alerts.map(a=>`⚠️ ${a}`).join('<br>');
-
-    // Cards KPI
-    const kpiList=isEC ? [
-      {lbl:'Investimento',val:fmtBRL(m.invested),sub:'do mes'},
-      {lbl:'Budget',val:fmtBRL(m.budget),sub:'disponivel'},
-      {lbl:'Vendas / Pedidos',val:fmtN(m.vendas),sub:'do mes'},
-      {lbl:'ROAS',val:m.roas?fmtN(m.roas,2)+'x':'—',sub:'retorno'},
-      {lbl:'Ticket Medio',val:fmtBRL(m.ticket,2),sub:'por venda'},
-      {lbl:'Receita',val:fmtBRL(m.receita),sub:'faturada'},
-      {lbl:'Cliques',val:fmtN(m.cliques),sub:'totais'},
-      {lbl:'CTR',val:fmtPct(m.ctr),sub:'taxa de clique'},
-    ] : [
-      {lbl:'Investimento',  val:fmtBRL(m.invested),              sub:'total do mes'},
-      {lbl:'Impressoes',    val:fmtN(m.impressoes),               sub:''},
-      {lbl:'Cliques Totais',val:fmtN(m.cliques),                 sub:''},
-      {lbl:'CTR',           val:m.ctrMeta||'—',                  sub:'Meta Ads'},
-      {lbl:'Leads',         val:fmtN(m.leads),                   sub:'gerados no mes'},
-      {lbl:'CPL',           val:fmtBRL(m.cpl,2),                 sub:'custo por lead'},
-      {lbl:'MQL',           val:m.mql?fmtN(m.mql):'—',          sub:'qualificados'},
-      {lbl:'SQL',           val:m.sql?fmtN(m.sql):'—',          sub:'oportunidades'},
-      {lbl:'Vendas',        val:m.vendas?fmtN(m.vendas):'—',     sub:'fechamentos'},
-      {lbl:'Lead - MQL',   val:m.pctLeadMql||'—',               sub:'conversao'},
-      {lbl:'MQL - SQL',    val:m.pctMqlSql||'—',                sub:'conversao'},
-      {lbl:'SQL - Venda',  val:m.pctSqlVend||'—',               sub:'conversao'},
-    ];
-    kpis.innerHTML=kpiList.map(k=>`
-      <div class="metric">
-        <div class="metric-label">${k.lbl}</div>
-        <div class="metric-val">${k.val}</div>
-        ${k.sub?`<div class="metric-sub">${k.sub}</div>`:''}
-      </div>`).join('');
-
-    // Pace
-    document.getElementById('cl-pace-pct').textContent=m.paceReal.toFixed(1)+'%';
-    document.getElementById('cl-pace-pct').style.color=m.desvio>10?'#DC2626':m.desvio>-10?'#15803D':'#B45309';
-    document.getElementById('cl-pace-exp').textContent=m.paceEsperado.toFixed(1)+'%';
-    document.getElementById('cl-inv').textContent=fmtBRL(m.invested);
-    document.getElementById('cl-budget').textContent=fmtBRL(m.budget);
-    const pBar=Math.min(100,m.paceReal);
-    const pNeedle=Math.min(100,m.paceEsperado);
-    const pColor=m.desvio>10?'#DC2626':m.desvio>-10?'#15803D':'#B45309';
-    document.getElementById('cl-pace-bar').style.width=pBar+'%';
-    document.getElementById('cl-pace-bar').style.background=pColor;
-    document.getElementById('cl-pace-needle').style.left=pNeedle+'%';
-    document.getElementById('cl-pace-label').textContent=pace.lbl;
-    document.getElementById('cl-pace-label').style.color=pColor;
-
-    // Funil
-    const funnel=document.getElementById('cl-funnel');
-    const funnelSteps=isEC?[
-      {ico:'💰',lbl:'Investimento',val:m.invested,fmt:fmtBRL,ref:m.budget,sub:m.budget?`de ${fmtBRL(m.budget)}`:''},
-      {ico:'👁️',lbl:'Impressoes',val:m.impressoes,fmt:v=>fmtN(v),ref:m.impressoes,sub:''},
-      {ico:'🖱️',lbl:'Cliques',val:m.cliques,fmt:v=>fmtN(v),ref:m.impressoes,sub:m.impressoes&&m.cliques?`CTR ${((m.cliques/m.impressoes)*100).toFixed(2)}%`:''},
-      {ico:'🛒',lbl:'Pedidos/Vendas',val:m.vendas,fmt:v=>fmtN(v),ref:m.cliques,sub:m.roas?`ROAS ${fmtN(m.roas,2)}x`:''},
-      {ico:'💵',lbl:'Receita',val:m.receita,fmt:v=>fmtBRL(v),ref:m.budget,sub:m.ticket?`TM ${fmtBRL(m.ticket)}`:''},
-    ]:[
-      {ico:'💰',lbl:'Investimento',val:m.invested,fmt:fmtBRL,ref:m.budget,sub:m.budget?`de ${fmtBRL(m.budget)}`:''},
-      {ico:'🎯',lbl:'Leads',val:m.leads,fmt:v=>fmtN(v),ref:m.leads,sub:m.cpl?`CPL ${fmtBRL(m.cpl,2)}`:''},
-      {ico:'✅',lbl:'MQL',val:m.mql,fmt:v=>fmtN(v)||'—',ref:m.leads,sub:m.pctLeadMql||''},
-      {ico:'💼',lbl:'SQL',val:m.sql,fmt:v=>fmtN(v)||'—',ref:m.mql||m.leads,sub:m.pctMqlSql||''},
-      {ico:'🏆',lbl:'Vendas',val:m.vendas,fmt:v=>fmtN(v)||'—',ref:m.sql||m.leads,sub:m.pctSqlVend||''},
-    ];
-    const maxRef=funnelSteps.reduce((mx,s)=>Math.max(mx,s.val||0),1);
-    funnel.innerHTML=funnelSteps.map(s=>`
-      <div class="funnel-step">
-        <div class="funnel-icon">${s.ico}</div>
-        <div class="funnel-label">${s.lbl}</div>
-        <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:${maxRef>0?((s.val||0)/maxRef*100).toFixed(1):0}%;background:var(--red);"></div></div>
-        <div class="funnel-val">${s.fmt?s.fmt(s.val||0):(s.val||'—')}</div>
-        <div class="funnel-sub">${s.sub}</div>
-      </div>`).join('');
-
-    // Canais
-    const chanEl = document.getElementById('cl-channels');
-    const channels = [];
-    if (m.invMeta > 0 || m.leadsMeta > 0) channels.push({
-      name:'Meta Ads', color:'#1877F2', icon:'📘',
-      inv:m.invMeta, imp:m.impMeta, clk:m.clkMeta, ctr:m.ctrMeta,
-      leads:m.leadsMeta, taxa:m.taxaMeta, cpc:m.cpcMeta, cpl:m.cplMeta
-    });
-    if (m.invGoogle > 0 || m.leadsGoogle > 0) channels.push({
-      name:'Google Ads', color:'#4285F4', icon:'🔵',
-      inv:m.invGoogle, imp:m.impGoogle, clk:m.clkGoogle, ctr:m.ctrGoogle,
-      leads:m.leadsGoogle, taxa:m.taxaGoogle, cpc:m.cpcGoogle, cpl:m.cplGoogle
-    });
-    if (m.invLinkedin > 0) channels.push({
-      name:'LinkedIn Ads', color:'#0A66C2', icon:'💼',
-      inv:m.invLinkedin, imp:0, clk:0, ctr:null,
-      leads:m.leadsLinkedin, taxa:null, cpc:0, cpl:m.cplLinkedin
-    });
-
-    if (channels.length === 0) {
-      chanEl.innerHTML = '<p style="font-size:13px;color:var(--g4);">Sem dados por canal no mes atual.</p>';
-    } else {
-      chanEl.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;">
-        ${channels.map(ch => `
-          <div style="border:1px solid ${ch.color}33;border-radius:10px;padding:16px;border-left:3px solid ${ch.color};">
-            <div style="font-size:13px;font-weight:700;color:${ch.color};margin-bottom:12px;">${ch.icon} ${ch.name}</div>
-            <table style="width:100%;font-size:12px;border-collapse:collapse;">
-              <tr><td style="color:var(--g5);padding:3px 0;">Investimento</td><td style="font-weight:700;text-align:right;">${fmtBRL(ch.inv)}</td></tr>
-              ${ch.imp?`<tr><td style="color:var(--g5);padding:3px 0;">Impressoes</td><td style="font-weight:600;text-align:right;">${fmtN(ch.imp)}</td></tr>`:''}
-              ${ch.clk?`<tr><td style="color:var(--g5);padding:3px 0;">Cliques</td><td style="font-weight:600;text-align:right;">${fmtN(ch.clk)}</td></tr>`:''}
-              ${ch.ctr?`<tr><td style="color:var(--g5);padding:3px 0;">CTR</td><td style="font-weight:600;text-align:right;">${ch.ctr}</td></tr>`:''}
-              ${ch.leads?`<tr><td style="color:var(--g5);padding:3px 0;">Leads</td><td style="font-weight:700;text-align:right;color:var(--black);">${fmtN(ch.leads)}</td></tr>`:''}
-              ${ch.cpl?`<tr><td style="color:var(--g5);padding:3px 0;">CPL</td><td style="font-weight:700;text-align:right;color:${ch.color};">${fmtBRL(ch.cpl,2)}</td></tr>`:''}
-              ${ch.cpc?`<tr><td style="color:var(--g5);padding:3px 0;">CPC</td><td style="font-weight:600;text-align:right;">${fmtBRL(ch.cpc,2)}</td></tr>`:''}
-              ${ch.taxa?`<tr><td style="color:var(--g5);padding:3px 0;">Conv.</td><td style="font-weight:600;text-align:right;">${ch.taxa}</td></tr>`:''}
-            </table>
-          </div>
-        `).join('')}
-      </div>`;
-    }
-
-    // Conversoes do funil
-    if (m.pctLeadMql || m.pctMqlSql || m.pctSqlVend) {
-      chanEl.innerHTML += `<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--g2);">
-        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--g4);margin-bottom:10px;">Taxas de Conversao do Funil</div>
-        <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:13px;">
-          ${m.pctLeadMql?`<div><span style="color:var(--g5);">Lead - MQL</span> <strong>${m.pctLeadMql}</strong></div>`:''}
-          ${m.pctMqlSql?`<div><span style="color:var(--g5);">MQL - SQL</span> <strong>${m.pctMqlSql}</strong></div>`:''}
-          ${m.pctSqlVend?`<div><span style="color:var(--g5);">SQL - Venda</span> <strong>${m.pctSqlVend}</strong></div>`:''}
-          ${m.cplMql?`<div><span style="color:var(--g5);">CP-MQL</span> <strong>${fmtBRL(m.cplMql,2)}</strong></div>`:''}
-          ${m.cplSql?`<div><span style="color:var(--g5);">CP-SQL</span> <strong>${fmtBRL(m.cplSql,2)}</strong></div>`:''}
-        </div>
-      </div>`;
-    }
-
-    // Historico tabela
-    renderHistory(m.history, isEC);
-    // Grafico
-    renderChart(m.history, currentMetric);
-  }
+  // Pills de mes + KPIs/funil/canais (pode ser trocado sem recarregar cliente)
+  renderPaceMonthBtns(t, d.allMonths);
+  renderPaceKPIs(m, isEC, hs);
 
   // Pipeline Comercial
   loadComercialData(t);
@@ -822,6 +688,201 @@ function renderClient(t){
     document.getElementById('cl-hs-score').textContent='—';
     document.getElementById('cl-hs-action').textContent='Health Score nao disponivel para este cliente.';
   }
+}
+
+// ─── PACE MONTH NAVIGATION ─────────────────────────────────────────────────
+function renderPaceMonthBtns(ticker, months) {
+  const el = document.getElementById('cl-pace-month-filter');
+  if (!el) return;
+  if (!months || months.length <= 1) { el.innerHTML = ''; return; }
+  const sel = paceMonthFilter[ticker] || 'current';
+  // Mostra os ultimos 12 meses, do mais recente para o mais antigo
+  const recent = months.slice(-12).reverse();
+  el.innerHTML = recent.map(mo => {
+    const key = mo.isCurrent ? 'current' : mo.key;
+    const active = key === sel;
+    return `<button onclick="setPaceMonth('${ticker}','${key}')"
+      style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.12s;
+             ${active ? 'background:var(--red);color:white;border:1.5px solid var(--red);' : 'background:var(--g1);color:var(--g5);border:1px solid var(--g2);'}"
+      >${mo.label}${mo.isCurrent ? ' ★' : ''}</button>`;
+  }).join('');
+}
+
+function setPaceMonth(ticker, key) {
+  paceMonthFilter[ticker] = key;
+  const d = allData[ticker];
+  if (!d) return;
+  let m;
+  if (key === 'current') {
+    m = d.metrics;
+  } else {
+    m = d.allMonths.find(mo => mo.key === key) || d.metrics;
+  }
+  renderPaceMonthBtns(ticker, d.allMonths);
+  document.getElementById('cl-pace-month-label').textContent =
+    !m || m.isCurrent ? 'Mes Atual — Resultados' : `${m.label} — Resultados`;
+  renderPaceKPIs(m, d.type === 'ec', d.hs);
+}
+
+function renderPaceKPIs(m, isEC, hs) {
+  const kpis = document.getElementById('cl-kpis');
+
+  if (!m) {
+    kpis.innerHTML = '<p style="font-size:13px;color:var(--g4);">Sem dados de pace. Verifique se a planilha esta compartilhada.</p>';
+    document.getElementById('cl-pace-card').style.display = 'none';
+    return;
+  }
+
+  const pace = PACE_STATUS(m.desvio);
+  document.getElementById('cl-pace-badge').textContent = pace.lbl;
+  document.getElementById('cl-pace-badge').className = 'badge ' + pace.cls;
+
+  // Alertas (so para mes atual)
+  if (m.isCurrent) {
+    const alerts = [];
+    if (hs && (hs.flag === 'Danger' || hs.flag === 'Critical'))
+      alerts.push(`Health Score em ${hs.flag} (${hs.score}/30) — acao necessaria.`);
+    if (m.desvio < -20)
+      alerts.push(`Pace ${m.paceReal.toFixed(1)}% muito abaixo do esperado (${m.paceEsperado.toFixed(1)}%) — desvio de ${Math.abs(m.desvio).toFixed(1)}pp.`);
+    if (m.desvio > 20)
+      alerts.push(`Pace acelerado (${m.paceReal.toFixed(1)}%) — risco de estourar o budget antes do fim do mes.`);
+    const alertEl = document.getElementById('cl-alerts');
+    alertEl.style.display = alerts.length ? '' : 'none';
+    alertEl.innerHTML = alerts.map(a => `⚠️ ${a}`).join('<br>');
+  }
+
+  // Cards KPI
+  const kpiList = isEC ? [
+    {lbl:'Investimento',     val:fmtBRL(m.invested),             sub:'do mes'},
+    {lbl:'Budget',           val:fmtBRL(m.budget),               sub:'disponivel'},
+    {lbl:'Vendas / Pedidos', val:fmtN(m.vendas),                 sub:'do mes'},
+    {lbl:'ROAS',             val:m.roas ? fmtN(m.roas,2)+'x':'—', sub:'retorno'},
+    {lbl:'Ticket Medio',     val:fmtBRL(m.ticket,2),             sub:'por venda'},
+    {lbl:'Receita',          val:fmtBRL(m.receita),              sub:'faturada'},
+    {lbl:'Cliques',          val:fmtN(m.cliques),                sub:'totais'},
+    {lbl:'CTR',              val:fmtPct(m.ctr),                  sub:'taxa de clique'},
+  ] : [
+    {lbl:'Investimento',   val:fmtBRL(m.invested),              sub:'total do mes'},
+    {lbl:'Impressoes',     val:fmtN(m.impressoes),              sub:''},
+    {lbl:'Cliques Totais', val:fmtN(m.cliques),                 sub:''},
+    {lbl:'CTR',            val:m.ctrMeta||'—',                  sub:'Meta Ads'},
+    {lbl:'Leads',          val:fmtN(m.leads),                   sub:'gerados no mes'},
+    {lbl:'CPL',            val:fmtBRL(m.cpl,2),                 sub:'custo por lead'},
+    {lbl:'MQL',            val:m.mql ? fmtN(m.mql):'—',        sub:'qualificados'},
+    {lbl:'SQL',            val:m.sql ? fmtN(m.sql):'—',        sub:'oportunidades'},
+    {lbl:'Vendas',         val:m.vendas ? fmtN(m.vendas):'—',  sub:'fechamentos'},
+    {lbl:'Lead - MQL',     val:m.pctLeadMql||'—',              sub:'conversao'},
+    {lbl:'MQL - SQL',      val:m.pctMqlSql||'—',               sub:'conversao'},
+    {lbl:'SQL - Venda',    val:m.pctSqlVend||'—',              sub:'conversao'},
+  ];
+  kpis.innerHTML = kpiList.map(k => `
+    <div class="metric">
+      <div class="metric-label">${k.lbl}</div>
+      <div class="metric-val">${k.val}</div>
+      ${k.sub ? `<div class="metric-sub">${k.sub}</div>` : ''}
+    </div>`).join('');
+
+  // Pace card: so para mes atual (nao temos budget historico)
+  const paceCard = document.getElementById('cl-pace-card');
+  if (m.isCurrent) {
+    paceCard.style.display = '';
+    const pColor = m.desvio > 10 ? '#DC2626' : m.desvio > -10 ? '#15803D' : '#B45309';
+    document.getElementById('cl-pace-pct').textContent = m.paceEsperado.toFixed(1) + '%';
+    document.getElementById('cl-pace-pct').style.color = pColor;
+    document.getElementById('cl-pace-exp').textContent = m.paceEsperado.toFixed(1) + '%';
+    document.getElementById('cl-inv').textContent = fmtBRL(m.invested);
+    document.getElementById('cl-budget').textContent = fmtBRL(m.budget);
+    document.getElementById('cl-pace-bar').style.width = Math.min(100, m.paceReal) + '%';
+    document.getElementById('cl-pace-bar').style.background = pColor;
+    document.getElementById('cl-pace-needle').style.left = Math.min(100, m.paceEsperado) + '%';
+    document.getElementById('cl-pace-label').textContent = pace.lbl;
+    document.getElementById('cl-pace-label').style.color = pColor;
+  } else {
+    paceCard.style.display = 'none';
+  }
+
+  // Funil
+  const funnel = document.getElementById('cl-funnel');
+  const funnelSteps = isEC ? [
+    {ico:'💰', lbl:'Investimento',  val:m.invested, fmt:fmtBRL,          sub:m.budget ? `de ${fmtBRL(m.budget)}` : ''},
+    {ico:'👁️', lbl:'Impressoes',    val:m.impressoes,fmt:v=>fmtN(v),     sub:''},
+    {ico:'🖱️', lbl:'Cliques',       val:m.cliques,  fmt:v=>fmtN(v),      sub:m.impressoes&&m.cliques ? `CTR ${((m.cliques/m.impressoes)*100).toFixed(2)}%` : ''},
+    {ico:'🛒', lbl:'Pedidos/Vendas',val:m.vendas,   fmt:v=>fmtN(v),      sub:m.roas ? `ROAS ${fmtN(m.roas,2)}x` : ''},
+    {ico:'💵', lbl:'Receita',       val:m.receita,  fmt:v=>fmtBRL(v),    sub:m.ticket ? `TM ${fmtBRL(m.ticket)}` : ''},
+  ] : [
+    {ico:'💰', lbl:'Investimento',val:m.invested,fmt:fmtBRL,           sub:m.budget ? `de ${fmtBRL(m.budget)}` : ''},
+    {ico:'🎯', lbl:'Leads',       val:m.leads,   fmt:v=>fmtN(v),       sub:m.cpl ? `CPL ${fmtBRL(m.cpl,2)}` : ''},
+    {ico:'✅', lbl:'MQL',         val:m.mql,     fmt:v=>fmtN(v)||'—',  sub:m.pctLeadMql||''},
+    {ico:'💼', lbl:'SQL',         val:m.sql,     fmt:v=>fmtN(v)||'—',  sub:m.pctMqlSql||''},
+    {ico:'🏆', lbl:'Vendas',      val:m.vendas,  fmt:v=>fmtN(v)||'—',  sub:m.pctSqlVend||''},
+  ];
+  const maxRef = funnelSteps.reduce((mx, s) => Math.max(mx, s.val||0), 1);
+  funnel.innerHTML = funnelSteps.map(s => `
+    <div class="funnel-step">
+      <div class="funnel-icon">${s.ico}</div>
+      <div class="funnel-label">${s.lbl}</div>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:${maxRef>0 ? ((s.val||0)/maxRef*100).toFixed(1) : 0}%;background:var(--red);"></div></div>
+      <div class="funnel-val">${s.fmt ? s.fmt(s.val||0) : (s.val||'—')}</div>
+      <div class="funnel-sub">${s.sub}</div>
+    </div>`).join('');
+
+  // Canais
+  const chanEl = document.getElementById('cl-channels');
+  const channels = [];
+  if (m.invMeta > 0 || m.leadsMeta > 0) channels.push({
+    name:'Meta Ads', color:'#1877F2', icon:'📘',
+    inv:m.invMeta, imp:m.impMeta, clk:m.clkMeta, ctr:m.ctrMeta,
+    leads:m.leadsMeta, taxa:m.taxaMeta, cpc:m.cpcMeta, cpl:m.cplMeta
+  });
+  if (m.invGoogle > 0 || m.leadsGoogle > 0) channels.push({
+    name:'Google Ads', color:'#4285F4', icon:'🔵',
+    inv:m.invGoogle, imp:m.impGoogle, clk:m.clkGoogle, ctr:m.ctrGoogle,
+    leads:m.leadsGoogle, taxa:m.taxaGoogle, cpc:m.cpcGoogle, cpl:m.cplGoogle
+  });
+  if (m.invLinkedin > 0) channels.push({
+    name:'LinkedIn Ads', color:'#0A66C2', icon:'💼',
+    inv:m.invLinkedin, imp:0, clk:0, ctr:null,
+    leads:m.leadsLinkedin, taxa:null, cpc:0, cpl:m.cplLinkedin
+  });
+
+  if (channels.length === 0) {
+    chanEl.innerHTML = `<p style="font-size:13px;color:var(--g4);">Sem dados por canal${m.isCurrent ? ' no mes atual' : ' em '+m.label}.</p>`;
+  } else {
+    chanEl.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;">
+      ${channels.map(ch => `
+        <div style="border:1px solid ${ch.color}33;border-radius:10px;padding:16px;border-left:3px solid ${ch.color};">
+          <div style="font-size:13px;font-weight:700;color:${ch.color};margin-bottom:12px;">${ch.icon} ${ch.name}</div>
+          <table style="width:100%;font-size:12px;border-collapse:collapse;">
+            <tr><td style="color:var(--g5);padding:3px 0;">Investimento</td><td style="font-weight:700;text-align:right;">${fmtBRL(ch.inv)}</td></tr>
+            ${ch.imp ? `<tr><td style="color:var(--g5);padding:3px 0;">Impressoes</td><td style="font-weight:600;text-align:right;">${fmtN(ch.imp)}</td></tr>` : ''}
+            ${ch.clk ? `<tr><td style="color:var(--g5);padding:3px 0;">Cliques</td><td style="font-weight:600;text-align:right;">${fmtN(ch.clk)}</td></tr>` : ''}
+            ${ch.ctr ? `<tr><td style="color:var(--g5);padding:3px 0;">CTR</td><td style="font-weight:600;text-align:right;">${ch.ctr}</td></tr>` : ''}
+            ${ch.leads ? `<tr><td style="color:var(--g5);padding:3px 0;">Leads</td><td style="font-weight:700;text-align:right;color:var(--black);">${fmtN(ch.leads)}</td></tr>` : ''}
+            ${ch.cpl ? `<tr><td style="color:var(--g5);padding:3px 0;">CPL</td><td style="font-weight:700;text-align:right;color:${ch.color};">${fmtBRL(ch.cpl,2)}</td></tr>` : ''}
+            ${ch.cpc ? `<tr><td style="color:var(--g5);padding:3px 0;">CPC</td><td style="font-weight:600;text-align:right;">${fmtBRL(ch.cpc,2)}</td></tr>` : ''}
+            ${ch.taxa ? `<tr><td style="color:var(--g5);padding:3px 0;">Conv.</td><td style="font-weight:600;text-align:right;">${ch.taxa}</td></tr>` : ''}
+          </table>
+        </div>`).join('')}
+    </div>`;
+  }
+
+  if (m.pctLeadMql || m.pctMqlSql || m.pctSqlVend) {
+    chanEl.innerHTML += `<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--g2);">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--g4);margin-bottom:10px;">Taxas de Conversao do Funil</div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:13px;">
+        ${m.pctLeadMql ? `<div><span style="color:var(--g5);">Lead - MQL</span> <strong>${m.pctLeadMql}</strong></div>` : ''}
+        ${m.pctMqlSql  ? `<div><span style="color:var(--g5);">MQL - SQL</span> <strong>${m.pctMqlSql}</strong></div>`  : ''}
+        ${m.pctSqlVend ? `<div><span style="color:var(--g5);">SQL - Venda</span> <strong>${m.pctSqlVend}</strong></div>` : ''}
+        ${m.cplMql     ? `<div><span style="color:var(--g5);">CP-MQL</span> <strong>${fmtBRL(m.cplMql,2)}</strong></div>` : ''}
+        ${m.cplSql     ? `<div><span style="color:var(--g5);">CP-SQL</span> <strong>${fmtBRL(m.cplSql,2)}</strong></div>` : ''}
+      </div>
+    </div>`;
+  }
+
+  // Historico tabela e grafico usam TODOS os meses (nao filtrado)
+  const allM = allData[currentTicker]?.allMonths || [];
+  renderHistory(allM, isEC);
+  renderChart(allM, currentMetric);
 }
 
 // ─── COMERCIAL ─────────────────────────────────────────────────────────────
@@ -1244,9 +1305,8 @@ function renderHistory(history, isEC){
 function toggleChart(btn, metric){
   currentMetric=metric;
   document.querySelectorAll('.chart-toggle').forEach(b=>b.classList.toggle('active',b===btn));
-  if(currentTicker&&allData[currentTicker]?.metrics?.history){
-    renderChart(allData[currentTicker].metrics.history, metric);
-  }
+  const allM=currentTicker ? (allData[currentTicker]?.allMonths||[]) : [];
+  if(allM.length) renderChart(allM, metric);
 }
 
 function renderChart(history, metric){
