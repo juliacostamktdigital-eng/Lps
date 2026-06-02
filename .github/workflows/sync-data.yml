@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Criar pastas de dados
-        run: mkdir -p painel/data/pace painel/data/com
+        run: mkdir -p painel/data/pace painel/data/com painel/data/kommo
 
       # ── HEALTH SCORES (Cockpit MCP) ──────────────────────────────────────
       - name: Health Scores — Cockpit
@@ -111,6 +111,134 @@ jobs:
               touch "painel/data/com/${TICKER}.csv"
             fi
           done
+
+      # ── KOMMO CRM ─────────────────────────────────────────────────────────
+      - name: Kommo — VLoca (ACCE)
+        env:
+          KOMMO_ACCE: ${{ secrets.KOMMO_ACCE }}
+        run: |
+          HOST="rodrigocampos716.kommo.com"
+          PIPELINE=12500784
+
+          declare -A STAGE_NAMES=(
+            ["96545992"]="NOVO LEAD"
+            ["104848015"]="Aguardando atendimento"
+            ["96545996"]="EM DIAGNÓSTICO"
+            ["96546000"]="QUALIFICADO (MQL)"
+            ["96546004"]="Negociação (SQL)"
+            ["102944911"]="REPROVADO"
+            ["104848019"]="VENDA FUTURA"
+            ["142"]="Venda ganha"
+            ["143"]="DESQUALIFICADO"
+          )
+          STAGE_ORDER=(96545992 104848015 96545996 96546000 96546004 102944911 104848019 142 143)
+
+          declare -A CNTS PRICES
+          TOTAL=0 PAGE=1
+
+          while true; do
+            RESP=$(curl -s "https://${HOST}/api/v4/leads?pipeline_id=${PIPELINE}&limit=250&page=${PAGE}" \
+              -H "Authorization: Bearer $KOMMO_ACCE" --max-time 20)
+            N=$(echo "$RESP" | jq '._embedded.leads | length // 0' 2>/dev/null || echo 0)
+            [ "$N" = "0" ] && break
+            while IFS=$'\t' read -r SID PRICE; do
+              CNTS[$SID]=$((${CNTS[$SID]:-0} + 1))
+              PRICES[$SID]=$((${PRICES[$SID]:-0} + ${PRICE:-0}))
+              TOTAL=$((TOTAL+1))
+            done < <(echo "$RESP" | jq -r '._embedded.leads[] | "\(.status_id)\t\(.price//0)"' 2>/dev/null)
+            echo "$RESP" | jq -e '._links.next' >/dev/null 2>&1 || break
+            PAGE=$((PAGE + 1)); [ $PAGE -gt 60 ] && break
+          done
+
+          STAGES="["; FIRST=1; OTHER=0
+          for SID in "${STAGE_ORDER[@]}"; do
+            C=${CNTS[$SID]:-0}; P=${PRICES[$SID]:-0}; NM="${STAGE_NAMES[$SID]}"
+            [ $FIRST -eq 0 ] && STAGES+=","
+            STAGES+="{\"id\":$SID,\"name\":\"$NM\",\"count\":$C,\"price\":$P}"
+            FIRST=0
+          done
+          for SID in "${!CNTS[@]}"; do
+            [[ -n "${STAGE_NAMES[$SID]}" ]] || OTHER=$((OTHER + ${CNTS[$SID]}))
+          done
+          [ $OTHER -gt 0 ] && STAGES+=",{\"id\":0,\"name\":\"Outros funis\",\"count\":$OTHER,\"price\":0}"
+          STAGES+="]"
+
+          WON=${CNTS[142]:-0}; MQL=${CNTS[96546000]:-0}; SQL=${CNTS[96546004]:-0}
+          DISQ=${CNTS[143]:-0}; ACTIVE=$((TOTAL - DISQ - WON)); REC=${PRICES[142]:-0}
+
+          jq -n \
+            --arg ua "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" \
+            --arg brt "$(TZ='America/Sao_Paulo' date '+%d/%m/%Y %H:%M')" \
+            --argjson stages "$STAGES" \
+            --argjson total $TOTAL --argjson active $ACTIVE \
+            --argjson mql $MQL --argjson sql $SQL --argjson won $WON --argjson rec $REC \
+            '{updatedAt:$ua,updatedAtBRT:$brt,
+              pipeline:{id:12500784,name:"Funil 1 – Motoqueiros"},
+              stages:$stages,
+              summary:{total:$total,active:$active,mql:$mql,sql:$sql,won:$won,receita:$rec}}' \
+            > painel/data/kommo/ACCE.json
+          echo "Kommo ACCE OK: $TOTAL leads ($MQL MQL, $SQL SQL, $WON ganhos)"
+
+      - name: Kommo — Atlantica Maquinas (SOTB)
+        env:
+          KOMMO_SOTB: ${{ secrets.KOMMO_SOTB }}
+        run: |
+          HOST="atlanticamaquinas.kommo.com"
+          PIPELINE=12730796
+
+          # Checar se token esta configurado
+          if [ -z "$KOMMO_SOTB" ]; then
+            echo '{"updatedAt":"","error":"Secret KOMMO_SOTB nao configurado"}' \
+              > painel/data/kommo/SOTB.json
+            echo "Kommo SOTB: token nao configurado, pulando"
+            exit 0
+          fi
+
+          declare -A CNTS PRICES
+          TOTAL=0 PAGE=1
+
+          while true; do
+            RESP=$(curl -s "https://${HOST}/api/v4/leads?pipeline_id=${PIPELINE}&limit=250&page=${PAGE}" \
+              -H "Authorization: Bearer $KOMMO_SOTB" --max-time 20)
+            N=$(echo "$RESP" | jq '._embedded.leads | length // 0' 2>/dev/null || echo 0)
+            [ "$N" = "0" ] && break
+            while IFS=$'\t' read -r SID PRICE; do
+              CNTS[$SID]=$((${CNTS[$SID]:-0} + 1))
+              PRICES[$SID]=$((${PRICES[$SID]:-0} + ${PRICE:-0}))
+              TOTAL=$((TOTAL+1))
+            done < <(echo "$RESP" | jq -r '._embedded.leads[] | "\(.status_id)\t\(.price//0)"' 2>/dev/null)
+            echo "$RESP" | jq -e '._links.next' >/dev/null 2>&1 || break
+            PAGE=$((PAGE + 1)); [ $PAGE -gt 60 ] && break
+          done
+
+          # Buscar nomes das etapas do pipeline
+          STAGES_RESP=$(curl -s "https://${HOST}/api/v4/leads/pipelines/${PIPELINE}?with=statuses" \
+            -H "Authorization: Bearer $KOMMO_SOTB" --max-time 15)
+
+          # Construir stages JSON com contagens
+          STAGES=$(echo "$STAGES_RESP" | jq --argjson cnts "$(
+            for SID in "${!CNTS[@]}"; do printf '"%s":%s,' "$SID" "${CNTS[$SID]}"; done | sed 's/,$//'
+          )" '
+            [ ._embedded.statuses[]
+              | select(.type != 1)
+              | {id, name, count: (($cnts[.id|tostring]) // 0), price: 0}
+            ]' 2>/dev/null || echo "[]")
+
+          WON=${CNTS[142]:-0}; DISQ=${CNTS[143]:-0}; REC=${PRICES[142]:-0}
+          ACTIVE=$((TOTAL - DISQ - WON))
+
+          jq -n \
+            --arg ua "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" \
+            --arg brt "$(TZ='America/Sao_Paulo' date '+%d/%m/%Y %H:%M')" \
+            --argjson stages "${STAGES:-[]}" \
+            --argjson total $TOTAL --argjson active $ACTIVE \
+            --argjson won $WON --argjson rec $REC \
+            '{updatedAt:$ua,updatedAtBRT:$brt,
+              pipeline:{id:12730796,name:"Pipeline Principal"},
+              stages:$stages,
+              summary:{total:$total,active:$active,mql:0,sql:0,won:$won,receita:$rec}}' \
+            > painel/data/kommo/SOTB.json
+          echo "Kommo SOTB OK: $TOTAL leads ($WON ganhos)"
 
       # ── EKYTE TASKS ───────────────────────────────────────────────────────
       - name: Ekyte — Tarefas em Aberto

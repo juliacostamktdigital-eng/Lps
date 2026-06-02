@@ -300,6 +300,22 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--g1);color:var(--g
       </div>
     </div>
 
+    <!-- Kommo CRM -->
+    <div id="cl-kommo-wrap" style="display:none;margin-bottom:20px;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+        <div>
+          <div style="font-size:16px;font-weight:800;" id="cl-kommo-title">CRM Kommo</div>
+          <div style="font-size:12px;color:var(--g5);" id="cl-kommo-sub">Pipeline de vendas</div>
+        </div>
+        <span id="cl-kommo-updated" style="font-size:11px;color:var(--g4);"></span>
+      </div>
+      <div id="cl-kommo-kpis" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-bottom:16px;"></div>
+      <div class="card" style="padding:16px 20px;">
+        <div class="card-label">Kanban — Volume por Etapa</div>
+        <div id="cl-kommo-kanban"></div>
+      </div>
+    </div>
+
     <!-- Grafico historico -->
     <div class="card" style="margin-bottom:20px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
@@ -337,12 +353,12 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--g1);color:var(--g
 // ─── CONFIG ────────────────────────────────────────────────────────────────
 const CLIENTS = {
   FCE:   { name:'FiveCred',          type:'is' },
-  ACCE:  { name:'VLoca',             type:'is' },
+  ACCE:  { name:'VLoca',             type:'is', kommo:true },
   MSZB:  { name:'Massimo Zanetti',   type:'ec' },
   TAWV:  { name:'Tawa Veiculos',     type:'is' },
   TECN1: { name:'Tecnipool',         type:'is' },
   FARS:  { name:'Fares Aquino',      type:'is' },
-  SOTB:  { name:'Atlantica Maquinas',type:'is' },
+  SOTB:  { name:'Atlantica Maquinas',type:'is', kommo:true },
 };
 const HS = {
   Safe:     { color:'#15803D', bg:'#DCFCE7', emoji:'🟢' },
@@ -543,7 +559,15 @@ async function loadAll(){
                   : allMonths.length > 0 ? allMonths[allMonths.length-1] : null;
       // Cliente sem dados ativos: todos os indicadores zerados = onboarding/inativo
       if(metrics && metrics.invested===0 && metrics.leads===0 && metrics.vendas===0 && metrics.impressoes===0) metrics=null;
-      allData[t]={hs:hsMap[t]||null, metrics, allMonths, name:CLIENTS[t].name, type:CLIENTS[t].type};
+      // Kommo CRM (se configurado)
+      let kommo = null;
+      if(CLIENTS[t].kommo){
+        try{
+          const kj=await fetch(`data/kommo/${t}.json?`+Date.now()).then(r=>r.json());
+          if(kj.summary && kj.summary.total>0) kommo=kj;
+        }catch(_){}
+      }
+      allData[t]={hs:hsMap[t]||null, metrics, allMonths, kommo, name:CLIENTS[t].name, type:CLIENTS[t].type};
     }catch(e){allData[t]={hs:hsMap[t]||null,metrics:null,name:CLIENTS[t].name,type:CLIENTS[t].type};}
   }));
 
@@ -649,6 +673,7 @@ function renderClient(t){
   document.getElementById('cl-pace-label').textContent='—';
   document.getElementById('cl-pace-month-filter').innerHTML='';
   document.getElementById('cl-pace-month-label').textContent='Mes Atual — Resultados';
+  document.getElementById('cl-kommo-wrap').style.display='none';
   paceMonthFilter[t] = 'current'; // reset ao mes atual ao trocar de cliente
   if(clientChart){clientChart.destroy();clientChart=null;}
 
@@ -664,6 +689,9 @@ function renderClient(t){
   // Pills de mes + KPIs/funil/canais (pode ser trocado sem recarregar cliente)
   renderPaceMonthBtns(t, d.allMonths);
   renderPaceKPIs(m, isEC, hs);
+
+  // Kommo CRM
+  if(d.kommo) renderKommo(d.kommo);
 
   // Pipeline Comercial
   loadComercialData(t);
@@ -688,6 +716,52 @@ function renderClient(t){
     document.getElementById('cl-hs-score').textContent='—';
     document.getElementById('cl-hs-action').textContent='Health Score nao disponivel para este cliente.';
   }
+}
+
+// ─── KOMMO CRM ─────────────────────────────────────────────────────────────
+function renderKommo(k) {
+  const wrap = document.getElementById('cl-kommo-wrap');
+  if (!k || !k.summary) { wrap.style.display = 'none'; return; }
+
+  wrap.style.display = '';
+  const s = k.summary;
+  document.getElementById('cl-kommo-title').textContent = `CRM Kommo — ${k.pipeline?.name || 'Pipeline'}`;
+  document.getElementById('cl-kommo-sub').textContent = `${s.total.toLocaleString('pt-BR')} leads no CRM`;
+  document.getElementById('cl-kommo-updated').textContent = k.updatedAtBRT ? `Sync: ${k.updatedAtBRT}` : '';
+
+  const kpis = [
+    { lbl:'Total Leads', val:fmtN(s.total),  sub:'no CRM',          color:'var(--black)' },
+    { lbl:'Ativos',      val:fmtN(s.active), sub:'em andamento',     color:'var(--blue)' },
+    { lbl:'MQL',         val:fmtN(s.mql),    sub:'qualificados',     color:'var(--purple)' },
+    { lbl:'SQL',         val:fmtN(s.sql),    sub:'em negociacao',    color:'var(--yellow)' },
+    { lbl:'Ganhos',      val:fmtN(s.won),    sub:'vendas fechadas',  color:'var(--green)' },
+    { lbl:'Receita CRM', val:s.receita>0?fmtBRL(s.receita):'—', sub:'vendas ganhas', color:'var(--green)' },
+  ];
+  document.getElementById('cl-kommo-kpis').innerHTML = kpis.map(c => `
+    <div class="metric" style="border-left:3px solid ${c.color};">
+      <div class="metric-label">${c.lbl}</div>
+      <div class="metric-val" style="color:${c.color};">${c.val}</div>
+      <div class="metric-sub">${c.sub}</div>
+    </div>`).join('');
+
+  const stages = (k.stages || []).filter(st => st.count > 0);
+  const maxCount = Math.max(...stages.map(st => st.count), 1);
+  document.getElementById('cl-kommo-kanban').innerHTML = stages.map(st => {
+    const pct = ((st.count / maxCount) * 100).toFixed(1);
+    const isWon  = st.id === 142;
+    const isDisq = st.id === 143 || st.id === 0;
+    const isMQL  = st.name.toLowerCase().includes('mql') || st.name.toLowerCase().includes('qualif');
+    const isSQL  = st.name.toLowerCase().includes('sql') || st.name.toLowerCase().includes('negoc');
+    const color  = isWon ? 'var(--green)' : isDisq ? 'var(--g3)' : isMQL ? 'var(--blue)' : isSQL ? 'var(--purple)' : 'var(--red)';
+    const tc     = isDisq ? 'var(--g4)' : 'var(--g7)';
+    return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <div style="width:180px;font-size:12px;font-weight:500;color:${tc};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${st.name}</div>
+      <div style="flex:1;height:20px;background:var(--g1);border-radius:4px;overflow:hidden;">
+        <div style="height:100%;width:${pct}%;background:${color};border-radius:4px;transition:width 0.4s;"></div>
+      </div>
+      <div style="width:40px;text-align:right;font-size:12px;font-weight:700;color:${tc};">${fmtN(st.count)}</div>
+    </div>`;
+  }).join('') || '<p style="font-size:13px;color:var(--g4);">Sem dados de etapas.</p>';
 }
 
 // ─── PACE MONTH NAVIGATION ─────────────────────────────────────────────────

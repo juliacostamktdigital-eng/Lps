@@ -1,0 +1,25 @@
+{
+  "updatedAt": "2026-06-02T13:00:00Z",
+  "updatedAtBRT": "02/06/2026 10:00",
+  "pipeline": {"id": 12500784, "name": "Funil 1 – Motoqueiros"},
+  "stages": [
+    {"id": 96545992,  "name": "NOVO LEAD",              "count": 203, "price": 0},
+    {"id": 104848015, "name": "Aguardando atendimento", "count": 1,   "price": 0},
+    {"id": 96545996,  "name": "EM DIAGNÓSTICO",     "count": 22,  "price": 0},
+    {"id": 96546000,  "name": "QUALIFICADO (MQL)",       "count": 139, "price": 0},
+    {"id": 96546004,  "name": "Negociação (SQL)", "count": 4, "price": 0},
+    {"id": 102944911, "name": "REPROVADO",               "count": 9,   "price": 0},
+    {"id": 104848019, "name": "VENDA FUTURA",             "count": 13,  "price": 0},
+    {"id": 142,       "name": "Venda ganha",              "count": 38,  "price": 0},
+    {"id": 143,       "name": "DESQUALIFICADO",           "count": 1455,"price": 0},
+    {"id": 0,         "name": "Outros funis",             "count": 166, "price": 0}
+  ],
+  "summary": {
+    "total": 2050,
+    "active": 242,
+    "mql": 139,
+    "sql": 4,
+    "won": 38,
+    "receita": 0
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "updatedAt": "",
+  "updatedAtBRT": "",
+  "pipeline": {"id": 12730796, "name": "Pipeline Principal"},
+  "stages": [],
+  "summary": {
+    "total": 0,
+    "active": 0,
+    "mql": 0,
+    "sql": 0,
+    "won": 0,
+    "receita": 0
+  },
+  "error": "Token pendente — regerar em atlanticamaquinas.kommo.com"
+}
