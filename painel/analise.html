@@ -800,17 +800,34 @@ function renderClient(t){
 function norm(s){ return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim(); }
 function colIdx(header, variants){ return header.findIndex(h => variants.some(v => norm(v)===norm(h))); }
 
+// FCE: 6 produtos — cada um com seu CSV separado
+const FCE_TABS = [
+  { key:'FCE_CONS',  label:'Consignado'       },
+  { key:'FCE_FGTS',  label:'FGTS'             },
+  { key:'FCE_CARTA', label:'Carta Contemplada' },
+  { key:'FCE_CGI',   label:'CGI'              },
+  { key:'FCE_LUZ',   label:'Conta de Luz'     },
+  { key:'FCE_EXT',   label:'Externos'         },
+];
+
+const FCE_STATUS_SCHEMA = {
+  style:'status',
+  h: {
+    nome:   ['nome','nome completo','name'],
+    data:   ['data','data do lead','date'],
+    status: ['status'],
+    obs:    ['observações','observacoes','obs','observação'],
+    receita:['receita','receita total','valor'],
+  }
+};
+
 const COM_SCHEMA = {
-  FCE: {
-    style:'status',
-    h: {
-      nome:   ['nome','nome completo','name'],
-      data:   ['data','data do lead','date'],
-      status: ['status'],
-      obs:    ['observações','observacoes','obs','observação'],
-      receita:['receita','receita total','valor'],
-    }
-  },
+  FCE_CONS:  FCE_STATUS_SCHEMA,
+  FCE_FGTS:  FCE_STATUS_SCHEMA,
+  FCE_CARTA: FCE_STATUS_SCHEMA,
+  FCE_CGI:   FCE_STATUS_SCHEMA,
+  FCE_LUZ:   FCE_STATUS_SCHEMA,
+  FCE_EXT:   FCE_STATUS_SCHEMA,
   TECN1: {
     style:'mqsql',
     boolVal: true, // MQL/SQL usam "Sim"/"Não" em vez de vazio/preenchido
@@ -850,6 +867,103 @@ function buildColMap(header, schema) {
 async function loadComercialData(ticker) {
   const wrap = document.getElementById('cl-comercial-wrap');
   const empty = document.getElementById('cl-comercial-empty');
+
+  // FCE: carregar todos os 6 produtos em paralelo
+  if (ticker === 'FCE') {
+    wrap.style.display = '';
+    empty.style.display = 'none';
+    document.getElementById('cl-com-kpis').innerHTML = '<div class="ld"><div class="sp"></div> Carregando produtos...</div>';
+    document.getElementById('cl-com-alert').style.display = 'none';
+    document.getElementById('cl-com-stages').innerHTML = '';
+    document.getElementById('cl-com-pending').innerHTML = '';
+    document.getElementById('cl-com-stage-label').textContent = 'Leads por Produto';
+
+    const results = await Promise.allSettled(
+      FCE_TABS.map(tab => fetch(`data/com/${tab.key}.csv?` + Date.now())
+        .then(r => r.text())
+        .then(csv => ({ ...tab, csv }))
+        .catch(() => ({ ...tab, csv: '' }))
+      )
+    );
+
+    let totalGeral=0, semObsGeral=0, vendasGeral=0, receitaGeral=0;
+    const prodCards = [];
+    const allPending = [];
+
+    for (const r of results) {
+      if (r.status !== 'fulfilled') continue;
+      const { label, key, csv } = r.value;
+      if (!csv || csv.length < 10) {
+        prodCards.push({ label, total:0, semObs:0, vendas:0, receita:0, ok:false });
+        continue;
+      }
+      const rows = parseCSV(csv);
+      const header = rows[0];
+      const data = rows.slice(1).filter(r => r.some(c => c.trim()));
+      const c = buildColMap(header, FCE_STATUS_SCHEMA);
+      const get = (row, f) => c[f] >= 0 ? (row[c[f]] || '').trim() : '';
+
+      let t=data.length, so=0, v=0, rec=0;
+      data.forEach(row => {
+        const status = get(row,'status');
+        const obs    = get(row,'obs');
+        const recVal = brl(get(row,'receita'));
+        if (!obs) { so++; allPending.push({ label, nome: get(row,'nome')||'—', data: get(row,'data'), status }); }
+        if (status && (status.toLowerCase().includes('fecha') || status.toLowerCase().includes('comprou'))) v++;
+        rec += recVal;
+      });
+
+      totalGeral += t; semObsGeral += so; vendasGeral += v; receitaGeral += rec;
+      prodCards.push({ label, total:t, semObs:so, vendas:v, receita:rec, ok:true });
+    }
+
+    // Resumo por produto
+    document.getElementById('cl-com-kpis').innerHTML = prodCards.map(p => `
+      <div class="metric" style="border-left:2px solid ${p.ok ? 'var(--red)':'var(--g3)'};">
+        <div class="metric-label" style="font-size:11px;">${p.label}</div>
+        <div class="metric-val" style="font-size:18px;">${p.total}</div>
+        <div class="metric-sub">${p.semObs > 0 ? `<span style="color:var(--red);">${p.semObs} sem obs</span>` : '✓'} · ${p.vendas} fechados</div>
+      </div>`).join('') +
+      `<div class="metric" style="border-left:2px solid var(--green);">
+        <div class="metric-label">TOTAL FCE</div>
+        <div class="metric-val" style="color:var(--black);">${totalGeral}</div>
+        <div class="metric-sub">${semObsGeral} sem obs · R$ ${receitaGeral.toLocaleString('pt-BR',{maximumFractionDigits:0})}</div>
+      </div>`;
+
+    // Alerta geral
+    if (semObsGeral > 0) {
+      const alertEl = document.getElementById('cl-com-alert');
+      alertEl.style.display = '';
+      alertEl.innerHTML = `<div class="alert-box">⚠️ <strong>${semObsGeral}</strong> leads sem observação em todos os produtos FiveCred — precisam de atualização pelo comercial.</div>`;
+    }
+
+    // Tabela funil por produto
+    document.getElementById('cl-com-stages').innerHTML = prodCards.filter(p=>p.ok).map(p => `
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--g1);">
+        <div style="font-size:12px;color:var(--g7);flex:1;">${p.label}</div>
+        <div style="font-size:11px;color:var(--g4);">${p.total} leads</div>
+        <div style="font-size:12px;font-weight:700;color:${p.semObs>0?'var(--red)':'var(--green)'};">${p.semObs} sem obs</div>
+        <div style="font-size:11px;color:var(--green);">${p.vendas} ✓</div>
+        <div style="font-size:11px;color:var(--g5);">${fmtBRL(p.receita)}</div>
+      </div>`).join('');
+
+    // Leads pendentes cross-produto
+    const pendEl = document.getElementById('cl-com-pending');
+    if (allPending.length === 0) {
+      pendEl.innerHTML = '<p style="font-size:13px;color:var(--green);padding:8px 0;">✓ Todos os leads estão com observação.</p>';
+    } else {
+      pendEl.innerHTML = allPending.slice(0,20).map(l => `
+        <div style="padding:6px 0;border-bottom:1px solid var(--g1);font-size:12px;">
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span style="font-size:10px;background:var(--g2);padding:1px 6px;border-radius:99px;color:var(--g5);">${l.label}</span>
+            <span style="font-weight:600;">${l.nome}</span>
+          </div>
+          <div style="color:var(--g5);margin-top:1px;">${l.data||''} ${l.status?'· '+l.status:''}</div>
+        </div>`).join('') +
+        (allPending.length > 20 ? `<div style="font-size:11px;color:var(--g4);padding:6px 0;">+${allPending.length-20} outros sem observação</div>` : '');
+    }
+    return;
+  }
 
   const schema = COM_SCHEMA[ticker];
   if (!schema) {

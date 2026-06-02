@@ -71,7 +71,12 @@ jobs:
             ["SOTB"]="1GDiRcey6G4kmx0ybSoIhVJSMRx-LGM5Ae7LepLNMoB0:617612824"
           )
           declare -A COM_SHEETS=(
-            ["FCE"]="1duCquoJj-NEf2sGF_25oD6lHWZegCOoiGgoJ6F1N5TU:0"
+            ["FCE_CONS"]="1duCquoJj-NEf2sGF_25oD6lHWZegCOoiGgoJ6F1N5TU:589062535"
+            ["FCE_FGTS"]="1duCquoJj-NEf2sGF_25oD6lHWZegCOoiGgoJ6F1N5TU:1121972824"
+            ["FCE_CARTA"]="1duCquoJj-NEf2sGF_25oD6lHWZegCOoiGgoJ6F1N5TU:0"
+            ["FCE_CGI"]="1duCquoJj-NEf2sGF_25oD6lHWZegCOoiGgoJ6F1N5TU:1071369815"
+            ["FCE_LUZ"]="1duCquoJj-NEf2sGF_25oD6lHWZegCOoiGgoJ6F1N5TU:804001817"
+            ["FCE_EXT"]="1duCquoJj-NEf2sGF_25oD6lHWZegCOoiGgoJ6F1N5TU:1243633650"
             ["TECN1"]="1Q4cgA_XG2Q6TxPzIB5oKb0vHGUyaQa-bFsJwFc41hrQ:0"
             ["FARS"]="1X-tCWiJeRVLuRiCXjuGlpXBVbhcQRROQJRn_QefJeIo:285026569"
           )
