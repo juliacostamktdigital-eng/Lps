@@ -427,37 +427,30 @@ tr:hover td { background: var(--gray-100); }
   <div class="tab-panel" id="tab-agenda">
     <div class="page-header">
       <div class="page-title">Agenda</div>
-      <div class="page-sub" id="agenda-sub">Hoje</div>
+      <div class="page-sub" id="agenda-sub">julia.costa@v4company.com</div>
     </div>
 
-    <div class="g2" style="align-items:start; gap:22px;">
-      <div>
-        <div class="card" style="margin-bottom:14px;">
-          <div class="card-label">Google Calendar — Configurar</div>
-          <p style="font-size:12px;color:var(--gray-500);line-height:1.7;margin-bottom:10px;">
-            Para obter o link: Google Calendar → Configuracoes → [seu calendario] → Role ate "Endereco do calendario em formato iCal" (link privado) → copie o link.
-          </p>
-          <div class="form-group">
-            <label class="form-label">Link iCal (privado)</label>
-            <input class="input" id="ical-input" placeholder="https://calendar.google.com/calendar/ical/..." type="url">
-          </div>
-          <button class="btn btn-red btn-sm" onclick="saveIcal()">Salvar e Carregar</button>
-        </div>
+    <!-- Seletor de visualizacao -->
+    <div style="display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap;">
+      <button class="btn btn-red btn-sm" onclick="setCalView('day')">Hoje</button>
+      <button class="btn btn-gray btn-sm" onclick="setCalView('week')">Semana</button>
+      <button class="btn btn-gray btn-sm" onclick="setCalView('month')">Mes</button>
+      <button class="btn btn-gray btn-sm" onclick="setCalView('agenda')">Lista</button>
+    </div>
 
-        <div class="card">
-          <div class="card-label">Hoje</div>
-          <div id="agenda-today">
-            <p style="font-size:13px;color:var(--gray-400);padding:8px 0;">Configure o link iCal acima para ver seus eventos.</p>
-          </div>
-        </div>
-      </div>
+    <!-- Embed Google Calendar -->
+    <div class="card" style="padding:0; overflow:hidden; border-radius:12px;">
+      <iframe
+        id="cal-iframe"
+        src="https://calendar.google.com/calendar/embed?src=julia.costa%40v4company.com&ctz=America%2FSao_Paulo&mode=WEEK&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0&bgcolor=%23ffffff&color=%23CC1B2B"
+        style="border:0; width:100%; height:640px; display:block;"
+        frameborder="0"
+        scrolling="no">
+      </iframe>
+    </div>
 
-      <div class="card">
-        <div class="card-label">Proximos 7 dias</div>
-        <div id="agenda-week">
-          <p style="font-size:13px;color:var(--gray-400);padding:8px 0;">Configure o link iCal ao lado.</p>
-        </div>
-      </div>
+    <div style="font-size:11px; color:var(--gray-400); margin-top:10px; text-align:right;">
+      Voce precisa estar logada com julia.costa@v4company.com no navegador para ver os eventos.
     </div>
   </div>
 
@@ -587,11 +580,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // restore ical — URL pre-configurada
-  const defaultIcal = 'https://calendar.google.com/calendar/ical/julia.costa%40v4company.com/public/basic.ics';
-  const saved = localStorage.getItem('ical_url') || defaultIcal;
-  localStorage.setItem('ical_url', saved);
-  document.getElementById('ical-input').value = saved;
+  // agenda usa embed direto — sem configuracao necessaria
 
   renderTsLog();
 });
@@ -1000,87 +989,19 @@ function copyMsg() {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// ABA AGENDA
+// ABA AGENDA — embed Google Calendar
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function saveIcal() {
-  const url = document.getElementById('ical-input').value.trim();
-  if (!url) { toast('Cole o link iCal primeiro','err'); return; }
-  localStorage.setItem('ical_url', url);
-  loadAgenda();
+const CAL_BASE = 'https://calendar.google.com/calendar/embed?src=julia.costa%40v4company.com&ctz=America%2FSao_Paulo&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0&bgcolor=%23ffffff&color=%23CC1B2B';
+
+function setCalView(mode) {
+  const modeMap = { day:'DAY', week:'WEEK', month:'MONTH', agenda:'AGENDA' };
+  const iframe = document.getElementById('cal-iframe');
+  iframe.src = CAL_BASE + '&mode=' + (modeMap[mode]||'WEEK');
+  document.querySelectorAll('#tab-agenda .btn').forEach(b => b.className = 'btn btn-gray btn-sm');
+  event.target.className = 'btn btn-red btn-sm';
 }
 
-async function loadAgenda() {
-  const url = localStorage.getItem('ical_url');
-  if (!url) return;
-  document.getElementById('agenda-today').innerHTML = '<div class="loading"><div class="spin"></div> Carregando...</div>';
-  try {
-    const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
-    const r = await fetch(proxy);
-    const ical = await r.text();
-    const events = parseIcal(ical);
-    const now = new Date();
-    const todayStr = now.toDateString();
-
-    const todayEvts = events.filter(e=>e.start&&new Date(e.start).toDateString()===todayStr)
-      .sort((a,b)=>new Date(a.start)-new Date(b.start));
-    const weekEvts = events.filter(e=>{
-      if(!e.start) return false;
-      const d=(new Date(e.start)-now)/(86400000);
-      return d>=-1&&d<=7;
-    }).sort((a,b)=>new Date(a.start)-new Date(b.start));
-
-    const PAL=['#CC1B2B','#2563EB','#15803D','#7C3AED','#D97706','#0891B2'];
-    const dotColor = s => PAL[Math.abs((s||'x').charCodeAt(0))%PAL.length];
-
-    const renderEvt = (e, showDate) => {
-      const start = new Date(e.start), end = e.end?new Date(e.end):null;
-      const allDay = start.getHours()===0&&start.getMinutes()===0&&(!end||end-start>=86400000);
-      const timeStr = allDay?'Dia todo':start.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+(end?' – '+end.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'');
-      const dateStr = showDate?start.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'})+' · ':'';
-      return `<div class="event-row">
-        <div class="event-dot" style="background:${dotColor(e.summary)};"></div>
-        <div>
-          <div class="event-time">${dateStr}${timeStr}</div>
-          <div class="event-title">${e.summary||'Sem titulo'}</div>
-          ${e.location?`<div class="event-loc">📍 ${e.location}</div>`:''}
-        </div>
-      </div>`;
-    };
-
-    document.getElementById('agenda-today').innerHTML = todayEvts.length
-      ? todayEvts.map(e=>renderEvt(e,false)).join('')
-      : '<p style="font-size:13px;color:var(--gray-400);padding:8px 0;">Sem eventos hoje.</p>';
-
-    document.getElementById('agenda-week').innerHTML = weekEvts.length
-      ? weekEvts.map(e=>renderEvt(e,true)).join('')
-      : '<p style="font-size:13px;color:var(--gray-400);padding:8px 0;">Sem eventos proximos.</p>';
-
-  } catch(e) {
-    document.getElementById('agenda-today').innerHTML = `<div class="alert">Erro ao carregar agenda: ${e.message}. Verifique o link iCal.</div>`;
-  }
-}
-
-function parseIcal(text) {
-  const events=[];
-  text.split('BEGIN:VEVENT').slice(1).forEach(block=>{
-    const g=(k)=>{
-      const m=block.match(new RegExp(k+'(?:;[^:]+)?:([\\s\\S]+?)(?:\\r?\\n(?![\\t ]))'));
-      return m?m[1].replace(/\r?\n[\t ]/g,'').trim():null;
-    };
-    const pd=(s)=>{
-      if(!s) return null;
-      if(s.length===8) return new Date(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8));
-      if(s.includes('T')){
-        const utc=s.endsWith('Z');
-        const [yr,mo,dy,hr,mn,sc]=[+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8),+s.slice(9,11),+s.slice(11,13),+s.slice(13,15)];
-        return utc?new Date(Date.UTC(yr,mo,dy,hr,mn,sc)):new Date(yr,mo,dy,hr,mn,sc);
-      }
-      return null;
-    };
-    events.push({ summary:g('SUMMARY'), location:g('LOCATION'), start:pd(g('DTSTART')), end:pd(g('DTEND')) });
-  });
-  return events.filter(e=>e.start);
-}
+function loadAgenda() {}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // ABA TIMESHEET
