@@ -1,0 +1,139 @@
+name: Sync Dashboard Data
+
+on:
+  schedule:
+    - cron: '0 10 * * 1-5'   # 07:00 BRT (10:00 UTC) — seg a sex
+  workflow_dispatch:           # botao manual no GitHub Actions
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Criar pastas de dados
+        run: mkdir -p painel/data/pace painel/data/com
+
+      # ── HEALTH SCORES (Cockpit MCP) ──────────────────────────────────────
+      - name: Health Scores — Cockpit
+        env:
+          COCKPIT_TOKEN: ${{ secrets.COCKPIT_TOKEN }}
+        run: |
+          # 1. Initialize session
+          curl -s -D /tmp/hs_headers.txt -X POST \
+            "https://mcp-cockpit.dados.collieassociados.com/mcp" \
+            -H "Authorization: Bearer $COCKPIT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -H "Accept: application/json, text/event-stream" \
+            -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"gh-sync","version":"1.0"}}}' \
+            -o /tmp/hs_init.txt --max-time 15
+
+          SESSION=$(grep -i 'mcp-session-id:' /tmp/hs_headers.txt | awk '{print $2}' | tr -d '\r\n')
+          echo "Cockpit session: $SESSION"
+
+          # 2. Query all projects with health score
+          curl -s -X POST \
+            "https://mcp-cockpit.dados.collieassociados.com/mcp" \
+            -H "Authorization: Bearer $COCKPIT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -H "Accept: application/json, text/event-stream" \
+            -H "mcp-session-id: $SESSION" \
+            -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"cockpit_query_table","arguments":{"page":1,"pageSize":50,"resolveCalculations":true}}}' \
+            -o /tmp/hs_raw.txt --max-time 20
+
+          # 3. Extrair JSON e filtrar clientes Colli
+          grep '^data:' /tmp/hs_raw.txt | sed 's/^data: //' | \
+            jq '.result.content[0].text | fromjson |
+              { updatedAt: (now | todate),
+                data: [.data[] | select(.ticker | test("FCE|ACCE|MSZB|TAWV|TECN1|FARS|SOTB")) |
+                  { ticker, name, algorithm_flag, algorithm_health_avg_score, lt,
+                    projectStartDate, churnDate, atendimentoDiarioAtivo }]
+              }' > painel/data/health_scores.json 2>/dev/null \
+            || echo '{"updatedAt":"","data":[],"error":"parse failed"}' > painel/data/health_scores.json
+
+          echo "Health scores salvos: $(jq '.data | length' painel/data/health_scores.json) clientes"
+
+      # ── GROWTHPACE (Google Sheets) ────────────────────────────────────────
+      - name: GrowthPace — Google Sheets
+        run: |
+          declare -A PACE_SHEETS=(
+            ["FCE"]="1naAmFNzrycM5cddVQDhGduDQx0nZFe0GlgtajOA2fUI:617612824"
+            ["ACCE"]="1DJYnq3qXC9Td8Fip1LJvFy4qn8XBIIkcGhT8QC2m_M8:2105044438"
+            ["MSZB"]="1Trpq5YTb4e_spNIG94bE12z1u6ZWPkPEr_wDPlcz29Y:368538734"
+            ["TAWV"]="1qGWXaxS2yLu3jX9hTIxX87jwnT1ONi59kFNSSXVIaDY:2105044438"
+            ["TECN1"]="1e2PKWFMxEHoc-9K_0_omXVLiLIT8bASte0J_s6KCiMg:2105044438"
+            ["FARS"]="1y_veFQsSb7q8Nzz_Q0ZD68D29vWM20c578JZDVZLkpU:105734657"
+            ["SOTB"]="1GDiRcey6G4kmx0ybSoIhVJSMRx-LGM5Ae7LepLNMoB0:617612824"
+          )
+          declare -A COM_SHEETS=(
+            ["FCE"]="1duCquoJj-NEf2sGF_25oD6lHWZegCOoiGgoJ6F1N5TU:0"
+            ["TECN1"]="1Q4cgA_XG2Q6TxPzIB5oKb0vHGUyaQa-bFsJwFc41hrQ:0"
+            ["FARS"]="1X-tCWiJeRVLuRiCXjuGlpXBVbhcQRROQJRn_QefJeIo:285026569"
+          )
+
+          for TICKER in "${!PACE_SHEETS[@]}"; do
+            INFO="${PACE_SHEETS[$TICKER]}"
+            ID="${INFO%%:*}"; GID="${INFO##*:}"
+            URL="https://docs.google.com/spreadsheets/d/${ID}/pub?gid=${GID}&single=true&output=csv"
+            CSV=$(curl -sL "$URL" --max-time 20 -A "Mozilla/5.0")
+            if [ -n "$CSV" ] && ! echo "$CSV" | head -1 | grep -qi "<!DOCTYPE"; then
+              echo "$CSV" > "painel/data/pace/${TICKER}.csv"
+              echo "Pace OK: $TICKER ($(echo "$CSV" | wc -l) linhas)"
+            else
+              echo "Pace FAIL: $TICKER"
+              touch "painel/data/pace/${TICKER}.csv"
+            fi
+          done
+
+          for TICKER in "${!COM_SHEETS[@]}"; do
+            INFO="${COM_SHEETS[$TICKER]}"
+            ID="${INFO%%:*}"; GID="${INFO##*:}"
+            URL="https://docs.google.com/spreadsheets/d/${ID}/pub?gid=${GID}&single=true&output=csv"
+            CSV=$(curl -sL "$URL" --max-time 20 -A "Mozilla/5.0")
+            if [ -n "$CSV" ] && ! echo "$CSV" | head -1 | grep -qi "<!DOCTYPE"; then
+              echo "$CSV" > "painel/data/com/${TICKER}.csv"
+              echo "Com OK: $TICKER"
+            else
+              touch "painel/data/com/${TICKER}.csv"
+            fi
+          done
+
+      # ── EKYTE TASKS ───────────────────────────────────────────────────────
+      - name: Ekyte — Tarefas em Aberto
+        env:
+          EKYTE_TOKEN: ${{ secrets.EKYTE_TOKEN }}
+        run: |
+          RESULT=$(curl -s \
+            "https://api.ekyte.com/api/companies/3597/workspaces/0/tasks?page=1&pageSize=60&statusCodes=1,2" \
+            -H "Authorization: Bearer $EKYTE_TOKEN" \
+            -H "Accept: application/json" \
+            --max-time 15)
+
+          if echo "$RESULT" | jq empty 2>/dev/null; then
+            echo "$RESULT" | jq '{updatedAt: (now | todate), tasks: (.items // . // [])}' \
+              > painel/data/ekyte_tasks.json
+            echo "Tasks salvas: $(jq '.tasks | length' painel/data/ekyte_tasks.json)"
+          else
+            echo '{"updatedAt":"","tasks":[],"error":"api error"}' > painel/data/ekyte_tasks.json
+          fi
+
+      # ── TIMESTAMP ─────────────────────────────────────────────────────────
+      - name: Salvar timestamp do sync
+        run: |
+          echo "{\"syncedAt\":\"$(date -u '+%Y-%m-%dT%H:%M:%SZ')\",\"syncedAtBRT\":\"$(TZ='America/Sao_Paulo' date '+%d/%m/%Y %H:%M')\"}" \
+            > painel/data/last_sync.json
+
+      # ── COMMIT ────────────────────────────────────────────────────────────
+      - name: Commit e Push
+        run: |
+          git config user.name  "Dashboard Sync Bot"
+          git config user.email "sync@github-actions.com"
+          git add painel/data/
+          git diff --staged --quiet \
+            && echo "Sem alteracoes" \
+            || (git commit -m "chore: sync $(TZ='America/Sao_Paulo' date '+%d/%m %H:%M') [skip ci]" && git push)

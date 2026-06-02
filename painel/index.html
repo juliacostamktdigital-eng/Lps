@@ -272,7 +272,14 @@ tr:hover td { background: var(--gray-100); }
     <div class="nav-item" data-tab="timesheet"><span class="nav-icon">⏱️</span>Timesheet</div>
   </nav>
   <div class="sidebar-footer">
-    <button class="btn-sync" onclick="syncActive()">🔄 Sincronizar</button>
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      <button class="btn-sync" onclick="syncActive()">🔄 Atualizar dados</button>
+      <a href="https://github.com/juliacostamktdigital-eng/Lps/actions/workflows/sync-data.yml"
+         target="_blank"
+         style="font-size:10px;color:rgba(255,255,255,0.3);text-align:center;text-decoration:none;padding:2px 0;">
+        ↗ Executar sync manual
+      </a>
+    </div>
   </div>
 </aside>
 
@@ -310,6 +317,7 @@ tr:hover td { background: var(--gray-100); }
             <select class="select" id="a-type">
               <option value="diario">Relatorio Diario D-1</option>
               <option value="mensal">Relatorio Mensal</option>
+              <option value="semanal">Semanal — Boas Praticas</option>
               <option value="criativo">Aprovacao de Criativos</option>
               <option value="update">Atualizacao / Projeto</option>
             </select>
@@ -378,6 +386,19 @@ tr:hover td { background: var(--gray-100); }
         <button class="btn btn-gray btn-sm" onclick="loadPace()" style="background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);">🔄 Atualizar</button>
       </div>
     </div>
+
+    <div class="card" style="margin-bottom:18px;" id="hs-strip">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div class="card-label" style="margin:0;">Health Score — Cockpit</div>
+        <div style="font-size:11px;color:var(--gray-400);" id="hs-sync-time">—</div>
+      </div>
+      <div id="hs-cards" style="display:flex;gap:10px;flex-wrap:wrap;">
+        <div class="loading"><div class="spin"></div> Aguardando sync...</div>
+      </div>
+    </div>
+
+    <!-- Alerta de gestora: clientes que precisam de atencao -->
+    <div id="mgr-alert" style="display:none;margin-bottom:16px;"></div>
 
     <div class="g4" id="pace-cards">
       <div class="loading"><div class="spin"></div> Buscando dados...</div>
@@ -586,6 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // agenda usa embed direto — sem configuracao necessaria
 
   renderTsLog();
+  loadSyncTime();
 });
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -617,22 +639,18 @@ const EK = {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // GOOGLE SHEETS FETCH + PARSE
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-async function fetchCSV(sheetId, gid) {
-  const direct = `https://docs.google.com/spreadsheets/d/${sheetId}/pub?gid=${gid}&single=true&output=csv`;
-  const proxies = [
-    `https://api.allorigins.win/raw?url=${encodeURIComponent(direct)}`,
-    `https://corsproxy.io/?${encodeURIComponent(direct)}`,
-    `https://thingproxy.freeboard.io/fetch/${direct}`,
-  ];
-  for (const url of [direct, ...proxies]) {
-    try {
-      const r = await fetch(url);
-      if (!r.ok) continue;
-      const t = await r.text();
-      if (t.length > 30 && !t.trim().startsWith('<') && !t.includes('<!DOCTYPE')) return t;
-    } catch(_) {}
+async function fetchCSV(key, tipo) {
+  // tipo = 'pace' ou 'com'
+  const path = `data/${tipo}/${key}.csv`;
+  try {
+    const r = await fetch(path);
+    if (!r.ok) throw new Error(`${r.status}`);
+    const t = await r.text();
+    if (t.length < 10 || t.trim().startsWith('<')) throw new Error('arquivo vazio ou invalido');
+    return t;
+  } catch(e) {
+    throw new Error(`Arquivo nao encontrado (${path}). Execute o sync primeiro.`);
   }
-  throw new Error('Sem acesso — verifique se a planilha foi publicada via Arquivo → Publicar na Web → CSV.');
 }
 
 function parseCSV(text) {
@@ -711,9 +729,60 @@ function paceStatus(real, exp) {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// HEALTH SCORES
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const HS_FLAG = {
+  Safe:     { cls:'b-green',  color:'#15803D', emoji:'🟢' },
+  Care:     { cls:'b-yellow', color:'#D97706', emoji:'🟡' },
+  Critical: { cls:'b-red',    color:'#DC2626', emoji:'🔴' },
+  Danger:   { cls:'b-red',    color:'#7F1D1D', emoji:'⚫' },
+};
+
+async function loadHealthScores() {
+  const el = document.getElementById('hs-cards');
+  const timeEl = document.getElementById('hs-sync-time');
+  try {
+    const r = await fetch('data/health_scores.json');
+    const json = await r.json();
+
+    if (json.pending || !json.data?.length) {
+      el.innerHTML = '<p style="font-size:12px;color:var(--gray-400);">Sync ainda nao executado. Clique em "Executar Sync" no GitHub Actions.</p>';
+      return;
+    }
+
+    timeEl.textContent = 'Atualizado: ' + (json.updatedAt ? new Date(json.updatedAt).toLocaleString('pt-BR') : '—');
+
+    // montar cards por cliente
+    const tickers = Object.keys(CLIENTS);
+    el.innerHTML = tickers.map(t => {
+      const hs = json.data.find(d => d.ticker === t);
+      if (!hs) return `<div style="background:var(--gray-100);border-radius:8px;padding:10px 12px;min-width:110px;"><div style="font-size:11px;font-weight:700;">${t}</div><div style="font-size:11px;color:var(--gray-400);margin-top:4px;">Sem dados</div></div>`;
+      const flag = HS_FLAG[hs.algorithm_flag] || HS_FLAG.Care;
+      const score = hs.algorithm_health_avg_score ? parseFloat(hs.algorithm_health_avg_score).toFixed(0) : '—';
+      return `<div style="background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:10px 12px;min-width:110px;text-align:center;">
+        <div style="font-size:11px;font-weight:700;color:var(--black);">${t}</div>
+        <div style="font-size:22px;font-weight:800;color:${flag.color};margin:4px 0;">${score}</div>
+        <span class="badge ${flag.cls}" style="font-size:10px;">${flag.emoji} ${hs.algorithm_flag||'—'}</span>
+      </div>`;
+    }).join('');
+
+    // alerta de gestora
+    const critical = json.data.filter(d => d.algorithm_flag === 'Critical' || d.algorithm_flag === 'Danger');
+    const alertEl = document.getElementById('mgr-alert');
+    if (critical.length > 0) {
+      alertEl.style.display = '';
+      alertEl.innerHTML = `<div class="alert">⚠️ ${critical.length} cliente(s) em estado critico no Health Score: ${critical.map(c=>`<strong>${c.ticker}</strong> (${c.algorithm_flag})`).join(', ')}. Atencao redobrada no atendimento.</div>`;
+    }
+  } catch(e) {
+    el.innerHTML = `<p style="font-size:12px;color:var(--gray-400);">Health Score: ${e.message}</p>`;
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // ABA PACE
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 async function loadPace() {
+  loadHealthScores();
   const now = new Date();
   const dim = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
   const day = now.getDate();
@@ -724,13 +793,13 @@ async function loadPace() {
   document.getElementById('pace-cards').innerHTML = '<div class="loading"><div class="spin"></div> Buscando dados...</div>';
 
   const keys = Object.keys(CLIENTS);
-  const res = await Promise.allSettled(keys.map(async k => {
-    const c = CLIENTS[k];
-    const csv = await fetchCSV(c.pace.id, c.pace.gid);
-    return { k, n:c.name, ...extractPace(csv), err:null };
+  const res = await Promise.allSettled(keys.map(async (key) => {
+    const csv = await fetchCSV(key, 'pace');
+    const data = extractPace(csv);
+    return { key, ...CLIENTS[key], ...data, err: null };
   }));
 
-  const data = res.map((r,i)=> r.status==='fulfilled' ? r.value : { k:keys[i], n:CLIENTS[keys[i]].name, budget:0,invested:0,leads:0,cpl:0,meta:0,google:0, err:r.reason?.message||'Erro' });
+  const data = res.map((r,i)=> r.status==='fulfilled' ? r.value : { key:keys[i], name:CLIENTS[keys[i]].name, budget:0,invested:0,leads:0,cpl:0,meta:0,google:0, err:r.reason?.message||'Erro' });
 
   data.sort((a,b)=>{
     const pa=a.budget>0?(a.invested/a.budget)*100:0;
@@ -761,7 +830,7 @@ async function loadPace() {
     card.className = 'pace-card';
     card.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px;">
-        <div><div class="pace-client">${r.n}</div><div class="pace-ticker">${r.k}</div></div>
+        <div><div class="pace-client">${r.name}</div><div class="pace-ticker">${r.key}</div></div>
         <span class="badge ${st.cls}">${st.lbl}</span>
       </div>
       ${r.err ? `<div style="font-size:12px;color:var(--gray-400);margin-top:6px;">⚠️ ${r.err}</div>` : `
@@ -783,7 +852,7 @@ async function loadPace() {
     `;
     document.getElementById('pace-cards').appendChild(card);
 
-    cLabels.push(r.k);
+    cLabels.push(r.key);
     cReal.push(parseFloat(pct.toFixed(1)));
     cExp.push(parseFloat(exp.toFixed(1)));
   });
@@ -835,7 +904,7 @@ async function loadComercial() {
 
   for (const [key,c] of comClients) {
     try {
-      const csv = await fetchCSV(c.com.id, c.com.gid);
+      const csv = await fetchCSV(key, 'com');
       const rows = parseCSV(csv);
       if(rows.length<2){continue;}
       const headers = rows[0];
@@ -927,7 +996,7 @@ async function loadAtendContext() {
   if (c.com) {
     comCard.style.display='';
     try {
-      const csv = await fetchCSV(c.com.id, c.com.gid);
+      const csv = await fetchCSV(key, 'com');
       const rows = parseCSV(csv);
       const hdr = rows[0]||[];
       const data = rows.slice(1).filter(r=>r.some(x=>x.trim()));
@@ -1129,6 +1198,46 @@ function gerarMsg() {
     }
     msg += `\n\n[MSG]\nQualquer duvida ou se quiserem mais detalhes, fico a disposicao!`;
 
+  // ── SEMANAL ──
+  } else if (type === 'semanal') {
+    const blocos = dados ? splitBlocos(dados) : [];
+    const canais = blocos.map(extraiMetricas);
+    const totInv  = canais.reduce((s,c)=>s+(parseFloat(c.inv)||0),0);
+    const totLds  = canais.reduce((s,c)=>s+(parseInt(c.lds)||0),0);
+    const totVend = canais.reduce((s,c)=>s+(parseInt(c.vend)||0),0);
+    const totCpl  = totLds>0 ? totInv/totLds : 0;
+    const cac     = canais.reduce((s,c)=>s+(parseFloat(c.cac||c.cpa)||0),0) / Math.max(1,canais.filter(c=>c.cac||c.cpa).length);
+
+    const clientName = CLIENTS[key]?.name || key;
+    const hasNegative = canais.some(c=>parseFloat(c.cpl)>100 || parseInt(c.lds)<3);
+
+    msg = `[MSG]\nFala, ${clientName}! ${hasNegative ? 'Segue o resultado da semana.' : 'Otima semana!'}${hasNegative ? '' : ' ✊'}\nSegue uma visao do resultado geral.\n`;
+    msg += `\n[MSG]\n📊 RESULTADOS (${mesTitle.toUpperCase()})\n\n`;
+
+    if (totLds > 0 || totInv > 0) {
+      msg += `GERACAO DE DEMANDA\n`;
+      if (totInv) msg += `Investido:    R$ ${fmtN(String(totInv))}\n`;
+      if (totLds)  msg += `Leads:        ${totLds}\n`;
+      if (totCpl)  msg += `CPL:          R$ ${fmtN(String(totCpl))}\n`;
+    }
+    if (totVend > 0) {
+      const totRec = canais.reduce((s,c)=>s+(parseFloat(c.rec)||0),0);
+      msg += `\nCONVERSAO EM VENDAS\n`;
+      msg += `Vendas:       ${totVend}\n`;
+      if (totRec) msg += `Valor vendido: R$ ${fmtN(String(totRec))}\n`;
+      if (cac)   msg += `CAC:          R$ ${fmtN(String(cac))}\n`;
+    }
+
+    if (blocos.length > 1) {
+      msg += `\n[MSG]\n📋 Detalhamento por canal:\n`;
+      blocos.forEach(b => { msg += `\n🔹 *${b.header||'Canal'}*\n${b.lines.join('\n')}\n`; });
+    }
+
+    msg += `\n[MSG]\n📝 CONTEXTO\n\n${gerarAnalise(canais,'mes').replace(/📊 \*Analise do periodo:\*\n\n/,'')}`;
+    msg += `\n\n[MSG]\n🗂️ BACKLOG DA SEMANA\n\n→ [acoes em andamento]\n→ [o que sera entregue]\n→ [proximas acoes]`;
+    msg += `\n\n[MSG]\n📅 CRONOGRAMA\n[DD.MM] | [HH:MM as HH:MM] — Check-in\n// Descreva brevemente a pauta`;
+    msg += `\n\n[MSG]\nQualquer duvida, estou a disposicao.`;
+
   // ── CRIATIVOS ──
   } else if (type === 'criativo') {
     msg = `[MSG]\n${sauda}, time! 👋\n\n[MSG]\n🎨 *Criativos para Aprovacao*\nSegue o link com os materiais desenvolvidos para a proxima campanha. Pedimos que verifiquem e nos retornem com o feedback ou aprovacao para darmos andamento! 🚀\n\n${dados||'[link aqui]'}\n\n[MSG]\nQualquer duvida, estamos a disposicao! 🙌`;
@@ -1303,6 +1412,21 @@ async function regEkyte(taskId, taskName, ini, fim, dur, date) {
     localStorage.setItem('ts_'+todayKey(), JSON.stringify(tsLog));
     renderTsLog();
   }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// SYNC TIME
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+async function loadSyncTime() {
+  try {
+    const r = await fetch('data/last_sync.json');
+    const j = await r.json();
+    const el = document.getElementById('sidebar-date');
+    if (j.syncedAtBRT && j.syncedAtBRT !== 'Aguardando primeiro sync') {
+      // adiciona linha de sync abaixo da data
+      el.title = 'Dados sincronizados em: ' + j.syncedAtBRT;
+    }
+  } catch(_) {}
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
