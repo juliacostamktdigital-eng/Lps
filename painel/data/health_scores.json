@@ -3,6 +3,19 @@
     "updatedAtBRT":  "02/06/2026 14:26",
     "data":  [
                  {
+                     "ticker":  "MSZB",
+                     "name":  "Massimo Zanetti",
+                     "flag":  "Danger",
+                     "score":  19.4,
+                     "lt":  2,
+                     "phase":  "ex_im_setup",
+                     "tier":  "medium",
+                     "fee":  "6750.2",
+                     "projectStartDate":  "2026-03-06T11:16:47.195Z",
+                     "documentId":  "umc8om8dne121vd6qbeoct6n",
+                     "cockpitUrl":  "https://flow.collieassociados.com/health-score/cockpit"
+                 },
+                 {
                      "ticker":  "TECN1",
                      "name":  "Tecnipool",
                      "flag":  "Danger",
@@ -55,19 +68,6 @@
                      "cockpitUrl":  "https://flow.collieassociados.com/health-score/cockpit"
                  },
                  {
-                     "ticker":  "FARS",
-                     "name":  "Fares Aquino",
-                     "flag":  "Care",
-                     "score":  16.8,
-                     "lt":  1,
-                     "phase":  "ex_im_checkin_1",
-                     "tier":  "tiny",
-                     "fee":  "6602.01",
-                     "projectStartDate":  "2026-04-03T12:00:00.000Z",
-                     "documentId":  "kf61m3ds7c306c5quctel0b5",
-                     "cockpitUrl":  "https://flow.collieassociados.com/health-score/cockpit"
-                 },
-                 {
                      "ticker":  "ACCE",
                      "name":  "VLoca",
                      "flag":  "Care",
@@ -78,6 +78,19 @@
                      "fee":  "6000",
                      "projectStartDate":  "2025-09-26T03:00:00.000Z",
                      "documentId":  "bxnt4vzw5x4yo5hty8hhrjdb",
+                     "cockpitUrl":  "https://flow.collieassociados.com/health-score/cockpit"
+                 },
+                 {
+                     "ticker":  "FARS",
+                     "name":  "Fares Aquino",
+                     "flag":  "Care",
+                     "score":  16.8,
+                     "lt":  1,
+                     "phase":  "ex_im_checkin_1",
+                     "tier":  "tiny",
+                     "fee":  "6602.01",
+                     "projectStartDate":  "2026-04-03T12:00:00.000Z",
+                     "documentId":  "kf61m3ds7c306c5quctel0b5",
                      "cockpitUrl":  "https://flow.collieassociados.com/health-score/cockpit"
                  }
              ]
