@@ -196,6 +196,38 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--g1);color:var(--g
     <!-- Alertas -->
     <div id="cl-alerts" style="display:none;" class="alert-box"></div>
 
+    <!-- Pipeline Comercial -->
+    <div id="cl-comercial-wrap" style="display:none;margin-bottom:20px;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+        <div>
+          <div style="font-size:16px;font-weight:800;">Pipeline Comercial</div>
+          <div style="font-size:12px;color:var(--g5);">Planilha comercial atualizada pelo time de vendas</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <div id="cl-com-month-filter" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+          <span id="cl-com-updated" style="font-size:11px;color:var(--g4);"></span>
+        </div>
+      </div>
+      <!-- KPIs comercial -->
+      <div id="cl-com-kpis" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-bottom:16px;"></div>
+      <!-- Alerta leads sem atualização -->
+      <div id="cl-com-alert" style="display:none;margin-bottom:16px;"></div>
+      <!-- Status / Funil -->
+      <div class="g2" style="gap:16px;margin-bottom:20px;">
+        <div class="card">
+          <div class="card-label" id="cl-com-stage-label">Distribuição por Status</div>
+          <div id="cl-com-stages"></div>
+        </div>
+        <div class="card">
+          <div class="card-label">Leads Sem Atualização</div>
+          <div id="cl-com-pending" style="max-height:260px;overflow-y:auto;"></div>
+        </div>
+      </div>
+    </div>
+    <div id="cl-comercial-empty" style="display:none;margin-bottom:20px;" class="card">
+      <p style="font-size:13px;color:var(--g4);text-align:center;padding:8px;">Planilha comercial nao configurada para este cliente.</p>
+    </div>
+
     <!-- KPIs do mes -->
     <div class="card-label">Mes Atual — Resultados</div>
     <div id="cl-kpis" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:20px;">
@@ -286,38 +318,6 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--g1);color:var(--g
       </div>
     </div>
 
-    <!-- Pipeline Comercial -->
-    <div id="cl-comercial-wrap" style="display:none;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-        <div>
-          <div style="font-size:16px;font-weight:800;">Pipeline Comercial</div>
-          <div style="font-size:12px;color:var(--g5);">Planilha comercial atualizada pelo time de vendas</div>
-        </div>
-        <span id="cl-com-updated" style="font-size:11px;color:var(--g4);"></span>
-      </div>
-
-      <!-- KPIs comercial -->
-      <div id="cl-com-kpis" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-bottom:16px;"></div>
-
-      <!-- Alerta leads sem atualização -->
-      <div id="cl-com-alert" style="display:none;margin-bottom:16px;"></div>
-
-      <!-- Status / Funil -->
-      <div class="g2" style="gap:16px;margin-bottom:16px;">
-        <div class="card">
-          <div class="card-label" id="cl-com-stage-label">Distribuição por Status</div>
-          <div id="cl-com-stages"></div>
-        </div>
-        <div class="card">
-          <div class="card-label">Leads Sem Atualização</div>
-          <div id="cl-com-pending" style="max-height:260px;overflow-y:auto;"></div>
-        </div>
-      </div>
-    </div>
-
-    <div id="cl-comercial-empty" style="display:none;" class="card" style="background:var(--g1);border-style:dashed;">
-      <p style="font-size:13px;color:var(--g4);text-align:center;padding:8px;">Planilha comercial nao configurada para este cliente.</p>
-    </div>
   </section>
 
 </main>
@@ -356,6 +356,8 @@ let allData = {}; // { ticker: { hs, metrics } }
 let clientChart = null;
 let currentTicker = null;
 let currentMetric = 'leads';
+let comMonthFilter = 'all';
+let comercialCache = {};
 
 // ─── HELPERS ───────────────────────────────────────────────────────────────
 function brl(s){
@@ -499,7 +501,13 @@ async function loadAll(){
   // Sync time
   try{
     const s=await fetch('data/last_sync.json?'+Date.now()).then(r=>r.json());
-    document.getElementById('sb-sync').textContent='Sync: '+(s.syncedAtBRT||'—');
+    const syncEl=document.getElementById('sb-sync');
+    const syncTxt='Sync: '+(s.syncedAtBRT||'—');
+    syncEl.textContent=syncTxt;
+    if(s.syncedAt){
+      const ageH=(Date.now()-new Date(s.syncedAt))/3600000;
+      if(ageH>28){syncEl.textContent=syncTxt+' ⚠️ desatualizado';syncEl.style.color='#F87171';}
+    }
   }catch(_){}
 
   // Health Scores
@@ -521,7 +529,9 @@ async function loadAll(){
   await Promise.allSettled(tickers.map(async t=>{
     try{
       const csv=await fetch(`data/pace/${t}.csv?`+Date.now()).then(r=>r.text());
-      const metrics=csv.length>50 ? extractMetrics(csv) : null;
+      let metrics=csv.length>50 ? extractMetrics(csv) : null;
+      // Cliente sem dados ativos: todos os indicadores zerados = onboarding/inativo
+      if(metrics && metrics.invested===0 && metrics.leads===0 && metrics.vendas===0 && metrics.impressoes===0) metrics=null;
       allData[t]={hs:hsMap[t]||null, metrics, name:CLIENTS[t].name, type:CLIENTS[t].type};
     }catch(e){allData[t]={hs:hsMap[t]||null,metrics:null,name:CLIENTS[t].name,type:CLIENTS[t].type};}
   }));
@@ -611,6 +621,22 @@ function renderClient(t){
   const m=d.metrics;
   const isEC=d.type==='ec';
   const f=hs?HS[hs.flag]||HS.Care:{color:'#9CA3AF',bg:'#F9FAFB',emoji:'—'};
+
+  // Limpar dados do cliente anterior
+  document.getElementById('cl-funnel').innerHTML='';
+  document.getElementById('cl-channels').innerHTML='';
+  document.getElementById('cl-pace-badge').textContent='—';
+  document.getElementById('cl-pace-badge').className='badge b-gray';
+  document.getElementById('cl-history-body').innerHTML='';
+  document.getElementById('cl-history-head').innerHTML='';
+  document.getElementById('cl-pace-pct').textContent='—';
+  document.getElementById('cl-pace-exp').textContent='—';
+  document.getElementById('cl-inv').textContent='—';
+  document.getElementById('cl-budget').textContent='—';
+  document.getElementById('cl-pace-bar').style.width='0%';
+  document.getElementById('cl-pace-needle').style.left='0%';
+  document.getElementById('cl-pace-label').textContent='—';
+  if(clientChart){clientChart.destroy();clientChart=null;}
 
   document.getElementById('cl-title').textContent=d.name;
   document.getElementById('cl-sub').textContent=`${t} · ${isEC?'Ecommerce':'Inside Sales'} · Dados do mes atual`;
@@ -796,11 +822,24 @@ function renderClient(t){
 }
 
 // ─── COMERCIAL ─────────────────────────────────────────────────────────────
-// Busca coluna por lista de nomes alternativos (case-insensitive, sem acento)
 function norm(s){ return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim(); }
 function colIdx(header, variants){ return header.findIndex(h => variants.some(v => norm(v)===norm(h))); }
 
-// FCE: 6 produtos — cada um com seu CSV separado
+function parseLeadDate(s){
+  if(!s) return null;
+  const m=String(s).match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+  if(m){ let y=m[3].length===2?'20'+m[3]:m[3]; return new Date(+y,+m[2]-1,+m[1]); }
+  const m2=String(s).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m2) return new Date(+m2[1],+m2[2]-1,+m2[3]);
+  return null;
+}
+function mkKey(d){ return d?`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`:'?'; }
+function mkLabel(k){
+  if(k==='all') return 'Todos'; if(k==='?') return 'Sem data';
+  const [y,mo]=k.split('-');
+  return ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'][+mo-1]+' '+String(y).slice(2);
+}
+
 const FCE_TABS = [
   { key:'FCE_CONS',  label:'Consignado'       },
   { key:'FCE_FGTS',  label:'FGTS'             },
@@ -829,8 +868,7 @@ const COM_SCHEMA = {
   FCE_LUZ:   FCE_STATUS_SCHEMA,
   FCE_EXT:   FCE_STATUS_SCHEMA,
   TECN1: {
-    style:'mqsql',
-    boolVal: true, // MQL/SQL usam "Sim"/"Não" em vez de vazio/preenchido
+    style:'mqsql', boolVal: true,
     h: {
       nome:   ['nome','nome completo','name'],
       data:   ['data','data do lead'],
@@ -842,8 +880,7 @@ const COM_SCHEMA = {
     }
   },
   FARS: {
-    style:'mqsql',
-    boolVal: true, // MQL/SQL usam "Sim"/"Não"
+    style:'mqsql', boolVal: true,
     h: {
       nome:   ['nome','nome completo','name'],
       data:   ['data','data do lead'],
@@ -864,11 +901,40 @@ function buildColMap(header, schema) {
   return m;
 }
 
+function filterByMonth(rows, colMap, month) {
+  if (month === 'all') return rows;
+  return rows.filter(row => {
+    const d = parseLeadDate(colMap.data >= 0 ? (row[colMap.data]||'').trim() : '');
+    return d ? mkKey(d) === month : month === '?';
+  });
+}
+
+function renderMonthBtns(ticker, months) {
+  const el = document.getElementById('cl-com-month-filter');
+  if (!el) return;
+  el.innerHTML = ['all', ...months].map(k => {
+    const active = k === comMonthFilter;
+    return `<button onclick="setComMonth('${ticker}','${k}')"
+      style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.12s;
+             ${active?'background:var(--red);color:white;border:1px solid var(--red);':'background:var(--g1);color:var(--g5);border:1px solid var(--g2);'}">${mkLabel(k)}</button>`;
+  }).join('');
+}
+
+function setComMonth(ticker, month) {
+  comMonthFilter = month;
+  const cache = comercialCache[ticker];
+  if (!cache) return;
+  renderMonthBtns(ticker, cache.months);
+  if (ticker === 'FCE') renderFCEStats(month);
+  else renderSingleComStats(ticker, month);
+}
+
 async function loadComercialData(ticker) {
   const wrap = document.getElementById('cl-comercial-wrap');
   const empty = document.getElementById('cl-comercial-empty');
+  comMonthFilter = 'all';
+  document.getElementById('cl-com-month-filter').innerHTML = '';
 
-  // FCE: carregar todos os 6 produtos em paralelo
   if (ticker === 'FCE') {
     wrap.style.display = '';
     empty.style.display = 'none';
@@ -880,88 +946,31 @@ async function loadComercialData(ticker) {
 
     const results = await Promise.allSettled(
       FCE_TABS.map(tab => fetch(`data/com/${tab.key}.csv?` + Date.now())
-        .then(r => r.text())
-        .then(csv => ({ ...tab, csv }))
-        .catch(() => ({ ...tab, csv: '' }))
+        .then(r => r.text()).then(csv => ({ ...tab, csv })).catch(() => ({ ...tab, csv: '' }))
       )
     );
 
-    let totalGeral=0, semObsGeral=0, vendasGeral=0, receitaGeral=0;
-    const prodCards = [];
-    const allPending = [];
-
+    const tabs = [];
+    const allMonthKeys = new Set();
     for (const r of results) {
       if (r.status !== 'fulfilled') continue;
       const { label, key, csv } = r.value;
-      if (!csv || csv.length < 10) {
-        prodCards.push({ label, total:0, semObs:0, vendas:0, receita:0, ok:false });
-        continue;
-      }
+      if (!csv || csv.length < 10) { tabs.push({ label, key, rows:[], colMap:{} }); continue; }
       const rows = parseCSV(csv);
       const header = rows[0];
       const data = rows.slice(1).filter(r => r.some(c => c.trim()));
-      const c = buildColMap(header, FCE_STATUS_SCHEMA);
-      const get = (row, f) => c[f] >= 0 ? (row[c[f]] || '').trim() : '';
-
-      let t=data.length, so=0, v=0, rec=0;
+      const colMap = buildColMap(header, FCE_STATUS_SCHEMA);
       data.forEach(row => {
-        const status = get(row,'status');
-        const obs    = get(row,'obs');
-        const recVal = brl(get(row,'receita'));
-        if (!obs) { so++; allPending.push({ label, nome: get(row,'nome')||'—', data: get(row,'data'), status }); }
-        if (status && (status.toLowerCase().includes('fecha') || status.toLowerCase().includes('comprou'))) v++;
-        rec += recVal;
+        const d = parseLeadDate(colMap.data >= 0 ? (row[colMap.data]||'').trim() : '');
+        if (d) allMonthKeys.add(mkKey(d));
       });
-
-      totalGeral += t; semObsGeral += so; vendasGeral += v; receitaGeral += rec;
-      prodCards.push({ label, total:t, semObs:so, vendas:v, receita:rec, ok:true });
+      tabs.push({ label, key, rows: data, colMap });
     }
 
-    // Resumo por produto
-    document.getElementById('cl-com-kpis').innerHTML = prodCards.map(p => `
-      <div class="metric" style="border-left:2px solid ${p.ok ? 'var(--red)':'var(--g3)'};">
-        <div class="metric-label" style="font-size:11px;">${p.label}</div>
-        <div class="metric-val" style="font-size:18px;">${p.total}</div>
-        <div class="metric-sub">${p.semObs > 0 ? `<span style="color:var(--red);">${p.semObs} sem obs</span>` : '✓'} · ${p.vendas} fechados</div>
-      </div>`).join('') +
-      `<div class="metric" style="border-left:2px solid var(--green);">
-        <div class="metric-label">TOTAL FCE</div>
-        <div class="metric-val" style="color:var(--black);">${totalGeral}</div>
-        <div class="metric-sub">${semObsGeral} sem obs · R$ ${receitaGeral.toLocaleString('pt-BR',{maximumFractionDigits:0})}</div>
-      </div>`;
-
-    // Alerta geral
-    if (semObsGeral > 0) {
-      const alertEl = document.getElementById('cl-com-alert');
-      alertEl.style.display = '';
-      alertEl.innerHTML = `<div class="alert-box">⚠️ <strong>${semObsGeral}</strong> leads sem observação em todos os produtos FiveCred — precisam de atualização pelo comercial.</div>`;
-    }
-
-    // Tabela funil por produto
-    document.getElementById('cl-com-stages').innerHTML = prodCards.filter(p=>p.ok).map(p => `
-      <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--g1);">
-        <div style="font-size:12px;color:var(--g7);flex:1;">${p.label}</div>
-        <div style="font-size:11px;color:var(--g4);">${p.total} leads</div>
-        <div style="font-size:12px;font-weight:700;color:${p.semObs>0?'var(--red)':'var(--green)'};">${p.semObs} sem obs</div>
-        <div style="font-size:11px;color:var(--green);">${p.vendas} ✓</div>
-        <div style="font-size:11px;color:var(--g5);">${fmtBRL(p.receita)}</div>
-      </div>`).join('');
-
-    // Leads pendentes cross-produto
-    const pendEl = document.getElementById('cl-com-pending');
-    if (allPending.length === 0) {
-      pendEl.innerHTML = '<p style="font-size:13px;color:var(--green);padding:8px 0;">✓ Todos os leads estão com observação.</p>';
-    } else {
-      pendEl.innerHTML = allPending.slice(0,20).map(l => `
-        <div style="padding:6px 0;border-bottom:1px solid var(--g1);font-size:12px;">
-          <div style="display:flex;gap:8px;align-items:center;">
-            <span style="font-size:10px;background:var(--g2);padding:1px 6px;border-radius:99px;color:var(--g5);">${l.label}</span>
-            <span style="font-weight:600;">${l.nome}</span>
-          </div>
-          <div style="color:var(--g5);margin-top:1px;">${l.data||''} ${l.status?'· '+l.status:''}</div>
-        </div>`).join('') +
-        (allPending.length > 20 ? `<div style="font-size:11px;color:var(--g4);padding:6px 0;">+${allPending.length-20} outros sem observação</div>` : '');
-    }
+    const months = [...allMonthKeys].sort().reverse();
+    comercialCache['FCE'] = { tabs, months };
+    renderMonthBtns('FCE', months);
+    renderFCEStats('all');
     return;
   }
 
@@ -978,12 +987,10 @@ async function loadComercialData(ticker) {
 
   try {
     const csv = await fetch(`data/com/${ticker}.csv?` + Date.now()).then(r => r.text());
-    if (!csv || csv.length < 10) throw new Error('Arquivo não encontrado');
-
+    if (!csv || csv.length < 10) throw new Error('Arquivo nao encontrado');
     const rows = parseCSV(csv);
     const header = rows[0];
     const data = rows.slice(1).filter(r => r.some(c => c.trim()));
-
     if (data.length === 0) {
       document.getElementById('cl-com-kpis').innerHTML = '<p style="font-size:13px;color:var(--g4);padding:8px 0;">Planilha sem dados ainda — aguardando preenchimento do comercial.</p>';
       document.getElementById('cl-com-alert').style.display = 'none';
@@ -991,127 +998,208 @@ async function loadComercialData(ticker) {
       document.getElementById('cl-com-pending').innerHTML = '';
       return;
     }
-
-    const c = buildColMap(header, schema);
-    const total = data.length;
-    let semObs=0, semMql=0, semSql=0, vendas=0, mqlCount=0, sqlCount=0;
-    let receitaTotal=0;
-    const statusMap = {};
-    const pendingLeads = [];
-
+    const colMap = buildColMap(header, schema);
+    const monthKeys = new Set();
     data.forEach(row => {
-      const get = (f) => c[f] >= 0 ? (row[c[f]] || '').trim() : '';
-      if (schema.style === 'status') {
-        const status = get('status');
-        const obs    = get('obs');
-        const rec    = brl(get('receita'));
-        statusMap[status || '(sem status)'] = (statusMap[status || '(sem status)'] || 0) + 1;
-        if (!obs) { semObs++; pendingLeads.push({ nome: get('nome')||'—', data: get('data'), status }); }
-        if (status && (status.toLowerCase().includes('fecha') || status.toLowerCase().includes('comprou'))) vendas++;
-        receitaTotal += rec;
-      } else {
-        const mql = get('mql'); const sql = get('sql');
-        const obs = get('obs'); const vnd = get('venda');
-        const rec = brl(get('receita'));
-        // boolVal: MQL/SQL usam "Sim"/"Nao" — vazio = sem avaliacao, "Nao" = avaliado/nao qualificado
-        if (schema.boolVal) {
-          const mqlL = mql.toLowerCase(); const sqlL = sql.toLowerCase();
-          if (!mql) semMql++; else if (mqlL === 'sim') mqlCount++;
-          if (!sql) semSql++; else if (sqlL === 'sim') sqlCount++;
-          if (!obs) semObs++;
-          if (!mql || !sql || !obs) pendingLeads.push({ nome: get('nome')||'—', data: get('data'), mql, sql });
-        } else {
-          if (!mql) { semMql++; } else mqlCount++;
-          if (!sql) { semSql++; } else sqlCount++;
-          if (!obs) { semObs++; pendingLeads.push({ nome: get('nome')||'—', data: get('data'), mql, sql }); }
-        }
-        if (vnd && !['','nao','não','0','false'].includes(vnd.toLowerCase())) vendas++;
-        receitaTotal += rec;
-      }
+      const d = parseLeadDate(colMap.data >= 0 ? (row[colMap.data]||'').trim() : '');
+      if (d) monthKeys.add(mkKey(d));
     });
-
-    // KPIs
-    const kpiData = schema.style === 'status' ? [
-      { lbl:'Total Leads', val: total, sub:'na base', color:'var(--black)' },
-      { lbl:'Sem Observação', val: semObs, sub:`${((semObs/total)*100).toFixed(0)}% sem follow-up`, color: semObs > total*0.3 ? 'var(--red)':'var(--black)' },
-      { lbl:'Em Tratativa', val: statusMap['Em Tratativa de Venda']||0, sub:'', color:'var(--blue)' },
-      { lbl:'Em Contato', val: statusMap['Em contato']||0, sub:'', color:'var(--green)' },
-      { lbl:'Fechados', val: vendas, sub:'', color:'var(--green)' },
-      { lbl:'Receita', val: fmtBRL(receitaTotal), sub:'total', color:'var(--green)' },
-    ] : [
-      { lbl:'Total Leads', val: total, sub:'na base', color:'var(--black)' },
-      { lbl:'MQL', val: mqlCount, sub:`${total-mqlCount} sem`, color: mqlCount > 0 ? 'var(--blue)':'var(--g4)' },
-      { lbl:'SQL', val: sqlCount, sub:`${total-sqlCount} sem`, color: sqlCount > 0 ? 'var(--purple)':'var(--g4)' },
-      { lbl:'Vendas', val: vendas, sub:'fechadas', color:'var(--green)' },
-      { lbl:'Sem Obs.', val: semObs, sub:'leads sem follow-up', color: semObs > 0 ? 'var(--red)':'var(--green)' },
-      { lbl:'Receita', val: fmtBRL(receitaTotal), sub:'total', color:'var(--green)' },
-    ];
-
-    document.getElementById('cl-com-kpis').innerHTML = kpiData.map(k => `
-      <div class="metric">
-        <div class="metric-label">${k.lbl}</div>
-        <div class="metric-val" style="color:${k.color};">${k.val}</div>
-        ${k.sub?`<div class="metric-sub">${k.sub}</div>`:''}
-      </div>`).join('');
-
-    // Alerta
-    const alertEl = document.getElementById('cl-com-alert');
-    const critCount = semObs + semMql + semSql;
-    if (critCount > 0) {
-      alertEl.style.display = '';
-      const parts = [];
-      if (semObs > 0) parts.push(`<strong>${semObs}</strong> lead${semObs>1?'s':''} sem observação`);
-      if (semMql > 0) parts.push(`<strong>${semMql}</strong> sem MQL`);
-      if (semSql > 0) parts.push(`<strong>${semSql}</strong> sem SQL`);
-      alertEl.innerHTML = `<div class="alert-box">⚠️ ${parts.join(' · ')} — precisam de atualização pelo comercial.</div>`;
-    } else {
-      alertEl.style.display = 'none';
-    }
-
-    // Status / Funil
-    const stageEl = document.getElementById('cl-com-stages');
-    const stageLbl = document.getElementById('cl-com-stage-label');
-    if (schema.style === 'status') {
-      stageLbl.textContent = 'Distribuição por Status';
-      const sorted = Object.entries(statusMap).sort((a,b)=>b[1]-a[1]);
-      stageEl.innerHTML = sorted.map(([s,n]) => `
-        <div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--g1);">
-          <div style="font-size:12px;color:var(--g7);flex:1;">${s}</div>
-          <div style="font-size:12px;font-weight:700;">${n}</div>
-          <div style="font-size:10px;color:var(--g4);">${((n/total)*100).toFixed(0)}%</div>
-        </div>`).join('');
-    } else {
-      stageLbl.textContent = 'Funil MQL → SQL → Venda';
-      stageEl.innerHTML = [
-        { lbl:'Total Leads', n:total, color:'var(--black)' },
-        { lbl:'MQL Confirmado', n:mqlCount, color:'var(--blue)' },
-        { lbl:'SQL Confirmado', n:sqlCount, color:'var(--purple)' },
-        { lbl:'Vendas Fechadas', n:vendas, color:'var(--green)' },
-      ].map(s => `
-        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--g1);">
-          <div style="font-size:12px;color:var(--g7);width:140px;">${s.lbl}</div>
-          <div style="flex:1;height:6px;background:var(--g2);border-radius:99px;">
-            <div style="height:100%;width:${total>0?((s.n/total)*100).toFixed(0):0}%;background:${s.color};border-radius:99px;"></div>
-          </div>
-          <div style="font-size:13px;font-weight:700;color:${s.color};width:30px;text-align:right;">${s.n}</div>
-        </div>`).join('');
-    }
-
-    // Leads pendentes
-    const pendEl = document.getElementById('cl-com-pending');
-    if (pendingLeads.length === 0) {
-      pendEl.innerHTML = '<p style="font-size:13px;color:var(--green);padding:8px 0;">✓ Todos os leads estão com observação.</p>';
-    } else {
-      pendEl.innerHTML = pendingLeads.slice(0, 15).map(l => `
-        <div style="padding:7px 0;border-bottom:1px solid var(--g1);font-size:12px;">
-          <div style="font-weight:600;color:var(--black);">${l.nome||'(sem nome)'}</div>
-          <div style="color:var(--g5);margin-top:1px;">${l.data||''} ${l.status?'· '+l.status:''} ${l.mql===''?'· sem MQL':''} ${l.sql===''?'· sem SQL':''}</div>
-        </div>`).join('') +
-        (pendingLeads.length > 15 ? `<div style="font-size:11px;color:var(--g4);padding:6px 0;">+${pendingLeads.length-15} outros leads sem observação</div>` : '');
-    }
-
+    const months = [...monthKeys].sort().reverse();
+    comercialCache[ticker] = { rows: data, colMap, schema, months };
+    renderMonthBtns(ticker, months);
+    renderSingleComStats(ticker, 'all');
   } catch(e) {
     document.getElementById('cl-com-kpis').innerHTML = `<p style="font-size:13px;color:var(--g4);">Comercial: ${e.message}</p>`;
+  }
+}
+
+function renderFCEStats(month) {
+  const cache = comercialCache['FCE'];
+  if (!cache) return;
+  let totalGeral=0, semObsGeral=0, vendasGeral=0, receitaGeral=0;
+  const prodCards = [];
+  const allPending = [];
+
+  for (const tab of cache.tabs) {
+    const { label, rows, colMap } = tab;
+    if (!rows || rows.length === 0) { prodCards.push({ label, total:0, semObs:0, vendas:0, receita:0, ok:false }); continue; }
+    const filtered = filterByMonth(rows, colMap, month);
+    const get = (row, f) => colMap[f] >= 0 ? (row[colMap[f]] || '').trim() : '';
+    let t=filtered.length, so=0, v=0, rec=0;
+    filtered.forEach(row => {
+      const status = get(row,'status'); const obs = get(row,'obs');
+      const recVal = brl(get(row,'receita'));
+      if (!obs) { so++; allPending.push({ label, nome: get(row,'nome')||'—', data: get(row,'data'), status }); }
+      if (status && (status.toLowerCase().includes('fecha') || status.toLowerCase().includes('comprou'))) v++;
+      rec += recVal;
+    });
+    totalGeral += t; semObsGeral += so; vendasGeral += v; receitaGeral += rec;
+    prodCards.push({ label, total:t, semObs:so, vendas:v, receita:rec, ok:true });
+  }
+
+  document.getElementById('cl-com-kpis').innerHTML = prodCards.map(p => `
+    <div class="metric" style="border-left:2px solid ${p.ok?'var(--red)':'var(--g3)'};">
+      <div class="metric-label" style="font-size:11px;">${p.label}</div>
+      <div class="metric-val" style="font-size:18px;">${p.total}</div>
+      <div class="metric-sub">${p.semObs>0?`<span style="color:var(--red);">${p.semObs} sem obs</span>`:'✓'} · ${p.vendas} fechados</div>
+    </div>`).join('') +
+    `<div class="metric" style="border-left:2px solid var(--green);">
+      <div class="metric-label">TOTAL FCE</div>
+      <div class="metric-val" style="color:var(--black);">${totalGeral}</div>
+      <div class="metric-sub">${semObsGeral} sem obs · R$ ${receitaGeral.toLocaleString('pt-BR',{maximumFractionDigits:0})}</div>
+    </div>`;
+
+  const alertEl = document.getElementById('cl-com-alert');
+  if (semObsGeral > 0) {
+    alertEl.style.display = '';
+    alertEl.innerHTML = `<div class="alert-box">⚠️ <strong>${semObsGeral}</strong> leads sem observação em todos os produtos FiveCred — precisam de atualização pelo comercial.</div>`;
+  } else { alertEl.style.display = 'none'; }
+
+  document.getElementById('cl-com-stage-label').textContent = 'Leads por Produto';
+  document.getElementById('cl-com-stages').innerHTML = prodCards.filter(p=>p.ok).map(p => `
+    <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--g1);">
+      <div style="font-size:12px;color:var(--g7);flex:1;">${p.label}</div>
+      <div style="font-size:11px;color:var(--g4);">${p.total} leads</div>
+      <div style="font-size:12px;font-weight:700;color:${p.semObs>0?'var(--red)':'var(--green)'};">${p.semObs} sem obs</div>
+      <div style="font-size:11px;color:var(--green);">${p.vendas} ✓</div>
+      <div style="font-size:11px;color:var(--g5);">${fmtBRL(p.receita)}</div>
+    </div>`).join('');
+
+  const pendEl = document.getElementById('cl-com-pending');
+  if (allPending.length === 0) {
+    pendEl.innerHTML = '<p style="font-size:13px;color:var(--green);padding:8px 0;">✓ Todos os leads estão com observação.</p>';
+  } else {
+    pendEl.innerHTML = allPending.slice(0,20).map(l => `
+      <div style="padding:6px 0;border-bottom:1px solid var(--g1);font-size:12px;">
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span style="font-size:10px;background:var(--g2);padding:1px 6px;border-radius:99px;color:var(--g5);">${l.label}</span>
+          <span style="font-weight:600;">${l.nome}</span>
+        </div>
+        <div style="color:var(--g5);margin-top:1px;">${l.data||''} ${l.status?'· '+l.status:''}</div>
+      </div>`).join('') +
+      (allPending.length>20?`<div style="font-size:11px;color:var(--g4);padding:6px 0;">+${allPending.length-20} outros sem observação</div>`:'');
+  }
+}
+
+function renderSingleComStats(ticker, month) {
+  const cache = comercialCache[ticker];
+  if (!cache) return;
+  const { rows: allRows, colMap: c, schema } = cache;
+  const data = filterByMonth(allRows, c, month);
+
+  if (data.length === 0) {
+    const lbl = month !== 'all' ? `em ${mkLabel(month)}` : 'na base';
+    document.getElementById('cl-com-kpis').innerHTML = `<p style="font-size:13px;color:var(--g4);padding:8px 0;">Sem leads ${lbl}.</p>`;
+    document.getElementById('cl-com-alert').style.display = 'none';
+    document.getElementById('cl-com-stages').innerHTML = '';
+    document.getElementById('cl-com-pending').innerHTML = '';
+    return;
+  }
+
+  const total = data.length;
+  let semObs=0, semMql=0, semSql=0, vendas=0, mqlCount=0, sqlCount=0, receitaTotal=0;
+  const statusMap = {};
+  const pendingLeads = [];
+
+  data.forEach(row => {
+    const get = (f) => c[f] >= 0 ? (row[c[f]] || '').trim() : '';
+    if (schema.style === 'status') {
+      const status = get('status'); const obs = get('obs'); const rec = brl(get('receita'));
+      statusMap[status || '(sem status)'] = (statusMap[status || '(sem status)'] || 0) + 1;
+      if (!obs) { semObs++; pendingLeads.push({ nome: get('nome')||'—', data: get('data'), status }); }
+      if (status && (status.toLowerCase().includes('fecha') || status.toLowerCase().includes('comprou'))) vendas++;
+      receitaTotal += rec;
+    } else {
+      const mql=get('mql'); const sql=get('sql'); const obs=get('obs'); const vnd=get('venda');
+      const rec=brl(get('receita'));
+      if (schema.boolVal) {
+        const mqlL=mql.toLowerCase(); const sqlL=sql.toLowerCase();
+        if (!mql) semMql++; else if (mqlL==='sim') mqlCount++;
+        if (!sql) semSql++; else if (sqlL==='sim') sqlCount++;
+        if (!obs) semObs++;
+        if (!mql||!sql||!obs) pendingLeads.push({ nome:get('nome')||'—', data:get('data'), mql, sql });
+      } else {
+        if (!mql){semMql++;}else mqlCount++;
+        if (!sql){semSql++;}else sqlCount++;
+        if (!obs){semObs++;pendingLeads.push({ nome:get('nome')||'—', data:get('data'), mql, sql });}
+      }
+      if (vnd && !['','nao','não','0','false'].includes(vnd.toLowerCase())) vendas++;
+      receitaTotal += rec;
+    }
+  });
+
+  const kpiData = schema.style === 'status' ? [
+    { lbl:'Total Leads', val:total, sub:'na base', color:'var(--black)' },
+    { lbl:'Sem Observação', val:semObs, sub:`${((semObs/total)*100).toFixed(0)}% sem follow-up`, color:semObs>total*0.3?'var(--red)':'var(--black)' },
+    { lbl:'Em Tratativa', val:statusMap['Em Tratativa de Venda']||0, sub:'', color:'var(--blue)' },
+    { lbl:'Em Contato', val:statusMap['Em contato']||0, sub:'', color:'var(--green)' },
+    { lbl:'Fechados', val:vendas, sub:'', color:'var(--green)' },
+    { lbl:'Receita', val:fmtBRL(receitaTotal), sub:'total', color:'var(--green)' },
+  ] : [
+    { lbl:'Total Leads', val:total, sub:'na base', color:'var(--black)' },
+    { lbl:'MQL', val:mqlCount, sub:`${total-mqlCount} sem`, color:mqlCount>0?'var(--blue)':'var(--g4)' },
+    { lbl:'SQL', val:sqlCount, sub:`${total-sqlCount} sem`, color:sqlCount>0?'var(--purple)':'var(--g4)' },
+    { lbl:'Vendas', val:vendas, sub:'fechadas', color:'var(--green)' },
+    { lbl:'Sem Obs.', val:semObs, sub:'leads sem follow-up', color:semObs>0?'var(--red)':'var(--green)' },
+    { lbl:'Receita', val:fmtBRL(receitaTotal), sub:'total', color:'var(--green)' },
+  ];
+
+  document.getElementById('cl-com-kpis').innerHTML = kpiData.map(k => `
+    <div class="metric">
+      <div class="metric-label">${k.lbl}</div>
+      <div class="metric-val" style="color:${k.color};">${k.val}</div>
+      ${k.sub?`<div class="metric-sub">${k.sub}</div>`:''}
+    </div>`).join('');
+
+  const alertEl = document.getElementById('cl-com-alert');
+  const critCount = semObs + semMql + semSql;
+  if (critCount > 0) {
+    alertEl.style.display = '';
+    const parts = [];
+    if (semObs>0) parts.push(`<strong>${semObs}</strong> lead${semObs>1?'s':''} sem observação`);
+    if (semMql>0) parts.push(`<strong>${semMql}</strong> sem MQL`);
+    if (semSql>0) parts.push(`<strong>${semSql}</strong> sem SQL`);
+    alertEl.innerHTML = `<div class="alert-box">⚠️ ${parts.join(' · ')} — precisam de atualização pelo comercial.</div>`;
+  } else { alertEl.style.display = 'none'; }
+
+  const stageEl = document.getElementById('cl-com-stages');
+  const stageLbl = document.getElementById('cl-com-stage-label');
+  if (schema.style === 'status') {
+    stageLbl.textContent = 'Distribuição por Status';
+    const sorted = Object.entries(statusMap).sort((a,b)=>b[1]-a[1]);
+    stageEl.innerHTML = sorted.map(([s,n]) => `
+      <div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--g1);">
+        <div style="font-size:12px;color:var(--g7);flex:1;">${s}</div>
+        <div style="font-size:12px;font-weight:700;">${n}</div>
+        <div style="font-size:10px;color:var(--g4);">${((n/total)*100).toFixed(0)}%</div>
+      </div>`).join('');
+  } else {
+    stageLbl.textContent = 'Funil MQL → SQL → Venda';
+    stageEl.innerHTML = [
+      { lbl:'Total Leads', n:total, color:'var(--black)' },
+      { lbl:'MQL Confirmado', n:mqlCount, color:'var(--blue)' },
+      { lbl:'SQL Confirmado', n:sqlCount, color:'var(--purple)' },
+      { lbl:'Vendas Fechadas', n:vendas, color:'var(--green)' },
+    ].map(s => `
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--g1);">
+        <div style="font-size:12px;color:var(--g7);width:140px;">${s.lbl}</div>
+        <div style="flex:1;height:6px;background:var(--g2);border-radius:99px;">
+          <div style="height:100%;width:${total>0?((s.n/total)*100).toFixed(0):0}%;background:${s.color};border-radius:99px;"></div>
+        </div>
+        <div style="font-size:13px;font-weight:700;color:${s.color};width:30px;text-align:right;">${s.n}</div>
+      </div>`).join('');
+  }
+
+  const pendEl = document.getElementById('cl-com-pending');
+  if (pendingLeads.length === 0) {
+    pendEl.innerHTML = '<p style="font-size:13px;color:var(--green);padding:8px 0;">✓ Todos os leads estão com observação.</p>';
+  } else {
+    pendEl.innerHTML = pendingLeads.slice(0,15).map(l => `
+      <div style="padding:7px 0;border-bottom:1px solid var(--g1);font-size:12px;">
+        <div style="font-weight:600;color:var(--black);">${l.nome||'(sem nome)'}</div>
+        <div style="color:var(--g5);margin-top:1px;">${l.data||''} ${l.status?'· '+l.status:''} ${l.mql===''?'· sem MQL':''} ${l.sql===''?'· sem SQL':''}</div>
+      </div>`).join('') +
+      (pendingLeads.length>15?`<div style="font-size:11px;color:var(--g4);padding:6px 0;">+${pendingLeads.length-15} outros leads sem observação</div>`:'');
   }
 }
 
