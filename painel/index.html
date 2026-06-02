@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cockpit Operacional — V4 Company</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+:root {
+  --red: #CC1B2B;
+  --red-dark: #A8141F;
+  --red-light: #FEF2F2;
+  --black: #0F0F0F;
+  --gray-900: #111827;
+  --gray-700: #374151;
+  --gray-500: #6B7280;
+  --gray-400: #9CA3AF;
+  --gray-300: #D1D5DB;
+  --gray-200: #E5E7EB;
+  --gray-100: #F9FAFB;
+  --white: #FFFFFF;
+  --green: #15803D;
+  --green-light: #DCFCE7;
+  --yellow: #B45309;
+  --yellow-light: #FEF3C7;
+  --blue: #1D4ED8;
+  --sidebar: 230px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',system-ui,sans-serif; background:var(--gray-100); color:var(--gray-900); display:flex; min-height:100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar);
+  background: var(--black);
+  display: flex; flex-direction: column;
+  position: fixed; top:0; left:0; bottom:0;
+  z-index: 200;
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
+.sidebar-logo {
+  padding: 22px 20px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  display: flex; align-items: center; gap: 10px;
+}
+.logo-box {
+  width: 36px; height: 36px;
+  background: var(--red);
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 15px; color: white;
+  letter-spacing: -0.5px; flex-shrink: 0;
+}
+.logo-wordmark { font-size: 13px; font-weight: 700; color: white; letter-spacing: 1.8px; text-transform: uppercase; }
+.sidebar-user {
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.sidebar-name { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.88); }
+.sidebar-role { font-size: 11px; color: rgba(255,255,255,0.38); margin-top: 1px; }
+.sidebar-date { font-size: 11px; color: var(--red); margin-top: 5px; font-weight: 500; }
+.sidebar-nav { flex:1; padding: 10px 0; overflow-y: auto; }
+.nav-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 10px 20px;
+  cursor: pointer;
+  color: rgba(255,255,255,0.42);
+  font-size: 13px; font-weight: 500;
+  transition: all 0.13s;
+  border-left: 3px solid transparent;
+  user-select: none;
+}
+.nav-item:hover { color: rgba(255,255,255,0.78); background: rgba(255,255,255,0.04); }
+.nav-item.active { color: white; border-left-color: var(--red); background: rgba(204,27,43,0.10); }
+.nav-icon { font-size: 15px; width: 18px; text-align: center; }
+.sidebar-footer {
+  padding: 14px 16px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+.btn-sync {
+  width: 100%; padding: 8px 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 8px; color: rgba(255,255,255,0.5);
+  font-size: 12px; cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+  transition: all 0.13s; font-family: 'Inter',sans-serif; font-weight: 500;
+}
+.btn-sync:hover { background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.85); }
+
+/* ── MAIN ── */
+.main { margin-left: var(--sidebar); flex:1; display:flex; flex-direction:column; min-height:100vh; }
+.tab-panel { display:none; padding: 30px 36px; animation: fadeIn 0.18s ease; }
+.tab-panel.active { display: block; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(3px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── PAGE HEADER ── */
+.page-header { margin-bottom: 26px; }
+.page-title { font-size: 21px; font-weight: 800; color: var(--black); }
+.page-sub { font-size: 13px; color: var(--gray-500); margin-top: 3px; }
+
+/* ── CARDS ── */
+.card { background: var(--white); border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px 22px; }
+.card-label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.7px; color: var(--gray-400); margin-bottom: 14px;
+}
+
+/* ── GRIDS ── */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.g3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+.g4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+@media (max-width:1100px) { .g4 { grid-template-columns: repeat(2,1fr); } }
+@media (max-width:1300px) { .g3 { grid-template-columns: repeat(2,1fr); } }
+
+/* ── BADGES ── */
+.badge {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 3px 8px; border-radius: 99px;
+  font-size: 11px; font-weight: 600; white-space: nowrap;
+}
+.b-green  { background: var(--green-light);  color: var(--green); }
+.b-yellow { background: var(--yellow-light); color: var(--yellow); }
+.b-red    { background: var(--red-light);    color: var(--red); }
+.b-gray   { background: var(--gray-200);     color: var(--gray-500); }
+
+/* ── BUTTONS ── */
+.btn {
+  padding: 9px 18px; border-radius: 8px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  border: none; transition: all 0.13s;
+  font-family: 'Inter',sans-serif;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-red { background: var(--red); color: white; }
+.btn-red:hover { background: var(--red-dark); }
+.btn-gray { background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-200); }
+.btn-gray:hover { background: var(--gray-200); }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+
+/* ── INPUTS ── */
+.input, .select, .textarea {
+  width: 100%; padding: 9px 12px;
+  border: 1px solid var(--gray-200); border-radius: 8px;
+  font-size: 13px; font-family: 'Inter',sans-serif;
+  color: var(--gray-900); background: var(--white);
+  transition: border-color 0.13s; outline: none;
+}
+.input:focus, .select:focus, .textarea:focus {
+  border-color: var(--red); box-shadow: 0 0 0 3px rgba(204,27,43,0.09);
+}
+.textarea { resize: vertical; min-height: 100px; line-height: 1.55; }
+.form-group { margin-bottom: 13px; }
+.form-label { font-size: 12px; font-weight: 600; color: var(--gray-700); margin-bottom: 5px; display: block; }
+
+/* ── TABLES ── */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th {
+  text-align: left; padding: 9px 14px;
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.4px; color: var(--gray-500);
+  border-bottom: 1px solid var(--gray-200);
+  background: var(--gray-100); white-space: nowrap;
+}
+td { padding: 10px 14px; border-bottom: 1px solid var(--gray-100); color: var(--gray-900); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--gray-100); }
+.row-warn td { background: #FFFBEB !important; }
+.row-crit td { background: #FEF2F2 !important; }
+
+/* ── SUMMARY BAR ── */
+.summary-bar {
+  background: var(--black); border-radius: 12px;
+  padding: 16px 24px; display: flex; align-items: center; gap: 28px;
+  margin-bottom: 22px;
+}
+.sum-item { text-align: center; }
+.sum-num { font-size: 22px; font-weight: 800; color: white; }
+.sum-lbl { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.6px; }
+.sum-div { width: 1px; height: 34px; background: rgba(255,255,255,0.09); }
+
+/* ── PACE CARDS ── */
+.pace-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: 12px; padding: 16px 18px; }
+.pace-client { font-size: 13px; font-weight: 700; color: var(--black); }
+.pace-ticker { font-size: 11px; color: var(--gray-400); margin-bottom: 10px; }
+.pace-pct { font-size: 28px; font-weight: 800; margin: 4px 0 2px; line-height: 1; }
+.pace-track { height: 6px; background: var(--gray-200); border-radius: 99px; margin: 8px 0 6px; position: relative; }
+.pace-fill { height: 100%; border-radius: 99px; transition: width 0.5s ease; }
+.pace-needle { position: absolute; top: -4px; width: 2px; height: 14px; background: var(--gray-500); border-radius: 1px; }
+.pace-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--gray-500); }
+.pace-meta strong { color: var(--gray-900); font-weight: 600; }
+.pace-channels { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+
+/* ── TIMESHEET TIMER ── */
+.timer-big { font-size: 44px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -2px; color: var(--black); text-align: center; margin: 12px 0 4px; }
+.timer-running .timer-big { color: var(--red); }
+.timer-sub { text-align: center; font-size: 12px; color: var(--gray-400); margin-bottom: 14px; }
+
+/* ── MSG OUTPUT ── */
+.msg-box {
+  background: var(--gray-100); border: 1px solid var(--gray-200);
+  border-radius: 10px; padding: 16px 18px;
+  font-size: 13px; line-height: 1.7; white-space: pre-wrap;
+  max-height: 420px; overflow-y: auto;
+}
+
+/* ── ALERT STRIP ── */
+.alert { background: var(--red-light); border: 1px solid #FECACA; border-radius: 8px; padding: 9px 13px; font-size: 12px; color: #991B1B; display: flex; align-items: flex-start; gap: 7px; margin-bottom: 10px; }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--gray-200); margin: 22px 0; }
+
+/* ── LOADING ── */
+.loading { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--gray-400); padding: 12px 0; }
+.spin { width:15px; height:15px; border:2px solid var(--gray-200); border-top-color:var(--red); border-radius:50%; animation: rot 0.65s linear infinite; }
+@keyframes rot { to { transform: rotate(360deg); } }
+
+/* ── SETUP PLACEHOLDER ── */
+.setup { background: var(--gray-100); border: 2px dashed var(--gray-300); border-radius: 12px; padding: 32px; text-align: center; }
+.setup .icon { font-size: 34px; margin-bottom: 10px; }
+.setup h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.setup p { font-size: 13px; color: var(--gray-500); line-height: 1.6; margin-bottom: 14px; }
+
+/* ── AGENDA ── */
+.event-row { display: flex; align-items: flex-start; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--gray-100); }
+.event-row:last-child { border: none; }
+.event-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+.event-time { font-size: 11px; font-weight: 600; color: var(--gray-400); min-width: 70px; }
+.event-title { font-size: 13px; font-weight: 500; color: var(--black); }
+.event-loc { font-size: 11px; color: var(--gray-400); margin-top: 1px; }
+
+/* ── TASK ITEMS ── */
+.task-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--gray-100); }
+.task-row:last-child { border: none; }
+.task-id-tag { font-size: 10px; color: var(--gray-400); font-family: monospace; background: var(--gray-100); padding: 1px 5px; border-radius: 4px; white-space: nowrap; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 22px; right: 22px;
+  background: var(--black); color: white;
+  padding: 11px 18px; border-radius: 10px;
+  font-size: 13px; font-weight: 500; z-index: 9999;
+  opacity: 0; transform: translateY(6px);
+  transition: all 0.22s; display: flex; align-items: center; gap: 7px;
+  max-width: 340px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.ok { background: #14532D; }
+.toast.err { background: #7F1D1D; }
+  </style>
+</head>
+<body>
+
+<!-- ━━━━ SIDEBAR ━━━━ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-box">V4</div>
+    <span class="logo-wordmark">Company</span>
+  </div>
+  <div class="sidebar-user">
+    <div class="sidebar-name">Julia Costa</div>
+    <div class="sidebar-role">Gestora de Projetos</div>
+    <div class="sidebar-date" id="s-date">—</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-item active" data-tab="atendimento"><span class="nav-icon">💬</span>Atendimento</div>
+    <div class="nav-item" data-tab="pace"><span class="nav-icon">📊</span>GrowthPace</div>
+    <div class="nav-item" data-tab="comercial"><span class="nav-icon">🎯</span>Comercial</div>
+    <div class="nav-item" data-tab="agenda"><span class="nav-icon">📅</span>Agenda</div>
+    <div class="nav-item" data-tab="timesheet"><span class="nav-icon">⏱️</span>Timesheet</div>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="btn-sync" onclick="syncActive()">🔄 Sincronizar</button>
+  </div>
+</aside>
+
+<!-- ━━━━ MAIN ━━━━ -->
+<main class="main">
+
+  <!-- ═══ ABA: ATENDIMENTO ═══ -->
+  <div class="tab-panel active" id="tab-atendimento">
+    <div class="page-header">
+      <div class="page-title">Atendimento Diário</div>
+      <div class="page-sub">Selecione o cliente, cole os dados e gere a mensagem formatada para WhatsApp</div>
+    </div>
+
+    <div class="g2" style="align-items:start; gap:24px;">
+
+      <!-- ESQUERDA: formulário -->
+      <div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-label">Cliente e Tipo</div>
+          <div class="form-group">
+            <label class="form-label">Cliente</label>
+            <select class="select" id="a-client" onchange="loadAtendContext()">
+              <option value="">Selecione...</option>
+              <option value="FCE">FCE — FiveCred</option>
+              <option value="ACCE">ACCE — VLoca</option>
+              <option value="MSZB">MSZB — Massimo Zanetti</option>
+              <option value="TAWV">TAWV — Tawa Veiculos</option>
+              <option value="TECN1">TECN1 — Tecnipool</option>
+              <option value="FARS">FARS — Fares Aquino</option>
+              <option value="SOTB">SOTB — Atlantica Maquinas</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Tipo de Mensagem</label>
+            <select class="select" id="a-type">
+              <option value="diario">Relatorio Diario D-1</option>
+              <option value="mensal">Relatorio Mensal</option>
+              <option value="criativo">Aprovacao de Criativos</option>
+              <option value="update">Atualizacao / Projeto</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">Dados da Campanha</div>
+          <textarea class="textarea" id="a-dados" placeholder="Cole os dados que sua GT enviou.&#10;Ex: Meta: Investimento R$450 | Leads 12 | CPL R$37,50&#10;Google: Investimento R$280 | Leads 8 | CPL R$35,00" style="min-height:140px;"></textarea>
+          <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn btn-red" onclick="gerarMsg()">✨ Gerar Mensagem</button>
+            <button class="btn btn-gray btn-sm" onclick="copyMsg()">📋 Copiar</button>
+            <button class="btn btn-gray btn-sm" onclick="document.getElementById('a-dados').value=''">Limpar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- DIREITA: contexto + saída -->
+      <div>
+        <div id="a-context-wrap" style="display:none;">
+          <div class="card" style="margin-bottom:12px;">
+            <div class="card-label">Ekyte — Tarefas em Aberto</div>
+            <div id="a-ekyte-tasks"><div class="loading"><div class="spin"></div> Carregando...</div></div>
+          </div>
+          <div id="a-comercial-card" class="card" style="display:none; margin-bottom:12px;">
+            <div class="card-label">Comercial — Alertas</div>
+            <div id="a-comercial-content"></div>
+          </div>
+        </div>
+
+        <div id="a-output-card" class="card" style="display:none;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+            <div class="card-label" style="margin:0;">Mensagem Gerada</div>
+            <button class="btn btn-gray btn-sm" onclick="copyMsg()">📋 Copiar</button>
+          </div>
+          <div class="msg-box" id="a-output"></div>
+        </div>
+
+        <div id="a-placeholder" class="setup">
+          <div class="icon">💬</div>
+          <h3>Pronto para atender</h3>
+          <p>Escolha o cliente ao lado. O painel vai carregar as tarefas do Ekyte e os alertas do comercial antes de voce gerar a mensagem.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ABA: PACE ═══ -->
+  <div class="tab-panel" id="tab-pace">
+    <div class="page-header">
+      <div class="page-title">GrowthPace</div>
+      <div class="page-sub" id="pace-sub">Carregando planilhas...</div>
+    </div>
+
+    <div class="summary-bar" id="pace-bar">
+      <div class="sum-item"><div class="sum-num" id="p-total">—</div><div class="sum-lbl">Clientes</div></div>
+      <div class="sum-div"></div>
+      <div class="sum-item"><div class="sum-num" style="color:#4ADE80;" id="p-ok">—</div><div class="sum-lbl">No Pace</div></div>
+      <div class="sum-div"></div>
+      <div class="sum-item"><div class="sum-num" style="color:#FBBF24;" id="p-warn">—</div><div class="sum-lbl">Atencao</div></div>
+      <div class="sum-div"></div>
+      <div class="sum-item"><div class="sum-num" style="color:#F87171;" id="p-crit">—</div><div class="sum-lbl">Critico</div></div>
+      <div class="sum-div"></div>
+      <div class="sum-item"><div class="sum-num" style="color:#A78BFA;" id="p-exp">—</div><div class="sum-lbl">Pace Esperado</div></div>
+      <div style="margin-left:auto;">
+        <button class="btn btn-gray btn-sm" onclick="loadPace()" style="background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);">🔄 Atualizar</button>
+      </div>
+    </div>
+
+    <div class="g4" id="pace-cards">
+      <div class="loading"><div class="spin"></div> Buscando dados...</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="card">
+      <div class="card-label">Pace Real vs Esperado (%)</div>
+      <canvas id="paceChart" height="70"></canvas>
+    </div>
+
+    <div class="card" style="margin-top:14px; background:var(--gray-100); border-style:dashed;">
+      <div style="font-size:12px; color:var(--gray-500); line-height:1.7;">
+        <strong style="color:var(--gray-700);">Para as planilhas funcionarem:</strong>
+        abra cada GrowthPack no Google Sheets → Arquivo → Compartilhar → Publicar na Web → selecione a aba correta → CSV → Publicar.
+        Ou compartilhe como "Qualquer pessoa com o link pode ver".
+        Sem isso o navegador nao consegue ler os dados por restricao de CORS.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ABA: COMERCIAL ═══ -->
+  <div class="tab-panel" id="tab-comercial">
+    <div class="page-header">
+      <div class="page-title">Acompanhamento Comercial</div>
+      <div class="page-sub">Leads sem atualizacao e alertas por cliente</div>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:22px; flex-wrap:wrap;">
+      <select class="select" style="max-width:220px;" id="com-filter" onchange="filterCom()">
+        <option value="all">Todos os clientes</option>
+        <option value="FCE">FCE — FiveCred</option>
+        <option value="TECN1">TECN1 — Tecnipool</option>
+        <option value="FARS">FARS — Fares Aquino</option>
+      </select>
+      <button class="btn btn-gray btn-sm" onclick="loadComercial()">🔄 Atualizar</button>
+      <span id="com-summary" style="font-size:12px;color:var(--gray-500);"></span>
+    </div>
+
+    <div id="com-content">
+      <div class="loading"><div class="spin"></div> Carregando planilhas...</div>
+    </div>
+  </div>
+
+  <!-- ═══ ABA: AGENDA ═══ -->
+  <div class="tab-panel" id="tab-agenda">
+    <div class="page-header">
+      <div class="page-title">Agenda</div>
+      <div class="page-sub" id="agenda-sub">Hoje</div>
+    </div>
+
+    <div class="g2" style="align-items:start; gap:22px;">
+      <div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-label">Google Calendar — Configurar</div>
+          <p style="font-size:12px;color:var(--gray-500);line-height:1.7;margin-bottom:10px;">
+            Para obter o link: Google Calendar → Configuracoes → [seu calendario] → Role ate "Endereco do calendario em formato iCal" (link privado) → copie o link.
+          </p>
+          <div class="form-group">
+            <label class="form-label">Link iCal (privado)</label>
+            <input class="input" id="ical-input" placeholder="https://calendar.google.com/calendar/ical/..." type="url">
+          </div>
+          <button class="btn btn-red btn-sm" onclick="saveIcal()">Salvar e Carregar</button>
+        </div>
+
+        <div class="card">
+          <div class="card-label">Hoje</div>
+          <div id="agenda-today">
+            <p style="font-size:13px;color:var(--gray-400);padding:8px 0;">Configure o link iCal acima para ver seus eventos.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Proximos 7 dias</div>
+        <div id="agenda-week">
+          <p style="font-size:13px;color:var(--gray-400);padding:8px 0;">Configure o link iCal ao lado.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ABA: TIMESHEET ═══ -->
+  <div class="tab-panel" id="tab-timesheet">
+    <div class="page-header">
+      <div class="page-title">Timesheet</div>
+      <div class="page-sub">Apontamentos de hora no Ekyte</div>
+    </div>
+
+    <div class="g2" style="align-items:start; gap:22px;">
+
+      <!-- TIMER + MANUAL -->
+      <div>
+        <div class="card" id="timer-card" style="margin-bottom:14px;">
+          <div class="card-label">Timer</div>
+          <div class="form-group">
+            <label class="form-label">ID da Task</label>
+            <input class="input" id="t-id" placeholder="Ex: 9485238" type="number">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nome da Task</label>
+            <input class="input" id="t-name" placeholder="Ex: Atendimento FiveCred">
+          </div>
+          <div class="timer-big" id="t-clock">00:00:00</div>
+          <div class="timer-sub" id="t-sub">Pronto para iniciar</div>
+          <div style="display:flex; gap:8px; justify-content:center;">
+            <button class="btn btn-red" id="t-start" onclick="startTimer()">▶ Iniciar</button>
+            <button class="btn btn-gray" id="t-stop" onclick="stopTimer()" style="display:none;">⏹ Finalizar e Registrar</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">Registro Manual</div>
+          <div class="g2" style="gap:8px;">
+            <div class="form-group">
+              <label class="form-label">ID da Task</label>
+              <input class="input" id="m-id" type="number" placeholder="9485238">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nome</label>
+              <input class="input" id="m-name" placeholder="Nome da task">
+            </div>
+          </div>
+          <div class="g2" style="gap:8px;">
+            <div class="form-group">
+              <label class="form-label">Inicio</label>
+              <input class="input" id="m-start" type="time">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Fim</label>
+              <input class="input" id="m-end" type="time">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Data</label>
+            <input class="input" id="m-date" type="date">
+          </div>
+          <button class="btn btn-red" onclick="registerManual()">Registrar no Ekyte</button>
+        </div>
+      </div>
+
+      <!-- LOG DO DIA -->
+      <div class="card">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+          <div class="card-label" style="margin:0;">Log de Hoje</div>
+          <div style="font-size:16px; font-weight:800; color:var(--red);" id="t-total">0h00</div>
+        </div>
+        <div id="t-log">
+          <p style="font-size:13px; color:var(--gray-400); text-align:center; padding:28px 0;">Nenhum apontamento hoje.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CONFIG
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const EKYTE_TOKEN = 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjhBOTg4MzdFNjcyNEZBMzNBNUNENjdERUE4MEI1NDlFRUFDQUE5REFSUzI1NiIsInR5cCI6ImF0K2p3dCIsIng1dCI6ImlwaURmbWNrLWpPbHpXZmVxQXRVbnVyS3FkbyJ9.eyJuYmYiOjE3NzkxMzY1NjgsImV4cCI6MTc5NDY4ODU2OCwiaXNzIjoiaHR0cHM6Ly9hcGkuZWt5dGUuY29tIiwiY2xpZW50X2lkIjoicmVhY3RKU0NsaWVudCIsInN1YiI6IjE0Mjg0ZmEzLTM4NTAtNDRjMi04OWY3LTdkNTcwODQ3ZjUxZSIsImF1dGhfdGltZSI6MTc3OTEzNjU2NywiaWRwIjoibG9jYWwiLCJqdGkiOiJCNDMyOTVDODMzQzdFMDREMUU2MkZGMzUxMTlCMzFDOSIsImlhdCI6MTc3OTEzNjU2OCwic2NvcGUiOlsiZWt5dGVhcGkiXSwiYW1yIjpbInB3ZCJdfQ.ekGhrg_zWu8bL3Hq5DXRcddMgt1Mv-F67XeqghHg6ynuNxaWdReRI_dzveo35NaP_Shh5DjsKXT_MoI8zH10iVq4nOsb7FYw-k64C-qu9ymsKdU4MQ1fvP2Aqpve6D1snqTJqJlIvN58vpZz69ywkF0XiJbEY137bEdiImCRd85BDZHRwSOeVQfpdppZ2UAaMZpvb8ypvJNDE-uXX9XieYujJGj0F1ENyxtOYz_td6vIm6d_ofNQOEPtcGP24rML3POdLoEeK9QjBlSvYVhkY4zaiWlMM6fyHhvTVhXLIvRxL91aqC_JXsOcKzpeHHS__c3jgI6qDz_Riiny7Scapg';
+const EKYTE_CO = 3597;
+
+const CLIENTS = {
+  FCE:   { name:'FiveCred',           pace:{ id:'1naAmFNzrycM5cddVQDhGduDQx0nZFe0GlgtajOA2fUI', gid:'617612824'  }, com:{ id:'1duCquoJj-NEf2sGF_25oD6lHWZegCOoiGgoJ6F1N5TU', gid:'0'         } },
+  ACCE:  { name:'VLoca',              pace:{ id:'1DJYnq3qXC9Td8Fip1LJvFy4qn8XBIIkcGhT8QC2m_M8', gid:'2105044438' }, com:null },
+  MSZB:  { name:'Massimo Zanetti',    pace:{ id:'1Trpq5YTb4e_spNIG94bE12z1u6ZWPkPEr_wDPlcz29Y', gid:'368538734'  }, com:null },
+  TAWV:  { name:'Tawa Veiculos',      pace:{ id:'1qGWXaxS2yLu3jX9hTIxX87jwnT1ONi59kFNSSXVIaDY', gid:'2105044438' }, com:null },
+  TECN1: { name:'Tecnipool',          pace:{ id:'1e2PKWFMxEHoc-9K_0_omXVLiLIT8bASte0J_s6KCiMg', gid:'2105044438' }, com:{ id:'1Q4cgA_XG2Q6TxPzIB5oKb0vHGUyaQa-bFsJwFc41hrQ', gid:'0'         } },
+  FARS:  { name:'Fares Aquino',       pace:{ id:'1y_veFQsSb7q8Nzz_Q0ZD68D29vWM20c578JZDVZLkpU', gid:'105734657'  }, com:{ id:'1X-tCWiJeRVLuRiCXjuGlpXBVbhcQRROQJRn_QefJeIo', gid:'285026569'  } },
+  SOTB:  { name:'Atlantica Maquinas', pace:{ id:'1GDiRcey6G4kmx0ybSoIhVJSMRx-LGM5Ae7LepLNMoB0', gid:'617612824'  }, com:null },
+};
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// INIT
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let paceChart = null;
+let timerIval = null, timerStart = null, timerTask = null;
+let tsLog = JSON.parse(localStorage.getItem('ts_' + todayKey()) || '[]');
+
+function todayKey() { return new Date().toISOString().slice(0,10); }
+
+document.addEventListener('DOMContentLoaded', () => {
+  // date
+  const now = new Date();
+  const d = now.toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long' });
+  document.getElementById('s-date').textContent = d.charAt(0).toUpperCase() + d.slice(1);
+  document.getElementById('agenda-sub').textContent = now.toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long', year:'numeric' });
+  document.getElementById('m-date').value = todayKey();
+
+  // nav
+  document.querySelectorAll('.nav-item').forEach(n => {
+    n.addEventListener('click', () => {
+      document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(x => x.classList.remove('active'));
+      n.classList.add('active');
+      const tab = n.dataset.tab;
+      document.getElementById('tab-' + tab).classList.add('active');
+      if (tab === 'pace')      loadPace();
+      if (tab === 'comercial') loadComercial();
+      if (tab === 'agenda')    loadAgenda();
+    });
+  });
+
+  // restore ical
+  const saved = localStorage.getItem('ical_url');
+  if (saved) document.getElementById('ical-input').value = saved;
+
+  renderTsLog();
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// TOAST
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function toast(msg, type) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.className = 'toast show ' + (type||'');
+  setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// EKYTE API
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const EK = {
+  headers() { return { 'Authorization':'Bearer '+EKYTE_TOKEN, 'Accept':'application/json', 'Content-Type':'application/json' }; },
+  async get(path) {
+    const r = await fetch('https://api.ekyte.com'+path, { headers:this.headers(), mode:'cors' });
+    if (!r.ok) throw new Error('HTTP '+r.status);
+    return r.json();
+  },
+  async post(path, body) {
+    const r = await fetch('https://api.ekyte.com'+path, { method:'POST', headers:this.headers(), mode:'cors', body:JSON.stringify(body) });
+    if (!r.ok) { const t = await r.text(); throw new Error('HTTP '+r.status+': '+t); }
+    return r.json().catch(()=>({}));
+  }
+};
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// GOOGLE SHEETS FETCH + PARSE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+async function fetchCSV(sheetId, gid) {
+  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+  const r = await fetch(url, { mode:'cors' });
+  if (!r.ok) throw new Error('Planilha inacessivel (compartilhe como "qualquer pessoa com o link")');
+  const t = await r.text();
+  if (t.trim().startsWith('<')) throw new Error('Planilha nao publicada ou requer login');
+  return t;
+}
+
+function parseCSV(text) {
+  return text.split('\n').map(row => {
+    const cols=[]; let q=false, cur='';
+    for (let i=0;i<row.length;i++) {
+      const c=row[i];
+      if (c==='"') { q=!q; continue; }
+      if (c===','&&!q) { cols.push(cur.trim()); cur=''; continue; }
+      cur+=c;
+    }
+    cols.push(cur.trim()); return cols;
+  });
+}
+
+function brl(s) {
+  if (!s) return 0;
+  const n=parseFloat(s.replace(/R\$\s*/g,'').replace(/\./g,'').replace(',','.').trim());
+  return isNaN(n)?0:n;
+}
+
+function fmtBRL(v) {
+  if (!v||v===0) return '—';
+  return 'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0});
+}
+
+function extractPace(csv) {
+  const rows = parseCSV(csv);
+  const now = new Date();
+  const mnPT = ['janeiro','fevereiro','marco','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  const curMn = mnPT[now.getMonth()];
+  const curMm = String(now.getMonth()+1).padStart(2,'0');
+
+  let budget=0, invested=0, leads=0, cpl=0, meta=0, google=0;
+
+  // Find column index for current month
+  let hdrRow=null, colIdx=-1;
+  for (const row of rows) {
+    const s = row.join('|').toLowerCase();
+    if (s.includes(curMn)||s.includes('/'+curMm+'/')||s.includes('01/'+curMm)) {
+      hdrRow=row;
+      for(let j=0;j<row.length;j++) {
+        const c=row[j].toLowerCase();
+        if(c.includes(curMn)||c.includes('/'+curMm+'/')||c.includes('01/'+curMm)){colIdx=j;break;}
+      }
+      break;
+    }
+  }
+
+  for (const row of rows) {
+    const lbl=(row[0]||'').trim();
+    const lblL=lbl.toLowerCase();
+    const vals=row.slice(1).map(brl);
+    const nonzero=vals.filter(v=>v>0);
+    const last=nonzero.length?nonzero[nonzero.length-1]:0;
+
+    if (/^total$/i.test(lbl)||/budget.*total/i.test(lbl)) { if(brl(row[2])>0)budget=brl(row[2]); else if(last>0)budget=last; }
+    if (/^investimento$/i.test(lbl))         { invested = (colIdx>0&&brl(row[colIdx])>0)?brl(row[colIdx]):last||invested; }
+    if (/^investimento\s*meta/i.test(lbl))   { meta   = last; }
+    if (/^investimento\s*google/i.test(lbl)) { google = last; }
+    if (/^leads$/i.test(lbl))                { const n=row.slice(1).map(v=>parseInt(v)||0).filter(v=>v>0); if(n.length) leads=n[n.length-1]; }
+    if (/custo.*lead|^cpl$/i.test(lblL))     { cpl = (colIdx>0&&brl(row[colIdx])>0)?brl(row[colIdx]):last||cpl; }
+    if (/^r\$\s*[\d]/.test(row[2]||'') && /total/i.test(lbl) && !budget) budget=brl(row[2]);
+  }
+
+  return { budget, invested, leads, cpl, meta, google };
+}
+
+function paceStatus(real, exp) {
+  const d = real - exp;
+  if (d >  20) return { lbl:'Acelerado',            cls:'b-red',    col:'#DC2626' };
+  if (d >  10) return { lbl:'Levemente acelerado',  cls:'b-yellow', col:'#D97706' };
+  if (d > -10) return { lbl:'No pace',              cls:'b-green',  col:'#15803D' };
+  if (d > -20) return { lbl:'Ligeiro atraso',       cls:'b-yellow', col:'#D97706' };
+  return               { lbl:'Atrasado',             cls:'b-red',    col:'#DC2626' };
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ABA PACE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+async function loadPace() {
+  const now = new Date();
+  const dim = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+  const day = now.getDate();
+  const exp = (day/dim)*100;
+
+  document.getElementById('pace-sub').textContent = `Dia ${day} de ${dim} — Pace esperado: ${exp.toFixed(1)}%`;
+  document.getElementById('p-exp').textContent = exp.toFixed(1)+'%';
+  document.getElementById('pace-cards').innerHTML = '<div class="loading"><div class="spin"></div> Buscando dados...</div>';
+
+  const keys = Object.keys(CLIENTS);
+  const res = await Promise.allSettled(keys.map(async k => {
+    const c = CLIENTS[k];
+    const csv = await fetchCSV(c.pace.id, c.pace.gid);
+    return { k, n:c.name, ...extractPace(csv), err:null };
+  }));
+
+  const data = res.map((r,i)=> r.status==='fulfilled' ? r.value : { k:keys[i], n:CLIENTS[keys[i]].name, budget:0,invested:0,leads:0,cpl:0,meta:0,google:0, err:r.reason?.message||'Erro' });
+
+  data.sort((a,b)=>{
+    const pa=a.budget>0?(a.invested/a.budget)*100:0;
+    const pb=b.budget>0?(b.invested/b.budget)*100:0;
+    return Math.abs(pb-exp)-Math.abs(pa-exp);
+  });
+
+  let nOk=0, nWarn=0, nCrit=0;
+  const cLabels=[], cReal=[], cExp=[];
+
+  document.getElementById('pace-cards').innerHTML='';
+  data.forEach(r=>{
+    const pct = r.budget>0?(r.invested/r.budget)*100:0;
+    const st = r.err ? {lbl:'Sem acesso',cls:'b-gray',col:'#9CA3AF'}
+             : (r.invested===0&&day<=3) ? {lbl:'Aguardando GT',cls:'b-gray',col:'#9CA3AF'}
+             : paceStatus(pct, exp);
+
+    if(!r.err && r.invested>0) {
+      if(st.lbl==='No pace') nOk++;
+      else if(st.cls==='b-yellow') nWarn++;
+      else nCrit++;
+    }
+
+    const pBar = Math.min(100,pct).toFixed(1);
+    const expL = Math.min(100,exp).toFixed(1);
+
+    const card = document.createElement('div');
+    card.className = 'pace-card';
+    card.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px;">
+        <div><div class="pace-client">${r.n}</div><div class="pace-ticker">${r.k}</div></div>
+        <span class="badge ${st.cls}">${st.lbl}</span>
+      </div>
+      ${r.err ? `<div style="font-size:12px;color:var(--gray-400);margin-top:6px;">⚠️ ${r.err}</div>` : `
+        <div class="pace-pct" style="color:${st.col}">${pct.toFixed(1)}%</div>
+        <div style="font-size:11px;color:var(--gray-400);">Budget: ${fmtBRL(r.budget)}</div>
+        <div class="pace-track">
+          <div class="pace-fill" style="width:${pBar}%;background:${st.col};"></div>
+          <div class="pace-needle" style="left:${expL}%;"></div>
+        </div>
+        <div class="pace-meta">
+          <span>Investido: <strong>${fmtBRL(r.invested)}</strong></span>
+          <span>Leads: <strong>${r.leads||'—'}</strong></span>
+        </div>
+        <div class="pace-meta" style="margin-top:4px;">
+          <span>CPL: <strong>${fmtBRL(r.cpl)}</strong></span>
+          ${r.meta>0?`<span>Meta: <strong>${fmtBRL(r.meta)}</strong></span>`:''}
+        </div>
+      `}
+    `;
+    document.getElementById('pace-cards').appendChild(card);
+
+    cLabels.push(r.k);
+    cReal.push(parseFloat(pct.toFixed(1)));
+    cExp.push(parseFloat(exp.toFixed(1)));
+  });
+
+  document.getElementById('p-total').textContent = data.length;
+  document.getElementById('p-ok').textContent = nOk;
+  document.getElementById('p-warn').textContent = nWarn;
+  document.getElementById('p-crit').textContent = nCrit;
+  renderPaceChart(cLabels, cReal, cExp);
+}
+
+function renderPaceChart(labels, real, exp) {
+  const ctx = document.getElementById('paceChart').getContext('2d');
+  if (paceChart) paceChart.destroy();
+  paceChart = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        { label:'Pace Real (%)', data:real, backgroundColor:real.map((v,i)=>{
+            const d=v-exp[i];
+            if(Math.abs(d)<=10) return 'rgba(21,128,61,0.75)';
+            if(Math.abs(d)<=20) return 'rgba(180,83,9,0.75)';
+            return 'rgba(204,27,43,0.8)';
+          }), borderRadius:5, borderSkipped:false },
+        { label:'Pace Esperado (%)', data:exp, type:'line',
+          borderColor:'#6B7280', borderDash:[5,4], pointRadius:0, borderWidth:2, fill:false, tension:0 }
+      ]
+    },
+    options:{
+      responsive:true,
+      plugins:{ legend:{ position:'top', labels:{ font:{ family:'Inter',size:12 }, boxWidth:12 } } },
+      scales:{
+        y:{ beginAtZero:true, max:100, ticks:{ callback:v=>v+'%', font:{family:'Inter',size:11} }, grid:{color:'rgba(0,0,0,0.04)'} },
+        x:{ ticks:{ font:{family:'Inter',size:11} }, grid:{display:false} }
+      }
+    }
+  });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ABA COMERCIAL
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+async function loadComercial() {
+  document.getElementById('com-content').innerHTML = '<div class="loading"><div class="spin"></div> Carregando...</div>';
+
+  const comClients = Object.entries(CLIENTS).filter(([,c])=>c.com);
+  let html='', totalAlerts=0;
+
+  for (const [key,c] of comClients) {
+    try {
+      const csv = await fetchCSV(c.com.id, c.com.gid);
+      const rows = parseCSV(csv);
+      if(rows.length<2){continue;}
+      const headers = rows[0];
+      const data = rows.slice(1).filter(r=>r.some(x=>x.trim()));
+
+      const obsIdx = headers.findIndex(h=>/observa|follow|coment|obs/i.test(h));
+      const nameIdx = headers.findIndex(h=>/nome|lead|cliente|contato/i.test(h));
+      const empty = data.filter(r=>obsIdx>=0&&!(r[obsIdx]||'').trim());
+      totalAlerts += empty.length;
+
+      html += `
+        <div class="card" style="margin-bottom:16px;" data-client="${key}">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+            <div>
+              <span style="font-size:14px;font-weight:700;">${c.name}</span>
+              <span style="font-size:11px;color:var(--gray-400);margin-left:8px;">${key}</span>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              ${empty.length>0?`<span class="badge b-red">⚠️ ${empty.length} sem obs.</span>`:'<span class="badge b-green">✓ Atualizado</span>'}
+              <span style="font-size:12px;color:var(--gray-400);">${data.length} leads</span>
+            </div>
+          </div>
+          ${empty.length>0?`<div class="alert">⚠️ ${empty.length} lead(s) sem preenchimento na coluna de observacao.</div>`:''}
+          <div class="table-wrap">
+            <table>
+              <thead><tr>${headers.slice(0,6).map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+              <tbody>${data.slice(0,25).map(r=>{
+                const warn = obsIdx>=0&&!(r[obsIdx]||'').trim();
+                return `<tr class="${warn?'row-warn':''}">${r.slice(0,6).map(cell=>`<td>${cell||'<span style="color:var(--gray-300);">—</span>'}</td>`).join('')}</tr>`;
+              }).join('')}</tbody>
+            </table>
+          </div>
+          ${data.length>25?`<p style="font-size:11px;color:var(--gray-400);margin-top:8px;text-align:right;">Mostrando 25 de ${data.length}</p>`:''}
+        </div>`;
+    } catch(e) {
+      html += `<div class="card" style="margin-bottom:14px;" data-client="${key}">
+        <div style="font-weight:700;margin-bottom:8px;">${c.name} <span style="font-size:11px;color:var(--gray-400);">${key}</span></div>
+        <div class="alert">Planilha nao acessivel: ${e.message}</div>
+      </div>`;
+    }
+  }
+
+  document.getElementById('com-content').innerHTML = html||'<p style="color:var(--gray-400);font-size:13px;">Sem planilhas comerciais configuradas.</p>';
+  document.getElementById('com-summary').textContent = totalAlerts>0 ? `⚠️ ${totalAlerts} lead(s) precisam de atualizacao` : '';
+}
+
+function filterCom() {
+  const v = document.getElementById('com-filter').value;
+  document.querySelectorAll('#com-content .card[data-client]').forEach(c=>{
+    c.style.display = (v==='all'||c.dataset.client===v)?'':'none';
+  });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ABA ATENDIMENTO
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+async function loadAtendContext() {
+  const key = document.getElementById('a-client').value;
+  document.getElementById('a-context-wrap').style.display = key?'':'none';
+  document.getElementById('a-placeholder').style.display = key?'none':'';
+  if (!key) return;
+
+  const c = CLIENTS[key];
+
+  // Ekyte tasks
+  const el = document.getElementById('a-ekyte-tasks');
+  el.innerHTML = '<div class="loading"><div class="spin"></div></div>';
+  try {
+    const d = await EK.get(`/api/companies/${EKYTE_CO}/workspaces/0/tasks?title=&page=1&pageSize=30&statusCodes=1,2`);
+    const items = (d.items||d||[]);
+    const tasks = items.filter(t=>{
+      const ws = (t.workspace?.name||'').toLowerCase();
+      const title = (t.title||t.name||'').toLowerCase();
+      const nm = c.name.toLowerCase();
+      return ws.includes(nm)||ws.includes(key.toLowerCase())||title.includes(nm);
+    }).slice(0,10);
+
+    el.innerHTML = tasks.length
+      ? tasks.map(t=>`<div class="task-row"><div><span class="task-id-tag">#${t.id||t.ctcTaskId}</span></div><div style="font-size:13px;font-weight:500;">${t.title||t.name}</div></div>`).join('')
+      : '<p style="font-size:13px;color:var(--gray-400);">Nenhuma tarefa em aberto.</p>';
+  } catch(e) {
+    const isCors = e.message.includes('fetch')||e.message.includes('NetworkError');
+    el.innerHTML = `<p style="font-size:12px;color:var(--gray-400);">${isCors?'API Ekyte: CORS bloqueado no navegador. Consulte via Claude com /growthpace ou /ekyte.':e.message}</p>`;
+  }
+
+  // Comercial
+  const comCard = document.getElementById('a-comercial-card');
+  const comEl = document.getElementById('a-comercial-content');
+  if (c.com) {
+    comCard.style.display='';
+    try {
+      const csv = await fetchCSV(c.com.id, c.com.gid);
+      const rows = parseCSV(csv);
+      const hdr = rows[0]||[];
+      const data = rows.slice(1).filter(r=>r.some(x=>x.trim()));
+      const obsIdx = hdr.findIndex(h=>/observa|follow|coment|obs/i.test(h));
+      const empty = data.filter(r=>obsIdx>=0&&!(r[obsIdx]||'').trim());
+      comEl.innerHTML = empty.length>0
+        ? `<div class="alert">⚠️ ${empty.length} lead(s) sem atualizacao na observacao</div><p style="font-size:12px;color:var(--gray-400);">${data.length} leads na planilha.</p>`
+        : `<span class="badge b-green">✓ Planilha comercial OK</span><p style="font-size:12px;color:var(--gray-400);margin-top:6px;">${data.length} leads — todos com observacao.</p>`;
+    } catch(e) {
+      comEl.innerHTML = `<p style="font-size:12px;color:var(--gray-400);">Nao foi possivel carregar: ${e.message}</p>`;
+    }
+  } else { comCard.style.display='none'; }
+}
+
+function gerarMsg() {
+  const key = document.getElementById('a-client').value;
+  const type = document.getElementById('a-type').value;
+  const dados = document.getElementById('a-dados').value.trim();
+  if (!key) { toast('Selecione um cliente primeiro','err'); return; }
+
+  const now = new Date();
+  const h = now.getHours();
+  const sauda = h<12?'Bom dia':h<18?'Boa tarde':'Boa noite';
+  const mes = now.toLocaleString('pt-BR',{month:'long'});
+  const mesTitle = mes.charAt(0).toUpperCase()+mes.slice(1);
+
+  let msg='';
+
+  if (type==='diario') {
+    msg = `[MSG]\n${sauda}, time! Tudo bem por ai? Passando com o acompanhamento de ontem (D-1):\n\n[MSG]\n`;
+    if (dados) {
+      const lines = dados.split('\n').filter(l=>l.trim());
+      lines.forEach(line=>{
+        const ch = line.match(/^(Meta|Google|Facebook|Instagram)/i)?.[0]||'Canal';
+        msg += `🔹 *${ch}*\n\n`;
+        const inv=line.match(/[Ii]nvestimento[:\s]*R?\$?\s*([\d.,]+)/)?.[1];
+        const lds=line.match(/[Ll]eads?[:\s]*([\d]+)/)?.[1];
+        const cpl=line.match(/[Cc][Pp][Ll][:\s]*R?\$?\s*([\d.,]+)/)?.[1];
+        const ctr=line.match(/[Cc][Tt][Rr][:\s]*([\d.,]+)/)?.[1];
+        const imp=line.match(/[Ii]mpressoes?[:\s]*([\d.,]+)/)?.[1];
+        if(inv) msg+=`📌 Investimento: R$ ${inv}\n`;
+        if(imp) msg+=`👁️ Impressoes: ${imp}\n`;
+        if(ctr) msg+=`📈 CTR: ${ctr}%\n`;
+        if(lds) msg+=`🎯 Leads Gerados: ${lds}\n`;
+        if(cpl) msg+=`💰 CPL: R$ ${cpl}\n`;
+        msg+=`\n📊 *Analise do dia:*\n\n[Insira sua analise aqui com base nos dados acima]\n\n`;
+      });
+    } else {
+      msg+='[Cole os dados da campanha no campo ao lado]\n\n📊 *Analise do dia:*\n\n[Analise]\n\n';
+    }
+    msg+=`[MSG]\nSeguimos acompanhando de perto. Qualquer duvida, estou a disposicao! 🙌`;
+
+  } else if (type==='mensal') {
+    msg=`[MSG]\n${sauda}, time! 👋\n\n[MSG]\nPassando para atualizar voces sobre nossas metricas de campanhas no mes de ${mesTitle}:\n\n[MSG]\n📝 *Relatorio de Resultados — ${mesTitle}*\n\n${dados||'[Cole os dados do mes]'}\n\n📊 *Analise do periodo:*\n\n[Analise estrategica]\n\n[MSG]\nQualquer duvida, estou a disposicao!`;
+
+  } else if (type==='criativo') {
+    msg=`[MSG]\n${sauda}, time! 👋\n\n[MSG]\n🎨 *Criativos para Aprovacao*\nSegue o link com os materiais desenvolvidos para a proxima campanha. Pedimos que verifiquem e retornem com feedback ou aprovacao!\n\n${dados||'[link aqui]'}\n\n[MSG]\nQualquer duvida, estamos a disposicao! 🙌`;
+
+  } else {
+    msg=`[MSG]\n${sauda}, time! 👋\n\n[MSG]\nSegue nosso alinhamento do dia:\n\n[MSG]\n${dados||'[conteudo da atualizacao]'}\n\n[MSG]\nFicamos a disposicao! Vamos pra cima! 🚀`;
+  }
+
+  document.getElementById('a-output').textContent=msg;
+  document.getElementById('a-output-card').style.display='';
+}
+
+function copyMsg() {
+  const t = document.getElementById('a-output').textContent;
+  if (!t) { toast('Gere a mensagem primeiro','err'); return; }
+  navigator.clipboard.writeText(t).then(()=>toast('Copiado!','ok'));
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ABA AGENDA
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function saveIcal() {
+  const url = document.getElementById('ical-input').value.trim();
+  if (!url) { toast('Cole o link iCal primeiro','err'); return; }
+  localStorage.setItem('ical_url', url);
+  loadAgenda();
+}
+
+async function loadAgenda() {
+  const url = localStorage.getItem('ical_url');
+  if (!url) return;
+  document.getElementById('agenda-today').innerHTML = '<div class="loading"><div class="spin"></div> Carregando...</div>';
+  try {
+    const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+    const r = await fetch(proxy);
+    const ical = await r.text();
+    const events = parseIcal(ical);
+    const now = new Date();
+    const todayStr = now.toDateString();
+
+    const todayEvts = events.filter(e=>e.start&&new Date(e.start).toDateString()===todayStr)
+      .sort((a,b)=>new Date(a.start)-new Date(b.start));
+    const weekEvts = events.filter(e=>{
+      if(!e.start) return false;
+      const d=(new Date(e.start)-now)/(86400000);
+      return d>=-1&&d<=7;
+    }).sort((a,b)=>new Date(a.start)-new Date(b.start));
+
+    const PAL=['#CC1B2B','#2563EB','#15803D','#7C3AED','#D97706','#0891B2'];
+    const dotColor = s => PAL[Math.abs((s||'x').charCodeAt(0))%PAL.length];
+
+    const renderEvt = (e, showDate) => {
+      const start = new Date(e.start), end = e.end?new Date(e.end):null;
+      const allDay = start.getHours()===0&&start.getMinutes()===0&&(!end||end-start>=86400000);
+      const timeStr = allDay?'Dia todo':start.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+(end?' – '+end.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'');
+      const dateStr = showDate?start.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'})+' · ':'';
+      return `<div class="event-row">
+        <div class="event-dot" style="background:${dotColor(e.summary)};"></div>
+        <div>
+          <div class="event-time">${dateStr}${timeStr}</div>
+          <div class="event-title">${e.summary||'Sem titulo'}</div>
+          ${e.location?`<div class="event-loc">📍 ${e.location}</div>`:''}
+        </div>
+      </div>`;
+    };
+
+    document.getElementById('agenda-today').innerHTML = todayEvts.length
+      ? todayEvts.map(e=>renderEvt(e,false)).join('')
+      : '<p style="font-size:13px;color:var(--gray-400);padding:8px 0;">Sem eventos hoje.</p>';
+
+    document.getElementById('agenda-week').innerHTML = weekEvts.length
+      ? weekEvts.map(e=>renderEvt(e,true)).join('')
+      : '<p style="font-size:13px;color:var(--gray-400);padding:8px 0;">Sem eventos proximos.</p>';
+
+  } catch(e) {
+    document.getElementById('agenda-today').innerHTML = `<div class="alert">Erro ao carregar agenda: ${e.message}. Verifique o link iCal.</div>`;
+  }
+}
+
+function parseIcal(text) {
+  const events=[];
+  text.split('BEGIN:VEVENT').slice(1).forEach(block=>{
+    const g=(k)=>{
+      const m=block.match(new RegExp(k+'(?:;[^:]+)?:([\\s\\S]+?)(?:\\r?\\n(?![\\t ]))'));
+      return m?m[1].replace(/\r?\n[\t ]/g,'').trim():null;
+    };
+    const pd=(s)=>{
+      if(!s) return null;
+      if(s.length===8) return new Date(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8));
+      if(s.includes('T')){
+        const utc=s.endsWith('Z');
+        const [yr,mo,dy,hr,mn,sc]=[+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8),+s.slice(9,11),+s.slice(11,13),+s.slice(13,15)];
+        return utc?new Date(Date.UTC(yr,mo,dy,hr,mn,sc)):new Date(yr,mo,dy,hr,mn,sc);
+      }
+      return null;
+    };
+    events.push({ summary:g('SUMMARY'), location:g('LOCATION'), start:pd(g('DTSTART')), end:pd(g('DTEND')) });
+  });
+  return events.filter(e=>e.start);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ABA TIMESHEET
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function renderTsLog() {
+  const el = document.getElementById('t-log');
+  const tot = document.getElementById('t-total');
+  if (!tsLog.length) {
+    el.innerHTML='<p style="font-size:13px;color:var(--gray-400);text-align:center;padding:28px 0;">Nenhum apontamento hoje.</p>';
+    tot.textContent='0h00'; return;
+  }
+  const mins = tsLog.reduce((s,e)=>s+e.dur,0);
+  tot.textContent = Math.floor(mins/60)+'h'+String(mins%60).padStart(2,'0');
+  el.innerHTML=`<table>
+    <thead><tr><th>Task</th><th>Inicio</th><th>Fim</th><th>Duracao</th><th></th></tr></thead>
+    <tbody>${tsLog.map(e=>`<tr>
+      <td><div style="font-size:11px;color:var(--gray-400);font-family:monospace;">#${e.id}</div><div style="font-weight:500;">${e.name}</div></td>
+      <td>${e.ini}</td><td>${e.fim}</td>
+      <td>${Math.floor(e.dur/60)}h${String(e.dur%60).padStart(2,'0')}</td>
+      <td><span class="badge ${e.reg?'b-green':'b-yellow'}">${e.reg?'✓ Ekyte':'Local'}</span></td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+function startTimer() {
+  const id = document.getElementById('t-id').value.trim();
+  const name = document.getElementById('t-name').value.trim();
+  if (!id||!name) { toast('Preencha o ID e o nome da task','err'); return; }
+  timerStart = new Date(); timerTask = {id,name};
+  document.getElementById('t-start').style.display='none';
+  document.getElementById('t-stop').style.display='';
+  document.getElementById('timer-card').classList.add('timer-running');
+  document.getElementById('t-sub').textContent = 'Rodando desde '+timerStart.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  timerIval = setInterval(()=>{
+    const s=Math.floor((new Date()-timerStart)/1000);
+    document.getElementById('t-clock').textContent=String(Math.floor(s/3600)).padStart(2,'0')+':'+String(Math.floor((s%3600)/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+  },1000);
+}
+
+async function stopTimer() {
+  if(!timerStart) return;
+  const end=new Date();
+  clearInterval(timerIval); timerIval=null;
+  const ini=timerStart.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  const fim=end.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  const dur=Math.round((end-timerStart)/60000);
+  const date=timerStart.toISOString().slice(0,10);
+  document.getElementById('t-start').style.display='';
+  document.getElementById('t-stop').style.display='none';
+  document.getElementById('timer-card').classList.remove('timer-running');
+  document.getElementById('t-clock').textContent='00:00:00';
+  document.getElementById('t-sub').textContent='Pronto para iniciar';
+  await regEkyte(timerTask.id, timerTask.name, ini, fim, dur, date);
+  document.getElementById('t-id').value='';
+  document.getElementById('t-name').value='';
+  timerStart=null; timerTask=null;
+}
+
+async function registerManual() {
+  const id=document.getElementById('m-id').value.trim();
+  const name=document.getElementById('m-name').value.trim();
+  const ini=document.getElementById('m-start').value;
+  const fim=document.getElementById('m-end').value;
+  const date=document.getElementById('m-date').value;
+  if(!id||!name||!ini||!fim) { toast('Preencha todos os campos','err'); return; }
+  const [sh,sm]=ini.split(':').map(Number);
+  const [eh,em]=fim.split(':').map(Number);
+  const dur=(eh*60+em)-(sh*60+sm);
+  if(dur<=0) { toast('Horario de fim deve ser depois do inicio','err'); return; }
+  await regEkyte(id,name,ini,fim,dur,date);
+}
+
+async function regEkyte(taskId, taskName, ini, fim, dur, date) {
+  toast('Registrando no Ekyte...','');
+  let wsId=0, typeId=1, phaseId=0;
+  try {
+    const t = await EK.get(`/api/companies/${EKYTE_CO}/workspaces/0/tasks/${taskId}`);
+    wsId=t.workspaceId||0; typeId=t.ctcTaskTypeId||1; phaseId=t.phaseId||0;
+  } catch(_){}
+
+  const body={
+    typeTimeTracking:2,
+    startDate:`${date}T${ini}:00`, startDateTime:ini,
+    endDate:`${date}T${fim}:00`,   endDateTime:fim,
+    effort:dur, comment:'',
+    workspaceId:wsId, type:1,
+    ctcTaskId:parseInt(taskId), ctcTaskTypeId:typeId, phaseId, manualTime:ini
+  };
+
+  let reg=false;
+  try {
+    await EK.post(`/api/companies/${EKYTE_CO}/workspaces/${wsId}/time-trackings`, body);
+    reg=true;
+    toast(`✓ ${taskName} registrado (${Math.floor(dur/60)}h${String(dur%60).padStart(2,'0')})`, 'ok');
+  } catch(e) {
+    const cors=e.message.includes('fetch')||e.message.includes('NetworkError')||e.message.includes('CORS');
+    if(cors) {
+      toast('Ekyte CORS bloqueado — salvo localmente. Use /ekyte-log-timer no Claude para sincronizar.','err');
+    } else {
+      toast('Erro Ekyte: '+e.message,'err');
+    }
+  }
+
+  if(date===todayKey()) {
+    tsLog.push({id:taskId,name:taskName,ini,fim,dur,date,reg});
+    localStorage.setItem('ts_'+todayKey(), JSON.stringify(tsLog));
+    renderTsLog();
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// SYNC
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function syncActive() {
+  const tab = document.querySelector('.nav-item.active')?.dataset.tab;
+  if(tab==='pace')      loadPace();
+  else if(tab==='comercial') loadComercial();
+  else if(tab==='agenda')    loadAgenda();
+  else loadPace();
+  toast('Sincronizando...','');
+}
+</script>
+</body>
+</html>
