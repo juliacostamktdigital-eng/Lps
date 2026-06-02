@@ -811,25 +811,27 @@ const COM_SCHEMA = {
       receita:['receita','receita total','valor'],
     }
   },
-  FARS: {
+  TECN1: {
     style:'mqsql',
+    boolVal: true, // MQL/SQL usam "Sim"/"Não" em vez de vazio/preenchido
     h: {
       nome:   ['nome','nome completo','name'],
       data:   ['data','data do lead'],
-      mql:    ['mql','mql (tem interesse)','mql (tem interesse no serviço)'],
-      sql:    ['sql','sql (intenção de fechar)','sql (intencao de fechar)','sql (tem intenção)'],
+      mql:    ['mql (tem interesse no produto)','mql','mql (tem interesse)','mql (tem interesse no serviço)'],
+      sql:    ['sql (tem intenção de compra)','sql (tem intencao de compra)','sql','sql (intenção de fechar)','sql (intencao de fechar)'],
       obs:    ['observações comerciais','observacoes','obs','observações'],
       venda:  ['venda concluída','venda','venda concluida'],
       receita:['receita de vendas','receita','valor'],
     }
   },
-  TECN1: {
+  FARS: {
     style:'mqsql',
+    boolVal: true, // MQL/SQL usam "Sim"/"Não"
     h: {
       nome:   ['nome','nome completo','name'],
       data:   ['data','data do lead'],
-      mql:    ['mql','mql (tem interesse)','mql (tem interesse no serviço)'],
-      sql:    ['sql','sql (intenção de fechar)','sql (intencao de fechar)'],
+      mql:    ['mql (tem interesse no serviço)','mql (tem interesse)','mql'],
+      sql:    ['sql (tem intenção de fechar)','sql (intencao de fechar)','sql (intenção de fechar)','sql'],
       obs:    ['observações comerciais','observacoes','obs','observações'],
       venda:  ['venda concluída','venda','venda concluida'],
       receita:['receita de vendas','receita','valor'],
@@ -897,9 +899,18 @@ async function loadComercialData(ticker) {
         const mql = get('mql'); const sql = get('sql');
         const obs = get('obs'); const vnd = get('venda');
         const rec = brl(get('receita'));
-        if (!mql) semMql++; else mqlCount++;
-        if (!sql) semSql++; else sqlCount++;
-        if (!obs) { semObs++; pendingLeads.push({ nome: get('nome')||'—', data: get('data'), mql, sql }); }
+        // boolVal: MQL/SQL usam "Sim"/"Nao" — vazio = sem avaliacao, "Nao" = avaliado/nao qualificado
+        if (schema.boolVal) {
+          const mqlL = mql.toLowerCase(); const sqlL = sql.toLowerCase();
+          if (!mql) semMql++; else if (mqlL === 'sim') mqlCount++;
+          if (!sql) semSql++; else if (sqlL === 'sim') sqlCount++;
+          if (!obs) semObs++;
+          if (!mql || !sql || !obs) pendingLeads.push({ nome: get('nome')||'—', data: get('data'), mql, sql });
+        } else {
+          if (!mql) { semMql++; } else mqlCount++;
+          if (!sql) { semSql++; } else sqlCount++;
+          if (!obs) { semObs++; pendingLeads.push({ nome: get('nome')||'—', data: get('data'), mql, sql }); }
+        }
         if (vnd && !['','nao','não','0','false'].includes(vnd.toLowerCase())) vendas++;
         receitaTotal += rec;
       }
