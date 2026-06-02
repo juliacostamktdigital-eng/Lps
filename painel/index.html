@@ -517,7 +517,10 @@ tr:hover td { background: var(--gray-100); }
       <div class="card">
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
           <div class="card-label" style="margin:0;">Log de Hoje</div>
-          <div style="font-size:16px; font-weight:800; color:var(--red);" id="t-total">0h00</div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button class="btn btn-gray btn-sm" onclick="loadTsEkyte()">🔄 Carregar do Ekyte</button>
+            <div style="font-size:16px; font-weight:800; color:var(--red);" id="t-total">0h00</div>
+          </div>
         </div>
         <div id="t-log">
           <p style="font-size:13px; color:var(--gray-400); text-align:center; padding:28px 0;">Nenhum apontamento hoje.</p>
@@ -616,18 +619,20 @@ const EK = {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 async function fetchCSV(sheetId, gid) {
   const direct = `https://docs.google.com/spreadsheets/d/${sheetId}/pub?gid=${gid}&single=true&output=csv`;
-  const proxy  = `https://corsproxy.io/?${encodeURIComponent(direct)}`;
-
-  // tenta direto; se CORS bloquear usa proxy
-  for (const url of [direct, proxy]) {
+  const proxies = [
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(direct)}`,
+    `https://corsproxy.io/?${encodeURIComponent(direct)}`,
+    `https://thingproxy.freeboard.io/fetch/${direct}`,
+  ];
+  for (const url of [direct, ...proxies]) {
     try {
       const r = await fetch(url);
       if (!r.ok) continue;
       const t = await r.text();
-      if (!t.trim().startsWith('<')) return t;
+      if (t.length > 30 && !t.trim().startsWith('<') && !t.includes('<!DOCTYPE')) return t;
     } catch(_) {}
   }
-  throw new Error('Nao foi possivel acessar a planilha. Verifique se esta publicada em Arquivo → Publicar na Web → CSV.');
+  throw new Error('Sem acesso — verifique se a planilha foi publicada via Arquivo → Publicar na Web → CSV.');
 }
 
 function parseCSV(text) {
@@ -684,7 +689,7 @@ function extractPace(csv) {
     const nonzero=vals.filter(v=>v>0);
     const last=nonzero.length?nonzero[nonzero.length-1]:0;
 
-    if (/^total$/i.test(lbl)||/budget.*total/i.test(lbl)) { if(brl(row[2])>0)budget=brl(row[2]); else if(last>0)budget=last; }
+    if (/^(total|verba|budget|orcamento)/i.test(lbl)||/budget|verba\s*(total|mes|mensal)/i.test(lbl)||/investimento\s*previsto/i.test(lbl)) { const bv=row.slice(1).map(brl).filter(v=>v>100); if(bv.length&&!budget) budget=Math.max(...bv); }
     if (/^investimento$/i.test(lbl))         { invested = (colIdx>0&&brl(row[colIdx])>0)?brl(row[colIdx]):last||invested; }
     if (/^investimento\s*meta/i.test(lbl))   { meta   = last; }
     if (/^investimento\s*google/i.test(lbl)) { google = last; }
@@ -937,84 +942,117 @@ async function loadAtendContext() {
   } else { comCard.style.display='none'; }
 }
 
-// ── parsers de metrica ──
-function parseNum(str, key) {
-  const r = new RegExp(key + '[:\\s]*R?\\$?\\s*([\\d.,]+)', 'i');
-  const m = str.match(r);
+// ── helpers ──
+function parseNum(txt, key) {
+  const m = txt.match(new RegExp(key + '[^\\d]*([\\d]{1,3}(?:[.,][\\d]{3})*(?:[.,]\\d{1,2})?)', 'i'));
   if (!m) return null;
   return m[1].replace(/\./g,'').replace(',','.');
 }
-function fmtN(v) { return v ? parseFloat(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) : null; }
+function fmtN(v) { if(!v) return null; return parseFloat(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 
-function parseCanal(linha) {
-  const nome = linha.match(/^(Meta|Google\s*Ads?|Google|Facebook|Instagram)/i)?.[0]?.trim() || 'Canal';
-  const inv   = parseNum(linha,'[Ii]nvestimento');
-  const imp   = parseNum(linha,'[Ii]mpressoes?');
-  const alc   = parseNum(linha,'[Aa]lcance');
-  const clk   = parseNum(linha,'[Cc]liques?(?:\\s*no\\s*[Ll]ink)?');
-  const ctr   = parseNum(linha,'[Cc][Tt][Rr]');
-  const cpm   = parseNum(linha,'[Cc][Pp][Mm]');
-  const lds   = parseNum(linha,'[Ll]eads?');
-  const cpl   = (parseNum(linha,'[Cc][Pp][Ll]')) || (inv && lds ? String(parseFloat(inv)/parseFloat(lds)) : null);
-  const vend  = parseNum(linha,'[Vv]endas?');
-  const cpa   = (parseNum(linha,'[Cc][Pp][Aa]')) || (inv && vend ? String(parseFloat(inv)/parseFloat(vend)) : null);
-  const rec   = parseNum(linha,'[Rr]eceita');
-  const tick  = (parseNum(linha,'[Tt]icket')) || (rec && vend ? String(parseFloat(rec)/parseFloat(vend)) : null);
-  const isEco = !!(vend || cpa);
-  return { nome, inv, imp, alc, clk, ctr, cpm, lds, cpl, vend, cpa, rec, tick, isEco };
-}
+// Divide o input em blocos por canal
+// Cada bloco começa com linha sem emoji de metrica (= nome do canal)
+function splitBlocos(texto) {
+  const linhas = texto.split('\n').map(l=>l.trim()).filter(l=>l);
+  const blocos = [];
+  let cur = null;
+  const isMetric = l => /^[📌👁️📣🖱️📈💰🎯✅🚀]/u.test(l);
 
-function blocoCanal(c) {
-  let b = `🔹 *${c.nome}*\n\n`;
-  if (c.inv)  b += `📌 Investimento: R$ ${fmtN(c.inv)}\n`;
-  if (c.imp)  b += `👁️ Impressoes: ${parseInt(c.imp).toLocaleString('pt-BR')}\n`;
-  if (c.alc)  b += `📣 Alcance: ${parseInt(c.alc).toLocaleString('pt-BR')}\n`;
-  if (c.clk)  b += `🖱️ Cliques no Link: ${parseInt(c.clk).toLocaleString('pt-BR')}\n`;
-  if (c.ctr)  b += `📈 CTR: ${parseFloat(c.ctr).toFixed(2)}%\n`;
-  if (c.cpm)  b += `💰 CPM: R$ ${fmtN(c.cpm)}\n`;
-  if (!c.isEco) {
-    if (c.lds)  b += `🎯 Leads Gerados: ${c.lds}\n`;
-    if (c.cpl)  b += `💰 CPL: R$ ${fmtN(c.cpl)}\n`;
-  } else {
-    if (c.vend) b += `🎯 Vendas: ${c.vend}\n`;
-    if (c.cpa)  b += `💰 CPA: R$ ${fmtN(c.cpa)}\n`;
-    if (c.tick) b += `✅ Ticket Medio: R$ ${fmtN(c.tick)}\n`;
-    if (c.rec)  b += `🚀 Receita Faturada: R$ ${fmtN(c.rec)}\n`;
+  for (const l of linhas) {
+    if (!isMetric(l)) {
+      if (cur) blocos.push(cur);
+      cur = { header: l, lines: [] };
+    } else {
+      if (!cur) cur = { header: '', lines: [] };
+      cur.lines.push(l);
+    }
   }
-  return b;
+  if (cur) blocos.push(cur);
+  return blocos;
 }
 
+// Extrai numeros de um bloco para analise
+function extraiMetricas(bloco) {
+  const txt = bloco.lines.join('\n');
+  const inv  = parseNum(txt, 'Investimento');
+  const imp  = parseNum(txt, 'Impres');
+  const alc  = parseNum(txt, 'Alcance');
+  const clk  = parseNum(txt, 'Cliques');
+  const ctr  = parseNum(txt, 'CTR');
+  const cpm  = parseNum(txt, 'CPM');
+  const lds  = parseNum(txt, 'Leads');
+  const cpl  = parseNum(txt, 'CPL') || (inv&&lds ? String(parseFloat(inv)/parseFloat(lds)) : null);
+  const vend = parseNum(txt, 'Vendas');
+  const cpa  = parseNum(txt, 'CPA')  || (inv&&vend ? String(parseFloat(inv)/parseFloat(vend)) : null);
+  const rec  = parseNum(txt, 'Receita');
+  const tick = parseNum(txt, 'Ticket') || (rec&&vend ? String(parseFloat(rec)/parseFloat(vend)) : null);
+  return { nome: bloco.header, inv, imp, alc, clk, ctr, cpm, lds, cpl, vend, cpa, rec, tick, isEco:!!(vend||cpa) };
+}
+
+// Gera analise narrativa fluida (igual a skill atendimento-diario)
 function gerarAnalise(canais, periodo) {
-  const obs = [];
+  const partes = [];
   const passos = [];
+
   canais.forEach(c => {
-    const n = c.nome;
-    if (c.ctr) {
-      const v = parseFloat(c.ctr);
-      if (v < 0.5)       { obs.push(`CTR de ${v.toFixed(2)}% no ${n} esta abaixo do esperado, indicando oportunidade de melhoria nos criativos ou na segmentacao.`); passos.push(`Revisar criativos e segmentacao no ${n}.`); }
-      else if (v >= 1.5) { obs.push(`CTR de ${v.toFixed(2)}% no ${n} demonstra boa performance do criativo, com alto engajamento do publico.`); }
+    const leads = parseInt(c.lds)||0;
+    const cpl   = parseFloat(c.cpl)||0;
+    const ctr   = parseFloat(c.ctr)||0;
+    const cpm   = parseFloat(c.cpm)||0;
+    const alc   = parseInt(c.alc)||0;
+    const vend  = parseInt(c.vend)||0;
+    const cpa   = parseFloat(c.cpa)||0;
+    const pref  = canais.length > 1 ? `No ${c.nome||'canal'}, ` : '';
+
+    // avaliacao por leads/cpl
+    if (leads > 0 && cpl > 0) {
+      const qual = cpl<20?'resultado excelente para o perfil do publico':cpl<50?'resultado eficiente para o perfil do publico':cpl<100?'resultado dentro da media do canal':'custo por lead elevado, recomendamos monitorar';
+      partes.push(`${pref}a campanha gerou ${leads} lead${leads>1?'s':''} com CPL de R$ ${fmtN(String(cpl))}, ${qual}.`);
+      if (cpl > 100) passos.push(`Avaliar pausa dos conjuntos com CPL mais elevado.`);
     }
-    if (c.cpl) {
-      const v = parseFloat(c.cpl);
-      if (v > 80)  { obs.push(`CPL de R$ ${fmtN(c.cpl)} no ${n} esta elevado. Vale avaliar ajustes na oferta ou no publico para reduzir o custo.`); passos.push(`Revisar conjuntos com CPL elevado no ${n}.`); }
-      else if (v < 35 && c.lds && parseInt(c.lds) >= 5) { obs.push(`CPL de R$ ${fmtN(c.cpl)} com ${c.lds} leads no ${n} e um resultado positivo, mostrando eficiencia na aquisicao.`); }
+
+    // avaliacao por vendas/cpa
+    if (vend > 0 && cpa > 0) {
+      const qual = cpa<80?'resultado eficiente de custo por venda':cpa<200?'resultado dentro da media':cpa<400?'custo por venda elevado, vale revisar segmentacao':'CPA critico, recomendamos revisao urgente';
+      partes.push(`${pref}${vend} venda${vend>1?'s':''} com CPA de R$ ${fmtN(String(cpa))}, ${qual}.`);
     }
-    if (c.cpa) {
-      const v = parseFloat(c.cpa);
-      if (v > 200) { obs.push(`CPA de R$ ${fmtN(c.cpa)} no ${n} merece atencao. Avaliar pausa de conjuntos com menor retorno.`); passos.push(`Pausar conjuntos com CPA elevado no ${n}.`); }
+
+    // CTR + alcance (juntados em frase unica quando possivel)
+    if (ctr > 0) {
+      const qualCtr = ctr>=2.5?'demonstra excelente atratividade do criativo':ctr>=1.5?'indica que o criativo esta atraindo cliques de forma saudavel':ctr>=0.8?'esta em faixa razoavel para o canal':'esta abaixo do ideal, sinalizando oportunidade de melhoria no criativo ou na segmentacao';
+      const alcParte = alc > 0 ? `, e o alcance de ${alc.toLocaleString('pt-BR')} mostra boa distribuicao dos anuncios dentro da segmentacao` : '';
+      partes.push(`O CTR de ${ctr.toFixed(2)}% ${qualCtr}${alcParte}.`);
+      if (ctr < 0.5) passos.push(`Revisar criativos e segmentacao.`);
+    } else if (alc > 0) {
+      partes.push(`O alcance de ${alc.toLocaleString('pt-BR')} mostra boa distribuicao dos anuncios.`);
     }
-    if (c.lds && parseInt(c.lds) < 3)  { obs.push(`Volume baixo de leads no ${n} (${c.lds}). Pode indicar campanha em periodo de aprendizado ou necessidade de escala.`); passos.push(`Aguardar saida do periodo de aprendizado ou escalar verba no ${n}.`); }
-    if (c.cpm && parseFloat(c.cpm) > 60) { obs.push(`CPM elevado no ${n} (R$ ${fmtN(c.cpm)}), sugerindo leilao competitivo ou possivel saturacao de publico.`); }
+
+    // CPM
+    if (cpm > 0) {
+      const qualCpm = cpm<20?'esta em faixa baixa para o canal':cpm<50?'esta em faixa razoavel para o canal':cpm<80?'esta levemente elevado, leilao pode estar mais competitivo':'esta alto, sugerindo saturacao de publico ou leilao muito competitivo';
+      partes.push(`O CPM de R$ ${fmtN(String(cpm))} ${qualCpm}.`);
+    }
+
+    // volume baixo
+    if (leads > 0 && leads < 3) {
+      passos.push(`Volume baixo de leads. Campanha pode estar em periodo de aprendizado.`);
+    }
   });
 
-  let analise = `📊 *Analise ${periodo === 'mes' ? 'do periodo' : 'do dia'}:*\n\n`;
-  if (obs.length) {
-    analise += obs.join(' ') + '\n';
-  } else {
-    analise += 'Campanha rodando de forma estavel. Seguimos monitorando os indicadores.\n';
-  }
+  // Abertura com avaliacao geral
+  const totLds  = canais.reduce((s,c)=>s+(parseInt(c.lds)||0),0);
+  const avgCpl  = canais.filter(c=>c.cpl).map(c=>parseFloat(c.cpl));
+  const mediaCpl = avgCpl.length ? avgCpl.reduce((s,v)=>s+v,0)/avgCpl.length : 0;
+  let abertura = '';
+  if      (totLds >= 10 && mediaCpl < 50) abertura = 'Bom desempenho no dia. ';
+  else if (totLds > 0   && mediaCpl < 80) abertura = 'Resultado satisfatorio no dia. ';
+  else if (totLds === 0 && canais.some(c=>c.inv))  abertura = 'Dia com baixa entrega de resultados. ';
+  else if (totLds > 0)                   abertura = 'Acompanhamento do dia: ';
+
+  const label = periodo==='mes' ? 'do periodo' : 'do dia';
+  let analise = `📊 *Analise ${label}:*\n\n${abertura}${partes.join(' ')}`;
   if (passos.length) {
-    analise += `\n➡️ *Proximos passos:*\n` + passos.map(p => `• ${p}`).join('\n') + '\n';
+    analise += `\n\n➡️ *Proximos passos:*\n` + [...new Set(passos)].map(p=>`• ${p}`).join('\n');
   }
   return analise;
 }
@@ -1026,68 +1064,70 @@ function gerarMsg() {
   if (!key) { toast('Selecione um cliente primeiro','err'); return; }
 
   const now = new Date();
-  const h = now.getHours();
-  const sauda = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
-  const mes = now.toLocaleString('pt-BR',{month:'long'});
-  const mesTitle = mes.charAt(0).toUpperCase() + mes.slice(1);
-
+  const h   = now.getHours();
+  const sauda    = h<12?'Bom dia':h<18?'Boa tarde':'Boa noite';
+  const mes      = now.toLocaleString('pt-BR',{month:'long'});
+  const mesTitle = mes.charAt(0).toUpperCase()+mes.slice(1);
   let msg = '';
 
   // ── DIARIO D-1 ──
   if (type === 'diario') {
-    msg = `[MSG]\n${sauda}, time! Tudo bem por ai? 🚀 Passando com o acompanhamento de ontem (D-1):\n`;
+    if (!dados) {
+      msg = `[MSG]\n${sauda}, time! 🚀 Passando com o acompanhamento de ontem (D-1):\n\n[MSG]\n[Cole os dados da campanha]\n\n[MSG]\nSeguimos acompanhando de perto. Qualquer duvida, fico a disposicao! 🙌`;
+    } else {
+      const blocos = splitBlocos(dados);
+      const canais = blocos.map(extraiMetricas);
 
-    if (dados) {
-      const linhas = dados.split('\n').filter(l => l.trim());
-      const canais = linhas.map(parseCanal).filter(c => c.inv || c.lds || c.vend);
+      const temMeta   = canais.some(c=>/meta|facebook|instagram/i.test(c.nome));
+      const temGoogle = canais.some(c=>/google/i.test(c.nome));
 
-      // compilado so se tiver Meta + Google
-      const temMeta   = canais.some(c => /meta|facebook|instagram/i.test(c.nome));
-      const temGoogle = canais.some(c => /google/i.test(c.nome));
+      msg = `[MSG]\n${sauda}, time! 🚀 Passando com o acompanhamento de ontem (D-1):`;
 
-      if (temMeta && temGoogle && !canais[0].isEco) {
-        const totInv = canais.reduce((s,c)=>s+(parseFloat(c.inv)||0),0);
-        const totLds = canais.reduce((s,c)=>s+(parseInt(c.lds)||0),0);
-        const totCpl = totLds > 0 ? totInv/totLds : 0;
-        msg += `\n[MSG]\n📝 *Compilado Geral*\n\n`;
-        msg += `📌 Investimento Total: R$ ${fmtN(String(totInv))}\n`;
-        msg += `🎯 Leads Gerados (Total): ${totLds}\n`;
-        if (totCpl > 0) msg += `💰 CPL (Total): R$ ${fmtN(String(totCpl))}\n`;
+      // compilado so quando Meta + Google juntos
+      if (temMeta && temGoogle) {
+        const totInv  = canais.reduce((s,c)=>s+(parseFloat(c.inv)||0),0);
+        const totLds  = canais.reduce((s,c)=>s+(parseInt(c.lds)||0),0);
+        const totVend = canais.reduce((s,c)=>s+(parseInt(c.vend)||0),0);
+        const totCpl  = totLds>0 ? totInv/totLds : 0;
+        const totCpa  = totVend>0 ? totInv/totVend : 0;
+        msg += `\n\n[MSG]\n📝 *Compilado Geral*\n\n📌 Investimento Total: R$ ${fmtN(String(totInv))}\n`;
+        if (totLds)  { msg+=`🎯 Leads Gerados (Total): ${totLds}\n`; if(totCpl) msg+=`💰 CPL (Total): R$ ${fmtN(String(totCpl))}\n`; }
+        if (totVend) { msg+=`🎯 Vendas (Total): ${totVend}\n`;         if(totCpa) msg+=`💰 CPA (Total): R$ ${fmtN(String(totCpa))}\n`; }
       }
 
-      msg += `\n[MSG]\n📋 *Relatorios por canal:*\n\n`;
-      canais.forEach(c => { msg += blocoCanal(c) + '\n'; });
+      // bloco de cada canal — preserva exatamente o que a GT mandou
+      blocos.forEach(b => {
+        msg += `\n\n[MSG]\n🔹 *${b.header || 'Canal'}*\n\n${b.lines.join('\n')}`;
+      });
 
-      msg += gerarAnalise(canais, 'dia');
-    } else {
-      msg += `\n[MSG]\n[Cole os dados da campanha no campo ao lado para gerar o relatorio]\n\n📊 *Analise do dia:*\n\n[Analise]\n`;
+      // analise em MSG separado
+      msg += `\n\n[MSG]\n${gerarAnalise(canais,'dia')}`;
+      msg += `\n\n[MSG]\nSeguimos acompanhando de perto. Qualquer duvida, fico a disposicao! 🙌`;
     }
-
-    msg += `\n[MSG]\nSeguimos acompanhando de perto. Qualquer duvida, fico a disposicao! 🙌`;
 
   // ── MENSAL ──
   } else if (type === 'mensal') {
-    const linhas = dados ? dados.split('\n').filter(l=>l.trim()) : [];
-    const canais = linhas.map(parseCanal).filter(c=>c.inv||c.lds||c.vend);
-
-    msg = `[MSG]\n${sauda}, time! 👋\n\n[MSG]\nPassando para atualizar voces sobre nossas metricas de campanhas no mes de ${mesTitle}:\n`;
+    const blocos = dados ? splitBlocos(dados) : [];
+    const canais = blocos.map(extraiMetricas);
+    msg = `[MSG]\n${sauda}, time! 👋\n\n[MSG]\nPassando para atualizar voces sobre nossas metricas de campanhas no mes de ${mesTitle}:`;
 
     if (canais.length > 0) {
       const totInv = canais.reduce((s,c)=>s+(parseFloat(c.inv)||0),0);
       const totLds = canais.reduce((s,c)=>s+(parseInt(c.lds)||0),0);
-      const totCpl = totLds > 0 ? totInv/totLds : 0;
-      msg += `\n[MSG]\n📝 *Relatorio de Resultados — ${mesTitle}*\n\n`;
-      if (totInv) msg += `📌 Investimento Total: R$ ${fmtN(String(totInv))}\n`;
-      if (totLds) msg += `🎯 Leads Gerados (Total): ${totLds}\n`;
-      if (totCpl) msg += `💰 Custo por Lead (CPL — Total): R$ ${fmtN(String(totCpl))}\n`;
-      msg += `\n[MSG]\n📋 *Relatorios por canais:*\n\n`;
-      canais.forEach(c => { msg += blocoCanal(c) + '\n'; });
-      msg += gerarAnalise(canais, 'mes');
+      const totCpl = totLds>0 ? totInv/totLds : 0;
+      msg += `\n\n[MSG]\n📝 *Relatorio de Resultados — ${mesTitle}*\n\n`;
+      if(totInv) msg+=`📌 Investimento Total: R$ ${fmtN(String(totInv))}\n`;
+      if(totLds) msg+=`🎯 Leads Gerados (Total): ${totLds}\n`;
+      if(totCpl) msg+=`💰 Custo por Lead (CPL — Total): R$ ${fmtN(String(totCpl))}\n`;
+      if (blocos.length > 1) {
+        msg += `\n[MSG]\n📋 *Relatorios por canais:*\n`;
+        blocos.forEach(b => { msg += `\n[MSG]\n🔹 *${b.header||'Canal'}*\n\n${b.lines.join('\n')}`; });
+      }
+      msg += `\n\n[MSG]\n${gerarAnalise(canais,'mes')}`;
     } else {
-      msg += `\n[MSG]\n📝 *Relatorio de Resultados — ${mesTitle}*\n\n${dados||'[Cole os dados do mes]'}\n\n📊 *Analise do periodo:*\n\n[Analise estrategica]\n`;
+      msg += `\n\n[MSG]\n📝 *Relatorio de Resultados — ${mesTitle}*\n\n${dados||'[Cole os dados]'}\n\n📊 *Analise do periodo:*\n\n[Analise estrategica]`;
     }
-
-    msg += `\n[MSG]\nQualquer duvida ou se quiserem mais detalhes, fico a disposicao!`;
+    msg += `\n\n[MSG]\nQualquer duvida ou se quiserem mais detalhes, fico a disposicao!`;
 
   // ── CRIATIVOS ──
   } else if (type === 'criativo') {
@@ -1126,6 +1166,39 @@ function loadAgenda() {}
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // ABA TIMESHEET
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ABA TIMESHEET
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+async function loadTsEkyte() {
+  const today = todayKey(); // YYYY-MM-DD
+  const el = document.getElementById('t-log');
+  el.innerHTML = '<div class="loading"><div class="spin"></div> Carregando do Ekyte...</div>';
+  try {
+    // tenta endpoint de time-trackings por data
+    const data = await EK.get(`/api/companies/${EKYTE_CO}/time-trackings?startDate=${today}&endDate=${today}&page=1&pageSize=50`);
+    const items = data.items || data || [];
+    if (!items.length) { el.innerHTML='<p style="font-size:13px;color:var(--gray-400);text-align:center;padding:20px 0;">Nenhum apontamento encontrado no Ekyte para hoje.</p>'; return; }
+
+    // mescla com localStorage sem duplicar
+    items.forEach(item => {
+      const ini = (item.startDateTime||item.startDate||'').slice(11,16);
+      const fim = (item.endDateTime||item.endDate||'').slice(11,16);
+      const dur = item.effort || 0;
+      const taskId = item.ctcTaskId || item.taskId || '';
+      const taskName = item.ctcTask?.title || item.task?.title || item.comment || 'Task #'+taskId;
+      const existe = tsLog.find(e=>e.id==taskId&&e.ini===ini);
+      if (!existe) tsLog.push({ id:taskId, name:taskName, ini, fim, dur, date:today, reg:true });
+    });
+    localStorage.setItem('ts_'+today, JSON.stringify(tsLog));
+    renderTsLog();
+    toast(`${items.length} apontamento(s) carregado(s) do Ekyte`, 'ok');
+  } catch(e) {
+    const cors = e.message.includes('fetch') || e.message.includes('NetworkError');
+    el.innerHTML = cors
+      ? `<div class="alert">API Ekyte bloqueada por CORS no navegador. Os apontamentos feitos via Claude aparecem no Ekyte mas nao podem ser importados diretamente aqui. Use o painel do Ekyte para consultar.</div>`
+      : `<div class="alert">Erro: ${e.message}</div>`;
+  }
+}
+
 function renderTsLog() {
   const el = document.getElementById('t-log');
   const tot = document.getElementById('t-total');
