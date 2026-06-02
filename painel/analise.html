@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Analise Diaria — V4 Colli</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -1135,10 +1138,17 @@ function renderSingleComStats(ticker, month) {
     { lbl:'Em Contato', val:statusMap['Em contato']||0, sub:'', color:'var(--green)' },
     { lbl:'Fechados', val:vendas, sub:'', color:'var(--green)' },
     { lbl:'Receita', val:fmtBRL(receitaTotal), sub:'total', color:'var(--green)' },
+  ] : schema.boolVal ? [
+    { lbl:'Total Leads', val:total, sub:'na base', color:'var(--black)' },
+    { lbl:'MQL (Sim)', val:mqlCount, sub:`${semMql} aguardando`, color:mqlCount>0?'var(--blue)':'var(--g4)' },
+    { lbl:'SQL (Sim)', val:sqlCount, sub:`${semSql} aguardando`, color:sqlCount>0?'var(--purple)':'var(--g4)' },
+    { lbl:'Vendas', val:vendas, sub:'fechadas', color:'var(--green)' },
+    { lbl:'Sem Obs.', val:semObs, sub:`${((semObs/total)*100).toFixed(0)}% dos leads`, color:semObs>0?'var(--red)':'var(--green)' },
+    { lbl:'Receita', val:fmtBRL(receitaTotal), sub:'total', color:'var(--green)' },
   ] : [
     { lbl:'Total Leads', val:total, sub:'na base', color:'var(--black)' },
-    { lbl:'MQL', val:mqlCount, sub:`${total-mqlCount} sem`, color:mqlCount>0?'var(--blue)':'var(--g4)' },
-    { lbl:'SQL', val:sqlCount, sub:`${total-sqlCount} sem`, color:sqlCount>0?'var(--purple)':'var(--g4)' },
+    { lbl:'MQL', val:mqlCount, sub:`${semMql} sem avaliação`, color:mqlCount>0?'var(--blue)':'var(--g4)' },
+    { lbl:'SQL', val:sqlCount, sub:`${semSql} sem avaliação`, color:sqlCount>0?'var(--purple)':'var(--g4)' },
     { lbl:'Vendas', val:vendas, sub:'fechadas', color:'var(--green)' },
     { lbl:'Sem Obs.', val:semObs, sub:'leads sem follow-up', color:semObs>0?'var(--red)':'var(--green)' },
     { lbl:'Receita', val:fmtBRL(receitaTotal), sub:'total', color:'var(--green)' },
@@ -1157,8 +1167,8 @@ function renderSingleComStats(ticker, month) {
     alertEl.style.display = '';
     const parts = [];
     if (semObs>0) parts.push(`<strong>${semObs}</strong> lead${semObs>1?'s':''} sem observação`);
-    if (semMql>0) parts.push(`<strong>${semMql}</strong> sem MQL`);
-    if (semSql>0) parts.push(`<strong>${semSql}</strong> sem SQL`);
+    if (semMql>0) parts.push(`<strong>${semMql}</strong> ${schema.boolVal?'aguardando MQL':'sem MQL'}`);
+    if (semSql>0) parts.push(`<strong>${semSql}</strong> ${schema.boolVal?'aguardando SQL':'sem SQL'}`);
     alertEl.innerHTML = `<div class="alert-box">⚠️ ${parts.join(' · ')} — precisam de atualização pelo comercial.</div>`;
   } else { alertEl.style.display = 'none'; }
 
