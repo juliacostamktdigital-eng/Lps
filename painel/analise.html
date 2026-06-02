@@ -276,7 +276,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--g1);color:var(--g
     </div>
 
     <!-- Historico tabela -->
-    <div class="card">
+    <div class="card" style="margin-bottom:20px;">
       <div class="card-label">Historico Mensal Completo</div>
       <div style="overflow-x:auto;">
         <table class="tbl" id="cl-history-tbl">
@@ -284,6 +284,39 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--g1);color:var(--g
           <tbody id="cl-history-body"></tbody>
         </table>
       </div>
+    </div>
+
+    <!-- Pipeline Comercial -->
+    <div id="cl-comercial-wrap" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <div>
+          <div style="font-size:16px;font-weight:800;">Pipeline Comercial</div>
+          <div style="font-size:12px;color:var(--g5);">Planilha comercial atualizada pelo time de vendas</div>
+        </div>
+        <span id="cl-com-updated" style="font-size:11px;color:var(--g4);"></span>
+      </div>
+
+      <!-- KPIs comercial -->
+      <div id="cl-com-kpis" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-bottom:16px;"></div>
+
+      <!-- Alerta leads sem atualização -->
+      <div id="cl-com-alert" style="display:none;margin-bottom:16px;"></div>
+
+      <!-- Status / Funil -->
+      <div class="g2" style="gap:16px;margin-bottom:16px;">
+        <div class="card">
+          <div class="card-label" id="cl-com-stage-label">Distribuição por Status</div>
+          <div id="cl-com-stages"></div>
+        </div>
+        <div class="card">
+          <div class="card-label">Leads Sem Atualização</div>
+          <div id="cl-com-pending" style="max-height:260px;overflow-y:auto;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="cl-comercial-empty" style="display:none;" class="card" style="background:var(--g1);border-style:dashed;">
+      <p style="font-size:13px;color:var(--g4);text-align:center;padding:8px;">Planilha comercial nao configurada para este cliente.</p>
     </div>
   </section>
 
@@ -737,6 +770,10 @@ function renderClient(t){
     renderChart(m.history, currentMetric);
   }
 
+  // Pipeline Comercial
+  loadComercialData(t);
+  }
+
   // Health Score
   if(hs){
     document.getElementById('cl-hs-score').textContent=hs.score||'—';
@@ -756,6 +793,159 @@ function renderClient(t){
   } else {
     document.getElementById('cl-hs-score').textContent='—';
     document.getElementById('cl-hs-action').textContent='Health Score nao disponivel para este cliente.';
+  }
+}
+
+// ─── COMERCIAL ─────────────────────────────────────────────────────────────
+const COM_SCHEMA = {
+  FCE: {
+    nome:0, data:0, status:19, obs:20, receita:23,
+    style:'status', statusCol:19, obsCol:20, receitaCol:23,
+  },
+  FARS: {
+    nome:1, data:0, mql:12, sql:13, obs:14, venda:15, receita:16,
+    style:'mqsql', mqlCol:12, sqlCol:13, obsCol:14, vendaCol:15, receitaCol:16,
+  },
+  TECN1: {
+    nome:1, data:0, mql:12, sql:13, obs:14, venda:15, receita:16,
+    style:'mqsql', mqlCol:12, sqlCol:13, obsCol:14, vendaCol:15, receitaCol:16,
+  },
+};
+
+async function loadComercialData(ticker) {
+  const wrap = document.getElementById('cl-comercial-wrap');
+  const empty = document.getElementById('cl-comercial-empty');
+
+  const schema = COM_SCHEMA[ticker];
+  if (!schema) {
+    wrap.style.display = 'none';
+    empty.style.display = '';
+    return;
+  }
+
+  wrap.style.display = '';
+  empty.style.display = 'none';
+  document.getElementById('cl-com-kpis').innerHTML = '<div class="ld"><div class="sp"></div> Carregando...</div>';
+
+  try {
+    const csv = await fetch(`data/com/${ticker}.csv?` + Date.now()).then(r => r.text());
+    if (!csv || csv.length < 100) throw new Error('Arquivo vazio');
+
+    const rows = parseCSV(csv);
+    const header = rows[0];
+    const data = rows.slice(1).filter(r => r.some(c => c.trim()));
+
+    const total = data.length;
+    let semObs=0, semMql=0, semSql=0, vendas=0, mqlCount=0, sqlCount=0;
+    let receitaTotal=0;
+    const statusMap = {};
+    const pendingLeads = []; // leads sem follow-up
+
+    data.forEach((row, i) => {
+      if (schema.style === 'status') {
+        const status = (row[schema.statusCol] || '').trim();
+        const obs    = (row[schema.obsCol]    || '').trim();
+        const rec    = brl(row[schema.receitaCol] || '');
+        statusMap[status || '(sem status)'] = (statusMap[status || '(sem status)'] || 0) + 1;
+        if (!obs) { semObs++; pendingLeads.push({ nome: (row[schema.nome]||'—').trim(), data: (row[schema.data]||'').trim(), status }); }
+        if (status && (status.toLowerCase().includes('fecha') || status.toLowerCase().includes('comprou'))) vendas++;
+        receitaTotal += rec;
+      } else {
+        const mql  = (row[schema.mqlCol]  || '').trim();
+        const sql  = (row[schema.sqlCol]  || '').trim();
+        const obs  = (row[schema.obsCol]  || '').trim();
+        const vnd  = (row[schema.vendaCol]|| '').trim();
+        const rec  = brl(row[schema.receitaCol] || '');
+        if (!mql) semMql++;  else mqlCount++;
+        if (!sql) semSql++;  else sqlCount++;
+        if (!obs) { semObs++; pendingLeads.push({ nome: (row[1]||'—').trim(), data: (row[0]||'').trim(), mql, sql }); }
+        if (vnd && !['','nao','não','0','false'].includes(vnd.toLowerCase())) vendas++;
+        receitaTotal += rec;
+      }
+    });
+
+    // KPIs
+    const kpiData = schema.style === 'status' ? [
+      { lbl:'Total Leads', val: total, sub:'na base', color:'var(--black)' },
+      { lbl:'Sem Observação', val: semObs, sub:`${((semObs/total)*100).toFixed(0)}% sem follow-up`, color: semObs > total*0.3 ? 'var(--red)':'var(--black)' },
+      { lbl:'Em Tratativa', val: statusMap['Em Tratativa de Venda']||0, sub:'', color:'var(--blue)' },
+      { lbl:'Em Contato', val: statusMap['Em contato']||0, sub:'', color:'var(--green)' },
+      { lbl:'Fechados', val: vendas, sub:'', color:'var(--green)' },
+      { lbl:'Receita', val: fmtBRL(receitaTotal), sub:'total', color:'var(--green)' },
+    ] : [
+      { lbl:'Total Leads', val: total, sub:'na base', color:'var(--black)' },
+      { lbl:'MQL', val: mqlCount, sub:`${total-mqlCount} sem`, color: mqlCount > 0 ? 'var(--blue)':'var(--g4)' },
+      { lbl:'SQL', val: sqlCount, sub:`${total-sqlCount} sem`, color: sqlCount > 0 ? 'var(--purple)':'var(--g4)' },
+      { lbl:'Vendas', val: vendas, sub:'fechadas', color:'var(--green)' },
+      { lbl:'Sem Obs.', val: semObs, sub:`leads sem follow-up`, color: semObs > 0 ? 'var(--red)':'var(--green)' },
+      { lbl:'Receita', val: fmtBRL(receitaTotal), sub:'total', color:'var(--green)' },
+    ];
+
+    document.getElementById('cl-com-kpis').innerHTML = kpiData.map(k => `
+      <div class="metric">
+        <div class="metric-label">${k.lbl}</div>
+        <div class="metric-val" style="color:${k.color};">${k.val}</div>
+        ${k.sub?`<div class="metric-sub">${k.sub}</div>`:''}
+      </div>`).join('');
+
+    // Alerta
+    const alertEl = document.getElementById('cl-com-alert');
+    const critCount = semObs + semMql + semSql;
+    if (critCount > 0 || semObs > total * 0.4) {
+      alertEl.style.display = '';
+      const parts = [];
+      if (semObs > 0) parts.push(`<strong>${semObs}</strong> lead${semObs>1?'s':''} sem observação`);
+      if (semMql > 0) parts.push(`<strong>${semMql}</strong> sem MQL`);
+      if (semSql > 0) parts.push(`<strong>${semSql}</strong> sem SQL`);
+      alertEl.innerHTML = `<div class="alert-box">⚠️ ${parts.join(' · ')} — precisam de atualização pelo comercial.</div>`;
+    } else {
+      alertEl.style.display = 'none';
+    }
+
+    // Status
+    const stageEl = document.getElementById('cl-com-stages');
+    const stageLbl = document.getElementById('cl-com-stage-label');
+    if (schema.style === 'status') {
+      stageLbl.textContent = 'Distribuição por Status';
+      const sorted = Object.entries(statusMap).sort((a,b)=>b[1]-a[1]);
+      stageEl.innerHTML = sorted.map(([s,n]) => `
+        <div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--g1);">
+          <div style="font-size:12px;color:var(--g7);flex:1;">${s}</div>
+          <div style="font-size:12px;font-weight:700;">${n}</div>
+          <div style="font-size:10px;color:var(--g4);">${((n/total)*100).toFixed(0)}%</div>
+        </div>`).join('');
+    } else {
+      stageLbl.textContent = 'Funil MQL → SQL → Venda';
+      stageEl.innerHTML = [
+        { lbl:'Total Leads', n:total, color:'var(--black)' },
+        { lbl:'MQL Confirmado', n:mqlCount, color:'var(--blue)' },
+        { lbl:'SQL Confirmado', n:sqlCount, color:'var(--purple)' },
+        { lbl:'Vendas Fechadas', n:vendas, color:'var(--green)' },
+      ].map(s => `
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--g1);">
+          <div style="font-size:12px;color:var(--g7);width:140px;">${s.lbl}</div>
+          <div style="flex:1;height:6px;background:var(--g2);border-radius:99px;">
+            <div style="height:100%;width:${total>0?((s.n/total)*100).toFixed(0):0}%;background:${s.color};border-radius:99px;"></div>
+          </div>
+          <div style="font-size:13px;font-weight:700;color:${s.color};width:30px;text-align:right;">${s.n}</div>
+        </div>`).join('');
+    }
+
+    // Tabela leads pendentes
+    const pendEl = document.getElementById('cl-com-pending');
+    if (pendingLeads.length === 0) {
+      pendEl.innerHTML = '<p style="font-size:13px;color:var(--green);padding:8px 0;">✓ Todos os leads estão com observação.</p>';
+    } else {
+      pendEl.innerHTML = pendingLeads.slice(0, 15).map(l => `
+        <div style="padding:7px 0;border-bottom:1px solid var(--g1);font-size:12px;">
+          <div style="font-weight:600;color:var(--black);">${l.nome||'(sem nome)'}</div>
+          <div style="color:var(--g5);margin-top:1px;">${l.data||''} ${l.status?'· '+l.status:''} ${l.mql===''?'· sem MQL':''} ${l.sql===''?'· sem SQL':''}</div>
+        </div>`).join('') +
+        (pendingLeads.length > 15 ? `<div style="font-size:11px;color:var(--g4);padding:6px 0;">+${pendingLeads.length-15} outros leads sem observação</div>` : '');
+    }
+
+  } catch(e) {
+    document.getElementById('cl-com-kpis').innerHTML = `<p style="font-size:13px;color:var(--g4);">Comercial: ${e.message}</p>`;
   }
 }
 
