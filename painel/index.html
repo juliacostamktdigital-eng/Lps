@@ -268,6 +268,7 @@ tr:hover td { background: var(--gray-100); }
     <div class="nav-item active" data-tab="atendimento"><span class="nav-icon">💬</span>Atendimento</div>
     <div class="nav-item" data-tab="pace"><span class="nav-icon">📊</span>GrowthPace</div>
     <div class="nav-item" data-tab="comercial"><span class="nav-icon">🎯</span>Comercial</div>
+    <div class="nav-item" data-tab="healthscore"><span class="nav-icon">❤️</span>Health Score</div>
     <div class="nav-item" data-tab="agenda"><span class="nav-icon">📅</span>Agenda</div>
     <div class="nav-item" data-tab="timesheet"><span class="nav-icon">⏱️</span>Timesheet</div>
   </nav>
@@ -451,6 +452,46 @@ tr:hover td { background: var(--gray-100); }
     </div>
   </div>
 
+  <!-- ═══ ABA: HEALTH SCORE ═══ -->
+  <div class="tab-panel" id="tab-healthscore">
+    <div class="page-header">
+      <div class="page-title">Health Score</div>
+      <div class="page-sub" id="hs-page-sub">Carregando...</div>
+    </div>
+
+    <!-- Resumo executivo -->
+    <div class="summary-bar" id="hs-exec-bar" style="margin-bottom:22px;">
+      <div class="sum-item"><div class="sum-num" style="color:#F87171;" id="hs-danger">—</div><div class="sum-lbl">Danger</div></div>
+      <div class="sum-div"></div>
+      <div class="sum-item"><div class="sum-num" style="color:#FCA5A5;" id="hs-critical">—</div><div class="sum-lbl">Critical</div></div>
+      <div class="sum-div"></div>
+      <div class="sum-item"><div class="sum-num" style="color:#FBBF24;" id="hs-care">—</div><div class="sum-lbl">Care</div></div>
+      <div class="sum-div"></div>
+      <div class="sum-item"><div class="sum-num" style="color:#4ADE80;" id="hs-safe">—</div><div class="sum-lbl">Safe</div></div>
+      <div class="sum-div"></div>
+      <div class="sum-item"><div class="sum-num" id="hs-avg-score">—</div><div class="sum-lbl">Media Geral</div></div>
+      <div style="margin-left:auto;display:flex;gap:8px;">
+        <button class="btn btn-gray btn-sm" onclick="loadHealthScoreTab()" style="background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);">🔄</button>
+        <a href="https://flow.collieassociados.com/health-score/cockpit" target="_blank"
+           class="btn btn-red btn-sm" style="text-decoration:none;">Ver Cockpit ↗</a>
+      </div>
+    </div>
+
+    <!-- Cards por cliente -->
+    <div id="hs-full-cards" class="g3" style="margin-bottom:24px;">
+      <div class="loading"><div class="spin"></div> Carregando...</div>
+    </div>
+
+    <!-- Grafico de scores -->
+    <div class="card" style="margin-bottom:18px;">
+      <div class="card-label">Score por Cliente (meta: acima de 20)</div>
+      <canvas id="hsChart" height="80"></canvas>
+    </div>
+
+    <!-- Alerta de gestora -->
+    <div id="hs-manager-alert" style="display:none;"></div>
+  </div>
+
   <!-- ═══ ABA: AGENDA ═══ -->
   <div class="tab-panel" id="tab-agenda">
     <div class="page-header">
@@ -605,9 +646,10 @@ document.addEventListener('DOMContentLoaded', () => {
       n.classList.add('active');
       const tab = n.dataset.tab;
       document.getElementById('tab-' + tab).classList.add('active');
-      if (tab === 'pace')      loadPace();
-      if (tab === 'comercial') loadComercial();
-      if (tab === 'agenda')    loadAgenda();
+      if (tab === 'pace')        loadPace();
+      if (tab === 'comercial')   loadComercial();
+      if (tab === 'agenda')      loadAgenda();
+      if (tab === 'healthscore') loadHealthScoreTab();
     });
   });
 
@@ -739,49 +781,151 @@ function paceStatus(real, exp) {
 // HEALTH SCORES
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const HS_FLAG = {
-  Safe:     { cls:'b-green',  color:'#15803D', emoji:'🟢' },
-  Care:     { cls:'b-yellow', color:'#D97706', emoji:'🟡' },
-  Critical: { cls:'b-red',    color:'#DC2626', emoji:'🔴' },
-  Danger:   { cls:'b-red',    color:'#7F1D1D', emoji:'⚫' },
+  Safe:     { cls:'b-green',  color:'#15803D', bg:'#DCFCE7', emoji:'🟢', label:'Safe'     },
+  Care:     { cls:'b-yellow', color:'#B45309', bg:'#FEF3C7', emoji:'🟡', label:'Care'     },
+  Critical: { cls:'b-red',    color:'#DC2626', bg:'#FEE2E2', emoji:'🔴', label:'Critical' },
+  Danger:   { cls:'b-red',    color:'#7F1D1D', bg:'#FEE2E2', emoji:'⚫', label:'Danger'   },
 };
+let hsChart = null;
 
+// Carrega health scores para a mini-strip na aba Pace
 async function loadHealthScores() {
   const el = document.getElementById('hs-cards');
   const timeEl = document.getElementById('hs-sync-time');
   try {
-    const r = await fetch('data/health_scores.json');
+    const r = await fetch('data/health_scores.json?' + Date.now());
     const json = await r.json();
-
-    if (json.pending || !json.data?.length) {
-      el.innerHTML = '<p style="font-size:12px;color:var(--gray-400);">Sync ainda nao executado. Clique em "Executar Sync" no GitHub Actions.</p>';
-      return;
-    }
-
-    timeEl.textContent = 'Atualizado: ' + (json.updatedAt ? new Date(json.updatedAt).toLocaleString('pt-BR') : '—');
-
-    // montar cards por cliente
-    const tickers = Object.keys(CLIENTS);
-    el.innerHTML = tickers.map(t => {
-      const hs = json.data.find(d => d.ticker === t);
-      if (!hs) return `<div style="background:var(--gray-100);border-radius:8px;padding:10px 12px;min-width:110px;"><div style="font-size:11px;font-weight:700;">${t}</div><div style="font-size:11px;color:var(--gray-400);margin-top:4px;">Sem dados</div></div>`;
-      const flag = HS_FLAG[hs.algorithm_flag] || HS_FLAG.Care;
-      const score = hs.algorithm_health_avg_score ? parseFloat(hs.algorithm_health_avg_score).toFixed(0) : '—';
-      return `<div style="background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:10px 12px;min-width:110px;text-align:center;">
-        <div style="font-size:11px;font-weight:700;color:var(--black);">${t}</div>
-        <div style="font-size:22px;font-weight:800;color:${flag.color};margin:4px 0;">${score}</div>
-        <span class="badge ${flag.cls}" style="font-size:10px;">${flag.emoji} ${hs.algorithm_flag||'—'}</span>
+    if (!json.data?.length) { el.innerHTML='<p style="font-size:12px;color:var(--gray-400);">Sync pendente.</p>'; return; }
+    timeEl.textContent = json.updatedAtBRT ? 'Atualizado: '+json.updatedAtBRT : '';
+    el.innerHTML = json.data.map(hs => {
+      const f = HS_FLAG[hs.flag] || HS_FLAG.Care;
+      return `<div style="background:${f.bg};border:1px solid ${f.color}33;border-radius:8px;padding:8px 12px;min-width:90px;text-align:center;">
+        <div style="font-size:11px;font-weight:700;color:var(--black);">${hs.ticker}</div>
+        <div style="font-size:20px;font-weight:800;color:${f.color};margin:3px 0;">${hs.score||'—'}</div>
+        <div style="font-size:10px;font-weight:600;color:${f.color};">${f.emoji} ${f.label}</div>
       </div>`;
     }).join('');
-
-    // alerta de gestora
-    const critical = json.data.filter(d => d.algorithm_flag === 'Critical' || d.algorithm_flag === 'Danger');
+    const crit = json.data.filter(d=>d.flag==='Critical'||d.flag==='Danger');
     const alertEl = document.getElementById('mgr-alert');
-    if (critical.length > 0) {
-      alertEl.style.display = '';
-      alertEl.innerHTML = `<div class="alert">⚠️ ${critical.length} cliente(s) em estado critico no Health Score: ${critical.map(c=>`<strong>${c.ticker}</strong> (${c.algorithm_flag})`).join(', ')}. Atencao redobrada no atendimento.</div>`;
+    if (crit.length) {
+      alertEl.style.display='';
+      alertEl.innerHTML=`<div class="alert">⚠️ Atenção: ${crit.map(c=>`<strong>${c.ticker}</strong> em ${c.flag}`).join(', ')}. Priorize o atendimento e verifique o backlog.</div>`;
+    }
+  } catch(e) { el.innerHTML=`<p style="font-size:12px;color:var(--gray-400);">HS: ${e.message}</p>`; }
+}
+
+// Aba dedicada de Health Score — visualizacao completa
+async function loadHealthScoreTab() {
+  const cards = document.getElementById('hs-full-cards');
+  const sub   = document.getElementById('hs-page-sub');
+  cards.innerHTML = '<div class="loading"><div class="spin"></div> Carregando...</div>';
+  try {
+    const r = await fetch('data/health_scores.json?' + Date.now());
+    const json = await r.json();
+    if (!json.data?.length) { cards.innerHTML='<p style="color:var(--gray-400);">Sync pendente. Execute o workflow no GitHub Actions.</p>'; return; }
+
+    sub.textContent = 'Sincronizado em ' + (json.updatedAtBRT||'—');
+
+    // Contadores
+    let nDanger=0,nCritical=0,nCare=0,nSafe=0,totalScore=0,nScore=0;
+    json.data.forEach(d=>{
+      if(d.flag==='Danger')   nDanger++;
+      if(d.flag==='Critical') nCritical++;
+      if(d.flag==='Care')     nCare++;
+      if(d.flag==='Safe')     nSafe++;
+      if(d.score){totalScore+=parseFloat(d.score);nScore++;}
+    });
+    document.getElementById('hs-danger').textContent   = nDanger;
+    document.getElementById('hs-critical').textContent = nCritical;
+    document.getElementById('hs-care').textContent     = nCare;
+    document.getElementById('hs-safe').textContent     = nSafe;
+    document.getElementById('hs-avg-score').textContent = nScore ? (totalScore/nScore).toFixed(1) : '—';
+
+    // Cards completos
+    cards.innerHTML = json.data.map(hs => {
+      const f = HS_FLAG[hs.flag] || HS_FLAG.Care;
+      const scoreBar = hs.score ? Math.min(100, (hs.score/30)*100).toFixed(0) : 0;
+      const lt = hs.lt ? `LT ${hs.lt}m` : '';
+      const since = hs.projectStartDate ? new Date(hs.projectStartDate).toLocaleDateString('pt-BR',{month:'short',year:'numeric'}) : '';
+      return `
+        <div style="background:var(--white);border:2px solid ${f.color}40;border-radius:14px;padding:20px 22px;position:relative;overflow:hidden;">
+          <!-- faixa colorida lateral -->
+          <div style="position:absolute;left:0;top:0;bottom:0;width:4px;background:${f.color};border-radius:4px 0 0 4px;"></div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+            <div>
+              <div style="font-size:14px;font-weight:800;color:var(--black);">${hs.name||hs.ticker}</div>
+              <div style="font-size:11px;color:var(--gray-400);margin-top:2px;">${hs.ticker}${lt?' · '+lt:''}${since?' · desde '+since:''}</div>
+            </div>
+            <span class="badge ${f.cls}" style="font-size:12px;padding:4px 10px;">${f.emoji} ${f.label}</span>
+          </div>
+
+          <!-- Score grande -->
+          <div style="display:flex;align-items:flex-end;gap:6px;margin-bottom:8px;">
+            <div style="font-size:42px;font-weight:900;color:${f.color};line-height:1;">${hs.score||'—'}</div>
+            <div style="font-size:13px;color:var(--gray-500);margin-bottom:6px;">/ 30 pts</div>
+          </div>
+
+          <!-- Barra de score -->
+          <div style="height:6px;background:var(--gray-200);border-radius:99px;margin-bottom:14px;">
+            <div style="height:100%;width:${scoreBar}%;background:${f.color};border-radius:99px;transition:width 0.6s;"></div>
+          </div>
+
+          <!-- Acoes necessarias por flag -->
+          ${f.label==='Danger'   ? `<div style="font-size:12px;color:#7F1D1D;background:#FEE2E2;border-radius:6px;padding:7px 10px;line-height:1.5;">⚡ Acao imediata. Agendar reuniao de alinhamento e revisar toda a entrega.</div>` : ''}
+          ${f.label==='Critical' ? `<div style="font-size:12px;color:#991B1B;background:#FEF2F2;border-radius:6px;padding:7px 10px;line-height:1.5;">⚠️ Situacao critica. Reforcar comunicacao e apresentar plano de recuperacao.</div>` : ''}
+          ${f.label==='Care'     ? `<div style="font-size:12px;color:#92400E;background:#FEF3C7;border-radius:6px;padding:7px 10px;line-height:1.5;">👀 Monitorar de perto. Manter atendimento proativo e antecipar dificuldades.</div>` : ''}
+          ${f.label==='Safe'     ? `<div style="font-size:12px;color:#166534;background:#DCFCE7;border-radius:6px;padding:7px 10px;line-height:1.5;">✅ Operacao saudavel. Manter padrao e planejar evolucao do contrato.</div>` : ''}
+        </div>`;
+    }).join('');
+
+    // Grafico de barras
+    const ctx = document.getElementById('hsChart').getContext('2d');
+    if (hsChart) hsChart.destroy();
+    hsChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: json.data.map(d=>d.ticker),
+        datasets: [{
+          label: 'Health Score',
+          data:  json.data.map(d=>parseFloat(d.score)||0),
+          backgroundColor: json.data.map(d=>(HS_FLAG[d.flag]||HS_FLAG.Care).color+'CC'),
+          borderRadius: 6, borderSkipped: false
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          annotation: { annotations: { meta: { type:'line', yMin:20, yMax:20, borderColor:'#9CA3AF', borderDash:[5,4], borderWidth:2,
+            label: { content:'Meta: 20', display:true, position:'end', color:'#6B7280', font:{size:11} }
+          }}}
+        },
+        scales: {
+          y: { beginAtZero:true, max:30, grid:{color:'rgba(0,0,0,0.04)'}, ticks:{font:{family:'Inter',size:11}} },
+          x: { grid:{display:false}, ticks:{font:{family:'Inter',size:11}} }
+        }
+      }
+    });
+
+    // Alerta gestora
+    const crit = json.data.filter(d=>d.flag==='Critical'||d.flag==='Danger');
+    const alertEl = document.getElementById('hs-manager-alert');
+    if (crit.length) {
+      alertEl.style.display='';
+      alertEl.innerHTML=`<div class="card" style="border-color:var(--red);background:var(--red-light);margin-top:4px;">
+        <div style="font-size:13px;font-weight:700;color:var(--red);margin-bottom:8px;">Visao de Gestora — Clientes que precisam de atencao agora</div>
+        ${crit.map(c=>`<div style="display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #FECACA;">
+          <span class="badge b-red">${c.flag}</span>
+          <div><strong>${c.name||c.ticker}</strong> · Score ${c.score||'—'}/30
+          <div style="font-size:11px;color:var(--gray-500);margin-top:2px;">
+            ${c.flag==='Danger'?'Reuniao imediata + plano de recuperacao urgente':
+              c.flag==='Critical'?'Reforcar atendimento + apresentar plano de acao na proxima semana':''}
+          </div></div>
+        </div>`).join('')}
+      </div>`;
     }
   } catch(e) {
-    el.innerHTML = `<p style="font-size:12px;color:var(--gray-400);">Health Score: ${e.message}</p>`;
+    cards.innerHTML=`<div class="alert">Erro: ${e.message}</div>`;
   }
 }
 
