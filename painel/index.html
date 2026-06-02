@@ -387,13 +387,20 @@ tr:hover td { background: var(--gray-100); }
       </div>
     </div>
 
+    <!-- Health Score: cards do JSON (sync) + link para cockpit completo -->
     <div class="card" style="margin-bottom:18px;" id="hs-strip">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-        <div class="card-label" style="margin:0;">Health Score — Cockpit</div>
-        <div style="font-size:11px;color:var(--gray-400);" id="hs-sync-time">—</div>
+        <div class="card-label" style="margin:0;">Health Score</div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <div style="font-size:11px;color:var(--gray-400);" id="hs-sync-time">—</div>
+          <a href="https://flow.collieassociados.com/health-score/cockpit" target="_blank"
+             style="font-size:11px;color:var(--red);font-weight:600;text-decoration:none;">
+            Ver cockpit completo ↗
+          </a>
+        </div>
       </div>
       <div id="hs-cards" style="display:flex;gap:10px;flex-wrap:wrap;">
-        <div class="loading"><div class="spin"></div> Aguardando sync...</div>
+        <div class="loading"><div class="spin"></div> Carregando...</div>
       </div>
     </div>
 

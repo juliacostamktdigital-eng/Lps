@@ -79,8 +79,10 @@ jobs:
           for TICKER in "${!PACE_SHEETS[@]}"; do
             INFO="${PACE_SHEETS[$TICKER]}"
             ID="${INFO%%:*}"; GID="${INFO##*:}"
-            URL="https://docs.google.com/spreadsheets/d/${ID}/pub?gid=${GID}&single=true&output=csv"
-            CSV=$(curl -sL "$URL" --max-time 20 -A "Mozilla/5.0")
+            CSV=$(curl -sL "https://docs.google.com/spreadsheets/d/${ID}/export?format=csv&gid=${GID}" --max-time 20 -A "Mozilla/5.0")
+            if echo "$CSV" | head -1 | grep -qi "<!DOCTYPE\|<html"; then
+              CSV=$(curl -sL "https://docs.google.com/spreadsheets/d/${ID}/pub?gid=${GID}&single=true&output=csv" --max-time 20 -A "Mozilla/5.0")
+            fi
             if [ -n "$CSV" ] && ! echo "$CSV" | head -1 | grep -qi "<!DOCTYPE"; then
               echo "$CSV" > "painel/data/pace/${TICKER}.csv"
               echo "Pace OK: $TICKER ($(echo "$CSV" | wc -l) linhas)"
@@ -93,8 +95,10 @@ jobs:
           for TICKER in "${!COM_SHEETS[@]}"; do
             INFO="${COM_SHEETS[$TICKER]}"
             ID="${INFO%%:*}"; GID="${INFO##*:}"
-            URL="https://docs.google.com/spreadsheets/d/${ID}/pub?gid=${GID}&single=true&output=csv"
-            CSV=$(curl -sL "$URL" --max-time 20 -A "Mozilla/5.0")
+            CSV=$(curl -sL "https://docs.google.com/spreadsheets/d/${ID}/export?format=csv&gid=${GID}" --max-time 20 -A "Mozilla/5.0")
+            if echo "$CSV" | head -1 | grep -qi "<!DOCTYPE\|<html"; then
+              CSV=$(curl -sL "https://docs.google.com/spreadsheets/d/${ID}/pub?gid=${GID}&single=true&output=csv" --max-time 20 -A "Mozilla/5.0")
+            fi
             if [ -n "$CSV" ] && ! echo "$CSV" | head -1 | grep -qi "<!DOCTYPE"; then
               echo "$CSV" > "painel/data/com/${TICKER}.csv"
               echo "Com OK: $TICKER"
