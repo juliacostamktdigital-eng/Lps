@@ -587,9 +587,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // restore ical
-  const saved = localStorage.getItem('ical_url');
-  if (saved) document.getElementById('ical-input').value = saved;
+  // restore ical — URL pre-configurada
+  const defaultIcal = 'https://calendar.google.com/calendar/ical/julia.costa%40v4company.com/public/basic.ics';
+  const saved = localStorage.getItem('ical_url') || defaultIcal;
+  localStorage.setItem('ical_url', saved);
+  document.getElementById('ical-input').value = saved;
 
   renderTsLog();
 });
