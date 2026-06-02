@@ -797,20 +797,54 @@ function renderClient(t){
 }
 
 // ─── COMERCIAL ─────────────────────────────────────────────────────────────
+// Busca coluna por lista de nomes alternativos (case-insensitive, sem acento)
+function norm(s){ return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim(); }
+function colIdx(header, variants){ return header.findIndex(h => variants.some(v => norm(v)===norm(h))); }
+
 const COM_SCHEMA = {
   FCE: {
-    nome:0, data:0, status:19, obs:20, receita:23,
-    style:'status', statusCol:19, obsCol:20, receitaCol:23,
+    style:'status',
+    h: {
+      nome:   ['nome','nome completo','name'],
+      data:   ['data','data do lead','date'],
+      status: ['status'],
+      obs:    ['observações','observacoes','obs','observação'],
+      receita:['receita','receita total','valor'],
+    }
   },
   FARS: {
-    nome:1, data:0, mql:12, sql:13, obs:14, venda:15, receita:16,
-    style:'mqsql', mqlCol:12, sqlCol:13, obsCol:14, vendaCol:15, receitaCol:16,
+    style:'mqsql',
+    h: {
+      nome:   ['nome','nome completo','name'],
+      data:   ['data','data do lead'],
+      mql:    ['mql','mql (tem interesse)','mql (tem interesse no serviço)'],
+      sql:    ['sql','sql (intenção de fechar)','sql (intencao de fechar)','sql (tem intenção)'],
+      obs:    ['observações comerciais','observacoes','obs','observações'],
+      venda:  ['venda concluída','venda','venda concluida'],
+      receita:['receita de vendas','receita','valor'],
+    }
   },
   TECN1: {
-    nome:1, data:0, mql:12, sql:13, obs:14, venda:15, receita:16,
-    style:'mqsql', mqlCol:12, sqlCol:13, obsCol:14, vendaCol:15, receitaCol:16,
+    style:'mqsql',
+    h: {
+      nome:   ['nome','nome completo','name'],
+      data:   ['data','data do lead'],
+      mql:    ['mql','mql (tem interesse)','mql (tem interesse no serviço)'],
+      sql:    ['sql','sql (intenção de fechar)','sql (intencao de fechar)'],
+      obs:    ['observações comerciais','observacoes','obs','observações'],
+      venda:  ['venda concluída','venda','venda concluida'],
+      receita:['receita de vendas','receita','valor'],
+    }
   },
 };
+
+function buildColMap(header, schema) {
+  const m = {};
+  for (const [field, variants] of Object.entries(schema.h)) {
+    m[field] = colIdx(header, variants);
+  }
+  return m;
+}
 
 async function loadComercialData(ticker) {
   const wrap = document.getElementById('cl-comercial-wrap');
@@ -829,36 +863,44 @@ async function loadComercialData(ticker) {
 
   try {
     const csv = await fetch(`data/com/${ticker}.csv?` + Date.now()).then(r => r.text());
-    if (!csv || csv.length < 100) throw new Error('Arquivo vazio');
+    if (!csv || csv.length < 10) throw new Error('Arquivo não encontrado');
 
     const rows = parseCSV(csv);
     const header = rows[0];
     const data = rows.slice(1).filter(r => r.some(c => c.trim()));
 
+    if (data.length === 0) {
+      document.getElementById('cl-com-kpis').innerHTML = '<p style="font-size:13px;color:var(--g4);padding:8px 0;">Planilha sem dados ainda — aguardando preenchimento do comercial.</p>';
+      document.getElementById('cl-com-alert').style.display = 'none';
+      document.getElementById('cl-com-stages').innerHTML = '';
+      document.getElementById('cl-com-pending').innerHTML = '';
+      return;
+    }
+
+    const c = buildColMap(header, schema);
     const total = data.length;
     let semObs=0, semMql=0, semSql=0, vendas=0, mqlCount=0, sqlCount=0;
     let receitaTotal=0;
     const statusMap = {};
-    const pendingLeads = []; // leads sem follow-up
+    const pendingLeads = [];
 
-    data.forEach((row, i) => {
+    data.forEach(row => {
+      const get = (f) => c[f] >= 0 ? (row[c[f]] || '').trim() : '';
       if (schema.style === 'status') {
-        const status = (row[schema.statusCol] || '').trim();
-        const obs    = (row[schema.obsCol]    || '').trim();
-        const rec    = brl(row[schema.receitaCol] || '');
+        const status = get('status');
+        const obs    = get('obs');
+        const rec    = brl(get('receita'));
         statusMap[status || '(sem status)'] = (statusMap[status || '(sem status)'] || 0) + 1;
-        if (!obs) { semObs++; pendingLeads.push({ nome: (row[schema.nome]||'—').trim(), data: (row[schema.data]||'').trim(), status }); }
+        if (!obs) { semObs++; pendingLeads.push({ nome: get('nome')||'—', data: get('data'), status }); }
         if (status && (status.toLowerCase().includes('fecha') || status.toLowerCase().includes('comprou'))) vendas++;
         receitaTotal += rec;
       } else {
-        const mql  = (row[schema.mqlCol]  || '').trim();
-        const sql  = (row[schema.sqlCol]  || '').trim();
-        const obs  = (row[schema.obsCol]  || '').trim();
-        const vnd  = (row[schema.vendaCol]|| '').trim();
-        const rec  = brl(row[schema.receitaCol] || '');
-        if (!mql) semMql++;  else mqlCount++;
-        if (!sql) semSql++;  else sqlCount++;
-        if (!obs) { semObs++; pendingLeads.push({ nome: (row[1]||'—').trim(), data: (row[0]||'').trim(), mql, sql }); }
+        const mql = get('mql'); const sql = get('sql');
+        const obs = get('obs'); const vnd = get('venda');
+        const rec = brl(get('receita'));
+        if (!mql) semMql++; else mqlCount++;
+        if (!sql) semSql++; else sqlCount++;
+        if (!obs) { semObs++; pendingLeads.push({ nome: get('nome')||'—', data: get('data'), mql, sql }); }
         if (vnd && !['','nao','não','0','false'].includes(vnd.toLowerCase())) vendas++;
         receitaTotal += rec;
       }
@@ -877,7 +919,7 @@ async function loadComercialData(ticker) {
       { lbl:'MQL', val: mqlCount, sub:`${total-mqlCount} sem`, color: mqlCount > 0 ? 'var(--blue)':'var(--g4)' },
       { lbl:'SQL', val: sqlCount, sub:`${total-sqlCount} sem`, color: sqlCount > 0 ? 'var(--purple)':'var(--g4)' },
       { lbl:'Vendas', val: vendas, sub:'fechadas', color:'var(--green)' },
-      { lbl:'Sem Obs.', val: semObs, sub:`leads sem follow-up`, color: semObs > 0 ? 'var(--red)':'var(--green)' },
+      { lbl:'Sem Obs.', val: semObs, sub:'leads sem follow-up', color: semObs > 0 ? 'var(--red)':'var(--green)' },
       { lbl:'Receita', val: fmtBRL(receitaTotal), sub:'total', color:'var(--green)' },
     ];
 
@@ -891,7 +933,7 @@ async function loadComercialData(ticker) {
     // Alerta
     const alertEl = document.getElementById('cl-com-alert');
     const critCount = semObs + semMql + semSql;
-    if (critCount > 0 || semObs > total * 0.4) {
+    if (critCount > 0) {
       alertEl.style.display = '';
       const parts = [];
       if (semObs > 0) parts.push(`<strong>${semObs}</strong> lead${semObs>1?'s':''} sem observação`);
@@ -902,7 +944,7 @@ async function loadComercialData(ticker) {
       alertEl.style.display = 'none';
     }
 
-    // Status
+    // Status / Funil
     const stageEl = document.getElementById('cl-com-stages');
     const stageLbl = document.getElementById('cl-com-stage-label');
     if (schema.style === 'status') {
@@ -931,7 +973,7 @@ async function loadComercialData(ticker) {
         </div>`).join('');
     }
 
-    // Tabela leads pendentes
+    // Leads pendentes
     const pendEl = document.getElementById('cl-com-pending');
     if (pendingLeads.length === 0) {
       pendEl.innerHTML = '<p style="font-size:13px;color:var(--green);padding:8px 0;">✓ Todos os leads estão com observação.</p>';
