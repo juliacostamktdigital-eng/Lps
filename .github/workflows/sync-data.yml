@@ -2,7 +2,7 @@ name: Sync Dashboard Data
 
 on:
   schedule:
-    - cron: '0 10 * * 1-5'   # 07:00 BRT (10:00 UTC) — seg a sex
+    - cron: '0 10 * * *'      # 07:00 BRT (10:00 UTC) — todos os dias
   workflow_dispatch:           # botao manual no GitHub Actions
 
 permissions:
