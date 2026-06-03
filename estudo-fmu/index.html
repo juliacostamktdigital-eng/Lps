@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plataforma de Estudos — Engenharia Civil FMU</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--blue:#1a56db;--blue-mid:#1e40af;--blue-light:#3b82f6;--blue-pale:#eff6ff;--blue-ultra:#dbeafe;--gray:#f8fafc;--gray-2:#f1f5f9;--gray-3:#e2e8f0;--text:#1e293b;--text-2:#475569;--text-3:#94a3b8;--green:#16a34a;--yellow:#ca8a04;--red:#dc2626;--radius:12px;--shadow:0 4px 24px rgba(26,86,219,.08)}
+body{font-family:'Inter',sans-serif;background:#fff;color:var(--text);min-height:100vh}
+.banner-alert{position:fixed;top:0;left:0;right:0;z-index:9999;padding:14px 24px;font-weight:700;font-size:15px;text-align:center;display:none;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.banner-warn{background:#fef3c7;color:#92400e;border-bottom:3px solid #f59e0b}
+.banner-danger{background:#fee2e2;color:#991b1b;border-bottom:4px solid #dc2626;font-size:17px;padding:18px 24px}
+.banner-close{cursor:pointer;margin-left:12px;font-size:18px;opacity:.7}
+header{background:linear-gradient(135deg,var(--blue-mid) 0%,var(--blue) 60%,var(--blue-light) 100%);padding:28px 32px 24px;display:flex;align-items:center;gap:20px;box-shadow:0 4px 24px rgba(26,86,219,.25)}
+.header-icon{font-size:42px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.3))}
+.header-text h1{color:#fff;font-size:22px;font-weight:800;letter-spacing:-.3px}
+.header-text p{color:#bfdbfe;font-size:13px;margin-top:3px;font-weight:500}
+.header-badges{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.hbadge{background:rgba(255,255,255,.15);color:#fff;font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;border:1px solid rgba(255,255,255,.25)}
+nav{background:#fff;border-bottom:2px solid var(--gray-3);padding:0 16px;display:flex;gap:0;overflow-x:auto;scrollbar-width:none;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+nav::-webkit-scrollbar{display:none}
+.nav-btn{padding:16px 18px;font-size:13px;font-weight:600;color:var(--text-2);cursor:pointer;white-space:nowrap;border:none;background:none;border-bottom:3px solid transparent;transition:all .2s;display:flex;align-items:center;gap:6px}
+.nav-btn:hover{color:var(--blue);background:var(--blue-pale)}
+.nav-btn.active{color:var(--blue);border-bottom-color:var(--blue);background:var(--blue-pale)}
+.tab-content{display:none;animation:fadeIn .3s ease}
+.tab-content.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.container{max-width:1100px;margin:0 auto;padding:32px 20px}
+.section-title{font-size:20px;font-weight:800;color:var(--blue-mid);margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.section-sub{color:var(--text-2);font-size:14px;margin-bottom:28px}
+.sub-nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.sub-btn{padding:8px 16px;font-size:13px;font-weight:600;color:var(--blue);border:2px solid var(--blue);background:#fff;border-radius:8px;cursor:pointer;transition:all .2s}
+.sub-btn:hover,.sub-btn.active{background:var(--blue);color:#fff}
+.sub-content{display:none}
+.sub-content.active{display:block;animation:fadeIn .25s ease}
+.card{background:#fff;border-radius:var(--radius);border:1px solid var(--gray-3);padding:24px;margin-bottom:20px;box-shadow:var(--shadow)}
+.card-title{font-size:16px;font-weight:700;color:var(--blue-mid);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.alert-box{border-radius:8px;padding:12px 16px;margin:16px 0;font-size:13px;font-weight:600;display:flex;align-items:flex-start;gap:10px}
+.alert-warn{background:#fef3c7;color:#92400e;border-left:4px solid #f59e0b}
+.alert-info{background:var(--blue-ultra);color:var(--blue-mid);border-left:4px solid var(--blue)}
+.alert-green{background:#dcfce7;color:#15803d;border-left:4px solid #16a34a}
+.formula{display:inline-block;background:var(--blue-ultra);color:var(--blue-mid);font-family:monospace;font-size:15px;font-weight:700;padding:6px 14px;border-radius:6px;margin:4px 2px}
+.formula-block{background:var(--blue-ultra);color:var(--blue-mid);font-family:monospace;font-size:14px;font-weight:600;padding:14px 18px;border-radius:8px;margin:12px 0;border-left:4px solid var(--blue-light)}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+th{background:var(--blue);color:#fff;padding:10px 14px;text-align:left;font-weight:700}
+td{padding:9px 14px;border-bottom:1px solid var(--gray-3)}
+tr:nth-child(even) td{background:var(--blue-pale)}
+tr:hover td{background:var(--blue-ultra)}
+pre{background:#1e293b;color:#e2e8f0;border-radius:10px;padding:20px;font-size:13px;overflow-x:auto;margin:14px 0;line-height:1.7}
+pre .kw{color:#93c5fd}
+pre .fn{color:#a78bfa}
+pre .st{color:#86efac}
+pre .cm{color:#64748b}
+pre .nm{color:#fbbf24}
+code.inline{background:var(--gray-2);color:var(--blue-mid);padding:2px 7px;border-radius:4px;font-size:13px;font-family:monospace}
+.ask-btn{display:inline-flex;align-items:center;gap:8px;margin-top:20px;padding:10px 20px;background:var(--blue);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:background .2s}
+.ask-btn:hover{background:var(--blue-mid)}
+.back-top{position:fixed;bottom:24px;right:24px;width:44px;height:44px;background:var(--blue);color:#fff;border:none;border-radius:50%;font-size:20px;cursor:pointer;box-shadow:0 4px 16px rgba(26,86,219,.35);display:flex;align-items:center;justify-content:center;z-index:500;transition:transform .2s}
+.back-top:hover{transform:translateY(-3px)}
+.step{counter-increment:step;display:flex;gap:14px;margin-bottom:14px;align-items:flex-start}
+.step-num{min-width:28px;height:28px;background:var(--blue);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
+.step-body{flex:1;font-size:14px;color:var(--text-2);line-height:1.6;padding-top:4px}
+.steps{counter-reset:step}
+.pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;margin:2px}
+.pill-blue{background:var(--blue-ultra);color:var(--blue)}
+.pill-green{background:#dcfce7;color:#15803d}
+.pill-yellow{background:#fef3c7;color:#92400e}
+.pill-red{background:#fee2e2;color:#991b1b}
+.cmd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin:14px 0}
+.cmd-item{background:var(--gray-2);border-radius:8px;padding:10px 14px;font-size:13px}
+.cmd-key{font-family:monospace;font-weight:800;color:var(--blue);font-size:14px}
+.cmd-desc{color:var(--text-2);font-size:12px;margin-top:2px}
+.line-table{border:1px solid var(--gray-3);border-radius:8px;overflow:hidden;margin:14px 0}
+.line-row{display:flex;align-items:center;gap:16px;padding:10px 16px;border-bottom:1px solid var(--gray-3)}
+.line-row:last-child{border-bottom:none}
+.line-row:nth-child(even){background:var(--blue-pale)}
+.line-label{font-size:13px;font-weight:600;min-width:180px;color:var(--text)}
+.line-preview{flex:1}
+.line-desc{font-size:12px;color:var(--text-2);min-width:140px;text-align:right}
+.svg-solid{stroke:#1e293b;stroke-width:2;fill:none}
+.svg-dash{stroke:#1e293b;stroke-width:2;stroke-dasharray:6,3;fill:none}
+.svg-dot{stroke:#1e293b;stroke-width:2;stroke-dasharray:12,3,2,3;fill:none}
+.svg-hatch{stroke:#475569;stroke-width:1}
+
+/* Calendar */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:16px}
+.cal-header{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:4px}
+.cal-dow{text-align:center;font-size:11px;font-weight:800;color:var(--text-2);text-transform:uppercase;padding:4px}
+.cal-day{background:#fff;border:1px solid var(--gray-3);border-radius:10px;padding:10px 8px;min-height:90px;transition:all .2s;cursor:default}
+.cal-day:hover{border-color:var(--blue-light);box-shadow:0 2px 12px rgba(26,86,219,.1)}
+.cal-day.today{border-color:var(--blue);box-shadow:0 0 0 2px rgba(26,86,219,.2)}
+.cal-day.has-delivery{border-color:#dc2626;background:#fff5f5}
+.cal-day.has-review{background:var(--blue-pale)}
+.cal-num{font-size:13px;font-weight:800;color:var(--blue-mid);margin-bottom:4px}
+.cal-day.today .cal-num{background:var(--blue);color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.cal-topic{font-size:10px;color:var(--text-2);line-height:1.4;margin-bottom:4px}
+.cal-badges{display:flex;gap:3px;flex-wrap:wrap}
+.cal-badge{font-size:10px;padding:1px 5px;border-radius:4px;font-weight:700}
+.badge-calc{background:#fef3c7;color:#92400e}
+.badge-check{background:#dcfce7;color:#15803d}
+.badge-del{background:#fee2e2;color:#991b1b}
+.badge-rev{background:var(--blue-ultra);color:var(--blue)}
+@media(max-width:700px){.cal-grid,.cal-header{grid-template-columns:repeat(4,1fr)}.cal-day:nth-child(n+25){display:none}}
+@media(max-width:500px){.cal-grid,.cal-header{grid-template-columns:repeat(3,1fr)}}
+
+/* Calculator */
+.calc-wrap{max-width:360px;margin:0 auto;background:#0f172a;border-radius:20px;padding:24px;box-shadow:0 8px 40px rgba(0,0,0,.4)}
+.calc-display{background:#1e293b;border-radius:12px;padding:16px 20px;margin-bottom:16px;text-align:right}
+.calc-expr{color:#64748b;font-size:13px;min-height:20px;font-family:monospace;word-break:break-all}
+.calc-result{color:#fff;font-size:32px;font-weight:700;font-family:monospace;word-break:break-all;margin-top:4px}
+.calc-mem{color:var(--blue-light);font-size:11px;min-height:16px;margin-top:4px;text-align:left;font-family:monospace}
+.calc-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.calc-btn{padding:14px 8px;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif}
+.calc-btn:active{transform:scale(.93)}
+.btn-num{background:#334155;color:#f1f5f9}
+.btn-num:hover{background:#475569}
+.btn-op{background:var(--blue-mid);color:#fff}
+.btn-op:hover{background:var(--blue)}
+.btn-fn{background:#1e3a5f;color:#93c5fd;font-size:12px}
+.btn-fn:hover{background:#1e40af}
+.btn-eq{background:var(--blue);color:#fff;grid-column:span 2}
+.btn-eq:hover{background:var(--blue-light)}
+.btn-clear{background:#7f1d1d;color:#fca5a5}
+.btn-clear:hover{background:#991b1b}
+.btn-mem{background:#1e293b;color:#a78bfa;font-size:11px}
+.btn-mem:hover{background:#312e81}
+.calc-note{color:#64748b;font-size:12px;margin-top:16px;text-align:center}
+
+/* Stat examples */
+.example-block{background:var(--gray-2);border-radius:10px;padding:18px;margin:14px 0}
+.example-title{font-size:13px;font-weight:700;color:var(--blue-mid);margin-bottom:10px}
+.step-calc{background:#fff;border:1px solid var(--gray-3);border-radius:6px;padding:8px 12px;margin:6px 0;font-size:13px;display:flex;align-items:center;gap:10px}
+.step-calc .sc-label{color:var(--text-2);min-width:160px;font-size:12px}
+.step-calc .sc-val{font-family:monospace;font-weight:700;color:var(--blue-mid)}
+
+/* Responsive */
+@media(max-width:768px){.container{padding:20px 14px}header{padding:20px 16px}.header-text h1{font-size:18px}.nav-btn{padding:12px 12px;font-size:12px}.sub-nav{gap:6px}.sub-btn{font-size:12px;padding:7px 12px}}
+</style>
+</head>
+<body>
+
+<div class="banner-alert banner-danger" id="bannerDanger">
+  <span id="bannerDangerText"></span>
+  <span class="banner-close" onclick="document.getElementById('bannerDanger').style.display='none'">✕</span>
+</div>
+<div class="banner-alert banner-warn" id="bannerWarn">
+  <span id="bannerWarnText"></span>
+  <span class="banner-close" onclick="document.getElementById('bannerWarn').style.display='none'">✕</span>
+</div>
+
+<header>
+  <div class="header-icon">🏗️</div>
+  <div class="header-text">
+    <h1>Plataforma de Estudos — Engenharia Civil</h1>
+    <p>FMU · EAD 2026.1 · Junho 2026</p>
+    <div class="header-badges">
+      <span class="hbadge">📐 CAD</span>
+      <span class="hbadge">💬 Comunicação</span>
+      <span class="hbadge">📊 Estatística</span>
+      <span class="hbadge">🏗️ Práticas</span>
+      <span class="hbadge">🐍 Python</span>
+    </div>
+  </div>
+</header>
+
+<nav id="mainNav">
+  <button class="nav-btn active" onclick="showTab('cal',this)">📅 Calendário</button>
+  <button class="nav-btn" onclick="showTab('calc',this)">🧮 Calculadora</button>
+  <button class="nav-btn" onclick="showTab('cad',this)">📐 CAD</button>
+  <button class="nav-btn" onclick="showTab('com',this)">💬 Comunicação</button>
+  <button class="nav-btn" onclick="showTab('stat',this)">📊 Estatística</button>
+  <button class="nav-btn" onclick="showTab('prat',this)">🏗️ Práticas</button>
+  <button class="nav-btn" onclick="showTab('prog',this)">🐍 Programação</button>
+</nav>
+
+<!-- ======= ABA 1: CALENDÁRIO ======= -->
+<div class="tab-content active" id="tab-cal">
+<div class="container">
+  <div class="section-title">📅 Calendário — Junho 2026</div>
+  <div class="section-sub">Plano de estudos dia a dia. Clique nos dias para ver detalhes.</div>
+
+  <div class="cal-header">
+    <div class="cal-dow">Dom</div>
+    <div class="cal-dow">Seg</div>
+    <div class="cal-dow">Ter</div>
+    <div class="cal-dow">Qua</div>
+    <div class="cal-dow">Qui</div>
+    <div class="cal-dow">Sex</div>
+    <div class="cal-dow">Sáb</div>
+  </div>
+
+  <div class="cal-grid" id="calGrid"></div>
+
+  <div class="card" style="margin-top:24px">
+    <div class="card-title">🔑 Legenda</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <span class="cal-badge badge-calc" style="font-size:12px;padding:4px 10px">🔢 Usar calculadora</span>
+      <span class="cal-badge badge-check" style="font-size:12px;padding:4px 10px">✅ Marcar na plataforma</span>
+      <span class="cal-badge badge-del" style="font-size:12px;padding:4px 10px">⚠️ Entrega/Prova</span>
+      <span class="cal-badge badge-rev" style="font-size:12px;padding:4px 10px">🔄 Revisão</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ======= ABA 2: CALCULADORA ======= -->
+<div class="tab-content" id="tab-calc">
+<div class="container">
+  <div class="section-title">🧮 Calculadora Científica</div>
+  <div class="section-sub">Para cálculos de estatística e engenharia. Suporta sin, cos, log, raiz, potência e memória.</div>
+
+  <div class="calc-wrap">
+    <div class="calc-display">
+      <div class="calc-expr" id="calcExpr"></div>
+      <div class="calc-result" id="calcResult">0</div>
+      <div class="calc-mem" id="calcMem"></div>
+    </div>
+    <div class="calc-grid">
+      <button class="calc-btn btn-mem" onclick="calcMem('mc')">MC</button>
+      <button class="calc-btn btn-mem" onclick="calcMem('mr')">MR</button>
+      <button class="calc-btn btn-mem" onclick="calcMem('m+')">M+</button>
+      <button class="calc-btn btn-mem" onclick="calcMem('m-')">M−</button>
+      <button class="calc-btn btn-clear" onclick="calcClear()">C</button>
+
+      <button class="calc-btn btn-fn" onclick="calcFn('sin(')">sin</button>
+      <button class="calc-btn btn-fn" onclick="calcFn('cos(')">cos</button>
+      <button class="calc-btn btn-fn" onclick="calcFn('tan(')">tan</button>
+      <button class="calc-btn btn-fn" onclick="calcFn('log10(')">log</button>
+      <button class="calc-btn btn-fn" onclick="calcFn('Math.log(')">ln</button>
+
+      <button class="calc-btn btn-fn" onclick="calcFn('Math.sqrt(')">√</button>
+      <button class="calc-btn btn-fn" onclick="calcFn('**2')">x²</button>
+      <button class="calc-btn btn-fn" onclick="calcFn('**')">xʸ</button>
+      <button class="calc-btn btn-fn" onclick="calcFn('Math.PI')">π</button>
+      <button class="calc-btn btn-fn" onclick="calcFn('Math.E')">e</button>
+
+      <button class="calc-btn btn-num" onclick="calcInput('7')">7</button>
+      <button class="calc-btn btn-num" onclick="calcInput('8')">8</button>
+      <button class="calc-btn btn-num" onclick="calcInput('9')">9</button>
+      <button class="calc-btn btn-op" onclick="calcInput('/')">÷</button>
+      <button class="calc-btn btn-op" onclick="calcDel()">DEL</button>
+
+      <button class="calc-btn btn-num" onclick="calcInput('4')">4</button>
+      <button class="calc-btn btn-num" onclick="calcInput('5')">5</button>
+      <button class="calc-btn btn-num" onclick="calcInput('6')">6</button>
+      <button class="calc-btn btn-op" onclick="calcInput('*')">×</button>
+      <button class="calc-btn btn-op" onclick="calcInput('%')">%</button>
+
+      <button class="calc-btn btn-num" onclick="calcInput('1')">1</button>
+      <button class="calc-btn btn-num" onclick="calcInput('2')">2</button>
+      <button class="calc-btn btn-num" onclick="calcInput('3')">3</button>
+      <button class="calc-btn btn-op" onclick="calcInput('-')">−</button>
+      <button class="calc-btn btn-op" onclick="calcInput('(')">( )</button>
+
+      <button class="calc-btn btn-num" onclick="calcInput('0')">0</button>
+      <button class="calc-btn btn-num" onclick="calcInput('.')">.</button>
+      <button class="calc-btn btn-fn" onclick="calcNeg()">±</button>
+      <button class="calc-btn btn-op" onclick="calcInput('+')">+</button>
+      <button class="calc-btn btn-eq" onclick="calcEval()">=</button>
+    </div>
+    <div class="calc-note">Pressione Enter para calcular · Esc para limpar</div>
+  </div>
+</div>
+</div>
+
+<!-- ======= ABA 3: CAD ======= -->
+<div class="tab-content" id="tab-cad">
+<div class="container">
+  <div class="section-title">📐 CAD — Desenho Técnico</div>
+  <div class="section-sub">Computer Aided Design aplicado à Engenharia Civil</div>
+  <div class="sub-nav">
+    <button class="sub-btn active" onclick="showSub('cad','vistas',this)">Vistas Ortográficas</button>
+    <button class="sub-btn" onclick="showSub('cad','diedros',this)">Diedros</button>
+    <button class="sub-btn" onclick="showSub('cad','nbr',this)">NBR 10.067</button>
+    <button class="sub-btn" onclick="showSub('cad','linhas',this)">Tipos de Linhas</button>
+    <button class="sub-btn" onclick="showSub('cad','cortes',this)">Cortes</button>
+    <button class="sub-btn" onclick="showSub('cad','hachuras',this)">Hachuras</button>
+    <button class="sub-btn" onclick="showSub('cad','autocad',this)">AutoCAD</button>
+  </div>
+
+  <div class="sub-content active" id="cad-vistas">
+    <div class="card">
+      <div class="card-title">🔲 Vistas Ortográficas</div>
+      <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:14px">Representacao 2D de um objeto 3D projetado em multiplas faces. Imagine o objeto dentro de uma caixa de vidro: cada parede da caixa mostra uma vista diferente.</p>
+      <table>
+        <thead><tr><th>Vista</th><th>Tambem chamada</th><th>O que mostra</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Frontal</strong></td><td>Vista principal</td><td>A face da frente do objeto</td></tr>
+          <tr><td><strong>Superior</strong></td><td>Planta baixa</td><td>O objeto visto de cima</td></tr>
+          <tr><td><strong>Inferior</strong></td><td>--</td><td>O objeto visto de baixo</td></tr>
+          <tr><td><strong>Lateral Direita</strong></td><td>Perfil direito</td><td>O lado direito do objeto</td></tr>
+          <tr><td><strong>Lateral Esquerda</strong></td><td>Perfil esquerdo</td><td>O lado esquerdo do objeto</td></tr>
+          <tr><td><strong>Posterior</strong></td><td>Vista de tras</td><td>A face traseira do objeto</td></tr>
+        </tbody>
+      </table>
+      <svg width="100%" viewBox="0 0 400 180" style="max-width:400px;display:block;margin:16px auto;background:var(--blue-pale);border-radius:8px;padding:10px">
+        <rect x="160" y="60" width="80" height="60" fill="#dbeafe" stroke="#1a56db" stroke-width="2"/>
+        <text x="200" y="95" text-anchor="middle" font-size="11" fill="#1e40af" font-weight="700">FRONTAL</text>
+        <rect x="60" y="60" width="80" height="60" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+        <text x="100" y="95" text-anchor="middle" font-size="10" fill="#0369a1">LAT. ESQ.</text>
+        <rect x="260" y="60" width="80" height="60" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+        <text x="300" y="95" text-anchor="middle" font-size="10" fill="#0369a1">LAT. DIR.</text>
+        <rect x="160" y="10" width="80" height="40" fill="#bfdbfe" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="200" y="35" text-anchor="middle" font-size="10" fill="#1e40af">SUPERIOR</text>
+        <rect x="160" y="130" width="80" height="40" fill="#bfdbfe" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="200" y="155" text-anchor="middle" font-size="10" fill="#1e40af">INFERIOR</text>
+      </svg>
+      <div class="alert-warn">⚠️ Acesse o Tema "Vistas Ortograficas" na plataforma FMU para ver as figuras e diagramas desta aula.</div>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+Vistas+Ortograficas:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="cad-diedros">
+    <div class="card">
+      <div class="card-title">📦 Diedros e Sistema de Projecao</div>
+      <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:14px">Planos de projecao que dividem o espaco em regioes para posicionar o objeto e suas vistas.</p>
+      <table>
+        <thead><tr><th>Sistema</th><th>Posicao</th><th>Uso</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1 Diedro</strong></td><td>Objeto ENTRE o observador e o plano</td><td>Europa</td></tr>
+          <tr><td><strong>3 Diedro</strong></td><td>Plano ENTRE o observador e o objeto</td><td>Brasil e EUA</td></tr>
+        </tbody>
+      </table>
+      <div class="alert-info">No Brasil usamos o 3 diedro. O simbolo no canto do desenho tecnico indica qual sistema foi usado.</div>
+      <div class="alert-warn">⚠️ Acesse o Tema "Diedros" na plataforma FMU para ver as figuras desta aula.</div>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+Diedros+e+Sistema+de+Projecao:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="cad-nbr">
+    <div class="card">
+      <div class="card-title">📋 NBR 10.067/1995</div>
+      <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:14px">Norma ABNT para principios gerais de representacao em desenho tecnico.</p>
+      <table>
+        <thead><tr><th>Item</th><th>Regra</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Escalas comuns</strong></td><td>1:1 (real), 1:2, 1:5, 1:10, 1:50, 1:100</td></tr>
+          <tr><td><strong>Formato A4</strong></td><td>210 x 297 mm</td></tr>
+          <tr><td><strong>Margens</strong></td><td>Minimo 10mm (esquerda: 20mm para encadernacao)</td></tr>
+          <tr><td><strong>Legenda obrigatoria</strong></td><td>Titulo, escala, data, autor, numero do desenho</td></tr>
+          <tr><td><strong>Formato A0</strong></td><td>841 x 1189 mm (o maior)</td></tr>
+          <tr><td><strong>Formato A3</strong></td><td>297 x 420 mm</td></tr>
+        </tbody>
+      </table>
+      <div class="formula-block">Escala 1:50 significa: 1 cm no papel = 50 cm na realidade</div>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+NBR+10.067+Desenho+Tecnico:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="cad-linhas">
+    <div class="card">
+      <div class="card-title">〰️ Tipos de Linhas</div>
+      <div class="line-table">
+        <div class="line-row">
+          <div class="line-label"><strong>Continua larga</strong> (0,7mm)</div>
+          <div class="line-preview"><svg width="100" height="16"><line x1="0" y1="8" x2="100" y2="8" stroke="#1e293b" stroke-width="3"/></svg></div>
+          <div class="line-desc">Contornos e arestas visiveis</div>
+        </div>
+        <div class="line-row">
+          <div class="line-label"><strong>Continua estreita</strong> (0,35mm)</div>
+          <div class="line-preview"><svg width="100" height="16"><line x1="0" y1="8" x2="100" y2="8" stroke="#1e293b" stroke-width="1"/></svg></div>
+          <div class="line-desc">Cotas, linhas auxiliares, hachuramento</div>
+        </div>
+        <div class="line-row">
+          <div class="line-label"><strong>Tracejada</strong></div>
+          <div class="line-preview"><svg width="100" height="16"><line x1="0" y1="8" x2="100" y2="8" stroke="#1e293b" stroke-width="2" stroke-dasharray="6,3"/></svg></div>
+          <div class="line-desc">Arestas e contornos invisiveis</div>
+        </div>
+        <div class="line-row">
+          <div class="line-label"><strong>Traco-ponto</strong></div>
+          <div class="line-preview"><svg width="100" height="16"><line x1="0" y1="8" x2="100" y2="8" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="12,3,2,3"/></svg></div>
+          <div class="line-desc">Eixos de simetria, linhas de centro</div>
+        </div>
+        <div class="line-row">
+          <div class="line-label"><strong>Traco-dois pontos</strong></div>
+          <div class="line-preview"><svg width="100" height="16"><line x1="0" y1="8" x2="100" y2="8" stroke="#475569" stroke-width="1.5" stroke-dasharray="12,3,2,3,2,3"/></svg></div>
+          <div class="line-desc">Partes adjacentes, posicoes alternativas</div>
+        </div>
+      </div>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+Tipos+de+Linhas+em+Desenho+Tecnico:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="cad-cortes">
+    <div class="card">
+      <div class="card-title">✂️ Cortes</div>
+      <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:14px">Usados para mostrar o interior de pecas complexas. Onde ha corte, aplica-se hachura.</p>
+      <table>
+        <thead><tr><th>Tipo</th><th>Descricao</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Corte Total</strong></td><td>Corta a peca inteira por um plano completo</td></tr>
+          <tr><td><strong>Meio-Corte</strong></td><td>Corta metade — um lado mostra exterior, outro interior. Usado em pecas simetricas.</td></tr>
+          <tr><td><strong>Corte Parcial</strong></td><td>Corta so uma pequena regiao com linha irregular (linha de ruptura)</td></tr>
+          <tr><td><strong>Corte Composto</strong></td><td>Usa dois ou mais planos de corte (em L, em Z)</td></tr>
+        </tbody>
+      </table>
+      <div class="alert-info">Regra fundamental: onde ha corte, se aplica hachura para indicar o material cortado.</div>
+      <div class="alert-warn">⚠️ Acesse o Tema "Cortes" na plataforma FMU para ver os exemplos visuais.</div>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+Cortes+em+Desenho+Tecnico:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="cad-hachuras">
+    <div class="card">
+      <div class="card-title">🖊️ Hachuras e Secoes</div>
+      <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:14px">Hachura: linhas a 45 graus paralelas e equidistantes que indicam material cortado.</p>
+      <svg width="100%" viewBox="0 0 300 120" style="max-width:300px;display:block;margin:14px auto;background:#fff;border:1px solid var(--gray-3);border-radius:8px">
+        <rect x="50" y="20" width="200" height="80" fill="#f8fafc" stroke="#1e293b" stroke-width="2"/>
+        <clipPath id="hclip"><rect x="50" y="20" width="200" height="80"/></clipPath>
+        <g clip-path="url(#hclip)">
+          <line x1="50" y1="20" x2="130" y2="100" stroke="#475569" stroke-width="1"/>
+          <line x1="70" y1="20" x2="150" y2="100" stroke="#475569" stroke-width="1"/>
+          <line x1="90" y1="20" x2="170" y2="100" stroke="#475569" stroke-width="1"/>
+          <line x1="110" y1="20" x2="190" y2="100" stroke="#475569" stroke-width="1"/>
+          <line x1="130" y1="20" x2="210" y2="100" stroke="#475569" stroke-width="1"/>
+          <line x1="150" y1="20" x2="230" y2="100" stroke="#475569" stroke-width="1"/>
+          <line x1="170" y1="20" x2="250" y2="100" stroke="#475569" stroke-width="1"/>
+          <line x1="190" y1="20" x2="250" y2="80" stroke="#475569" stroke-width="1"/>
+          <line x1="210" y1="20" x2="250" y2="60" stroke="#475569" stroke-width="1"/>
+          <line x1="230" y1="20" x2="250" y2="40" stroke="#475569" stroke-width="1"/>
+        </g>
+        <text x="150" y="115" text-anchor="middle" font-size="11" fill="#475569">Hachura a 45 graus — espaco 20px</text>
+      </svg>
+      <table>
+        <thead><tr><th>Conceito</th><th>Descricao</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Hachura</strong></td><td>Linhas a 45 graus, paralelas, espacadas 2-5mm. Indica material cortado</td></tr>
+          <tr><td><strong>Secao</strong></td><td>O plano de corte e removido do desenho principal — so aparece o corte</td></tr>
+          <tr><td><strong>Corte x Secao</strong></td><td>No corte a vista continua. Na secao so aparece o plano cortado</td></tr>
+          <tr><td><strong>Materiais diferentes</strong></td><td>Angulos ou padroes diferentes, mas 45 e o padrao geral</td></tr>
+        </tbody>
+      </table>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+Hachuras+e+Secoes+em+Desenho+Tecnico:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="cad-autocad">
+    <div class="card">
+      <div class="card-title">💻 AutoCAD</div>
+      <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:14px">Software CAD da Autodesk para desenho tecnico 2D e 3D. Essencial para plantas baixas, cortes, elevacoes e projetos estruturais na Engenharia Civil.</p>
+      <div class="card-title" style="font-size:14px;margin-top:16px">Como instalar (gratis como estudante):</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body">Acesse <strong>autodesk.com/education</strong> e clique em "Obter produtos gratuitos"</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body">Crie conta com email da FMU — acesso estudantil gratuito por 1 ano</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body">Baixe AutoCAD (instalador ~4GB)</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body">Execute o instalador, aceite os termos, instale normalmente</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-body">Abra, faca login com a conta Autodesk criada — AutoCAD completo por 1 ano!</div></div>
+      </div>
+      <div class="card-title" style="font-size:14px;margin-top:20px">Comandos basicos essenciais:</div>
+      <div class="cmd-grid">
+        <div class="cmd-item"><div class="cmd-key">L — LINE</div><div class="cmd-desc">Desenha linha</div></div>
+        <div class="cmd-item"><div class="cmd-key">C — CIRCLE</div><div class="cmd-desc">Desenha circulo</div></div>
+        <div class="cmd-item"><div class="cmd-key">REC — RECTANGLE</div><div class="cmd-desc">Retangulo</div></div>
+        <div class="cmd-item"><div class="cmd-key">E — ERASE</div><div class="cmd-desc">Apaga elemento</div></div>
+        <div class="cmd-item"><div class="cmd-key">Ctrl+Z — UNDO</div><div class="cmd-desc">Desfaz acao</div></div>
+        <div class="cmd-item"><div class="cmd-key">Z — ZOOM</div><div class="cmd-desc">Zoom na area</div></div>
+        <div class="cmd-item"><div class="cmd-key">DIM — DIMENSION</div><div class="cmd-desc">Cotas dimensionais</div></div>
+        <div class="cmd-item"><div class="cmd-key">H — HATCH</div><div class="cmd-desc">Aplica hachura</div></div>
+      </div>
+      <div class="alert-warn">⚠️ Nesta materia nao e necessaria a calculadora cientifica — o AutoCAD calcula automaticamente.</div>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+AutoCAD+para+Engenharia+Civil:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ======= ABA 4: COMUNICAÇÃO ======= -->
+<div class="tab-content" id="tab-com">
+<div class="container">
+  <div class="section-title">💬 Comunicacao Aplicada</div>
+  <div class="section-sub">Generos textuais, coerencia e coesao para a comunicacao tecnica em Engenharia</div>
+  <div class="sub-nav">
+    <button class="sub-btn active" onclick="showSub('com','genero',this)">Genero e Tecnologia</button>
+    <button class="sub-btn" onclick="showSub('com','coerencia',this)">Coerencia Textual</button>
+    <button class="sub-btn" onclick="showSub('com','coesao',this)">Coesao Textual</button>
+    <button class="sub-btn" onclick="showSub('com','principios',this)">Principios</button>
+  </div>
+
+  <div class="sub-content active" id="com-genero">
+    <div class="card">
+      <div class="card-title">📱 Genero e Tecnologia</div>
+      <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:14px"><strong>Genero textual</strong>: categoria de texto com funcao social reconhecida — relatorio, e-mail, WhatsApp, artigo, etc. <strong>Suporte</strong>: onde o texto aparece (papel, tela, app).</p>
+      <table>
+        <thead><tr><th>Genero Tradicional</th><th>Equivalente Digital</th></tr></thead>
+        <tbody>
+          <tr><td>Carta</td><td>E-mail</td></tr>
+          <tr><td>Aviso no mural</td><td>Post/Story</td></tr>
+          <tr><td>Diario pessoal</td><td>Blog</td></tr>
+          <tr><td>Reuniao presencial</td><td>Videoconferencia</td></tr>
+          <tr><td>Relatorio impresso</td><td>Relatorio em PDF/Google Docs</td></tr>
+        </tbody>
+      </table>
+      <div class="card-title" style="font-size:14px;margin-top:16px">Generos na Engenharia Civil:</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0">
+        <span class="pill pill-blue">Relatorio tecnico</span>
+        <span class="pill pill-blue">Laudo pericial</span>
+        <span class="pill pill-blue">ART</span>
+        <span class="pill pill-blue">Memorial descritivo</span>
+        <span class="pill pill-yellow">WhatsApp de obra (informal)</span>
+        <span class="pill pill-green">E-mail formal ao cliente</span>
+      </div>
+      <div class="alert-info">Um WhatsApp de obra e um genero textual informal. Uma ART e um genero textual formal com normas legais obrigatorias.</div>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+Genero+Textual+e+Tecnologia:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="com-coerencia">
+    <div class="card">
+      <div class="card-title">🔗 Coerencia Textual</div>
+      <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:14px"><strong>Coerencia</strong>: quando o texto faz sentido, tem logica e unidade de ideias. Um texto coerente tem tema central, progressao de ideias e sem contradicoes.</p>
+      <div class="example-block">
+        <div class="example-title" style="color:#dc2626">Sem coerencia (texto ruim):</div>
+        <p style="font-size:13px;color:#475569;font-style:italic">"Fui a obra. O ceu e azul. A viga e de concreto. Gosto de futebol."</p>
+        <p style="font-size:12px;color:#dc2626;margin-top:6px">Problema: frases sem conexao logica entre si</p>
+      </div>
+      <div class="example-block">
+        <div class="example-title" style="color:var(--green)">Com coerencia (texto bom):</div>
+        <p style="font-size:13px;color:#475569;font-style:italic">"Fui a obra verificar as vigas. As vigas de concreto armado estavam em boas condicoes. O cronograma sera mantido."</p>
+        <p style="font-size:12px;color:var(--green);margin-top:6px">Correto: cada frase avanca o mesmo tema com logica</p>
+      </div>
+      <div class="card-title" style="font-size:14px;margin-top:16px">O que destroi a coerencia:</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0">
+        <span class="pill pill-red">Contradicao</span>
+        <span class="pill pill-red">Fuga do tema</span>
+        <span class="pill pill-red">Ideias desconexas</span>
+        <span class="pill pill-red">Informacoes falsas</span>
+      </div>
+      <div class="alert-info">Exercicio: leia um paragrafo e pergunte: "isso faz sentido? cada frase conecta com a anterior?"</div>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+Coerencia+Textual:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="com-coesao">
+    <div class="card">
+      <div class="card-title">🔄 Coesao Textual</div>
+      <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:14px"><strong>Coesao</strong>: os mecanismos linguisticos que LIGAM as frases entre si — as "pontes" do texto. Diferente da coerencia (sentido geral), coesao sao as palavras conectoras.</p>
+      <table>
+        <thead><tr><th>Tipo</th><th>Descricao</th><th>Exemplos</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Referencial</strong></td><td>Usa pronome ou sinonimo para nao repetir</td><td>"A viga... ela... o elemento estrutural..."</td></tr>
+          <tr><td><strong>Sequencial</strong></td><td>Usa conectivos para ordenar</td><td>"primeiro... depois... por fim..."</td></tr>
+        </tbody>
+      </table>
+      <div class="card-title" style="font-size:14px;margin-top:16px">Conectivos mais usados:</div>
+      <table>
+        <thead><tr><th>Funcao</th><th>Conectivos</th></tr></thead>
+        <tbody>
+          <tr><td>Adicao</td><td>e, tambem, alem disso, ainda</td></tr>
+          <tr><td>Oposicao</td><td>mas, porem, entretanto, no entanto</td></tr>
+          <tr><td>Causa</td><td>porque, pois, ja que, uma vez que</td></tr>
+          <tr><td>Conclusao</td><td>portanto, logo, assim, dessa forma</td></tr>
+          <tr><td>Tempo</td><td>quando, enquanto, depois, antes, em seguida</td></tr>
+        </tbody>
+      </table>
+      <div class="example-block">
+        <div class="example-title">Exemplo com coesao:</div>
+        <p style="font-size:13px;color:#475569;line-height:1.7">"O concreto foi lancado. <strong>Em seguida</strong>, a equipe fez o nivelamento. <strong>Por fim</strong>, cobriu com lona para cura."</p>
+      </div>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+Coesao+Textual:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="com-principios">
+    <div class="card">
+      <div class="card-title">⚖️ Principios da Coerencia e Coesao</div>
+      <table>
+        <thead><tr><th>Principio</th><th>O que significa</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Nao contradicao</strong></td><td>Um texto nao pode afirmar e negar a mesma coisa</td></tr>
+          <tr><td><strong>Nao tautologia</strong></td><td>Nao repetir a mesma ideia com palavras diferentes sem acrescentar nada</td></tr>
+          <tr><td><strong>Relevancia</strong></td><td>Cada parte do texto deve contribuir para o tema central</td></tr>
+          <tr><td><strong>Progressao</strong></td><td>O texto deve avancar, trazer informacoes novas a cada paragrafo</td></tr>
+        </tbody>
+      </table>
+      <div class="alert-info">
+        <strong>Na pratica em Engenharia:</strong> Um relatorio tecnico deve ter:<br>
+        1. Introducao — o que foi feito<br>
+        2. Desenvolvimento — como foi feito, com dados<br>
+        3. Conclusao — resultado e recomendacoes<br>
+        Sem desviar do tema em nenhum momento.
+      </div>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+Principios+da+Coerencia+e+Coesao:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ======= ABA 5: ESTATÍSTICA ======= -->
+<div class="tab-content" id="tab-stat">
+<div class="container">
+  <div class="section-title">📊 Estatistica Aplicada</div>
+  <div class="section-sub">Focado em formulas e exemplos numericos passo a passo. Use a calculadora (aba 🧮) nos calculos marcados com 🔢.</div>
+  <div class="sub-nav">
+    <button class="sub-btn active" onclick="showSub('stat','conceitos',this)">Conceitos</button>
+    <button class="sub-btn" onclick="showSub('stat','freq',this)">Distribuicao</button>
+    <button class="sub-btn" onclick="showSub('stat','media',this)">Media/Mediana/Moda</button>
+    <button class="sub-btn" onclick="showSub('stat','variancia',this)">Variancia/DP</button>
+    <button class="sub-btn" onclick="showSub('stat','hist',this)">Histogramas</button>
+    <button class="sub-btn" onclick="showSub('stat','prob',this)">Probabilidade</button>
+  </div>
+
+  <div class="sub-content active" id="stat-conceitos">
+    <div class="card">
+      <div class="card-title">📌 Conceitos Basicos</div>
+      <table>
+        <thead><tr><th>Conceito</th><th>Definicao</th><th>Exemplo na Engenharia</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Estatistica Descritiva</strong></td><td>Organiza e resume dados</td><td>Tabelas de resistencia do concreto</td></tr>
+          <tr><td><strong>Estatistica Inferencial</strong></td><td>Tira conclusoes sobre populacao a partir de amostra</td><td>Testar 10 blocos para estimar qualidade de 1000</td></tr>
+          <tr><td><strong>Populacao</strong></td><td>Conjunto completo</td><td>Todos os funcionarios da obra</td></tr>
+          <tr><td><strong>Amostra</strong></td><td>Parte da populacao</td><td>10 funcionarios escolhidos</td></tr>
+          <tr><td><strong>Variavel discreta</strong></td><td>Valores inteiros</td><td>Numero de faltas: 0, 1, 2...</td></tr>
+          <tr><td><strong>Variavel continua</strong></td><td>Qualquer valor numerico</td><td>Peso: 68,5 kg; Temperatura: 23,7 C</td></tr>
+          <tr><td><strong>Variavel qualitativa</strong></td><td>Categoria, nao numero</td><td>Tipo de material, cor do cimento</td></tr>
+        </tbody>
+      </table>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+Conceitos+Basicos+de+Estatistica:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="stat-freq">
+    <div class="card">
+      <div class="card-title">📋 Distribuicao de Frequencias</div>
+      <table>
+        <thead><tr><th>Simbolo</th><th>Nome</th><th>Como calcular</th></tr></thead>
+        <tbody>
+          <tr><td><span class="formula">fi</span></td><td>Frequencia absoluta</td><td>Quantas vezes o valor aparece</td></tr>
+          <tr><td><span class="formula">fri</span></td><td>Frequencia relativa</td><td>fi ÷ n</td></tr>
+          <tr><td><span class="formula">%</span></td><td>Frequencia percentual</td><td>fri × 100</td></tr>
+          <tr><td><span class="formula">Fi</span></td><td>Frequencia acumulada</td><td>Soma das fi ate aquele ponto</td></tr>
+        </tbody>
+      </table>
+      <div class="card-title" style="font-size:14px;margin-top:16px">Exemplo — Resistencia do Concreto (MPa):</div>
+      <table>
+        <thead><tr><th>Valor</th><th>fi</th><th>fri</th><th>%</th><th>Fi</th></tr></thead>
+        <tbody>
+          <tr><td>25 MPa</td><td>4</td><td>0,20</td><td>20%</td><td>4</td></tr>
+          <tr><td>30 MPa</td><td>6</td><td>0,30</td><td>30%</td><td>10</td></tr>
+          <tr><td>35 MPa</td><td>7</td><td>0,35</td><td>35%</td><td>17</td></tr>
+          <tr><td>40 MPa</td><td>3</td><td>0,15</td><td>15%</td><td>20</td></tr>
+          <tr><td><strong>Total</strong></td><td><strong>20</strong></td><td><strong>1,00</strong></td><td><strong>100%</strong></td><td>--</td></tr>
+        </tbody>
+      </table>
+      <div class="example-block">
+        <div class="example-title">Passo a passo:</div>
+        <div class="step-calc"><span class="sc-label">1. Liste os valores unicos</span><span class="sc-val">25, 30, 35, 40</span></div>
+        <div class="step-calc"><span class="sc-label">2. Conte quantas vezes cada aparece</span><span class="sc-val">fi = 4, 6, 7, 3</span></div>
+        <div class="step-calc"><span class="sc-label">3. Divida pelo total (n=20) para fri</span><span class="sc-val">4/20 = 0,20</span></div>
+        <div class="step-calc"><span class="sc-label">4. Multiplique por 100 para %</span><span class="sc-val">0,20 × 100 = 20%</span></div>
+        <div class="step-calc"><span class="sc-label">5. Some acumulando para Fi</span><span class="sc-val">4 → 10 → 17 → 20</span></div>
+      </div>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+Distribuicao+de+Frequencias:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="stat-media">
+    <div class="card">
+      <div class="card-title">🔢 Media, Mediana e Moda</div>
+      <div class="alert-info">Marque 🔢 — use a calculadora para todos os calculos desta secao.</div>
+
+      <div class="card-title" style="font-size:15px;margin-top:16px">MEDIA (x̄)</div>
+      <div class="formula-block">x̄ = Σxi / n &nbsp;&nbsp; (soma de todos ÷ quantidade)</div>
+      <div class="example-block">
+        <div class="example-title">Alturas (m): 1,70; 1,65; 1,80; 1,75; 1,68</div>
+        <div class="step-calc"><span class="sc-label">Soma todos</span><span class="sc-val">1,70+1,65+1,80+1,75+1,68 = 8,58</span></div>
+        <div class="step-calc"><span class="sc-label">Divida por n=5</span><span class="sc-val">8,58 ÷ 5 = <strong>1,716 m</strong></span></div>
+      </div>
+
+      <div class="card-title" style="font-size:15px;margin-top:20px">MEDIANA (Md)</div>
+      <p style="font-size:14px;color:var(--text-2);margin-bottom:10px">Valor do meio apos ordenar os dados em ordem crescente.</p>
+      <table>
+        <thead><tr><th>Caso</th><th>Como calcular</th><th>Exemplo</th></tr></thead>
+        <tbody>
+          <tr><td>n impar (5)</td><td>Valor central</td><td>1,65; 1,68; <strong>1,70</strong>; 1,75; 1,80 → Md = 1,70</td></tr>
+          <tr><td>n par (6)</td><td>Media dos dois centrais</td><td>(1,70+1,75) ÷ 2 = <strong>1,725</strong></td></tr>
+        </tbody>
+      </table>
+
+      <div class="card-title" style="font-size:15px;margin-top:20px">MODA (Mo)</div>
+      <p style="font-size:14px;color:var(--text-2);margin-bottom:10px">Valor que aparece mais vezes nos dados.</p>
+      <div class="example-block">
+        <div class="step-calc"><span class="sc-label">Dados: 20, 20, 25, 30, 20, 25</span><span class="sc-val">Mo = <strong>20</strong> (aparece 3 vezes)</span></div>
+        <div class="step-calc"><span class="sc-label">Bimodal (2 modas)</span><span class="sc-val">Dois valores com mesma frequencia maxima</span></div>
+        <div class="step-calc"><span class="sc-label">Sem moda</span><span class="sc-val">Todos aparecem igual numero de vezes</span></div>
+      </div>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+Media+Mediana+Moda+Estatistica:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="stat-variancia">
+    <div class="card">
+      <div class="card-title">📐 Variancia e Desvio Padrao 🔢</div>
+      <div class="formula-block">Variancia (s²) = Σ(xi - x̄)² / (n−1)</div>
+      <div class="formula-block">Desvio Padrao (s) = √s²</div>
+      <div class="example-block">
+        <div class="example-title">Exemplo: resistencia do concreto (MPa): 28, 30, 32, 25, 30</div>
+        <div class="step-calc"><span class="sc-label">1. Calcule a media</span><span class="sc-val">(28+30+32+25+30)/5 = 145/5 = <strong>29 MPa</strong></span></div>
+        <div class="step-calc"><span class="sc-label">2. (28-29)² = (-1)²</span><span class="sc-val">= 1</span></div>
+        <div class="step-calc"><span class="sc-label">2. (30-29)² = (1)²</span><span class="sc-val">= 1</span></div>
+        <div class="step-calc"><span class="sc-label">2. (32-29)² = (3)²</span><span class="sc-val">= 9</span></div>
+        <div class="step-calc"><span class="sc-label">2. (25-29)² = (-4)²</span><span class="sc-val">= 16</span></div>
+        <div class="step-calc"><span class="sc-label">2. (30-29)² = (1)²</span><span class="sc-val">= 1</span></div>
+        <div class="step-calc"><span class="sc-label">3. Soma dos quadrados</span><span class="sc-val">1+1+9+16+1 = 28</span></div>
+        <div class="step-calc"><span class="sc-label">4. Divida por (n-1)=4</span><span class="sc-val">28/4 = <strong>7</strong> (variancia)</span></div>
+        <div class="step-calc"><span class="sc-label">5. Raiz quadrada de 7</span><span class="sc-val">√7 ≈ <strong>2,65 MPa</strong> (desvio padrao)</span></div>
+      </div>
+      <div class="alert-info">🔢 Use a calculadora cientifica para as potencias (x²) e raiz quadrada (√).</div>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+Variancia+e+Desvio+Padrao:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="stat-hist">
+    <div class="card">
+      <div class="card-title">📊 Histogramas 🔢</div>
+      <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:14px">Grafico de barras para variaveis continuas, sem espaco entre as barras. Eixo X: classes (intervalos). Eixo Y: frequencia.</p>
+      <div class="card-title" style="font-size:14px">Como construir:</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body">Defina o numero de classes: <span class="formula">k ≈ √n</span> (raiz de n arredondada) 🔢</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body">Calcule a amplitude total: <span class="formula">R = maior valor - menor valor</span></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body">Calcule o intervalo de classe: <span class="formula">h = R / k</span> 🔢</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body">Monte a tabela de frequencias por classe</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-body">Desenhe as barras sem espaco entre elas</div></div>
+      </div>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+Histogramas+em+Estatistica:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="stat-prob">
+    <div class="card">
+      <div class="card-title">🎲 Probabilidade Basica 🔢</div>
+      <div class="formula-block">P(A) = casos favoraveis / casos possiveis</div>
+      <div class="example-block">
+        <div class="example-title">Exemplo: 20 pecas, 3 com defeito</div>
+        <div class="step-calc"><span class="sc-label">P(defeito)</span><span class="sc-val">3/20 = 0,15 = <strong>15%</strong></span></div>
+        <div class="step-calc"><span class="sc-label">P(sem defeito) = 1 - 0,15</span><span class="sc-val"><strong>85%</strong> (complementar)</span></div>
+      </div>
+      <table>
+        <thead><tr><th>Regra</th><th>Formula</th><th>Quando usar</th></tr></thead>
+        <tbody>
+          <tr><td>Complementar</td><td>P(nao A) = 1 - P(A)</td><td>Para calcular o oposto</td></tr>
+          <tr><td>Adicao (exclusivos)</td><td>P(A ou B) = P(A) + P(B)</td><td>Eventos que nao ocorrem juntos</td></tr>
+          <tr><td>Multiplicacao (independentes)</td><td>P(A e B) = P(A) × P(B)</td><td>Eventos independentes entre si</td></tr>
+        </tbody>
+      </table>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+Probabilidade+Basica+Estatistica:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ======= ABA 6: PRÁTICAS PROFISSIONAIS ======= -->
+<div class="tab-content" id="tab-prat">
+<div class="container">
+  <div class="section-title">🏗️ Praticas Profissionais na Engenharia</div>
+  <div class="section-sub">Etica, regulamentacao, ART e responsabilidade tecnica</div>
+  <div class="sub-nav">
+    <button class="sub-btn active" onclick="showSub('prat','etica',this)">Etica Profissional</button>
+    <button class="sub-btn" onclick="showSub('prat','crea',this)">CREA e Regulamentacao</button>
+    <button class="sub-btn" onclick="showSub('prat','art',this)">ART</button>
+    <button class="sub-btn" onclick="showSub('prat','projeto',this)">Pre Projeto</button>
+  </div>
+
+  <div class="sub-content active" id="prat-etica">
+    <div class="card">
+      <div class="card-title">⚖️ Etica Profissional</div>
+      <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:14px">O Codigo de Etica do Engenheiro estabelece deveres e proibicoes para o exercicio da profissao.</p>
+      <table>
+        <thead><tr><th>Principio</th><th>Descricao</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Integridade</strong></td><td>Agir com honestidade em todas as situacoes profissionais</td></tr>
+          <tr><td><strong>Competencia</strong></td><td>Executar apenas o que tem qualificacao tecnica para fazer</td></tr>
+          <tr><td><strong>Responsabilidade</strong></td><td>Responder legal e tecnicamente pelo que assina</td></tr>
+          <tr><td><strong>Respeito</strong></td><td>Respeitar clientes, colegas e a sociedade</td></tr>
+        </tbody>
+      </table>
+      <div class="card-title" style="font-size:14px;margin-top:16px">Situacoes praticas:</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+        <div class="alert-box alert-warn">Nunca assinar projeto que nao elaborou</div>
+        <div class="alert-box alert-warn">Nunca executar obra sem projeto aprovado</div>
+        <div class="alert-box alert-warn">Denunciar irregularidades que ponham vidas em risco</div>
+        <div class="alert-box alert-info">Manter sigilo sobre informacoes confidenciais do cliente</div>
+      </div>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+Etica+Profissional+na+Engenharia:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="prat-crea">
+    <div class="card">
+      <div class="card-title">🏛️ CREA e Regulamentacao</div>
+      <table>
+        <thead><tr><th>Orgao</th><th>Funcao</th></tr></thead>
+        <tbody>
+          <tr><td><strong>CREA</strong></td><td>Conselho Regional de Engenharia e Agronomia — registro e fiscalizacao regional</td></tr>
+          <tr><td><strong>CFEa</strong></td><td>Conselho Federal — nivel nacional, define normas gerais</td></tr>
+        </tbody>
+      </table>
+      <div class="card-title" style="font-size:14px;margin-top:16px">Areas de atuacao do Engenheiro Civil:</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0">
+        <span class="pill pill-blue">Edificacoes</span>
+        <span class="pill pill-blue">Pontes</span>
+        <span class="pill pill-blue">Estradas</span>
+        <span class="pill pill-blue">Saneamento</span>
+        <span class="pill pill-blue">Fundacoes</span>
+      </div>
+      <div class="alert-box alert-warn">Sem registro no CREA: exercicio ilegal da profissao (crime previsto em lei).</div>
+      <div class="card-title" style="font-size:14px;margin-top:16px">Processo de habilitacao:</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0;font-size:13px;color:var(--text-2)">
+        <span class="pill pill-blue">Formatura</span>→<span class="pill pill-blue">Colacao de grau</span>→<span class="pill pill-blue">Registro CREA</span>→<span class="pill pill-blue">Anuidade</span>→<span class="pill pill-green">Habilitado!</span>
+      </div>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+CREA+e+Regulamentacao+Profissional:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="prat-art">
+    <div class="card">
+      <div class="card-title">📄 ART — Anotacao de Responsabilidade Tecnica</div>
+      <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:14px">Documento que registra o engenheiro responsavel por determinada obra ou servico. Emitida pelo proprio profissional no portal do CREA.</p>
+      <table>
+        <thead><tr><th>Item</th><th>Detalhe</th></tr></thead>
+        <tbody>
+          <tr><td><strong>O que gera</strong></td><td>Responsabilidade tecnica e legal pelo trabalho executado</td></tr>
+          <tr><td><strong>Quando emitir</strong></td><td>ANTES de iniciar a obra ou servico</td></tr>
+          <tr><td><strong>Quem precisa</strong></td><td>Todo engenheiro que executa, projeta, fiscaliza ou emite laudos</td></tr>
+          <tr><td><strong>Sem ART</strong></td><td>Obra irregular — profissional pode ser autuado e multado</td></tr>
+          <tr><td><strong>Custo</strong></td><td>Tabelado pelo CREA (varia por estado e valor da obra)</td></tr>
+        </tbody>
+      </table>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+ART+Anotacao+de+Responsabilidade+Tecnica:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="prat-projeto">
+    <div class="card">
+      <div class="card-title">✅ Pre Projeto — Atividade Entregue</div>
+      <div class="alert-box alert-green">✅ Entregue com sucesso! Nota: 9/10</div>
+      <table>
+        <thead><tr><th>Item</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Prazo original</td><td>10/06/2026 as 22:30</td></tr>
+          <tr><td>Tentativas</td><td>1 de 6 usadas</td></tr>
+          <tr><td>Nota obtida</td><td><strong>9/10</strong></td></tr>
+          <tr><td>Status do modulo</td><td><span class="pill pill-green">Completo</span></td></tr>
+        </tbody>
+      </table>
+      <div class="alert-info">Este modulo ja esta completo. Foque nas revisoes gerais das outras materias para as provas finais de 30/junho.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ======= ABA 7: PROGRAMAÇÃO ======= -->
+<div class="tab-content" id="tab-prog">
+<div class="container">
+  <div class="section-title">🐍 Programacao Aplicada — Python</div>
+  <div class="section-sub">Python para automacao e calculo em Engenharia Civil. Do basico ao pratico.</div>
+  <div class="sub-nav">
+    <button class="sub-btn active" onclick="showSub('prog','intro',this)">Introducao</button>
+    <button class="sub-btn" onclick="showSub('prog','tipos',this)">Tipos de Dados</button>
+    <button class="sub-btn" onclick="showSub('prog','variaveis',this)">Variaveis</button>
+    <button class="sub-btn" onclick="showSub('prog','cond',this)">Condicionais</button>
+    <button class="sub-btn" onclick="showSub('prog','loops',this)">Loops</button>
+    <button class="sub-btn" onclick="showSub('prog','exercicios',this)">Exercicios</button>
+  </div>
+
+  <div class="sub-content active" id="prog-intro">
+    <div class="card">
+      <div class="card-title">🐍 Introducao ao Python</div>
+      <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:14px">Python e uma linguagem de programacao de alto nivel, simples e muito usada em IA, dados e automacao. Na Engenharia Civil: calculos estruturais, analise de dados de obras, automacao de planilhas.</p>
+      <div class="card-title" style="font-size:14px">Como executar Python:</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 16px">
+        <span class="pill pill-blue">python.org → instale o IDLE</span>
+        <span class="pill pill-green">replit.com (online, sem instalar)</span>
+        <span class="pill pill-blue">colab.research.google.com (online)</span>
+      </div>
+      <div class="card-title" style="font-size:14px">Primeiro programa:</div>
+      <pre><span class="fn">print</span>(<span class="st">"Ola, Engenharia Civil!"</span>)</pre>
+      <div class="alert-info">Python e case-sensitive: <code class="inline">Print</code> e diferente de <code class="inline">print</code>. Cuidado com maiusculas e minusculas.</div>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+Introducao+ao+Python:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="prog-tipos">
+    <div class="card">
+      <div class="card-title">🔤 Tipos de Dados</div>
+      <table>
+        <thead><tr><th>Tipo</th><th>Nome Python</th><th>Exemplo</th></tr></thead>
+        <tbody>
+          <tr><td>Inteiro</td><td><code class="inline">int</code></td><td>5, -3, 100</td></tr>
+          <tr><td>Decimal</td><td><code class="inline">float</code></td><td>3.14, -2.5, 9.81</td></tr>
+          <tr><td>Texto</td><td><code class="inline">str</code></td><td>"concreto", 'viga'</td></tr>
+          <tr><td>Logico</td><td><code class="inline">bool</code></td><td>True, False</td></tr>
+        </tbody>
+      </table>
+<pre><span class="cm"># Exemplos de variaveis</span>
+idade = <span class="nm">38</span>          <span class="cm"># int</span>
+peso = <span class="nm">85.5</span>         <span class="cm"># float</span>
+nome = <span class="st">"Julia"</span>      <span class="cm"># str</span>
+estudando = <span class="kw">True</span>    <span class="cm"># bool</span>
+
+<span class="cm"># Verificar o tipo:</span>
+<span class="fn">type</span>(idade)   <span class="cm"># retorna &lt;class 'int'&gt;</span>
+
+<span class="cm"># Conversao entre tipos:</span>
+<span class="fn">int</span>(<span class="st">"5"</span>)     <span class="cm"># "5" → 5</span>
+<span class="fn">float</span>(<span class="nm">5</span>)     <span class="cm"># 5 → 5.0</span>
+<span class="fn">str</span>(<span class="nm">38</span>)      <span class="cm"># 38 → "38"</span></pre>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+Tipos+de+Dados+em+Python:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="prog-variaveis">
+    <div class="card">
+      <div class="card-title">📦 Variaveis e Expressoes</div>
+      <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:14px">Variavel: nome que armazena um valor na memoria. Regras: letras, numeros (nao comeca), underline. Sem espacos, sem acentos. O sinal <code class="inline">=</code> e atribuicao, nao comparacao.</p>
+<pre><span class="cm"># Variaveis para engenharia</span>
+comprimento = <span class="nm">10.5</span>    <span class="cm"># metros</span>
+largura = <span class="nm">3.2</span>         <span class="cm"># metros</span>
+altura = <span class="nm">2.8</span>          <span class="cm"># metros</span>
+
+<span class="cm"># Calculo de volume</span>
+volume = comprimento * largura * altura
+<span class="fn">print</span>(<span class="st">f"Volume: </span>{volume}<span class="st"> m3"</span>)   <span class="cm"># Volume: 94.08 m3</span></pre>
+      <div class="card-title" style="font-size:14px;margin-top:16px">Operadores aritmeticos:</div>
+      <table>
+        <thead><tr><th>Operador</th><th>Funcao</th><th>Exemplo</th><th>Resultado</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inline">+</code></td><td>Adicao</td><td>5 + 3</td><td>8</td></tr>
+          <tr><td><code class="inline">-</code></td><td>Subtracao</td><td>10 - 4</td><td>6</td></tr>
+          <tr><td><code class="inline">*</code></td><td>Multiplicacao</td><td>3 * 4</td><td>12</td></tr>
+          <tr><td><code class="inline">/</code></td><td>Divisao (float)</td><td>7 / 2</td><td>3.5</td></tr>
+          <tr><td><code class="inline">//</code></td><td>Divisao inteira</td><td>7 // 2</td><td>3</td></tr>
+          <tr><td><code class="inline">%</code></td><td>Modulo (resto)</td><td>7 % 2</td><td>1</td></tr>
+          <tr><td><code class="inline">**</code></td><td>Potencia</td><td>2 ** 3</td><td>8</td></tr>
+        </tbody>
+      </table>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+Variaveis+e+Expressoes+em+Python:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="prog-cond">
+    <div class="card">
+      <div class="card-title">🔀 Condicionais — if / elif / else</div>
+      <div class="alert-info">ATENCAO: Python usa <strong>indentacao</strong> (espacos) para definir blocos — e obrigatorio. Use 4 espacos ou Tab.</div>
+<pre><span class="cm"># Verificar resistencia do concreto</span>
+resistencia = <span class="nm">25</span>  <span class="cm"># MPa</span>
+
+<span class="kw">if</span> resistencia >= <span class="nm">30</span>:
+    <span class="fn">print</span>(<span class="st">"Concreto APROVADO"</span>)
+<span class="kw">elif</span> resistencia >= <span class="nm">20</span>:
+    <span class="fn">print</span>(<span class="st">"Concreto ATENCAO — no limite minimo"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"Concreto REPROVADO"</span>)
+
+<span class="cm"># Saida: Concreto ATENCAO — no limite minimo</span></pre>
+<pre><span class="cm"># Nota do aluno</span>
+nota = <span class="nm">7.5</span>
+
+<span class="kw">if</span> nota >= <span class="nm">7</span>:
+    <span class="fn">print</span>(<span class="st">"Aprovado!"</span>)
+<span class="kw">elif</span> nota >= <span class="nm">5</span>:
+    <span class="fn">print</span>(<span class="st">"Recuperacao"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"Reprovado"</span>)</pre>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+Condicionais+if+elif+else+Python:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="prog-loops">
+    <div class="card">
+      <div class="card-title">🔁 Loops — while e for</div>
+      <div class="card-title" style="font-size:14px">WHILE — enquanto condicao for verdadeira:</div>
+<pre>contador = <span class="nm">1</span>
+<span class="kw">while</span> contador <= <span class="nm">5</span>:
+    <span class="fn">print</span>(<span class="st">f"Dia {contador} de estudo"</span>)
+    contador += <span class="nm">1</span>
+
+<span class="cm"># Saida:</span>
+<span class="cm"># Dia 1 de estudo</span>
+<span class="cm"># Dia 2 de estudo</span>
+<span class="cm"># ... ate Dia 5 de estudo</span></pre>
+      <div class="card-title" style="font-size:14px;margin-top:16px">FOR — para cada item em uma sequencia:</div>
+<pre>materias = [<span class="st">"CAD"</span>, <span class="st">"Comunicacao"</span>, <span class="st">"Estatistica"</span>, <span class="st">"Praticas"</span>, <span class="st">"Programacao"</span>]
+<span class="kw">for</span> materia <span class="kw">in</span> materias:
+    <span class="fn">print</span>(<span class="st">f"Estudar: {materia}"</span>)</pre>
+      <div class="card-title" style="font-size:14px;margin-top:16px">RANGE — gera sequencia de numeros:</div>
+<pre><span class="fn">range</span>(<span class="nm">5</span>)          <span class="cm"># 0, 1, 2, 3, 4</span>
+<span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">6</span>)       <span class="cm"># 1, 2, 3, 4, 5</span>
+<span class="fn">range</span>(<span class="nm">0</span>, <span class="nm">10</span>, <span class="nm">2</span>)   <span class="cm"># 0, 2, 4, 6, 8 (de 2 em 2)</span>
+
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">31</span>):
+    <span class="fn">print</span>(<span class="st">f"Dia {i} de junho"</span>)</pre>
+      <div class="card-title" style="font-size:14px;margin-top:16px">BREAK e CONTINUE:</div>
+<pre><span class="cm"># break: para o loop completamente</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">10</span>):
+    <span class="kw">if</span> i == <span class="nm">5</span>:
+        <span class="kw">break</span>
+    <span class="fn">print</span>(i)      <span class="cm"># imprime 0, 1, 2, 3, 4</span>
+
+<span class="cm"># continue: pula para a proxima iteracao</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">10</span>):
+    <span class="kw">if</span> i % <span class="nm">2</span> == <span class="nm">0</span>:
+        <span class="kw">continue</span>   <span class="cm"># pula pares</span>
+    <span class="fn">print</span>(i)      <span class="cm"># imprime so impares: 1, 3, 5, 7, 9</span></pre>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Tenho+uma+duvida+sobre+Loops+while+for+Python:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+
+  <div class="sub-content" id="prog-exercicios">
+    <div class="card">
+      <div class="card-title">📝 Exercicios Praticos</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body">Calcule a area de uma laje retangular (comprimento x largura) para <code class="inline">comprimento=8</code> e <code class="inline">largura=5</code></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body">Crie uma lista com as 5 materias e imprima cada uma com <code class="inline">for</code></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body">Use <code class="inline">while</code> para contar quantos dias faltam para 30/06 a partir de hoje</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body">Verifique com <code class="inline">if</code> se uma nota e "Aprovado", "Recuperacao" ou "Reprovado"</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-body">Use <code class="inline">range()</code> para imprimir os multiplos de 5 de 0 a 100</div></div>
+      </div>
+<pre><span class="cm"># Exercicio 1 — area da laje</span>
+comprimento = <span class="nm">8</span>
+largura = <span class="nm">5</span>
+area = comprimento * largura
+<span class="fn">print</span>(<span class="st">f"Area da laje: {area} m2"</span>)   <span class="cm"># 40 m2</span>
+
+<span class="cm"># Exercicio 5 — multiplos de 5</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">0</span>, <span class="nm">101</span>, <span class="nm">5</span>):
+    <span class="fn">print</span>(i)</pre>
+      <a class="ask-btn" href="https://claude.ai/new?q=Sou+estudante+de+Engenharia+Civil+na+FMU.+Preciso+de+ajuda+com+exercicios+de+Python+para+Engenharia+Civil:+" target="_blank">💬 Tirar duvida com Claude</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<button class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ===== TAB NAVIGATION =====
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function showSub(tab, id, btn) {
+  const prefix = tab + '-';
+  document.querySelectorAll('[id^="' + prefix + '"]').forEach(el => {
+    if (el.classList.contains('sub-content')) el.classList.remove('active');
+  });
+  btn.closest('.tab-content').querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active'));
+  const target = document.getElementById(prefix + id);
+  if (target) target.classList.add('active');
+  btn.classList.add('active');
+}
+
+// ===== CALENDAR =====
+const schedule = {
+  2:  {topic:'💬 Comunicacao — Genero e Tecnologia', badges:[]},
+  3:  {topic:'💬 Comunicacao — Coerencia Textual', badges:[]},
+  4:  {topic:'💬 Comunicacao — Coesao Textual', badges:[]},
+  5:  {topic:'💬 Comunicacao — Principios da Coerencia e Coesao', badges:['check']},
+  6:  {topic:'📐 CAD — Vistas Ortograficas', badges:[]},
+  7:  {topic:'📐 CAD — Diedros e Sistema de Projecao', badges:[]},
+  8:  {topic:'📐 CAD — NBR 10.067/1995', badges:['del'], delivery:'ENTREGA: Atividades Extensionistas Curriculares Modulo I'},
+  9:  {topic:'📐 CAD — Tipos de Linhas', badges:[]},
+  10: {topic:'📐 CAD — Cortes', badges:['del'], delivery:'ENTREGA: Praticas Profissionais Pre Projeto (22:30)'},
+  11: {topic:'📐 CAD — Hachuras e Secoes', badges:['check']},
+  12: {topic:'📐 CAD — AutoCAD Instalacao e Pratica 🔧', badges:[]},
+  13: {topic:'📊 Estatistica — Conceitos Basicos e Distribuicao', badges:[]},
+  14: {topic:'📊 Estatistica — Media, Mediana, Moda', badges:['calc']},
+  15: {topic:'📊 Estatistica — Variancia e Desvio Padrao', badges:['calc']},
+  16: {topic:'📊 Estatistica — Histogramas e Graficos', badges:['calc']},
+  17: {topic:'📊 Estatistica — Probabilidade Basica', badges:['calc','check']},
+  18: {topic:'🏗️ Praticas — Etica e Responsabilidade Tecnica', badges:[]},
+  19: {topic:'🏗️ Praticas — CREA e Regulamentacao Profissional', badges:['check']},
+  20: {topic:'🐍 Programacao — Python: Tipos de Dados', badges:[]},
+  21: {topic:'🐍 Programacao — Python: Variaveis e Expressoes', badges:[]},
+  22: {topic:'🐍 Programacao — Python: Condicionais if/elif/else', badges:[]},
+  23: {topic:'🐍 Programacao — Python: Loops while', badges:[]},
+  24: {topic:'🐍 Programacao — Python: Loops for e range()', badges:['check']},
+  25: {topic:'🔄 Revisao — Comunicacao + CAD', badges:['rev']},
+  26: {topic:'🔄 Revisao — Estatistica', badges:['calc','rev']},
+  27: {topic:'🔄 Revisao — Programacao', badges:['rev']},
+  28: {topic:'🔄 Revisao — Praticas Profissionais', badges:['rev']},
+  29: {topic:'🔄 Revisao Geral — Todas as Materias', badges:['rev']},
+  30: {topic:'🚨 PROVAS E ENTREGAS FINAIS — TODAS AS MATERIAS', badges:['del'], delivery:'PROVAS E ENTREGAS FINAIS'}
+};
+
+const dows = ['Dom','Seg','Ter','Qua','Qui','Sex','Sab'];
+const today = new Date();
+const todayDay = (today.getMonth() === 5 && today.getFullYear() === 2026) ? today.getDate() : -1;
+
+function buildCalendar() {
+  const grid = document.getElementById('calGrid');
+  // June 1, 2026 is a Monday (index 1)
+  const firstDow = 1;
+  // Add empty cells for days before June 2 (we start at 2)
+  // June starts Mon, so first cell = Mon = index 1. We skip Sun (0).
+  // Add 1 empty cell for Sunday
+  let html = '<div class="cal-day" style="visibility:hidden;min-height:60px"></div>';
+  // Day 1 is Monday so no empty needed before Mon
+  // Actually June 1 2026 = Monday. col 0=Sun, col 1=Mon. So 1 empty for Sun.
+  for (let d = 2; d <= 30; d++) {
+    const info = schedule[d] || {topic:'', badges:[]};
+    const dow = dows[(firstDow + d - 1) % 7];
+    let cls = 'cal-day';
+    if (d === todayDay) cls += ' today';
+    if (info.badges.includes('del')) cls += ' has-delivery';
+    if (info.badges.includes('rev')) cls += ' has-review';
+    let badgesHtml = '';
+    if (info.badges.includes('calc')) badgesHtml += '<span class="cal-badge badge-calc">🔢</span>';
+    if (info.badges.includes('check')) badgesHtml += '<span class="cal-badge badge-check">✅</span>';
+    if (info.badges.includes('del')) badgesHtml += '<span class="cal-badge badge-del">⚠️</span>';
+    if (info.badges.includes('rev')) badgesHtml += '<span class="cal-badge badge-rev">🔄</span>';
+    html += `<div class="${cls}">
+      <div class="cal-num">${d}</div>
+      <div class="cal-topic" style="font-size:9px;color:#64748b;margin-bottom:2px">${dow}</div>
+      <div class="cal-topic">${info.topic}</div>
+      <div class="cal-badges">${badgesHtml}</div>
+    </div>`;
+  }
+  grid.innerHTML = html;
+}
+buildCalendar();
+
+// ===== ALERTS =====
+function checkAlerts() {
+  if (today.getFullYear() !== 2026 || today.getMonth() !== 5) return;
+  const d = today.getDate();
+  const dangerBanner = document.getElementById('bannerDanger');
+  const warnBanner = document.getElementById('bannerWarn');
+  if (d === 8) {
+    document.getElementById('bannerDangerText').textContent = '🚨 HOJE E DIA DE ENTREGA: Atividades Extensionistas Curriculares Modulo I — entregue agora!';
+    dangerBanner.style.display = 'flex';
+  } else if (d === 10) {
+    document.getElementById('bannerDangerText').textContent = '🚨 HOJE E DIA DE ENTREGA: Praticas Profissionais Pre Projeto — prazo ate 22:30!';
+    dangerBanner.style.display = 'flex';
+  } else if (d === 30) {
+    document.getElementById('bannerDangerText').textContent = '🚨 HOJE SAO AS PROVAS E ENTREGAS FINAIS DE TODAS AS MATERIAS! Boa sorte!';
+    dangerBanner.style.display = 'flex';
+  } else if (d === 5) {
+    document.getElementById('bannerWarnText').textContent = '⚠️ Daqui 3 dias (08/jun): ENTREGA das Atividades Extensionistas Curriculares Modulo I!';
+    warnBanner.style.display = 'flex';
+  } else if (d === 7) {
+    document.getElementById('bannerWarnText').textContent = '⚠️ Daqui 3 dias (10/jun): ENTREGA Praticas Profissionais Pre Projeto (22:30)!';
+    warnBanner.style.display = 'flex';
+  } else if (d === 27) {
+    document.getElementById('bannerWarnText').textContent = '⚠️ Daqui 3 dias (30/jun): PROVAS E ENTREGAS FINAIS DE TODAS AS MATERIAS!';
+    warnBanner.style.display = 'flex';
+  }
+}
+checkAlerts();
+
+// ===== NOTIFICATIONS =====
+window.addEventListener('load', function() {
+  if ('Notification' in window && Notification.permission === 'default') {
+    setTimeout(function() {
+      Notification.requestPermission().then(function(perm) {
+        if (perm === 'granted' && today.getFullYear() === 2026 && today.getMonth() === 5) {
+          const d = today.getDate();
+          if (d === 5) new Notification('⚠️ FMU Alerta', {body:'Daqui 3 dias (08/jun): Entrega Atividades Extensionistas!', icon:''});
+          if (d === 7) new Notification('⚠️ FMU Alerta', {body:'Daqui 3 dias (10/jun): Entrega Praticas Profissionais Pre Projeto!'});
+          if (d === 8) new Notification('🚨 FMU ENTREGA HOJE', {body:'Atividades Extensionistas Curriculares Modulo I — entregue agora!'});
+          if (d === 10) new Notification('🚨 FMU ENTREGA HOJE', {body:'Praticas Profissionais Pre Projeto — prazo ate 22:30!'});
+          if (d === 27) new Notification('⚠️ FMU Alerta', {body:'Daqui 3 dias (30/jun): Provas finais de todas as materias!'});
+          if (d === 30) new Notification('🚨 FMU PROVAS HOJE', {body:'Provas e entregas finais de todas as materias!'});
+        }
+      });
+    }, 2000);
+  }
+});
+
+// ===== CALCULATOR =====
+let calcExpr = '';
+let calcMemo = 0;
+let hasMemo = false;
+
+function updateDisplay() {
+  document.getElementById('calcExpr').textContent = calcExpr;
+  document.getElementById('calcMem').textContent = hasMemo ? 'M: ' + calcMemo : '';
+}
+
+function calcInput(val) {
+  const ops = ['+','-','*','/','**','%'];
+  const lastCh = calcExpr.slice(-1);
+  if (ops.includes(val) && ops.includes(lastCh)) calcExpr = calcExpr.slice(0,-1);
+  calcExpr += val;
+  updateDisplay();
+  tryPreview();
+}
+
+function calcFn(fn) {
+  if (fn === '**2') {
+    calcExpr += '**2';
+  } else {
+    calcExpr += fn;
+  }
+  updateDisplay();
+}
+
+function calcClear() {
+  calcExpr = '';
+  document.getElementById('calcResult').textContent = '0';
+  updateDisplay();
+}
+
+function calcDel() {
+  calcExpr = calcExpr.slice(0,-1);
+  updateDisplay();
+  tryPreview();
+}
+
+function calcNeg() {
+  if (calcExpr === '' || calcExpr === '0') return;
+  if (calcExpr.startsWith('-')) calcExpr = calcExpr.slice(1);
+  else calcExpr = '-' + calcExpr;
+  updateDisplay();
+}
+
+function tryPreview() {
+  try {
+    let expr = calcExpr.replace(/log10\(/g,'Math.log10(');
+    let r = eval(expr);
+    if (typeof r === 'number' && isFinite(r)) {
+      document.getElementById('calcResult').textContent = +r.toFixed(10) + '';
+    }
+  } catch(e) {}
+}
+
+function calcEval() {
+  try {
+    let expr = calcExpr
+      .replace(/log10\(/g,'Math.log10(')
+      .replace(/÷/g,'/')
+      .replace(/×/g,'*')
+      .replace(/−/g,'-');
+    let result = eval(expr);
+    if (typeof result === 'number' && isFinite(result)) {
+      document.getElementById('calcResult').textContent = +result.toFixed(10) + '';
+      calcExpr = String(+result.toFixed(10));
+      document.getElementById('calcExpr').textContent = '';
+    } else {
+      document.getElementById('calcResult').textContent = 'Erro';
+    }
+  } catch(e) {
+    document.getElementById('calcResult').textContent = 'Erro';
+  }
+}
+
+function calcMem(op) {
+  const cur = parseFloat(document.getElementById('calcResult').textContent) || 0;
+  if (op === 'mc') { calcMemo = 0; hasMemo = false; }
+  else if (op === 'mr') { calcExpr = String(calcMemo); tryPreview(); }
+  else if (op === 'm+') { calcMemo += cur; hasMemo = true; }
+  else if (op === 'm-') { calcMemo -= cur; hasMemo = true; }
+  updateDisplay();
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') calcEval();
+  else if (e.key === 'Escape') calcClear();
+  else if (e.key === 'Backspace') calcDel();
+  else if ('0123456789.+-*/()%'.includes(e.key)) calcInput(e.key);
+});
+</script>
+</body>
+</html>
