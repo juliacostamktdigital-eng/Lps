@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -127,6 +127,20 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--g1);color:var(--g
 .tbl td{padding:9px 12px;border-bottom:1px solid var(--g1);color:var(--g9);vertical-align:middle;}
 .tbl tr:last-child td{border:none;}
 .tbl tr:hover td{background:var(--g1);}
+
+/* TASK ITEMS */
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--g1);cursor:pointer;transition:opacity 0.15s;}
+.task-item:last-child{border:none;}
+.task-check{width:18px;height:18px;border-radius:5px;border:2px solid var(--g3);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all 0.18s;font-size:11px;font-weight:900;color:transparent;}
+.task-item.done .task-check{background:var(--green);border-color:var(--green);color:white;}
+.task-item.done .task-label{text-decoration:line-through;color:var(--g4);}
+.task-item:hover .task-check{border-color:var(--g5);}
+.task-label{font-size:13px;color:var(--g7);line-height:1.45;flex:1;user-select:none;}
+.client-col{background:var(--white);border:1px solid var(--g2);border-radius:12px;padding:18px 20px;}
+.client-col-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--g2);}
+.client-col-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.client-col-name{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;}
+.client-col-count{font-size:10px;color:var(--g4);margin-left:auto;font-weight:600;}
 </style>
 </head>
 <body>
@@ -144,7 +158,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--g1);color:var(--g
   </div>
 
   <div class="sb-nav">
-    <button class="nav-btn active" onclick="showSection('overview')">📊 Visao Geral</button>
+    <button class="nav-btn active" data-section="priorities" onclick="showSection('priorities')">✅ Prioridades</button>
+    <button class="nav-btn" data-section="overview" onclick="showSection('overview')">📊 Visao Geral</button>
   </div>
 
   <div class="sb-section">Clientes</div>
@@ -156,8 +171,45 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--g1);color:var(--g
 <!-- MAIN -->
 <main class="main">
 
+  <!-- PRIORIDADES DO DIA -->
+  <section class="section active" id="sec-priorities">
+    <div class="ph">
+      <div>
+        <div class="ph-title">Prioridades do Dia</div>
+        <div class="ph-sub" id="pr-date-sub">—</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span id="pr-done-label" style="font-size:13px;font-weight:700;color:var(--g5);">0/12 feitas</span>
+        <button onclick="resetTasks()" style="padding:7px 13px;background:var(--g1);border:1px solid var(--g2);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;color:var(--g7);">↺ Resetar dia</button>
+      </div>
+    </div>
+
+    <!-- Copy intro -->
+    <div style="background:var(--black);border-radius:14px;padding:22px 28px;margin-bottom:24px;">
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.4px;color:var(--red);margin-bottom:10px;" id="pr-focus-label">Foco do dia</div>
+      <p style="font-size:15px;color:rgba(255,255,255,0.82);line-height:1.7;font-weight:400;margin-bottom:4px;">
+        Uma tarefa por vez. Risca, respira, avança.
+      </p>
+      <p style="font-size:13px;color:rgba(255,255,255,0.38);line-height:1.55;">
+        Cada entrega é o dia se movendo na direção certa.
+      </p>
+      <div style="margin-top:18px;">
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:7px;">
+          <span style="color:rgba(255,255,255,0.3);">Progresso do dia</span>
+          <span id="pr-pct" style="color:white;font-weight:700;">0%</span>
+        </div>
+        <div style="height:6px;background:rgba(255,255,255,0.07);border-radius:99px;overflow:hidden;">
+          <div id="pr-bar" style="height:100%;width:0%;background:var(--red);border-radius:99px;transition:width 0.5s;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid de tarefas por cliente -->
+    <div id="pr-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;"></div>
+  </section>
+
   <!-- OVERVIEW -->
-  <section class="section active" id="sec-overview">
+  <section class="section" id="sec-overview">
     <div class="ph">
       <div>
         <div class="ph-title">Visao Geral</div>
@@ -1405,14 +1457,114 @@ function renderChart(history, metric){
 // ─── NAV ───────────────────────────────────────────────────────────────────
 function showSection(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id==='sec-'+id));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.textContent.includes(id==='overview'?'Geral':'X')));
-  if(id==='overview'){
+  document.querySelectorAll('.nav-btn[data-section]').forEach(b=>b.classList.toggle('active',b.dataset.section===id));
+  if(id==='overview'||id==='priorities'){
     document.querySelectorAll('.client-btn').forEach(b=>b.classList.remove('active'));
   }
 }
 
+// ─── PRIORIDADES DO DIA ────────────────────────────────────────────────────
+const PR_CLIENTS = [
+  { id:'interno', name:'Interno',             color:'#374151', dot:'#9CA3AF' },
+  { id:'vloca',   name:'VLoca',               color:'#1D4ED8', dot:'#3B82F6' },
+  { id:'fce',     name:'FiveCred',            color:'#CC1B2B', dot:'#CC1B2B' },
+  { id:'tawa',    name:'Tawá Veículos',       color:'#15803D', dot:'#22C55E' },
+  { id:'atl',     name:'Atlântica Máquinas',  color:'#7C3AED', dot:'#A78BFA' },
+];
+
+const PR_TASKS = [
+  { id:'p1',  client:'interno', label:'Envio do Atendimento Diário' },
+  { id:'p2',  client:'interno', label:'Solicitar atualização de faturamento/venda por cliente' },
+  { id:'p3',  client:'interno', label:'Enviar mensagem de feriado — bom descanso (quinta é feriado)' },
+  { id:'p4',  client:'interno', label:'Responder clientes nos grupos pela manhã' },
+  { id:'p5',  client:'interno', label:'Ajustar backlog dos designers' },
+  { id:'p6',  client:'vloca',   label:'Responder thread VLoca' },
+  { id:'p7',  client:'vloca',   label:'Programar vídeos VLoca' },
+  { id:'p8',  client:'vloca',   label:'Programar locação de motos VLoca' },
+  { id:'p9',  client:'fce',     label:'Responder thread FiveCred' },
+  { id:'p10', client:'fce',     label:'Ajustar copys de social FiveCred' },
+  { id:'p11', client:'tawa',    label:'Responder Canal de Expansão — Proposta SDR IA Tawá' },
+  { id:'p12', client:'atl',     label:'Ajustar catálogo da Atlântica Máquinas' },
+];
+
+const PR_TODAY = new Date().toISOString().slice(0,10);
+const PR_KEY   = 'pr_tasks_' + PR_TODAY;
+
+function prLoadState(){ const r=localStorage.getItem(PR_KEY); return r?JSON.parse(r):{}; }
+function prSaveState(s){
+  localStorage.setItem(PR_KEY, JSON.stringify(s));
+  Object.keys(localStorage).filter(k=>k.startsWith('pr_tasks_')&&k!==PR_KEY).forEach(k=>localStorage.removeItem(k));
+}
+
+function prUpdateProgress(state){
+  const total=PR_TASKS.length, done=PR_TASKS.filter(t=>state[t.id]).length;
+  const pct=Math.round((done/total)*100);
+  document.getElementById('pr-bar').style.width=pct+'%';
+  document.getElementById('pr-bar').style.background=pct===100?'#15803D':'var(--red)';
+  document.getElementById('pr-pct').textContent=pct+'%';
+  document.getElementById('pr-done-label').textContent=done+'/'+total+' feitas';
+  document.getElementById('pr-done-label').style.color=pct===100?'var(--green)':'var(--g5)';
+}
+
+function prToggle(taskId){
+  const state=prLoadState();
+  state[taskId]=!state[taskId];
+  prSaveState(state);
+  const el=document.getElementById('task-'+taskId);
+  if(el){el.classList.toggle('done',!!state[taskId]);el.querySelector('.task-check').textContent=state[taskId]?'✓':'';}
+  prUpdateProgress(state);
+  // Atualiza contagem no cabeçalho da coluna
+  const t=PR_TASKS.find(t=>t.id===taskId);
+  if(t){ const cl=PR_CLIENTS.find(c=>c.id===t.client); if(cl) refreshColCount(cl.id,state); }
+}
+
+function refreshColCount(clientId, state){
+  const tasks=PR_TASKS.filter(t=>t.client===clientId);
+  const done=tasks.filter(t=>state[t.id]).length;
+  const el=document.getElementById('prcol-count-'+clientId);
+  if(el) el.textContent=done+'/'+tasks.length;
+}
+
+function resetTasks(){
+  localStorage.removeItem(PR_KEY);
+  renderPriorities();
+}
+
+function renderPriorities(){
+  const now=new Date();
+  const sub=document.getElementById('pr-date-sub');
+  if(sub) sub.textContent=now.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+  const fl=document.getElementById('pr-focus-label');
+  if(fl) fl.textContent='Foco · '+now.toLocaleDateString('pt-BR',{day:'2-digit',month:'long'});
+
+  const state=prLoadState();
+  const grid=document.getElementById('pr-grid');
+  if(!grid) return;
+
+  grid.innerHTML=PR_CLIENTS.map(cl=>{
+    const tasks=PR_TASKS.filter(t=>t.client===cl.id);
+    const done=tasks.filter(t=>state[t.id]).length;
+    return `<div class="client-col" style="border-top:3px solid ${cl.dot};">
+      <div class="client-col-head">
+        <div class="client-col-dot" style="background:${cl.dot};"></div>
+        <div class="client-col-name" style="color:${cl.color};">${cl.name}</div>
+        <div class="client-col-count" id="prcol-count-${cl.id}">${done}/${tasks.length}</div>
+      </div>
+      ${tasks.map(t=>`
+        <div id="task-${t.id}" class="task-item${state[t.id]?' done':''}" onclick="prToggle('${t.id}')">
+          <div class="task-check">${state[t.id]?'✓':''}</div>
+          <div class="task-label">${t.label}</div>
+        </div>`).join('')}
+    </div>`;
+  }).join('');
+
+  prUpdateProgress(state);
+}
+
 // ─── INIT ──────────────────────────────────────────────────────────────────
+renderPriorities();
 loadAll();
 </script>
 </body>
 </html>
+
