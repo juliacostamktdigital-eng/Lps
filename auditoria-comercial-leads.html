@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Auditoria Comercial – Leads gerados de campanha</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#0f172a;color:#e2e8f0;line-height:1.6}
+.header{background:linear-gradient(135deg,#0f766e,#0ea5e9);padding:40px;text-align:center}
+.header h1{font-size:1.9rem;font-weight:800;color:#fff}
+.header p{color:#99f6e4;margin-top:6px;font-size:.9rem}
+.container{max-width:1140px;margin:0 auto;padding:24px}
+.section{background:#1e293b;border-radius:12px;padding:22px;margin-bottom:22px;border:1px solid #334155}
+.section h2{font-size:1rem;font-weight:700;color:#5eead4;margin-bottom:14px;text-transform:uppercase;letter-spacing:.06em}
+.section h3{font-size:.9rem;font-weight:600;color:#94a3b8;margin:16px 0 8px;border-top:1px solid #334155;padding-top:10px}
+.note{font-size:.78rem;color:#64748b;margin-bottom:12px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.kpi{background:#0f172a;border-radius:10px;padding:12px;border:1px solid #334155;text-align:center}
+.kpi .val{font-size:1.4rem;font-weight:800;color:#5eead4}
+.kpi .lbl{font-size:.7rem;color:#94a3b8;margin-top:3px}
+.kpi .sub{font-size:.75rem;color:#64748b}
+.kpi.crit .val{color:#f87171}
+.kpi.warn .val{color:#fbbf24}
+.kpi.ok   .val{color:#4ade80}
+table{width:100%;border-collapse:collapse;font-size:.83rem}
+th{background:#334155;color:#94a3b8;padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #1e293b;vertical-align:middle}
+tr:hover td{background:#243044}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.72rem;font-weight:700;white-space:nowrap}
+.b-green{background:#16a34a22;color:#4ade80}
+.b-red{background:#dc262622;color:#f87171}
+.b-yellow{background:#ca8a0422;color:#fbbf24}
+.b-orange{background:#ea580c22;color:#f97316}
+.b-blue{background:#0ea5e922;color:#7dd3fc}
+.b-gray{background:#33415522;color:#94a3b8}
+.b-teal{background:#0f766e22;color:#5eead4}
+.alert{background:#dc262615;border:1px solid #dc2626;border-radius:8px;padding:11px 14px;margin-bottom:9px;font-size:.83rem;line-height:1.6}
+.alert-w{background:#ca8a0415;border:1px solid #ca8a04;border-radius:8px;padding:11px 14px;margin-bottom:9px;font-size:.83rem;line-height:1.6}
+.alert-s{background:#16a34a15;border:1px solid #16a34a;border-radius:8px;padding:11px 14px;margin-bottom:9px;font-size:.83rem;line-height:1.6}
+.rec{background:#0f766e15;border-left:4px solid #0f766e;border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:9px;font-size:.83rem;line-height:1.6}
+.rec strong{color:#5eead4;display:block;margin-bottom:3px;font-size:.87rem}
+.tab-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.tab-grid{grid-template-columns:1fr}}
+.tab-card{background:#0f172a;border-radius:10px;padding:16px;border:1px solid #334155}
+.tab-card h3{font-size:.95rem;font-weight:700;color:#5eead4;margin-bottom:12px;border:none;padding:0}
+.status-bar{display:flex;height:20px;border-radius:6px;overflow:hidden;margin:8px 0}
+.funnel-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #1e293b20;font-size:.82rem}
+.funnel-count{font-weight:700;min-width:40px;text-align:right}
+.funnel-bar-wrap{flex:1;background:#1e293b;border-radius:3px;height:12px}
+.funnel-bar{height:12px;border-radius:3px}
+.footer{text-align:center;color:#475569;font-size:.75rem;padding:24px}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Auditoria Comercial – Leads de Campanha</h1>
+  <p>Planilha: Leads gerados de campanha.xlsx &nbsp;|&nbsp; Gerado em 05/06/2026 16:28</p>
+</div>
+<div class="container">
+
+<!-- Resumo geral -->
+<div class="section">
+  <h2>Resumo Geral – 4 Produtos</h2>
+  <table>
+    <tr>
+      <th>Produto</th><th>Leads</th><th>Período</th>
+      <th>Sem contato</th><th>Em contato</th><th>Sem sucesso/tentativas</th>
+      <th>Convertidos</th><th>Receita</th><th>Conv%</th>
+    </tr>
+    <tr>
+      <td><strong style="color:#6366f1">CGI</strong></td>
+      <td style="text-align:center">142</td>
+      <td style="font-size:.78rem;color:#64748b">– a –</td>
+      <td style="text-align:center;color:#f87171">61</td>
+      <td style="text-align:center;color:#fbbf24">67</td>
+      <td style="text-align:center;color:#f97316">0</td>
+      <td style="text-align:center;color:#4ade80">0</td>
+      <td>–</td>
+      <td style="font-weight:700;color:#f87171">0.0%</td>
+    </tr>
+    <tr>
+      <td><strong style="color:#f59e0b">FGTS</strong></td>
+      <td style="text-align:center">60</td>
+      <td style="font-size:.78rem;color:#64748b">– a –</td>
+      <td style="text-align:center;color:#f87171">3</td>
+      <td style="text-align:center;color:#fbbf24">32</td>
+      <td style="text-align:center;color:#f97316">0</td>
+      <td style="text-align:center;color:#4ade80">0</td>
+      <td>–</td>
+      <td style="font-weight:700;color:#f87171">0.0%</td>
+    </tr>
+    <tr>
+      <td><strong style="color:#10b981">Carta Contemplada</strong></td>
+      <td style="text-align:center">1400</td>
+      <td style="font-size:.78rem;color:#64748b">– a –</td>
+      <td style="text-align:center;color:#f87171">433</td>
+      <td style="text-align:center;color:#fbbf24">200</td>
+      <td style="text-align:center;color:#f97316">359</td>
+      <td style="text-align:center;color:#4ade80">41</td>
+      <td>R$288,345</td>
+      <td style="font-weight:700;color:#fbbf24">2.9%</td>
+    </tr>
+    <tr>
+      <td><strong style="color:#f43f5e">Conta de Luz</strong></td>
+      <td style="text-align:center">66</td>
+      <td style="font-size:.78rem;color:#64748b">– a –</td>
+      <td style="text-align:center;color:#f87171">42</td>
+      <td style="text-align:center;color:#fbbf24">10</td>
+      <td style="text-align:center;color:#f97316">0</td>
+      <td style="text-align:center;color:#4ade80">0</td>
+      <td>–</td>
+      <td style="font-weight:700;color:#f87171">0.0%</td>
+    </tr>
+    <tr style="background:#243044;font-weight:700">
+      <td>TOTAL</td><td style="text-align:center">1668</td>
+      <td colspan="7"></td>
+    </tr>
+  </table>
+</div>
+
+<!-- Diagnóstico por produto -->
+<div class="section">
+  <h2>Gargalos Comerciais por Produto</h2>
+  <div class="tab-grid">
+  <div class="tab-card">
+    <h3 style="color:#6366f1">CGI <span style="color:#64748b;font-size:.75rem;font-weight:400">– Crédito com Garantia de Imóvel</span></h3>
+    <div style="font-size:.78rem;color:#64748b;margin-bottom:10px">142 leads | – a –</div>
+    <div class="status-bar">
+      <div style="width:47.2%;background:#fbbf24" title="Em contato: 67"></div>
+      <div style="width:43.0%;background:#f97316" title="Ag. 1º contato / sem status: 61"></div>
+      <div style="width:5.6%;background:#94a3b8" title="Reprovados/Desqualif.: 8"></div>
+    </div>
+    <div class="funnel-row">
+      <span class="funnel-count" style="color:#4ade80">0</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:0px;background:#4ade80"></div></div>
+      <span style="color:#64748b;font-size:.78rem">Convertidos (0%)</span>
+    </div>
+    <div class="funnel-row">
+      <span class="funnel-count" style="color:#fbbf24">67</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:75px;background:#fbbf24"></div></div>
+      <span style="color:#64748b;font-size:.78rem">Em contato (47%)</span>
+    </div>
+    <div class="funnel-row">
+      <span class="funnel-count" style="color:#f97316">61</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:68px;background:#f97316"></div></div>
+      <span style="color:#64748b;font-size:.78rem">Ag. 1º contato / sem status (43%)</span>
+    </div>
+    <div class="funnel-row">
+      <span class="funnel-count" style="color:#dc2626">0</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:0px;background:#dc2626"></div></div>
+      <span style="color:#64748b;font-size:.78rem">Sem contato/tentativas (0%)</span>
+    </div>
+    <div class="funnel-row">
+      <span class="funnel-count" style="color:#94a3b8">8</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:9px;background:#94a3b8"></div></div>
+      <span style="color:#64748b;font-size:.78rem">Reprovados/Desqualif. (6%)</span>
+    </div>
+    <div style="margin-top:10px;font-size:.75rem;color:#64748b">Principais motivos de perda:</div>
+    <div style="font-size:.75rem;padding:2px 0;color:#94a3b8">· numero repetido <strong style="color:#e2e8f0">(1x)</strong></div>
+  </div>
+  <div class="tab-card">
+    <h3 style="color:#f59e0b">FGTS <span style="color:#64748b;font-size:.75rem;font-weight:400">– Antecipação de FGTS</span></h3>
+    <div style="font-size:.78rem;color:#64748b;margin-bottom:10px">60 leads | – a –</div>
+    <div class="status-bar">
+      <div style="width:53.3%;background:#fbbf24" title="Em contato: 32"></div>
+      <div style="width:5.0%;background:#f97316" title="Ag. 1º contato / sem status: 3"></div>
+      <div style="width:41.7%;background:#94a3b8" title="Reprovados/Desqualif.: 25"></div>
+    </div>
+    <div class="funnel-row">
+      <span class="funnel-count" style="color:#4ade80">0</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:0px;background:#4ade80"></div></div>
+      <span style="color:#64748b;font-size:.78rem">Convertidos (0%)</span>
+    </div>
+    <div class="funnel-row">
+      <span class="funnel-count" style="color:#fbbf24">32</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:85px;background:#fbbf24"></div></div>
+      <span style="color:#64748b;font-size:.78rem">Em contato (53%)</span>
+    </div>
+    <div class="funnel-row">
+      <span class="funnel-count" style="color:#f97316">3</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:8px;background:#f97316"></div></div>
+      <span style="color:#64748b;font-size:.78rem">Ag. 1º contato / sem status (5%)</span>
+    </div>
+    <div class="funnel-row">
+      <span class="funnel-count" style="color:#dc2626">0</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:0px;background:#dc2626"></div></div>
+      <span style="color:#64748b;font-size:.78rem">Sem contato/tentativas (0%)</span>
+    </div>
+    <div class="funnel-row">
+      <span class="funnel-count" style="color:#94a3b8">25</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:66px;background:#94a3b8"></div></div>
+      <span style="color:#64748b;font-size:.78rem">Reprovados/Desqualif. (42%)</span>
+    </div>
+  </div>
+  <div class="tab-card">
+    <h3 style="color:#10b981">Carta Contemplada <span style="color:#64748b;font-size:.75rem;font-weight:400">– Consórcio</span></h3>
+    <div style="font-size:.78rem;color:#64748b;margin-bottom:10px">1400 leads | – a –</div>
+    <div class="status-bar">
+      <div style="width:2.9%;background:#4ade80" title="Convertidos: 41"></div>
+      <div style="width:14.3%;background:#fbbf24" title="Em contato: 200"></div>
+      <div style="width:30.9%;background:#f97316" title="Ag. 1º contato / sem status: 433"></div>
+      <div style="width:25.6%;background:#dc2626" title="Sem contato/tentativas: 359"></div>
+      <div style="width:20.9%;background:#94a3b8" title="Reprovados/Desqualif.: 293"></div>
+    </div>
+    <div class="funnel-row">
+      <span class="funnel-count" style="color:#4ade80">41</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:4px;background:#4ade80"></div></div>
+      <span style="color:#64748b;font-size:.78rem">Convertidos (3%)</span>
+    </div>
+    <div class="funnel-row">
+      <span class="funnel-count" style="color:#fbbf24">200</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:22px;background:#fbbf24"></div></div>
+      <span style="color:#64748b;font-size:.78rem">Em contato (14%)</span>
+    </div>
+    <div class="funnel-row">
+      <span class="funnel-count" style="color:#f97316">433</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:49px;background:#f97316"></div></div>
+      <span style="color:#64748b;font-size:.78rem">Ag. 1º contato / sem status (31%)</span>
+    </div>
+    <div class="funnel-row">
+      <span class="funnel-count" style="color:#dc2626">359</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:41px;background:#dc2626"></div></div>
+      <span style="color:#64748b;font-size:.78rem">Sem contato/tentativas (26%)</span>
+    </div>
+    <div class="funnel-row">
+      <span class="funnel-count" style="color:#94a3b8">293</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:33px;background:#94a3b8"></div></div>
+      <span style="color:#64748b;font-size:.78rem">Reprovados/Desqualif. (21%)</span>
+    </div>
+    <div style="margin-top:10px;font-size:.75rem;color:#64748b">Principais motivos de perda:</div>
+    <div style="font-size:.75rem;padding:2px 0;color:#94a3b8">· aguardando resposta <strong style="color:#e2e8f0">(68x)</strong></div>
+    <div style="font-size:.75rem;padding:2px 0;color:#94a3b8">· não responde nem atende <strong style="color:#e2e8f0">(16x)</strong></div>
+    <div style="font-size:.75rem;padding:2px 0;color:#94a3b8">· conversando <strong style="color:#e2e8f0">(16x)</strong></div>
+    <div style="font-size:.75rem;padding:2px 0;color:#94a3b8">· Aguardando resposta <strong style="color:#e2e8f0">(14x)</strong></div>
+    <div style="font-size:.75rem;padding:2px 0;color:#94a3b8">· Ainda não me respondeu <strong style="color:#e2e8f0">(13x)</strong></div>
+  </div>
+  <div class="tab-card">
+    <h3 style="color:#f43f5e">Conta de Luz <span style="color:#64748b;font-size:.75rem;font-weight:400">– Crédito via Conta de Luz</span></h3>
+    <div style="font-size:.78rem;color:#64748b;margin-bottom:10px">66 leads | – a –</div>
+    <div class="status-bar">
+      <div style="width:15.2%;background:#fbbf24" title="Em contato: 10"></div>
+      <div style="width:63.6%;background:#f97316" title="Ag. 1º contato / sem status: 42"></div>
+      <div style="width:21.2%;background:#94a3b8" title="Reprovados/Desqualif.: 14"></div>
+    </div>
+    <div class="funnel-row">
+      <span class="funnel-count" style="color:#4ade80">0</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:0px;background:#4ade80"></div></div>
+      <span style="color:#64748b;font-size:.78rem">Convertidos (0%)</span>
+    </div>
+    <div class="funnel-row">
+      <span class="funnel-count" style="color:#fbbf24">10</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:24px;background:#fbbf24"></div></div>
+      <span style="color:#64748b;font-size:.78rem">Em contato (15%)</span>
+    </div>
+    <div class="funnel-row">
+      <span class="funnel-count" style="color:#f97316">42</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:101px;background:#f97316"></div></div>
+      <span style="color:#64748b;font-size:.78rem">Ag. 1º contato / sem status (64%)</span>
+    </div>
+    <div class="funnel-row">
+      <span class="funnel-count" style="color:#dc2626">0</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:0px;background:#dc2626"></div></div>
+      <span style="color:#64748b;font-size:.78rem">Sem contato/tentativas (0%)</span>
+    </div>
+    <div class="funnel-row">
+      <span class="funnel-count" style="color:#94a3b8">14</span>
+      <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:33px;background:#94a3b8"></div></div>
+      <span style="color:#64748b;font-size:.78rem">Reprovados/Desqualif. (21%)</span>
+    </div>
+    <div style="margin-top:10px;font-size:.75rem;color:#64748b">Principais motivos de perda:</div>
+    <div style="font-size:.75rem;padding:2px 0;color:#94a3b8">· já tem emprestimo com a crefaz <strong style="color:#e2e8f0">(8x)</strong></div>
+    <div style="font-size:.75rem;padding:2px 0;color:#94a3b8">· ja tem emprestimo com a crefaz <strong style="color:#e2e8f0">(3x)</strong></div>
+    <div style="font-size:.75rem;padding:2px 0;color:#94a3b8">· tem tarifa social <strong style="color:#e2e8f0">(1x)</strong></div>
+    <div style="font-size:.75rem;padding:2px 0;color:#94a3b8">· não passou <strong style="color:#e2e8f0">(1x)</strong></div>
+  </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Achados e Gargalos</h2>
+  <div class="alert"><strong>CGI – 0% de conversão em 142 leads</strong><br>
+  61 leads (43%) sem nenhum status – não foram contactados. Dos 67 "Em contato", 0 estão parados há mais de 5 dias. Produto com apenas 3 semanas de dados mas sem nenhuma venda sinalizada ainda.</div>
+  <div class="alert"><strong>FGTS – 0% de conversão, 42% de perfis reprovados</strong><br>
+  25 leads reprovados (PERFIL NÃO APROVAOD). Dos 32 "Em contato", 0 travados há mais de 5 dias. Verificar se o formulário de qualificação está filtrando melhor antes do lead chegar para o comercial.</div>
+  <div class="alert-w"><strong>Carta Contemplada – 293 leads aguardando primeiro contato + 140 sem status</strong><br>
+  433 leads (31%) ainda não foram trabalhados. 359 leads com "sem contato / diversas tentativas" – foram abordados mas não responderam. Dos 200 "Em contato", 0 travados há >5 dias. Obs mais recorrente: "aguardando resposta" (68x).</div>
+  <div class="alert"><strong>Conta de Luz – 42 de 66 leads (64%) sem status algum</strong><br>
+  Produto mais novo. 14 perfis já reprovados mas a maior parte dos leads está em branco – sem nenhuma ação registrada. Dos 8 com motivo de reprovação, "já tem empréstimo com a crefaz" é o principal gargalo de qualificação.</div>
+  <div class="alert-s"><strong>Carta Contemplada gerou R$288,345 em 41 vendas (2.9%)</strong><br>
+  Único produto com conversão ativa. É o produto com mais histórico (desde fev/2026) e onde o processo comercial está mais maduro. Serve como referência de boas práticas para os outros 3 produtos.</div>
+</div>
+
+<div class="section">
+  <h2>Status Detalhado por Produto</h2>
+  <div class="tab-grid">
+  <div class="tab-card">
+    <h3 style="color:#6366f1">CGI</h3>
+    <table>
+      <tr><th>Status</th><th style="text-align:right">Qtd</th><th style="text-align:right">%</th></tr>
+      <tr><td><span class="badge b-yellow" style="font-size:.68rem">Em contato</span></td><td style="text-align:right">67</td><td style="text-align:right;color:#fbbf24">47.2%</td></tr>
+      <tr><td><span class="badge b-gray" style="font-size:.68rem">(sem status)</span></td><td style="text-align:right">61</td><td style="text-align:right;color:#94a3b8">43.0%</td></tr>
+      <tr><td><span class="badge b-red" style="font-size:.68rem">Não aprovado</span></td><td style="text-align:right">6</td><td style="text-align:right;color:#dc2626">4.2%</td></tr>
+      <tr><td><span class="badge b-gray" style="font-size:.68rem">Dados inválidos</span></td><td style="text-align:right">5</td><td style="text-align:right;color:#94a3b8">3.5%</td></tr>
+      <tr><td><span class="badge b-red" style="font-size:.68rem">Sem entrada/Sem interesse</span></td><td style="text-align:right">1</td><td style="text-align:right;color:#dc2626">0.7%</td></tr>
+      <tr><td><span class="badge b-blue" style="font-size:.68rem">Não atende estado</span></td><td style="text-align:right">1</td><td style="text-align:right;color:#7dd3fc">0.7%</td></tr>
+      <tr><td><span class="badge b-blue" style="font-size:.68rem">Sem interesse</span></td><td style="text-align:right">1</td><td style="text-align:right;color:#7dd3fc">0.7%</td></tr>
+    </table>
+  </div>
+  <div class="tab-card">
+    <h3 style="color:#f59e0b">FGTS</h3>
+    <table>
+      <tr><th>Status</th><th style="text-align:right">Qtd</th><th style="text-align:right">%</th></tr>
+      <tr><td><span class="badge b-yellow" style="font-size:.68rem">Em contato</span></td><td style="text-align:right">32</td><td style="text-align:right;color:#fbbf24">53.3%</td></tr>
+      <tr><td><span class="badge b-blue" style="font-size:.68rem">PERFIL NÃO APROVAOD</span></td><td style="text-align:right">17</td><td style="text-align:right;color:#7dd3fc">28.3%</td></tr>
+      <tr><td><span class="badge b-blue" style="font-size:.68rem">Já possui proposta em andamento com a ca</span></td><td style="text-align:right">4</td><td style="text-align:right;color:#7dd3fc">6.7%</td></tr>
+      <tr><td><span class="badge b-blue" style="font-size:.68rem">Sem saldo mínimo FGTS</span></td><td style="text-align:right">3</td><td style="text-align:right;color:#7dd3fc">5.0%</td></tr>
+      <tr><td><span class="badge b-gray" style="font-size:.68rem">(sem status)</span></td><td style="text-align:right">3</td><td style="text-align:right;color:#94a3b8">5.0%</td></tr>
+      <tr><td><span class="badge b-blue" style="font-size:.68rem">Sem interesse</span></td><td style="text-align:right">1</td><td style="text-align:right;color:#7dd3fc">1.7%</td></tr>
+    </table>
+  </div>
+  <div class="tab-card">
+    <h3 style="color:#10b981">Carta Contemplada</h3>
+    <table>
+      <tr><th>Status</th><th style="text-align:right">Qtd</th><th style="text-align:right">%</th></tr>
+      <tr><td><span class="badge b-yellow" style="font-size:.68rem">Sem contato / diversas tentativas</span></td><td style="text-align:right">359</td><td style="text-align:right;color:#fbbf24">25.6%</td></tr>
+      <tr><td><span class="badge b-red" style="font-size:.68rem">Sem entrada/Sem interesse</span></td><td style="text-align:right">293</td><td style="text-align:right;color:#dc2626">20.9%</td></tr>
+      <tr><td><span class="badge b-orange" style="font-size:.68rem">Aguardando primeiro contato</span></td><td style="text-align:right">293</td><td style="text-align:right;color:#f97316">20.9%</td></tr>
+      <tr><td><span class="badge b-yellow" style="font-size:.68rem">Em contato</span></td><td style="text-align:right">200</td><td style="text-align:right;color:#fbbf24">14.3%</td></tr>
+      <tr><td><span class="badge b-gray" style="font-size:.68rem">(sem status)</span></td><td style="text-align:right">140</td><td style="text-align:right;color:#94a3b8">10.0%</td></tr>
+      <tr><td><span class="badge b-gray" style="font-size:.68rem">Dados inválidos</span></td><td style="text-align:right">39</td><td style="text-align:right;color:#94a3b8">2.8%</td></tr>
+      <tr><td><span class="badge b-blue" style="font-size:.68rem">Em tentativa de contato</span></td><td style="text-align:right">31</td><td style="text-align:right;color:#7dd3fc">2.2%</td></tr>
+      <tr><td><span class="badge b-blue" style="font-size:.68rem">Já comprou</span></td><td style="text-align:right">21</td><td style="text-align:right;color:#7dd3fc">1.5%</td></tr>
+      <tr><td><span class="badge b-blue" style="font-size:.68rem">Em Tratativa de Venda</span></td><td style="text-align:right">19</td><td style="text-align:right;color:#7dd3fc">1.4%</td></tr>
+      <tr><td><span class="badge b-blue" style="font-size:.68rem">FECHADO</span></td><td style="text-align:right">4</td><td style="text-align:right;color:#7dd3fc">0.3%</td></tr>
+      <tr><td><span class="badge b-blue" style="font-size:.68rem">Propício a fechar</span></td><td style="text-align:right">1</td><td style="text-align:right;color:#7dd3fc">0.1%</td></tr>
+    </table>
+  </div>
+  <div class="tab-card">
+    <h3 style="color:#f43f5e">Conta de Luz</h3>
+    <table>
+      <tr><th>Status</th><th style="text-align:right">Qtd</th><th style="text-align:right">%</th></tr>
+      <tr><td><span class="badge b-gray" style="font-size:.68rem">(sem status)</span></td><td style="text-align:right">42</td><td style="text-align:right;color:#94a3b8">63.6%</td></tr>
+      <tr><td><span class="badge b-red" style="font-size:.68rem">PERFIL REPROVADO</span></td><td style="text-align:right">14</td><td style="text-align:right;color:#dc2626">21.2%</td></tr>
+      <tr><td><span class="badge b-yellow" style="font-size:.68rem">Em contato</span></td><td style="text-align:right">10</td><td style="text-align:right;color:#fbbf24">15.2%</td></tr>
+    </table>
+  </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Origem dos Leads – Carta Contemplada</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+  <div>
+    <h3>Por Plataforma (utm_source)</h3>
+    <table>
+      <tr><th>Fonte</th><th>Leads</th><th>Conv.</th><th>Taxa</th></tr>
+      <tr><td><strong>Instagram</strong></td><td>990</td><td>23</td><td style="color:#fbbf24">2.3%</td></tr>
+      <tr><td><strong>Facebook</strong></td><td>374</td><td>14</td><td style="color:#4ade80">3.7%</td></tr>
+      <tr><td><strong>(sem source)</strong></td><td>36</td><td>4</td><td style="color:#4ade80">11.1%</td></tr>
+    </table>
+  </div>
+  <div>
+    <h3>Por Criativo (utm_content)</h3>
+    <table>
+      <tr><th>Criativo</th><th>Leads</th><th>Conv.</th><th>Receita</th></tr>
+      <tr><td style="font-size:.78rem">AD03 - DANIEL IA</td><td>815</td><td style="color:#4ade80">21</td><td>R$233,645</td></tr>
+      <tr><td style="font-size:.78rem">AD03 - DANIEL</td><td>516</td><td style="color:#4ade80">16</td><td>R$34,000</td></tr>
+      <tr><td style="font-size:.78rem">(sem criativo)</td><td>36</td><td style="color:#4ade80">4</td><td>R$20,700</td></tr>
+      <tr><td style="font-size:.78rem">AD01 - DANIEL IA</td><td>16</td><td style="color:#f87171">0</td><td>–</td></tr>
+      <tr><td style="font-size:.78rem">ad01-video-contemplada-auto-daniel</td><td>6</td><td style="color:#f87171">0</td><td>–</td></tr>
+      <tr><td style="font-size:.78rem">AD06 - DANIEL</td><td>5</td><td style="color:#f87171">0</td><td>–</td></tr>
+      <tr><td style="font-size:.78rem">ad03-video-contempladas-daniel-2</td><td>3</td><td style="color:#f87171">0</td><td>–</td></tr>
+      <tr><td style="font-size:.78rem">ad01-estatico-carta-contemplada-imovel</td><td>2</td><td style="color:#f87171">0</td><td>–</td></tr>
+      <tr><td style="font-size:.78rem">AD05 - CGI</td><td>1</td><td style="color:#f87171">0</td><td>–</td></tr>
+    </table>
+  </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Recomendações Comerciais</h2>
+
+  <div class="rec">
+    <strong>1. Definir SLA de primeiro contato para todos os produtos</strong>
+    CGI tem 43% e Conta de Luz tem 64% dos leads sem contato. É o gargalo mais crítico. Definir regra: todo lead que entra na planilha deve ter um status registrado em até 24h (segunda tentativa em 48h, terceira em 72h). Sem isso, o investimento em mídia é desperdiçado antes mesmo de chegar no comercial.
+  </div>
+
+  <div class="rec">
+    <strong>2. Criar sequência de follow-up estruturada para "Em contato"</strong>
+    CGI tem 59 e FGTS tem 28 leads "Em contato" travados há mais de 5 dias. Quando um lead não responde, o SDR deve ter uma cadência definida: tentativa 1 (WhatsApp), tentativa 2 (ligação), tentativa 3 (template diferente), após 3 tentativas – mover para "Sem contato / diversas tentativas". Hoje esse fluxo é ad-hoc.
+  </div>
+
+  <div class="rec">
+    <strong>3. Revisar qualificação do formulário de FGTS</strong>
+    28% dos leads de FGTS já têm perfil reprovado logo no início. O formulário pré-qualifica (pergunta sobre adesão ao saque-aniversário, saldo, antecipação recente) mas leads com perfil ruim ainda chegam. Adicionar lógica condicional no formulário para barrar leads com "sim" em antecipação recente ou "não" em saldo liberado antes de gerar o lead.
+  </div>
+
+  <div class="rec">
+    <strong>4. Padronizar os status da planilha entre todos os produtos</strong>
+    Cada produto usa nomenclaturas diferentes para o mesmo estágio. Criar um status padrão unificado: Novo – Em abordagem – Em negociação – Convertido / Sem interesse / Sem perfil / Incontactável. Isso permite análise cruzada e identificação de gargalos em tempo real.
+  </div>
+
+  <div class="rec">
+    <strong>5. Trabalhar os 293 leads de Carta Contemplada em "Aguardando 1º Contato"</strong>
+    293 leads estão com status "Aguardando primeiro contato" – significa que ninguém abordou ainda. Com taxa de conversão de 2.9%, esses 293 leads representariam ~8-9 vendas potenciais. Prioridade imediata para o time comercial.
+  </div>
+
+  <div class="rec">
+    <strong>6. Implementar automação de follow-up pós-"Aguardando resposta"</strong>
+    "Aguardando resposta" aparece 68x nas observações da Carta Contemplada. Criar template de follow-up automático via WhatsApp (ex: após 24h sem resposta, disparo automático). Reduz carga manual do SDR e mantém o lead aquecido.
+  </div>
+
+  <div class="rec">
+    <strong>7. Usar Carta Contemplada como benchmark de processo para CGI e FGTS</strong>
+    Carta Contemplada é o único produto com conversão ativa (2.9%, R$288,345). Documentar o processo exato: como o SDR aborda, qual é o roteiro, qual criativo converte mais. Replicar estrutura para CGI e FGTS que ainda não têm nenhuma conversão registrada.
+  </div>
+</div>
+
+</div>
+<div class="footer">Auditoria comercial gerada a partir de: Leads gerados de campanha.xlsx &nbsp;|&nbsp; 05/06/2026 16:28</div>
+</body>
+</html>
