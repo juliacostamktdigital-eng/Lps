@@ -1,48 +1,9 @@
-﻿     ,2026,2026,2026,2026,2026,2026,2026,2026,2026
-,01/04/2026,01/05/2026,01/06/2026,01/07/2026,01/08/2026,01/09/2026,01/10/2026,01/11/2026,01/12/2026
-,30/04/2026,19/05/2026,30/06/2026,31/07/2026,31/08/2026,30/09/2026,31/10/2026,30/11/2026,31/12/2026
-MÃªs,abril,maio,junho,julho,agosto,setembro,outubro,novembro,dezembro
-Investimento,"R$ 1.998,70","R$ 2.084,63","R$ 172,32","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00"
-Ticket MÃ©dio,"R$ 4.500,00","R$ 30.825,00",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-ImpressÃµes,0,140.774,0,0,0,0,0,0,0
-SessÃµes Gerais,0,0,0,0,0,0,0,0,0
-Cliques Totais,713,915,64,0,0,0,0,0,0
-Leads,98,132,13,0,0,0,0,0,0
-MQL (Manual),2,61,0,0,,,,,
-SQL (Manual),2,12,0,0,,,,,
-Vendas (Manual),1,2,0,0,,,,,
-Receita Faturada (Manual),"R$ 4.500,00","R$ 61.650,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00"
-ROAS,"2,25","29,57","0,00",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Taxa de ConversÃ£o Leads(Clique->Lead),"13,74%","14,43%","20,31%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-,,,,,,,,,
-Custo por Clique,"R$ 2,80","R$ 2,28","R$ 2,69",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-,,,,,,,,,
-Custo por Lead,"R$ 20,39","R$ 15,79","R$ 13,26",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Custo por MQL ,"R$ 999,35","R$ 34,17",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Custo por SQL,"R$ 999,35","R$ 173,72",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Custo por Compra,"R$ 1.998,70","R$ 1.042,32",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-,,,,,,,,,
-% Lead - MQL,"2,04%","46,21%","0,00%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
- % MQL - SQL,"100,00%","19,67%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-% SQL - Vendas,"50,00%","16,67%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-,,,,,,,,,
-Investimento Meta,"R$ 1.917,64","R$ 1.860,72","R$ 172,32","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00"
-ImpressÃµes,0,140.030,0,0,0,0,0,0,0
-Cliques,685,836,64,0,0,0,0,0,0
-CTR,,"0,60%",,,,,,,
-Leads(ConversÃµes),97,132,13,0,0,0,0,0,0
-Taxa de ConversÃ£o(Clique->Lead),"14,16%","15,79%","20,31%",,,,,,
-,,,,,,,,,
-Custo por Clique,"R$ 2,80","R$ 2,23","R$ 2,69",,,,,,
-Custo por Lead,"R$ 19,77","R$ 14,10","R$ 13,26",,,,,,
-,,,,,,,,,
-,,,,,,,,,
-Investimento Google,"R$ 81,06","R$ 223,91","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00"
-ImpressÃµes,238,744,0,0,0,0,0,0,0
-Cliques,28,79,0,0,0,0,0,0,0
-CTR,"11,76%","10,62%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Leads(ConversÃµes),1,0,0,0,0,0,0,0,0
-Taxa de ConversÃ£o(Clique->Lead),"3,57%","0,00%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-,,,,,,,,,
-Custo por Clique,"R$ 2,90","R$ 2,83",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Custo por Lead,"R$ 81,06",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Budget Mensal:,,,,
+Canal,Campanhas,% Budget,R$ Budget,Budget / dia
+Facebook Ads,Lead Nativo + LP,40%,"R$ 1.700,00","R$ 56,67"
+,Reconhecimento de Marca,10%,"R$ 300,00","R$ 10,00"
+,Remarketing,10%,"R$ 300,00","R$ 10,00"
+Google Ads,Pesquisa,10%,"R$ 300,00","R$ 10,00"
+,WhatsApp (LP > WhatsApp),15%,"R$ 450,00","R$ 15,00"
+,Ligação ( LP> Ligação),15%,"R$ 450,00","R$ 15,00"
+TOTAL,,"100,00%","R$ 3.500,00","R$ 116,67"

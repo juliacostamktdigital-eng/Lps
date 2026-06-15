@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Controle Financeiro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #0a0a0a;
+  --bg2:      #111111;
+  --bg3:      #181818;
+  --bg4:      #222222;
+  --bg5:      #2a2a2a;
+  --red:      #E53935;
+  --red-dk:   #B71C1C;
+  --red-lt:   #EF9A9A;
+  --white:    #FFFFFF;
+  --gray:     #888888;
+  --gray-lt:  #cccccc;
+  --border:   #242424;
+  --border2:  #333333;
+  --green:    #22C55E;
+  --yellow:   #F59E0B;
+  --blue:     #60A5FA;
+  --r:        8px;
+  --rs:       4px;
+}
+
+html, body { height: 100%; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--white);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── HEADER ─────────────────────────────────── */
+.header {
+  background: var(--bg2);
+  border-bottom: 2px solid var(--red);
+  padding: 16px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.header-diamond {
+  color: var(--red);
+  font-size: 18px;
+  line-height: 1;
+}
+.header h1 {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--white);
+}
+.header-date {
+  font-size: 0.72rem;
+  color: var(--gray);
+  letter-spacing: 0.5px;
+}
+
+/* ── TABS NAV ────────────────────────────────── */
+.tabs-nav {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  padding: 0 20px;
+  flex-shrink: 0;
+  gap: 4px;
+}
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--gray);
+  padding: 13px 22px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  top: 1px;
+}
+.tab-btn:hover { color: var(--white); }
+.tab-btn.active { color: var(--red); border-bottom-color: var(--red); }
+
+/* ── PANELS ──────────────────────────────────── */
+.panel { display: none; flex: 1; }
+.panel.active { display: flex; flex-direction: column; }
+
+/* ILÉ iframe */
+.ile-frame {
+  width: 100%;
+  flex: 1;
+  border: none;
+  display: block;
+  min-height: calc(100vh - 110px);
+}
+
+/* SCROLLABLE CONTENT */
+.panel-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px;
+}
+
+/* ── MONTH NAV ───────────────────────────────── */
+.month-nav-wrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+.year-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.year-arrow {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  color: var(--gray-lt);
+  width: 28px; height: 28px;
+  border-radius: var(--rs);
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+.year-arrow:hover { border-color: var(--red); color: var(--red); }
+.year-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--white);
+  min-width: 40px;
+  text-align: center;
+}
+.months-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.month-pill {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--gray);
+  padding: 5px 13px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+.month-pill:hover { border-color: var(--border2); color: var(--gray-lt); }
+.month-pill.active {
+  background: var(--red);
+  border-color: var(--red);
+  color: var(--white);
+}
+
+/* ── SUMMARY CARDS ────────────────────────────── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.scard {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.scard::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: var(--r) var(--r) 0 0;
+}
+.scard.c-total::after   { background: var(--white); }
+.scard.c-pago::after    { background: var(--green); }
+.scard.c-pendente::after{ background: var(--red); }
+.scard.c-receber::after { background: var(--blue); }
+.scard.c-divida::after  { background: var(--yellow); }
+.scard.c-saldo::after   { background: var(--red); }
+
+.scard-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--gray);
+  margin-bottom: 8px;
+}
+.scard-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1.1;
+}
+.scard.c-pago    .scard-value { color: var(--green); }
+.scard.c-pendente .scard-value { color: var(--red); }
+.scard.c-receber .scard-value { color: var(--blue); }
+.scard.c-divida  .scard-value { color: var(--yellow); }
+.scard.c-saldo   .scard-value { color: var(--red); }
+.scard-sub {
+  font-size: 0.68rem;
+  color: var(--gray);
+  margin-top: 5px;
+}
+
+/* ── SECTION ──────────────────────────────────── */
+.section { margin-bottom: 32px; }
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.section-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--gray-lt);
+}
+.section-meta {
+  font-size: 0.72rem;
+  color: var(--gray);
+}
+
+/* ── TABLE ────────────────────────────────────── */
+.table-wrap {
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+}
+thead th {
+  background: var(--bg3);
+  padding: 11px 14px;
+  text-align: left;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gray);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.12s;
+}
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--bg3); }
+tbody td {
+  padding: 10px 14px;
+  vertical-align: middle;
+}
+
+/* ── EDITABLE INPUT ──────────────────────────── */
+.editable {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.83rem;
+  width: 100%;
+  padding: 5px 7px;
+  border-radius: var(--rs);
+  transition: border-color 0.15s, background 0.15s;
+  min-width: 0;
+}
+.editable:hover { border-color: var(--border2); }
+.editable:focus {
+  outline: none;
+  background: var(--bg4);
+  border-color: var(--red);
+}
+.editable::placeholder { color: var(--bg5); }
+input[type="number"].editable { -moz-appearance: textfield; }
+input[type="number"].editable::-webkit-inner-spin-button,
+input[type="number"].editable::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+/* ── STATUS BADGE ────────────────────────────── */
+.sbadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  transition: opacity 0.12s, transform 0.1s;
+  white-space: nowrap;
+  user-select: none;
+}
+.sbadge:hover { opacity: 0.8; transform: scale(1.03); }
+.sbadge .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+.s-pendente { background: rgba(229,57,53,0.15); color: var(--red); }
+.s-pendente .dot { background: var(--red); }
+.s-pago     { background: rgba(34,197,94,0.15); color: var(--green); }
+.s-pago .dot { background: var(--green); }
+.s-parcial  { background: rgba(245,158,11,0.15); color: var(--yellow); }
+.s-parcial .dot { background: var(--yellow); }
+.s-recebido { background: rgba(96,165,250,0.15); color: var(--blue); }
+.s-recebido .dot { background: var(--blue); }
+
+/* ── SALDO CELL ─────────────────────────────── */
+.saldo-pos { color: var(--red); font-weight: 700; }
+.saldo-zero { color: var(--green); font-weight: 700; }
+
+/* ── DELETE ──────────────────────────────────── */
+.btn-del {
+  background: none;
+  border: none;
+  color: var(--border2);
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: var(--rs);
+  font-size: 13px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.btn-del:hover { color: var(--red); }
+
+/* ── ADD ROW BTN ─────────────────────────────── */
+.btn-add-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px;
+  margin-top: 8px;
+  background: none;
+  border: 1px dashed var(--border2);
+  border-radius: var(--r);
+  color: var(--gray);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+.btn-add-row:hover { border-color: var(--red); color: var(--red); }
+
+/* ── SCROLLBAR ────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--bg5); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--red); }
+
+/* ── RESPONSIVE ──────────────────────────────── */
+@media (max-width: 768px) {
+  .panel-scroll { padding: 16px; }
+  .cards-grid { grid-template-columns: repeat(2, 1fr); }
+  .header h1 { font-size: 0.8rem; letter-spacing: 2px; }
+  .tab-btn { padding: 12px 14px; }
+}
+@media (max-width: 480px) {
+  .cards-grid { grid-template-columns: 1fr; }
+  .header { padding: 14px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <span class="header-diamond">◆</span>
+    <h1>Controle Financeiro</h1>
+  </div>
+  <span class="header-date" id="hDate"></span>
+</header>
+
+<!-- TABS -->
+<nav class="tabs-nav">
+  <button class="tab-btn active" data-tab="ile"   onclick="setTab('ile')">Ilé</button>
+  <button class="tab-btn"        data-tab="casa"  onclick="setTab('casa')">Casa</button>
+  <button class="tab-btn"        data-tab="sogro" onclick="setTab('sogro')">Sogro</button>
+</nav>
+
+<!-- PANEL ILÉ -->
+<div class="panel active" id="panel-ile">
+  <iframe class="ile-frame"
+    src="https://juliacostamktdigital-eng.github.io/Lps/controle_ile.html"
+    title="Controle Ilé Aláketú">
+  </iframe>
+</div>
+
+<!-- PANEL CASA -->
+<div class="panel" id="panel-casa">
+  <div class="panel-scroll">
+
+    <div class="month-nav-wrap">
+      <div class="year-nav">
+        <button class="year-arrow" onclick="adjYear('casa',-1)">‹</button>
+        <span class="year-label" id="casa-yr"></span>
+        <button class="year-arrow" onclick="adjYear('casa',1)">›</button>
+      </div>
+      <div class="months-row" id="casa-months"></div>
+    </div>
+
+    <div class="cards-grid" id="casa-cards"></div>
+
+    <!-- CONTAS A PAGAR -->
+    <div class="section">
+      <div class="section-head">
+        <span class="section-title">Contas a Pagar</span>
+        <span class="section-meta" id="casa-bills-meta"></span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="min-width:170px">Item</th>
+              <th style="width:80px">Vencto</th>
+              <th style="width:140px">Valor (R$)</th>
+              <th style="width:140px">Status</th>
+              <th style="width:36px"></th>
+            </tr>
+          </thead>
+          <tbody id="casa-bills-body"></tbody>
+        </table>
+      </div>
+      <button class="btn-add-row" onclick="addCasaBill()">+ Adicionar Conta</button>
+    </div>
+
+    <!-- A RECEBER -->
+    <div class="section">
+      <div class="section-head">
+        <span class="section-title">A Receber</span>
+        <span class="section-meta" id="casa-recv-meta"></span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="min-width:170px">Item</th>
+              <th style="width:160px">Valor Esperado (R$)</th>
+              <th style="width:160px">Valor Recebido (R$)</th>
+              <th style="width:140px">Status</th>
+              <th style="width:36px"></th>
+            </tr>
+          </thead>
+          <tbody id="casa-recv-body"></tbody>
+        </table>
+      </div>
+      <button class="btn-add-row" onclick="addCasaRecv()">+ Adicionar Item</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- PANEL SOGRO -->
+<div class="panel" id="panel-sogro">
+  <div class="panel-scroll">
+
+    <div class="month-nav-wrap">
+      <div class="year-nav">
+        <button class="year-arrow" onclick="adjYear('sogro',-1)">‹</button>
+        <span class="year-label" id="sogro-yr"></span>
+        <button class="year-arrow" onclick="adjYear('sogro',1)">›</button>
+      </div>
+      <div class="months-row" id="sogro-months"></div>
+    </div>
+
+    <div class="cards-grid" id="sogro-cards"></div>
+
+    <!-- CONTAS MENSAIS -->
+    <div class="section">
+      <div class="section-head">
+        <span class="section-title">Contas Mensais</span>
+        <span class="section-meta" id="sogro-bills-meta"></span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="min-width:200px">Item</th>
+              <th style="width:150px">Valor (R$)</th>
+              <th style="width:150px">Status</th>
+              <th style="width:36px"></th>
+            </tr>
+          </thead>
+          <tbody id="sogro-bills-body"></tbody>
+        </table>
+      </div>
+      <button class="btn-add-row" onclick="addSogroBill()">+ Adicionar Conta</button>
+    </div>
+
+    <!-- DÍVIDAS EM ABERTO (globais, persistem entre meses) -->
+    <div class="section">
+      <div class="section-head">
+        <span class="section-title">Dívidas em Aberto</span>
+        <span class="section-meta" id="sogro-debts-meta"></span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="min-width:170px">Dívida</th>
+              <th style="width:150px">Valor Total (R$)</th>
+              <th style="width:150px">Já Pago (R$)</th>
+              <th style="width:130px">Saldo</th>
+              <th style="width:150px">Status</th>
+              <th style="width:36px"></th>
+            </tr>
+          </thead>
+          <tbody id="sogro-debts-body"></tbody>
+        </table>
+      </div>
+      <button class="btn-add-row" onclick="addSogroDebt()">+ Adicionar Dívida</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  CONSTANTS
+// ═══════════════════════════════════════════════════════
+const MONTHS_SHORT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+const now = new Date();
+const CUR = { year: now.getFullYear(), month: now.getMonth() };
+
+const cur = {
+  tab:  'ile',
+  casa:  { year: CUR.year, month: CUR.month },
+  sogro: { year: CUR.year, month: CUR.month }
+};
+
+// ═══════════════════════════════════════════════════════
+//  DEFAULTS
+// ═══════════════════════════════════════════════════════
+const CASA_BILLS_DEFAULT = [
+  'Condomínio','Internet','Luz','Celular Vinicius',
+  'Pensão','Advogado','Faculdade Vinicius','Streaming','IPTU'
+];
+const CASA_RECV_DEFAULT = [
+  { name: 'Parcela da Casa', expectedValue: 1000 }
+];
+const SOGRO_BILLS_DEFAULT = ['Luz','Água'];
+
+// ═══════════════════════════════════════════════════════
+//  STORAGE
+// ═══════════════════════════════════════════════════════
+function sk(tab, year, month) { return `cf_${tab}_${year}_${month}`; }
+
+function loadCasa(y, m) {
+  const raw = localStorage.getItem(sk('casa', y, m));
+  if (raw) return JSON.parse(raw);
+  return {
+    bills: CASA_BILLS_DEFAULT.map((name, i) => ({
+      id: 'b' + i, name, dueDay: '', value: '', status: 'pendente'
+    })),
+    recv: CASA_RECV_DEFAULT.map((r, i) => ({
+      id: 'r' + i, name: r.name, expectedValue: r.expectedValue, receivedValue: '', status: 'pendente'
+    }))
+  };
+}
+
+function saveCasa(y, m, data) {
+  localStorage.setItem(sk('casa', y, m), JSON.stringify(data));
+}
+
+function loadSogroBills(y, m) {
+  const raw = localStorage.getItem(sk('sogro', y, m));
+  if (raw) return JSON.parse(raw);
+  return SOGRO_BILLS_DEFAULT.map((name, i) => ({
+    id: 'b' + i, name, value: '', status: 'pendente'
+  }));
+}
+
+function saveSogroBills(y, m, bills) {
+  localStorage.setItem(sk('sogro', y, m), JSON.stringify(bills));
+}
+
+function loadSogroDebts() {
+  const raw = localStorage.getItem('cf_sogro_debts');
+  return raw ? JSON.parse(raw) : [];
+}
+
+function saveSogroDebts(debts) {
+  localStorage.setItem('cf_sogro_debts', JSON.stringify(debts));
+}
+
+// ═══════════════════════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════════════════════
+function fmt(v) {
+  return (parseFloat(v) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+}
+
+function badge(status) {
+  const map = {
+    pendente: ['s-pendente','Pendente'],
+    pago:     ['s-pago',    'Pago'],
+    parcial:  ['s-parcial', 'Parcial'],
+    recebido: ['s-recebido','Recebido']
+  };
+  const [cls, label] = map[status] || map.pendente;
+  return `<button class="sbadge ${cls}"><span class="dot"></span>${label}</button>`;
+}
+
+// ═══════════════════════════════════════════════════════
+//  TAB SWITCHING
+// ═══════════════════════════════════════════════════════
+function setTab(tab) {
+  cur.tab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === tab);
+  });
+  document.querySelectorAll('.panel').forEach(p => {
+    p.classList.toggle('active', p.id === 'panel-' + tab);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+//  MONTH NAV
+// ═══════════════════════════════════════════════════════
+function renderMonthNav(tab) {
+  const { year, month } = cur[tab];
+  document.getElementById(`${tab}-yr`).textContent = year;
+  document.getElementById(`${tab}-months`).innerHTML =
+    MONTHS_SHORT.map((m, i) =>
+      `<button class="month-pill${i === month ? ' active' : ''}"
+        onclick="pickMonth('${tab}',${i})">${m}</button>`
+    ).join('');
+}
+
+function pickMonth(tab, m) {
+  cur[tab].month = m;
+  renderMonthNav(tab);
+  if (tab === 'casa')  renderCasa();
+  if (tab === 'sogro') renderSogro();
+}
+
+function adjYear(tab, d) {
+  cur[tab].year += d;
+  renderMonthNav(tab);
+  if (tab === 'casa')  renderCasa();
+  if (tab === 'sogro') renderSogro();
+}
+
+// ═══════════════════════════════════════════════════════
+//  CASA — RENDER
+// ═══════════════════════════════════════════════════════
+function renderCasa() {
+  const { year: y, month: m } = cur.casa;
+  const data = loadCasa(y, m);
+
+  // — Bills —
+  const tbody = document.getElementById('casa-bills-body');
+  tbody.innerHTML = '';
+  data.bills.forEach(b => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input class="editable" value="${esc(b.name)}" placeholder="Nome da conta"
+           onblur="chCasaBill('${b.id}','name',this.value)"></td>
+      <td><input class="editable" value="${esc(b.dueDay)}" placeholder="Dia" style="max-width:58px"
+           onblur="chCasaBill('${b.id}','dueDay',this.value)"></td>
+      <td><input class="editable" value="${esc(b.value)}" placeholder="0,00" type="number" min="0" step="0.01"
+           onblur="chCasaBill('${b.id}','value',this.value)"></td>
+      <td onclick="cycleCasaBill('${b.id}')">${badge(b.status)}</td>
+      <td><button class="btn-del" onclick="delCasaBill('${b.id}')">✕</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // — Receber —
+  const rbody = document.getElementById('casa-recv-body');
+  rbody.innerHTML = '';
+  data.recv.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input class="editable" value="${esc(r.name)}" placeholder="Nome"
+           onblur="chCasaRecv('${r.id}','name',this.value)"></td>
+      <td><input class="editable" value="${esc(r.expectedValue)}" placeholder="0,00" type="number" min="0" step="0.01"
+           onblur="chCasaRecv('${r.id}','expectedValue',this.value)"></td>
+      <td><input class="editable" value="${esc(r.receivedValue)}" placeholder="0,00" type="number" min="0" step="0.01"
+           onblur="chCasaRecv('${r.id}','receivedValue',this.value)"></td>
+      <td onclick="cycleCasaRecv('${r.id}')">${badge(r.status)}</td>
+      <td><button class="btn-del" onclick="delCasaRecv('${r.id}')">✕</button></td>
+    `;
+    rbody.appendChild(tr);
+  });
+
+  calcCasaCards(data);
+}
+
+function calcCasaCards(data) {
+  const { bills, recv } = data;
+  const total    = sum(bills, 'value');
+  const pago     = sumIf(bills, 'value', b => b.status === 'pago');
+  const parcial  = sumIf(bills, 'value', b => b.status === 'parcial');
+  const pendente = total - pago;
+  const aRec     = sum(recv, 'expectedValue');
+  const recebido = sumIf(recv, 'receivedValue', r => r.status === 'recebido');
+
+  document.getElementById('casa-cards').innerHTML = `
+    <div class="scard c-total">
+      <div class="scard-label">Total do Mês</div>
+      <div class="scard-value">${fmt(total)}</div>
+      <div class="scard-sub">Soma de todas as contas</div>
+    </div>
+    <div class="scard c-pago">
+      <div class="scard-label">Pago</div>
+      <div class="scard-value">${fmt(pago)}</div>
+      <div class="scard-sub">${parcial > 0 ? 'Parcial: ' + fmt(parcial) : 'Contas quitadas'}</div>
+    </div>
+    <div class="scard c-pendente">
+      <div class="scard-label">Pendente</div>
+      <div class="scard-value">${fmt(pendente)}</div>
+      <div class="scard-sub">Ainda a pagar</div>
+    </div>
+    <div class="scard c-receber">
+      <div class="scard-label">A Receber</div>
+      <div class="scard-value">${fmt(aRec)}</div>
+      <div class="scard-sub">Recebido: ${fmt(recebido)}</div>
+    </div>
+  `;
+  document.getElementById('casa-bills-meta').textContent =
+    `Total: ${fmt(total)} · Pago: ${fmt(pago)} · Pendente: ${fmt(pendente)}`;
+  document.getElementById('casa-recv-meta').textContent =
+    `Esperado: ${fmt(aRec)} · Recebido: ${fmt(recebido)}`;
+}
+
+// — Casa mutators —
+function chCasaBill(id, field, val) {
+  const { year: y, month: m } = cur.casa;
+  const d = loadCasa(y, m);
+  const b = d.bills.find(x => x.id === id);
+  if (!b) return;
+  b[field] = val;
+  saveCasa(y, m, d);
+  calcCasaCards(d);
+}
+
+function chCasaRecv(id, field, val) {
+  const { year: y, month: m } = cur.casa;
+  const d = loadCasa(y, m);
+  const r = d.recv.find(x => x.id === id);
+  if (!r) return;
+  r[field] = val;
+  saveCasa(y, m, d);
+  calcCasaCards(d);
+}
+
+function cycleCasaBill(id) {
+  const { year: y, month: m } = cur.casa;
+  const d = loadCasa(y, m);
+  const b = d.bills.find(x => x.id === id);
+  if (!b) return;
+  b.status = { pendente:'pago', pago:'parcial', parcial:'pendente' }[b.status] || 'pendente';
+  saveCasa(y, m, d);
+  renderCasa();
+}
+
+function cycleCasaRecv(id) {
+  const { year: y, month: m } = cur.casa;
+  const d = loadCasa(y, m);
+  const r = d.recv.find(x => x.id === id);
+  if (!r) return;
+  r.status = r.status === 'pendente' ? 'recebido' : 'pendente';
+  saveCasa(y, m, d);
+  renderCasa();
+}
+
+function delCasaBill(id) {
+  const { year: y, month: m } = cur.casa;
+  const d = loadCasa(y, m);
+  d.bills = d.bills.filter(x => x.id !== id);
+  saveCasa(y, m, d);
+  renderCasa();
+}
+
+function delCasaRecv(id) {
+  const { year: y, month: m } = cur.casa;
+  const d = loadCasa(y, m);
+  d.recv = d.recv.filter(x => x.id !== id);
+  saveCasa(y, m, d);
+  renderCasa();
+}
+
+function addCasaBill() {
+  const { year: y, month: m } = cur.casa;
+  const d = loadCasa(y, m);
+  d.bills.push({ id: uid(), name: '', dueDay: '', value: '', status: 'pendente' });
+  saveCasa(y, m, d);
+  renderCasa();
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('#casa-bills-body tr:last-child .editable');
+    if (inputs[0]) inputs[0].focus();
+  }, 50);
+}
+
+function addCasaRecv() {
+  const { year: y, month: m } = cur.casa;
+  const d = loadCasa(y, m);
+  d.recv.push({ id: uid(), name: '', expectedValue: '', receivedValue: '', status: 'pendente' });
+  saveCasa(y, m, d);
+  renderCasa();
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('#casa-recv-body tr:last-child .editable');
+    if (inputs[0]) inputs[0].focus();
+  }, 50);
+}
+
+// ═══════════════════════════════════════════════════════
+//  SOGRO — RENDER
+// ═══════════════════════════════════════════════════════
+function renderSogro() {
+  const { year: y, month: m } = cur.sogro;
+  const bills = loadSogroBills(y, m);
+  const debts = loadSogroDebts();
+
+  // — Bills —
+  const tbody = document.getElementById('sogro-bills-body');
+  tbody.innerHTML = '';
+  bills.forEach(b => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input class="editable" value="${esc(b.name)}" placeholder="Nome da conta"
+           onblur="chSogroBill('${b.id}','name',this.value)"></td>
+      <td><input class="editable" value="${esc(b.value)}" placeholder="0,00" type="number" min="0" step="0.01"
+           onblur="chSogroBill('${b.id}','value',this.value)"></td>
+      <td onclick="cycleSogroBill('${b.id}')">${badge(b.status)}</td>
+      <td><button class="btn-del" onclick="delSogroBill('${b.id}')">✕</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // — Debts —
+  const dbody = document.getElementById('sogro-debts-body');
+  dbody.innerHTML = '';
+  debts.forEach(d => {
+    const saldo = (parseFloat(d.totalValue) || 0) - (parseFloat(d.paidValue) || 0);
+    const saldoCls = saldo > 0 ? 'saldo-pos' : 'saldo-zero';
+    const saldoTxt = saldo > 0 ? fmt(saldo) : '✓ Quitado';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input class="editable" value="${esc(d.name)}" placeholder="Nome da dívida"
+           onblur="chSogroDebt('${d.id}','name',this.value)"></td>
+      <td><input class="editable" value="${esc(d.totalValue)}" placeholder="0,00" type="number" min="0" step="0.01"
+           onblur="chSogroDebt('${d.id}','totalValue',this.value)"></td>
+      <td><input class="editable" value="${esc(d.paidValue)}" placeholder="0,00" type="number" min="0" step="0.01"
+           onblur="chSogroDebt('${d.id}','paidValue',this.value)"></td>
+      <td><span class="${saldoCls}">${saldoTxt}</span></td>
+      <td onclick="cycleSogroDebt('${d.id}')">${badge(d.status)}</td>
+      <td><button class="btn-del" onclick="delSogroDebt('${d.id}')">✕</button></td>
+    `;
+    dbody.appendChild(tr);
+  });
+
+  calcSogroCards(bills, debts);
+}
+
+function calcSogroCards(bills, debts) {
+  const totalBills   = sum(bills, 'value');
+  const pagoBills    = sumIf(bills, 'value', b => b.status === 'pago');
+  const pendBills    = totalBills - pagoBills;
+  const totalDebts   = sum(debts, 'totalValue');
+  const paidDebts    = sum(debts, 'paidValue');
+  const saldoDebts   = totalDebts - paidDebts;
+
+  document.getElementById('sogro-cards').innerHTML = `
+    <div class="scard c-total">
+      <div class="scard-label">Contas do Mês</div>
+      <div class="scard-value">${fmt(totalBills)}</div>
+      <div class="scard-sub">Pago: ${fmt(pagoBills)}</div>
+    </div>
+    <div class="scard c-pendente">
+      <div class="scard-label">Pendente Mês</div>
+      <div class="scard-value">${fmt(pendBills)}</div>
+      <div class="scard-sub">Contas em aberto</div>
+    </div>
+    <div class="scard c-divida">
+      <div class="scard-label">Total Dívidas</div>
+      <div class="scard-value">${fmt(totalDebts)}</div>
+      <div class="scard-sub">Já pago: ${fmt(paidDebts)}</div>
+    </div>
+    <div class="scard c-saldo">
+      <div class="scard-label">Saldo Devedor</div>
+      <div class="scard-value">${fmt(saldoDebts)}</div>
+      <div class="scard-sub">Total ainda em aberto</div>
+    </div>
+  `;
+  document.getElementById('sogro-bills-meta').textContent =
+    `Total: ${fmt(totalBills)} · Pago: ${fmt(pagoBills)} · Pendente: ${fmt(pendBills)}`;
+  document.getElementById('sogro-debts-meta').textContent =
+    `Total: ${fmt(totalDebts)} · Pago: ${fmt(paidDebts)} · Saldo: ${fmt(saldoDebts)}`;
+}
+
+// — Sogro mutators (bills) —
+function chSogroBill(id, field, val) {
+  const { year: y, month: m } = cur.sogro;
+  const bills = loadSogroBills(y, m);
+  const b = bills.find(x => x.id === id);
+  if (!b) return;
+  b[field] = val;
+  saveSogroBills(y, m, bills);
+  calcSogroCards(bills, loadSogroDebts());
+}
+
+function cycleSogroBill(id) {
+  const { year: y, month: m } = cur.sogro;
+  const bills = loadSogroBills(y, m);
+  const b = bills.find(x => x.id === id);
+  if (!b) return;
+  b.status = { pendente:'pago', pago:'parcial', parcial:'pendente' }[b.status] || 'pendente';
+  saveSogroBills(y, m, bills);
+  renderSogro();
+}
+
+function delSogroBill(id) {
+  const { year: y, month: m } = cur.sogro;
+  const bills = loadSogroBills(y, m).filter(x => x.id !== id);
+  saveSogroBills(y, m, bills);
+  renderSogro();
+}
+
+function addSogroBill() {
+  const { year: y, month: m } = cur.sogro;
+  const bills = loadSogroBills(y, m);
+  bills.push({ id: uid(), name: '', value: '', status: 'pendente' });
+  saveSogroBills(y, m, bills);
+  renderSogro();
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('#sogro-bills-body tr:last-child .editable');
+    if (inputs[0]) inputs[0].focus();
+  }, 50);
+}
+
+// — Sogro mutators (debts, global) —
+function chSogroDebt(id, field, val) {
+  const debts = loadSogroDebts();
+  const d = debts.find(x => x.id === id);
+  if (!d) return;
+  d[field] = val;
+  saveSogroDebts(debts);
+  renderSogro();
+}
+
+function cycleSogroDebt(id) {
+  const debts = loadSogroDebts();
+  const d = debts.find(x => x.id === id);
+  if (!d) return;
+  d.status = { pendente:'parcial', parcial:'pago', pago:'pendente' }[d.status] || 'pendente';
+  saveSogroDebts(debts);
+  renderSogro();
+}
+
+function delSogroDebt(id) {
+  saveSogroDebts(loadSogroDebts().filter(x => x.id !== id));
+  renderSogro();
+}
+
+function addSogroDebt() {
+  const debts = loadSogroDebts();
+  debts.push({ id: uid(), name: '', totalValue: '', paidValue: '', status: 'pendente' });
+  saveSogroDebts(debts);
+  renderSogro();
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('#sogro-debts-body tr:last-child .editable');
+    if (inputs[0]) inputs[0].focus();
+  }, 50);
+}
+
+// ═══════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════
+function sum(arr, field) {
+  return arr.reduce((s, x) => s + (parseFloat(x[field]) || 0), 0);
+}
+function sumIf(arr, field, pred) {
+  return arr.filter(pred).reduce((s, x) => s + (parseFloat(x[field]) || 0), 0);
+}
+function esc(v) {
+  if (v === undefined || v === null) return '';
+  return String(v).replace(/"/g, '&quot;').replace(/</g, '&lt;');
+}
+
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+(function init() {
+  document.getElementById('hDate').textContent =
+    now.toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long', year:'numeric' });
+
+  ['casa','sogro'].forEach(t => renderMonthNav(t));
+  renderCasa();
+  renderSogro();
+})();
+</script>
+</body>
+</html>
