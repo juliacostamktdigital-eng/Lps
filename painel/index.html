@@ -1,1596 +1,1000 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cockpit Operacional — V4 Company</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Growth Review — V4 Colli&Co</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
 :root {
-  --red: #CC1B2B;
-  --red-dark: #A8141F;
-  --red-light: #FEF2F2;
-  --black: #0F0F0F;
-  --gray-900: #111827;
-  --gray-700: #374151;
-  --gray-500: #6B7280;
-  --gray-400: #9CA3AF;
-  --gray-300: #D1D5DB;
-  --gray-200: #E5E7EB;
-  --gray-100: #F9FAFB;
-  --white: #FFFFFF;
-  --green: #15803D;
-  --green-light: #DCFCE7;
-  --yellow: #B45309;
-  --yellow-light: #FEF3C7;
-  --blue: #1D4ED8;
-  --sidebar: 230px;
+  --red:    #E50914;
+  --red2:   #B8000E;
+  --red-bg: #FFF0F0;
+  --yellow: #F59E0B;
+  --green:  #22C55E;
+  --orange: #FF6E00;
+  --blue:   #3B82F6;
+  --bg:     #F4F5F7;
+  --surface:#FFFFFF;
+  --border: #E2E4E8;
+  --text:   #1A1814;
+  --muted:  #6B7280;
+  --radius: 8px;
+  --shadow: 0 1px 4px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'Inter',system-ui,sans-serif; background:var(--gray-100); color:var(--gray-900); display:flex; min-height:100vh; }
+body { font-family:'IBM Plex Sans',sans-serif; background:var(--bg); color:var(--text); font-size:13px; min-height:100vh; }
 
-/* ── SIDEBAR ── */
-.sidebar {
-  width: var(--sidebar);
-  background: var(--black);
-  display: flex; flex-direction: column;
-  position: fixed; top:0; left:0; bottom:0;
-  z-index: 200;
-  border-right: 1px solid rgba(255,255,255,0.06);
-}
-.sidebar-logo {
-  padding: 22px 20px 18px;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
-  display: flex; align-items: center; gap: 10px;
-}
-.logo-box {
-  width: 36px; height: 36px;
-  background: var(--red);
-  border-radius: 7px;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 900; font-size: 15px; color: white;
-  letter-spacing: -0.5px; flex-shrink: 0;
-}
-.logo-wordmark { font-size: 13px; font-weight: 700; color: white; letter-spacing: 1.8px; text-transform: uppercase; }
-.sidebar-user {
-  padding: 14px 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
-}
-.sidebar-name { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.88); }
-.sidebar-role { font-size: 11px; color: rgba(255,255,255,0.38); margin-top: 1px; }
-.sidebar-date { font-size: 11px; color: var(--red); margin-top: 5px; font-weight: 500; }
-.sidebar-nav { flex:1; padding: 10px 0; overflow-y: auto; }
-.nav-item {
-  display: flex; align-items: center; gap: 9px;
-  padding: 10px 20px;
-  cursor: pointer;
-  color: rgba(255,255,255,0.42);
-  font-size: 13px; font-weight: 500;
-  transition: all 0.13s;
-  border-left: 3px solid transparent;
-  user-select: none;
-}
-.nav-item:hover { color: rgba(255,255,255,0.78); background: rgba(255,255,255,0.04); }
-.nav-item.active { color: white; border-left-color: var(--red); background: rgba(204,27,43,0.10); }
-.nav-icon { font-size: 15px; width: 18px; text-align: center; }
-.sidebar-footer {
-  padding: 14px 16px;
-  border-top: 1px solid rgba(255,255,255,0.07);
-}
-.btn-sync {
-  width: 100%; padding: 8px 12px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.10);
-  border-radius: 8px; color: rgba(255,255,255,0.5);
-  font-size: 12px; cursor: pointer;
-  display: flex; align-items: center; gap: 6px;
-  transition: all 0.13s; font-family: 'Inter',sans-serif; font-weight: 500;
-}
-.btn-sync:hover { background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.85); }
+.topbar { height:3px; background:var(--red); width:100%; }
 
-/* ── MAIN ── */
-.main { margin-left: var(--sidebar); flex:1; display:flex; flex-direction:column; min-height:100vh; }
-.tab-panel { display:none; padding: 30px 36px; animation: fadeIn 0.18s ease; }
-.tab-panel.active { display: block; }
-@keyframes fadeIn { from { opacity:0; transform:translateY(3px); } to { opacity:1; transform:translateY(0); } }
-
-/* ── PAGE HEADER ── */
-.page-header { margin-bottom: 26px; }
-.page-title { font-size: 21px; font-weight: 800; color: var(--black); }
-.page-sub { font-size: 13px; color: var(--gray-500); margin-top: 3px; }
-
-/* ── CARDS ── */
-.card { background: var(--white); border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px 22px; }
-.card-label {
-  font-size: 11px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: 0.7px; color: var(--gray-400); margin-bottom: 14px;
+.header {
+  background:var(--surface); border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 24px; height:52px; position:sticky; top:0; z-index:100;
+  box-shadow:0 1px 3px rgba(0,0,0,0.06);
 }
+.brand { display:flex; align-items:center; gap:10px; }
+.logo { background:var(--red); color:#fff; font-weight:700; font-size:14px; padding:5px 9px; border-radius:4px; letter-spacing:.5px; }
+.brand-name { font-size:13px; font-weight:600; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; }
+.nav { display:flex; gap:2px; }
+.tab-btn {
+  background:none; border:none; padding:6px 16px; font-family:inherit; font-size:12px; font-weight:600;
+  color:var(--muted); border-radius:6px; cursor:pointer; letter-spacing:.5px; text-transform:uppercase; transition:all .15s;
+}
+.tab-btn:hover { background:#F3F4F6; color:var(--text); }
+.tab-btn.active { background:var(--red); color:#fff; }
+.header-right { display:flex; align-items:center; gap:12px; }
+.updated-tag { font-size:11px; color:var(--muted); }
+.refresh-btn {
+  background:none; border:1px solid var(--border); color:var(--muted); padding:5px 14px;
+  border-radius:6px; cursor:pointer; font-family:inherit; font-size:11px; font-weight:600;
+  letter-spacing:.5px; text-transform:uppercase; transition:all .15s;
+}
+.refresh-btn:hover { border-color:var(--red); color:var(--red); }
+.refresh-btn.loading { opacity:.5; cursor:not-allowed; }
 
-/* ── GRIDS ── */
-.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-.g3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
-.g4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
-@media (max-width:1100px) { .g4 { grid-template-columns: repeat(2,1fr); } }
-@media (max-width:1300px) { .g3 { grid-template-columns: repeat(2,1fr); } }
+.sprint-banner {
+  background:var(--surface); border-bottom:1px solid var(--border);
+  padding:14px 24px; display:flex; align-items:center; justify-content:space-between;
+}
+.sprint-left { display:flex; align-items:baseline; gap:10px; }
+.sprint-week { font-size:20px; font-weight:700; letter-spacing:1px; }
+.sprint-week b { color:var(--red); }
+.sprint-period { font-size:12px; color:var(--muted); }
+.sprint-kpis { display:flex; gap:24px; }
+.sprint-kpi { text-align:right; }
+.sprint-kpi-val { font-size:18px; font-weight:700; color:var(--red); }
+.sprint-kpi-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.8px; }
 
-/* ── BADGES ── */
+.err-banner {
+  display:none; background:#FFF3CD; border-bottom:3px solid #F59E0B;
+  padding:8px 24px; font-size:11px; color:#92400E;
+}
+.err-banner.visible { display:block; }
+.err-item { display:flex; align-items:center; gap:6px; padding:2px 0; }
+.err-item::before { content:'⚠'; font-size:12px; }
+
+.conn-bar {
+  background:var(--surface); border-bottom:1px solid var(--border);
+  display:flex; gap:16px; padding:6px 24px;
+}
+.conn-pill {
+  display:inline-flex; align-items:center; gap:5px; padding:2px 8px;
+  border-radius:20px; font-size:10px; font-weight:600; letter-spacing:.4px;
+}
+.conn-ok   { background:#DCFCE7; color:#166534; }
+.conn-warn { background:#FEF3C7; color:#92400E; }
+.conn-off  { background:#FEE2E2; color:#991B1B; }
+.conn-dot  { width:6px; height:6px; border-radius:50%; background:currentColor; }
+
+.main { padding:20px 24px; }
+
+.sec-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--red); margin-bottom:10px; }
+
+.carteira-wrap { overflow-x:auto; margin-bottom:28px; border-radius:var(--radius); box-shadow:var(--shadow); }
+table.carteira { width:100%; border-collapse:collapse; background:var(--surface); }
+table.carteira th {
+  background:var(--red); color:#fff; font-size:10px; font-weight:700; letter-spacing:1px;
+  text-transform:uppercase; padding:10px 12px; text-align:left; white-space:nowrap;
+}
+table.carteira th:first-child { border-radius:var(--radius) 0 0 0; }
+table.carteira th:last-child  { border-radius:0 var(--radius) 0 0; }
+table.carteira td { padding:10px 12px; border-bottom:1px solid var(--border); font-size:12px; vertical-align:middle; }
+table.carteira tr:last-child td { border-bottom:none; }
+table.carteira tbody tr { cursor:pointer; transition:background .1s; }
+table.carteira tbody tr:hover td { background:#FFF5F5; }
+table.carteira tbody tr:nth-child(even) td { background:#FAFAFA; }
+table.carteira tbody tr:nth-child(even):hover td { background:#FFF5F5; }
+
 .badge {
-  display: inline-flex; align-items: center; gap: 3px;
-  padding: 3px 8px; border-radius: 99px;
-  font-size: 11px; font-weight: 600; white-space: nowrap;
+  display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:20px;
+  font-size:10px; font-weight:700; letter-spacing:.3px; white-space:nowrap;
 }
-.b-green  { background: var(--green-light);  color: var(--green); }
-.b-yellow { background: var(--yellow-light); color: var(--yellow); }
-.b-red    { background: var(--red-light);    color: var(--red); }
-.b-gray   { background: var(--gray-200);     color: var(--gray-500); }
+.hs-danger   { background:#FEE2E2; color:#991B1B; border:1px solid #FECACA; }
+.hs-critical { background:#FFEDD5; color:#9A3412; border:1px solid #FED7AA; }
+.hs-care     { background:#FEF3C7; color:#92400E; border:1px solid #FDE68A; }
+.hs-safe     { background:#DCFCE7; color:#166534; border:1px solid #BBF7D0; }
+.hs-nd       { background:#F3F4F6; color:var(--muted); border:1px solid var(--border); }
 
-/* ── BUTTONS ── */
-.btn {
-  padding: 9px 18px; border-radius: 8px;
-  font-size: 13px; font-weight: 600; cursor: pointer;
-  border: none; transition: all 0.13s;
-  font-family: 'Inter',sans-serif;
-  display: inline-flex; align-items: center; gap: 6px;
+.pace-badge { display:inline-block; padding:2px 7px; border-radius:4px; font-size:10px; font-weight:600; }
+.p-atrasado { background:#FEE2E2; color:#991B1B; }
+.p-atraso-l { background:#FFEDD5; color:#9A3412; }
+.p-nopace   { background:#DCFCE7; color:#166534; }
+.p-acelerado{ background:#FEF3C7; color:#92400E; }
+.p-aguard   { background:#F3F4F6; color:var(--muted); }
+
+.client-card { background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom:12px; overflow:hidden; transition:box-shadow .2s; }
+.client-card:hover { box-shadow:0 4px 12px rgba(229,9,20,.12); }
+.card-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 18px; cursor:pointer; transition:background .1s;
 }
-.btn-red { background: var(--red); color: white; }
-.btn-red:hover { background: var(--red-dark); }
-.btn-gray { background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-200); }
-.btn-gray:hover { background: var(--gray-200); }
-.btn-sm { padding: 6px 12px; font-size: 12px; }
+.card-header:hover { background:#FFFAFA; }
+.card-hl { display:flex; align-items:center; gap:10px; }
+.ticker { background:var(--red); color:#fff; font-size:10px; font-weight:700; padding:4px 9px; border-radius:4px; letter-spacing:.5px; }
+.client-name { font-size:14px; font-weight:700; }
+.card-meta { display:flex; align-items:center; gap:14px; }
+.card-meta-item { font-size:11px; color:var(--muted); }
+.card-meta-item b { color:var(--text); }
+.chevron { font-size:16px; color:var(--muted); transition:transform .2s; }
+.chevron.open { transform:rotate(180deg); }
 
-/* ── INPUTS ── */
-.input, .select, .textarea {
-  width: 100%; padding: 9px 12px;
-  border: 1px solid var(--gray-200); border-radius: 8px;
-  font-size: 13px; font-family: 'Inter',sans-serif;
-  color: var(--gray-900); background: var(--white);
-  transition: border-color 0.13s; outline: none;
+.card-body { display:none; border-top:1px solid var(--border); }
+.card-body.open { display:block; }
+.card-tabs { display:flex; background:#FAFAFA; border-bottom:1px solid var(--border); }
+.card-tab {
+  padding:9px 16px; font-size:11px; font-weight:600; color:var(--muted); cursor:pointer;
+  border-bottom:2px solid transparent; letter-spacing:.5px; text-transform:uppercase; transition:all .15s;
 }
-.input:focus, .select:focus, .textarea:focus {
-  border-color: var(--red); box-shadow: 0 0 0 3px rgba(204,27,43,0.09);
+.card-tab:hover { color:var(--text); background:#F3F4F6; }
+.card-tab.active { color:var(--red); border-bottom-color:var(--red); background:var(--surface); }
+.card-panel { display:none; padding:18px; }
+.card-panel.active { display:block; }
+
+.metrics-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px; margin-bottom:16px; }
+.metric-box { background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:12px; }
+.metric-lbl { font-size:10px; color:var(--muted); letter-spacing:.8px; text-transform:uppercase; margin-bottom:4px; }
+.metric-val { font-size:19px; font-weight:700; }
+.metric-sub { font-size:10px; color:var(--muted); margin-top:2px; }
+
+.pace-bar-wrap { margin-bottom:16px; }
+.pace-bar-labels { display:flex; justify-content:space-between; font-size:11px; margin-bottom:5px; }
+.pace-track { height:10px; background:#E5E7EB; border-radius:20px; position:relative; overflow:visible; }
+.pace-fill  { height:100%; background:var(--red); border-radius:20px; transition:width .5s; }
+.pace-marker {
+  position:absolute; top:-3px; width:2px; height:16px; background:var(--yellow); border-radius:2px;
 }
-.textarea { resize: vertical; min-height: 100px; line-height: 1.55; }
-.form-group { margin-bottom: 13px; }
-.form-label { font-size: 12px; font-weight: 600; color: var(--gray-700); margin-bottom: 5px; display: block; }
-
-/* ── TABLES ── */
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th {
-  text-align: left; padding: 9px 14px;
-  font-size: 11px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: 0.4px; color: var(--gray-500);
-  border-bottom: 1px solid var(--gray-200);
-  background: var(--gray-100); white-space: nowrap;
-}
-td { padding: 10px 14px; border-bottom: 1px solid var(--gray-100); color: var(--gray-900); vertical-align: middle; }
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: var(--gray-100); }
-.row-warn td { background: #FFFBEB !important; }
-.row-crit td { background: #FEF2F2 !important; }
-
-/* ── SUMMARY BAR ── */
-.summary-bar {
-  background: var(--black); border-radius: 12px;
-  padding: 16px 24px; display: flex; align-items: center; gap: 28px;
-  margin-bottom: 22px;
-}
-.sum-item { text-align: center; }
-.sum-num { font-size: 22px; font-weight: 800; color: white; }
-.sum-lbl { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.6px; }
-.sum-div { width: 1px; height: 34px; background: rgba(255,255,255,0.09); }
-
-/* ── PACE CARDS ── */
-.pace-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: 12px; padding: 16px 18px; }
-.pace-client { font-size: 13px; font-weight: 700; color: var(--black); }
-.pace-ticker { font-size: 11px; color: var(--gray-400); margin-bottom: 10px; }
-.pace-pct { font-size: 28px; font-weight: 800; margin: 4px 0 2px; line-height: 1; }
-.pace-track { height: 6px; background: var(--gray-200); border-radius: 99px; margin: 8px 0 6px; position: relative; }
-.pace-fill { height: 100%; border-radius: 99px; transition: width 0.5s ease; }
-.pace-needle { position: absolute; top: -4px; width: 2px; height: 14px; background: var(--gray-500); border-radius: 1px; }
-.pace-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--gray-500); }
-.pace-meta strong { color: var(--gray-900); font-weight: 600; }
-.pace-channels { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
-
-/* ── TIMESHEET TIMER ── */
-.timer-big { font-size: 44px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -2px; color: var(--black); text-align: center; margin: 12px 0 4px; }
-.timer-running .timer-big { color: var(--red); }
-.timer-sub { text-align: center; font-size: 12px; color: var(--gray-400); margin-bottom: 14px; }
-
-/* ── MSG OUTPUT ── */
-.msg-box {
-  background: var(--gray-100); border: 1px solid var(--gray-200);
-  border-radius: 10px; padding: 16px 18px;
-  font-size: 13px; line-height: 1.7; white-space: pre-wrap;
-  max-height: 420px; overflow-y: auto;
+.pace-marker::after {
+  content:attr(data-label); position:absolute; top:-15px; left:50%; transform:translateX(-50%);
+  font-size:9px; color:var(--yellow); white-space:nowrap; font-weight:700;
+  background:#92400E; padding:1px 4px; border-radius:3px;
 }
 
-/* ── ALERT STRIP ── */
-.alert { background: var(--red-light); border: 1px solid #FECACA; border-radius: 8px; padding: 9px 13px; font-size: 12px; color: #991B1B; display: flex; align-items: flex-start; gap: 7px; margin-bottom: 10px; }
-
-/* ── DIVIDER ── */
-.divider { height: 1px; background: var(--gray-200); margin: 22px 0; }
-
-/* ── LOADING ── */
-.loading { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--gray-400); padding: 12px 0; }
-.spin { width:15px; height:15px; border:2px solid var(--gray-200); border-top-color:var(--red); border-radius:50%; animation: rot 0.65s linear infinite; }
-@keyframes rot { to { transform: rotate(360deg); } }
-
-/* ── SETUP PLACEHOLDER ── */
-.setup { background: var(--gray-100); border: 2px dashed var(--gray-300); border-radius: 12px; padding: 32px; text-align: center; }
-.setup .icon { font-size: 34px; margin-bottom: 10px; }
-.setup h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
-.setup p { font-size: 13px; color: var(--gray-500); line-height: 1.6; margin-bottom: 14px; }
-
-/* ── AGENDA ── */
-.event-row { display: flex; align-items: flex-start; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--gray-100); }
-.event-row:last-child { border: none; }
-.event-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
-.event-time { font-size: 11px; font-weight: 600; color: var(--gray-400); min-width: 70px; }
-.event-title { font-size: 13px; font-weight: 500; color: var(--black); }
-.event-loc { font-size: 11px; color: var(--gray-400); margin-top: 1px; }
-
-/* ── TASK ITEMS ── */
-.task-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--gray-100); }
-.task-row:last-child { border: none; }
-.task-id-tag { font-size: 10px; color: var(--gray-400); font-family: monospace; background: var(--gray-100); padding: 1px 5px; border-radius: 4px; white-space: nowrap; }
-
-/* ── TOAST ── */
-.toast {
-  position: fixed; bottom: 22px; right: 22px;
-  background: var(--black); color: white;
-  padding: 11px 18px; border-radius: 10px;
-  font-size: 13px; font-weight: 500; z-index: 9999;
-  opacity: 0; transform: translateY(6px);
-  transition: all 0.22s; display: flex; align-items: center; gap: 7px;
-  max-width: 340px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+.analise-box {
+  background:#FFF0F0; border-left:3px solid var(--red); border-radius:0 6px 6px 0;
+  padding:14px 18px; font-size:13px; line-height:1.8; color:#3B1515; margin-bottom:16px;
 }
-.toast.show { opacity: 1; transform: translateY(0); }
-.toast.ok { background: #14532D; }
-.toast.err { background: #7F1D1D; }
-  </style>
+.analise-section { margin-bottom:10px; }
+.analise-section-title { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--red); margin-bottom:4px; }
+
+.mensagem-box {
+  background:#F0F7FF; border-left:3px solid var(--blue); border-radius:0 6px 6px 0;
+  padding:12px 16px; font-size:12px; line-height:1.6; color:#1E3A5F; margin-bottom:16px;
+}
+.mensagem-label { font-size:10px; font-weight:700; color:var(--blue); letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
+
+.plano-item { background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:14px; margin-bottom:10px; }
+.plano-row { display:flex; gap:8px; margin-bottom:4px; font-size:12px; }
+.plano-key { font-weight:700; color:var(--red); min-width:56px; flex-shrink:0; }
+.plano-val { color:var(--text); line-height:1.5; }
+
+.plano-manual-wrap {
+  margin-top:16px; border-top:1px dashed var(--border); padding-top:14px;
+}
+.plano-manual-label { font-size:10px; font-weight:700; color:var(--blue); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px; }
+.plano-manual-area {
+  width:100%; min-height:90px; border:1px dashed var(--border); border-radius:6px;
+  padding:10px 12px; font-family:'IBM Plex Sans',sans-serif; font-size:12px; line-height:1.7;
+  resize:vertical; outline:none; background:var(--bg); color:var(--text); transition:border-color .15s;
+}
+.plano-manual-area:focus { border-color:var(--blue); background:#F0F7FF; }
+.plano-manual-hint { font-size:10px; color:var(--muted); margin-top:5px; }
+
+.just-block { margin-bottom:16px; }
+.just-q { font-size:12px; font-weight:700; color:var(--yellow); margin-bottom:6px; display:flex; align-items:center; gap:6px; }
+.just-q-num { background:var(--yellow); color:#fff; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; }
+.just-a { font-size:12px; color:var(--muted); line-height:1.6; padding-left:24px; }
+
+.leads-table { width:100%; border-collapse:collapse; margin-bottom:16px; }
+.leads-table th { background:#F3F4F6; color:var(--muted); font-size:10px; font-weight:600; letter-spacing:.8px; text-transform:uppercase; padding:8px 10px; text-align:left; }
+.leads-table td { padding:9px 10px; border-bottom:1px solid var(--border); font-size:12px; }
+.leads-table tr:last-child td { border-bottom:none; }
+.lead-urg td { border-left:3px solid var(--red) !important; }
+.dias-urg { background:#FEE2E2; color:#991B1B; padding:2px 6px; border-radius:3px; font-size:10px; font-weight:700; }
+.dias-ok  { background:#F3F4F6; color:var(--muted); padding:2px 6px; border-radius:3px; font-size:10px; font-weight:700; }
+
+.risco { display:inline-flex; align-items:center; padding:3px 8px; border-radius:4px; font-size:10px; font-weight:700; letter-spacing:.3px; }
+
+.loading { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px; gap:12px; }
+.spinner { width:32px; height:32px; border:3px solid var(--border); border-top-color:var(--red); border-radius:50%; animation:spin .7s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.loading-txt { font-size:13px; color:var(--muted); }
+
+.tab-section { display:none; }
+.tab-section.active { display:block; }
+
+.divider { height:1px; background:var(--border); margin:16px 0; }
+
+.score-bar-wrap { display:flex; align-items:center; gap:6px; }
+.score-bar { width:60px; height:6px; background:var(--border); border-radius:3px; overflow:hidden; }
+.score-fill { height:100%; border-radius:3px; }
+
+.desvio-pos { color:#92400E; font-weight:700; }
+.desvio-ok  { color:#166534; font-weight:700; }
+.desvio-neg { color:#991B1B; font-weight:700; }
+
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+
+.cart-msg { font-size:11px; color:var(--muted); max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* Saúde tab */
+.saude-kpis { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; margin-bottom:20px; }
+.saude-flag-bar { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:20px; padding:10px 14px; background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); }
+.saude-flag-item { display:flex; align-items:center; gap:5px; font-size:12px; }
+.saude-flag-dot  { width:11px; height:11px; border-radius:50%; flex-shrink:0; }
+.saude-offline   { background:#FEE2E2; border-left:3px solid var(--red); border-radius:0 6px 6px 0; padding:14px 18px; font-size:12px; color:#991B1B; margin-bottom:20px; }
+</style>
+
+<script>
+/* Snapshot gerado em 15/06/2026, 12:55:07 */
+window.STATIC_MODE         = true;
+window.STATIC_GENERATED_AT = '15/06/2026, 12:55:07';
+window.STATIC_DATA = {"semana":25,"periodo":"15/06 a 21/06","paceEsperado":"50.0","diaAtual":15,"diasNoMes":30,"updatedAt":"15/06/2026, 12:55:07","cacheInfo":"GP: 15/06, 12:51","errors":[],"conexoes":{"growthpack":"ok — 0h atrás","cockpit":"ok — 15/06/2026, 12:51:16 · 4 em risco"},"clientes":[{"ticker":"NATU","nome":"Natuclean","tipo":"IS","hs":{"flag":"Danger","score":20,"lt":0,"nome":"Natuclean","fee":8364.36,"dim":{"resultados":0,"opsTrafego":"true","prazoEntregas":"true","entregas":"true","relacionamento":"true"},"ckPace":0,"ckLeads":0,"ckMql":0,"ckSql":0,"ckVendas":0},"com":null,"gp":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","mensagem":"Planilha não pública → Compartilhar → \"Qualquer pessoa com o link\" → Leitor"},"paceReal":"—","desvio":"—","paceStatus":"Sem budget","risco":"CRÍTICO","riscoColor":"#E50914","riscoScore":3,"mensagem":"Planilha não pública → Compartilhar → \"Qualquer pessoa com o link\" → Leitor"},{"ticker":"MSZB","nome":"Massimo Zanetti","tipo":"EC","hs":{"flag":"Danger","score":20,"lt":2,"nome":"Massimo Zanetti Beverage Brasil Ltda","fee":6750.2,"dim":{"resultados":0,"opsTrafego":"true","prazoEntregas":"true","entregas":"true","relacionamento":"true"},"ckPace":0,"ckLeads":0,"ckMql":0,"ckSql":0,"ckVendas":0},"com":null,"gp":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","mensagem":"Planilha não pública → Compartilhar → \"Qualquer pessoa com o link\" → Leitor"},"paceReal":"—","desvio":"—","paceStatus":"Sem budget","risco":"CRÍTICO","riscoColor":"#E50914","riscoScore":3,"mensagem":"Planilha não pública → Compartilhar → \"Qualquer pessoa com o link\" → Leitor"},{"ticker":"SOTB","nome":"Atlantica Maquinas","tipo":"IS","hs":{"flag":"Danger","score":18,"lt":31,"nome":"SOTOBI MAQUINAS E ACESSORIOS PARA FABRICAS DE BLOCOS LTDA","fee":6000,"dim":{"resultados":6,"opsTrafego":"true","prazoEntregas":"false","entregas":"true","relacionamento":"false"},"ckPace":0.3886414285714285,"ckLeads":391,"ckMql":60,"ckSql":18,"ckVendas":4},"com":null,"gp":{"budget":0,"investido":3511.05,"meta":2701.94,"google":809.11,"cpl":5.79,"faturamento":144300,"leads":494,"mql":0,"sql":0,"vendas":2,"metaLeads":60,"rawBudget":"—","rawInvest":"R$ 3.511","rawCPL":"R$ 5,79","rawFat":"R$ 144.300","rawMeta":"R$ 2.702","rawGoogle":"R$ 809","mensagem":""},"paceReal":"—","desvio":"—","paceStatus":"Sem budget","risco":"CRÍTICO","riscoColor":"#E50914","riscoScore":3,"mensagem":""},{"ticker":"TAWV","nome":"Tawa Veiculos","tipo":"IS","hs":{"flag":"Danger","score":20,"lt":0,"nome":"TAWÁ VEÍCULOS","fee":6064.16,"dim":{"resultados":0,"opsTrafego":"true","prazoEntregas":"true","entregas":"true","relacionamento":"true"},"ckPace":0,"ckLeads":0,"ckMql":0,"ckSql":0,"ckVendas":0},"com":null,"gp":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","mensagem":""},"paceReal":"—","desvio":"—","paceStatus":"Sem budget","risco":"CRÍTICO","riscoColor":"#E50914","riscoScore":3,"mensagem":""},{"ticker":"ACCE","nome":"VLoca","tipo":"EC","hs":{"flag":"Care","score":26,"lt":8,"nome":"ACCENTURE PARTICIPACOES LTDA(ACCENTURE PARTICIPACOES LTDA - 54.271.277/0001-88)","fee":6000,"dim":{"resultados":6,"opsTrafego":"true","prazoEntregas":"true","entregas":"true","relacionamento":"true"},"ckPace":0.2816375,"ckLeads":82,"ckMql":62,"ckSql":9,"ckVendas":5},"com":null,"gp":{"budget":0,"investido":1527.44,"meta":1290.46,"google":236.98,"cpl":14.5,"faturamento":43611.4,"leads":100,"mql":63,"sql":10,"vendas":6,"metaLeads":89,"rawBudget":"—","rawInvest":"R$ 1.527","rawCPL":"R$ 14,50","rawFat":"R$ 43.611","rawMeta":"R$ 1.290","rawGoogle":"R$ 237","mensagem":""},"paceReal":"—","desvio":"—","paceStatus":"Sem budget","risco":"MÉDIO","riscoColor":"#F59E0B","riscoScore":1,"mensagem":""},{"ticker":"FARE1","nome":"Fares Aquino","tipo":"IS","hs":{"flag":"Care","score":25,"lt":2,"nome":"FARES AQUINO SOCIEDADE INDIVIDUAL DE ADVOCACIA","fee":6602.01,"dim":{"resultados":5,"opsTrafego":"true","prazoEntregas":"true","entregas":"true","relacionamento":"true"},"ckPace":0.4851685714285714,"ckLeads":159,"ckMql":30,"ckSql":12,"ckVendas":3},"com":null,"gp":{"budget":0,"investido":2131.02,"meta":2131.02,"google":0,"cpl":11.71,"faturamento":46000,"leads":182,"mql":33,"sql":14,"vendas":3,"metaLeads":182,"rawBudget":"—","rawInvest":"R$ 2.131","rawCPL":"R$ 11,71","rawFat":"R$ 46.000","rawMeta":"R$ 2.131","rawGoogle":"—","mensagem":""},"paceReal":"—","desvio":"—","paceStatus":"Sem budget","risco":"MÉDIO","riscoColor":"#F59E0B","riscoScore":1,"mensagem":""},{"ticker":"TECN1","nome":"Tecnipool","tipo":"IS","hs":{"flag":"N/D","score":0,"lt":0},"com":null,"gp":{"budget":0,"investido":3520.68,"meta":1026.13,"google":2494.55,"cpl":17.66,"faturamento":0,"leads":101,"mql":16,"sql":7,"vendas":0,"metaLeads":43,"rawBudget":"—","rawInvest":"R$ 3.521","rawCPL":"R$ 17,66","rawFat":"—","rawMeta":"R$ 1.026","rawGoogle":"R$ 2.495","mensagem":""},"paceReal":"—","desvio":"—","paceStatus":"Sem budget","risco":"OK","riscoColor":"#22C55E","riscoScore":0,"mensagem":""}],"cockpit":{"projetos":6,"emRisco":4,"scoreOp":"31.7","hsMedia":"21.5","flagDist":{"Safe":0,"Care":2,"Critical":0,"Danger":4},"lastOk":"15/06/2026, 12:51:16"}};
+</script>
 </head>
 <body>
 
-<!-- ━━━━ SIDEBAR ━━━━ -->
-<aside class="sidebar">
-  <div class="sidebar-logo">
-    <div class="logo-box">V4</div>
-    <span class="logo-wordmark">Company</span>
+<div class="topbar"></div>
+
+<div class="header">
+  <div class="brand">
+    <div class="logo">V4</div>
+    <div class="brand-name">Colli &amp; Co — Growth Review</div>
   </div>
-  <div class="sidebar-user">
-    <div class="sidebar-name">Julia Costa</div>
-    <div class="sidebar-role">Gestora de Projetos</div>
-    <div class="sidebar-date" id="s-date">—</div>
+  <div class="nav">
+    <button class="tab-btn active" onclick="setTab('growth')">Growth Review</button>
+    <button class="tab-btn" onclick="setTab('saude')">Saúde</button>
+    <button class="tab-btn" onclick="setTab('comercial')">Comercial</button>
   </div>
-  <nav class="sidebar-nav">
-    <div class="nav-item active" data-tab="atendimento"><span class="nav-icon">💬</span>Atendimento</div>
-    <div class="nav-item" data-tab="pace"><span class="nav-icon">📊</span>GrowthPace</div>
-    <div class="nav-item" data-tab="comercial"><span class="nav-icon">🎯</span>Comercial</div>
-    <div class="nav-item" data-tab="healthscore"><span class="nav-icon">❤️</span>Health Score</div>
-    <div class="nav-item" data-tab="agenda"><span class="nav-icon">📅</span>Agenda</div>
-    <div class="nav-item" data-tab="timesheet"><span class="nav-icon">⏱️</span>Timesheet</div>
-  </nav>
-  <div class="sidebar-footer">
-    <div style="display:flex;flex-direction:column;gap:6px;">
-      <button class="btn-sync" onclick="syncActive()">🔄 Atualizar dados</button>
-      <a href="https://github.com/juliacostamktdigital-eng/Lps/actions/workflows/sync-data.yml"
-         target="_blank"
-         style="font-size:10px;color:rgba(255,255,255,0.3);text-align:center;text-decoration:none;padding:2px 0;">
-        ↗ Executar sync manual
-      </a>
+  <div class="header-right">
+    <span class="updated-tag" id="updatedAt">—</span>
+    <button class="refresh-btn" id="refreshBtn" onclick="refreshData()">↻ Atualizar</button>
+  </div>
+</div>
+
+<div class="sprint-banner">
+  <div class="sprint-left">
+    <div class="sprint-week">SPRINT GROWTH — <b id="weekNum">SEMANA —</b></div>
+    <div class="sprint-period" id="weekPeriod">Carregando...</div>
+  </div>
+  <div class="sprint-kpis">
+    <div class="sprint-kpi">
+      <div class="sprint-kpi-val" id="paceEsp">—%</div>
+      <div class="sprint-kpi-label">Pace Esperado</div>
+    </div>
+    <div class="sprint-kpi">
+      <div class="sprint-kpi-val" id="diaAtual" style="color:var(--text)">Dia — / —</div>
+      <div class="sprint-kpi-label">Progresso Mês</div>
+    </div>
+    <div class="sprint-kpi">
+      <div class="sprint-kpi-val" id="cacheInfo" style="color:var(--muted);font-size:12px">—</div>
+      <div class="sprint-kpi-label">Último Cache GP</div>
     </div>
   </div>
-</aside>
+</div>
 
-<!-- ━━━━ MAIN ━━━━ -->
-<main class="main">
+<div class="conn-bar" id="connBar"></div>
+<div class="err-banner" id="errBanner"></div>
 
-  <!-- ═══ ABA: ATENDIMENTO ═══ -->
-  <div class="tab-panel active" id="tab-atendimento">
-    <div class="page-header">
-      <div class="page-title">Atendimento Diário</div>
-      <div class="page-sub">Selecione o cliente, cole os dados e gere a mensagem formatada para WhatsApp</div>
-    </div>
+<div class="main">
 
-    <div class="g2" style="align-items:start; gap:24px;">
-
-      <!-- ESQUERDA: formulário -->
-      <div>
-        <div class="card" style="margin-bottom:14px;">
-          <div class="card-label">Cliente e Tipo</div>
-          <div class="form-group">
-            <label class="form-label">Cliente</label>
-            <select class="select" id="a-client" onchange="loadAtendContext()">
-              <option value="">Selecione...</option>
-              <option value="FCE">FCE — FiveCred</option>
-              <option value="ACCE">ACCE — VLoca</option>
-              <option value="MSZB">MSZB — Massimo Zanetti</option>
-              <option value="TAWV">TAWV — Tawa Veiculos</option>
-              <option value="TECN1">TECN1 — Tecnipool</option>
-              <option value="FARS">FARS — Fares Aquino</option>
-              <option value="SOTB">SOTB — Atlantica Maquinas</option>
-            </select>
-          </div>
-          <div class="form-group" style="margin-bottom:0;">
-            <label class="form-label">Tipo de Mensagem</label>
-            <select class="select" id="a-type">
-              <option value="diario">Relatorio Diario D-1</option>
-              <option value="mensal">Relatorio Mensal</option>
-              <option value="semanal">Semanal — Boas Praticas</option>
-              <option value="criativo">Aprovacao de Criativos</option>
-              <option value="update">Atualizacao / Projeto</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-label">Dados da Campanha</div>
-          <textarea class="textarea" id="a-dados" placeholder="Cole os dados que sua GT enviou.&#10;Ex: Meta: Investimento R$450 | Leads 12 | CPL R$37,50&#10;Google: Investimento R$280 | Leads 8 | CPL R$35,00" style="min-height:140px;"></textarea>
-          <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
-            <button class="btn btn-red" onclick="gerarMsg()">✨ Gerar Mensagem</button>
-            <button class="btn btn-gray btn-sm" onclick="copyMsg()">📋 Copiar</button>
-            <button class="btn btn-gray btn-sm" onclick="document.getElementById('a-dados').value=''">Limpar</button>
-          </div>
-        </div>
+  <!-- GROWTH REVIEW -->
+  <div class="tab-section active" id="tab-growth">
+    <div id="loadingGR" class="loading"><div class="spinner"></div><div class="loading-txt">Carregando dados...</div></div>
+    <div id="contentGR" style="display:none">
+      <div class="sec-label">Visão da Carteira — Semana <span id="semLabel">—</span></div>
+      <div class="carteira-wrap">
+        <table class="carteira">
+          <thead>
+            <tr>
+              <th>Cliente</th><th>HS</th><th>Budget/Mês</th><th>Investido</th>
+              <th>Pace %</th><th>Desvio</th><th>Meta Leads</th><th>Leads</th>
+              <th>MQL</th><th>SQL</th><th>Vendas</th><th>CPL</th>
+              <th>Faturamento</th><th>Risco</th><th>Mensagem GP</th>
+            </tr>
+          </thead>
+          <tbody id="carteiraBody"></tbody>
+        </table>
       </div>
-
-      <!-- DIREITA: contexto + saída -->
-      <div>
-        <div id="a-context-wrap" style="display:none;">
-          <div class="card" style="margin-bottom:12px;">
-            <div class="card-label">Ekyte — Tarefas em Aberto</div>
-            <div id="a-ekyte-tasks"><div class="loading"><div class="spin"></div> Carregando...</div></div>
-          </div>
-          <div id="a-comercial-card" class="card" style="display:none; margin-bottom:12px;">
-            <div class="card-label">Comercial — Alertas</div>
-            <div id="a-comercial-content"></div>
-          </div>
-        </div>
-
-        <div id="a-output-card" class="card" style="display:none;">
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-            <div class="card-label" style="margin:0;">Mensagem Gerada</div>
-            <button class="btn btn-gray btn-sm" onclick="copyMsg()">📋 Copiar</button>
-          </div>
-          <div class="msg-box" id="a-output"></div>
-        </div>
-
-        <div id="a-placeholder" class="setup">
-          <div class="icon">💬</div>
-          <h3>Pronto para atender</h3>
-          <p>Escolha o cliente ao lado. O painel vai carregar as tarefas do Ekyte e os alertas do comercial antes de voce gerar a mensagem.</p>
-        </div>
-      </div>
+      <div class="sec-label">Sprint por Cliente</div>
+      <div id="clienteCards"></div>
     </div>
   </div>
 
-  <!-- ═══ ABA: PACE ═══ -->
-  <div class="tab-panel" id="tab-pace">
-    <div class="page-header">
-      <div class="page-title">GrowthPace</div>
-      <div class="page-sub" id="pace-sub">Carregando planilhas...</div>
-    </div>
-
-    <div class="summary-bar" id="pace-bar">
-      <div class="sum-item"><div class="sum-num" id="p-total">—</div><div class="sum-lbl">Clientes</div></div>
-      <div class="sum-div"></div>
-      <div class="sum-item"><div class="sum-num" style="color:#4ADE80;" id="p-ok">—</div><div class="sum-lbl">No Pace</div></div>
-      <div class="sum-div"></div>
-      <div class="sum-item"><div class="sum-num" style="color:#FBBF24;" id="p-warn">—</div><div class="sum-lbl">Atencao</div></div>
-      <div class="sum-div"></div>
-      <div class="sum-item"><div class="sum-num" style="color:#F87171;" id="p-crit">—</div><div class="sum-lbl">Critico</div></div>
-      <div class="sum-div"></div>
-      <div class="sum-item"><div class="sum-num" style="color:#A78BFA;" id="p-exp">—</div><div class="sum-lbl">Pace Esperado</div></div>
-      <div style="margin-left:auto;">
-        <button class="btn btn-gray btn-sm" onclick="loadPace()" style="background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);">🔄 Atualizar</button>
-      </div>
-    </div>
-
-    <!-- Health Score: cards do JSON (sync) + link para cockpit completo -->
-    <div class="card" style="margin-bottom:18px;" id="hs-strip">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-        <div class="card-label" style="margin:0;">Health Score</div>
-        <div style="display:flex;gap:10px;align-items:center;">
-          <div style="font-size:11px;color:var(--gray-400);" id="hs-sync-time">—</div>
-          <a href="https://flow.collieassociados.com/health-score/cockpit" target="_blank"
-             style="font-size:11px;color:var(--red);font-weight:600;text-decoration:none;">
-            Ver cockpit completo ↗
-          </a>
-        </div>
-      </div>
-      <div id="hs-cards" style="display:flex;gap:10px;flex-wrap:wrap;">
-        <div class="loading"><div class="spin"></div> Carregando...</div>
-      </div>
-    </div>
-
-    <!-- Alerta de gestora: clientes que precisam de atencao -->
-    <div id="mgr-alert" style="display:none;margin-bottom:16px;"></div>
-
-    <div class="g4" id="pace-cards">
-      <div class="loading"><div class="spin"></div> Buscando dados...</div>
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="card">
-      <div class="card-label">Pace Real vs Esperado (%)</div>
-      <canvas id="paceChart" height="70"></canvas>
-    </div>
-
-    <div class="card" style="margin-top:14px; background:var(--gray-100); border-style:dashed;">
-      <div style="font-size:12px; color:var(--gray-500); line-height:1.7;">
-        <strong style="color:var(--gray-700);">Para as planilhas funcionarem:</strong>
-        abra cada GrowthPack no Google Sheets → Arquivo → Compartilhar → Publicar na Web → selecione a aba correta → CSV → Publicar.
-        Ou compartilhe como "Qualquer pessoa com o link pode ver".
-        Sem isso o navegador nao consegue ler os dados por restricao de CORS.
-      </div>
+  <!-- SAÚDE -->
+  <div class="tab-section" id="tab-saude">
+    <div id="saudeContent">
+      <div class="loading"><div class="spinner"></div><div class="loading-txt">Carregando...</div></div>
     </div>
   </div>
 
-  <!-- ═══ ABA: COMERCIAL ═══ -->
-  <div class="tab-panel" id="tab-comercial">
-    <div class="page-header">
-      <div class="page-title">Acompanhamento Comercial</div>
-      <div class="page-sub">Leads sem atualizacao e alertas por cliente</div>
-    </div>
-
-    <div style="display:flex; align-items:center; gap:10px; margin-bottom:22px; flex-wrap:wrap;">
-      <select class="select" style="max-width:220px;" id="com-filter" onchange="filterCom()">
-        <option value="all">Todos os clientes</option>
-        <option value="FCE">FCE — FiveCred</option>
-        <option value="TECN1">TECN1 — Tecnipool</option>
-        <option value="FARS">FARS — Fares Aquino</option>
-      </select>
-      <button class="btn btn-gray btn-sm" onclick="loadComercial()">🔄 Atualizar</button>
-      <span id="com-summary" style="font-size:12px;color:var(--gray-500);"></span>
-    </div>
-
-    <div id="com-content">
-      <div class="loading"><div class="spin"></div> Carregando planilhas...</div>
-    </div>
+  <!-- COMERCIAL -->
+  <div class="tab-section" id="tab-comercial">
+    <div class="sec-label">Funil Comercial — Mês Atual</div>
+    <div id="comercialContent"></div>
   </div>
 
-  <!-- ═══ ABA: HEALTH SCORE ═══ -->
-  <div class="tab-panel" id="tab-healthscore">
-    <div class="page-header">
-      <div class="page-title">Health Score</div>
-      <div class="page-sub" id="hs-page-sub">Carregando...</div>
-    </div>
-
-    <!-- Resumo executivo -->
-    <div class="summary-bar" id="hs-exec-bar" style="margin-bottom:22px;">
-      <div class="sum-item"><div class="sum-num" style="color:#F87171;" id="hs-danger">—</div><div class="sum-lbl">Danger</div></div>
-      <div class="sum-div"></div>
-      <div class="sum-item"><div class="sum-num" style="color:#FCA5A5;" id="hs-critical">—</div><div class="sum-lbl">Critical</div></div>
-      <div class="sum-div"></div>
-      <div class="sum-item"><div class="sum-num" style="color:#FBBF24;" id="hs-care">—</div><div class="sum-lbl">Care</div></div>
-      <div class="sum-div"></div>
-      <div class="sum-item"><div class="sum-num" style="color:#4ADE80;" id="hs-safe">—</div><div class="sum-lbl">Safe</div></div>
-      <div class="sum-div"></div>
-      <div class="sum-item"><div class="sum-num" id="hs-avg-score">—</div><div class="sum-lbl">Media Geral</div></div>
-      <div style="margin-left:auto;display:flex;gap:8px;">
-        <button class="btn btn-gray btn-sm" onclick="loadHealthScoreTab()" style="background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);">🔄</button>
-        <a href="https://flow.collieassociados.com/health-score/cockpit" target="_blank"
-           class="btn btn-red btn-sm" style="text-decoration:none;">Ver Cockpit ↗</a>
-      </div>
-    </div>
-
-    <!-- Cards por cliente -->
-    <div id="hs-full-cards" class="g3" style="margin-bottom:24px;">
-      <div class="loading"><div class="spin"></div> Carregando...</div>
-    </div>
-
-    <!-- Grafico de scores -->
-    <div class="card" style="margin-bottom:18px;">
-      <div class="card-label">Score por Cliente (meta: acima de 20)</div>
-      <canvas id="hsChart" height="80"></canvas>
-    </div>
-
-    <!-- Alerta de gestora -->
-    <div id="hs-manager-alert" style="display:none;"></div>
-  </div>
-
-  <!-- ═══ ABA: AGENDA ═══ -->
-  <div class="tab-panel" id="tab-agenda">
-    <div class="page-header">
-      <div class="page-title">Agenda</div>
-      <div class="page-sub" id="agenda-sub">julia.costa@v4company.com</div>
-    </div>
-
-    <!-- Seletor de visualizacao -->
-    <div style="display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap;">
-      <button class="btn btn-red btn-sm" onclick="setCalView('day')">Hoje</button>
-      <button class="btn btn-gray btn-sm" onclick="setCalView('week')">Semana</button>
-      <button class="btn btn-gray btn-sm" onclick="setCalView('month')">Mes</button>
-      <button class="btn btn-gray btn-sm" onclick="setCalView('agenda')">Lista</button>
-    </div>
-
-    <!-- Embed Google Calendar -->
-    <div class="card" style="padding:0; overflow:hidden; border-radius:12px;">
-      <iframe
-        id="cal-iframe"
-        src="https://calendar.google.com/calendar/embed?src=julia.costa%40v4company.com&ctz=America%2FSao_Paulo&mode=WEEK&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0&bgcolor=%23ffffff&color=%23CC1B2B"
-        style="border:0; width:100%; height:640px; display:block;"
-        frameborder="0"
-        scrolling="no">
-      </iframe>
-    </div>
-
-    <div style="font-size:11px; color:var(--gray-400); margin-top:10px; text-align:right;">
-      Voce precisa estar logada com julia.costa@v4company.com no navegador para ver os eventos.
-    </div>
-  </div>
-
-  <!-- ═══ ABA: TIMESHEET ═══ -->
-  <div class="tab-panel" id="tab-timesheet">
-    <div class="page-header">
-      <div class="page-title">Timesheet</div>
-      <div class="page-sub">Apontamentos de hora no Ekyte</div>
-    </div>
-
-    <div class="g2" style="align-items:start; gap:22px;">
-
-      <!-- TIMER + MANUAL -->
-      <div>
-        <div class="card" id="timer-card" style="margin-bottom:14px;">
-          <div class="card-label">Timer</div>
-          <div class="form-group">
-            <label class="form-label">ID da Task</label>
-            <input class="input" id="t-id" placeholder="Ex: 9485238" type="number">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Nome da Task</label>
-            <input class="input" id="t-name" placeholder="Ex: Atendimento FiveCred">
-          </div>
-          <div class="timer-big" id="t-clock">00:00:00</div>
-          <div class="timer-sub" id="t-sub">Pronto para iniciar</div>
-          <div style="display:flex; gap:8px; justify-content:center;">
-            <button class="btn btn-red" id="t-start" onclick="startTimer()">▶ Iniciar</button>
-            <button class="btn btn-gray" id="t-stop" onclick="stopTimer()" style="display:none;">⏹ Finalizar e Registrar</button>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-label">Registro Manual</div>
-          <div class="g2" style="gap:8px;">
-            <div class="form-group">
-              <label class="form-label">ID da Task</label>
-              <input class="input" id="m-id" type="number" placeholder="9485238">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Nome</label>
-              <input class="input" id="m-name" placeholder="Nome da task">
-            </div>
-          </div>
-          <div class="g2" style="gap:8px;">
-            <div class="form-group">
-              <label class="form-label">Inicio</label>
-              <input class="input" id="m-start" type="time">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Fim</label>
-              <input class="input" id="m-end" type="time">
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Data</label>
-            <input class="input" id="m-date" type="date">
-          </div>
-          <button class="btn btn-red" onclick="registerManual()">Registrar no Ekyte</button>
-        </div>
-      </div>
-
-      <!-- LOG DO DIA -->
-      <div class="card">
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-          <div class="card-label" style="margin:0;">Log de Hoje</div>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <button class="btn btn-gray btn-sm" onclick="loadTsEkyte()">🔄 Carregar do Ekyte</button>
-            <div style="font-size:16px; font-weight:800; color:var(--red);" id="t-total">0h00</div>
-          </div>
-        </div>
-        <div id="t-log">
-          <p style="font-size:13px; color:var(--gray-400); text-align:center; padding:28px 0;">Nenhum apontamento hoje.</p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-</main>
-
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
+</div>
 
 <script>
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// CONFIG
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const EKYTE_TOKEN = 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjhBOTg4MzdFNjcyNEZBMzNBNUNENjdERUE4MEI1NDlFRUFDQUE5REFSUzI1NiIsInR5cCI6ImF0K2p3dCIsIng1dCI6ImlwaURmbWNrLWpPbHpXZmVxQXRVbnVyS3FkbyJ9.eyJuYmYiOjE3NzkxMzY1NjgsImV4cCI6MTc5NDY4ODU2OCwiaXNzIjoiaHR0cHM6Ly9hcGkuZWt5dGUuY29tIiwiY2xpZW50X2lkIjoicmVhY3RKU0NsaWVudCIsInN1YiI6IjE0Mjg0ZmEzLTM4NTAtNDRjMi04OWY3LTdkNTcwODQ3ZjUxZSIsImF1dGhfdGltZSI6MTc3OTEzNjU2NywiaWRwIjoibG9jYWwiLCJqdGkiOiJCNDMyOTVDODMzQzdFMDREMUU2MkZGMzUxMTlCMzFDOSIsImlhdCI6MTc3OTEzNjU2OCwic2NvcGUiOlsiZWt5dGVhcGkiXSwiYW1yIjpbInB3ZCJdfQ.ekGhrg_zWu8bL3Hq5DXRcddMgt1Mv-F67XeqghHg6ynuNxaWdReRI_dzveo35NaP_Shh5DjsKXT_MoI8zH10iVq4nOsb7FYw-k64C-qu9ymsKdU4MQ1fvP2Aqpve6D1snqTJqJlIvN58vpZz69ywkF0XiJbEY137bEdiImCRd85BDZHRwSOeVQfpdppZ2UAaMZpvb8ypvJNDE-uXX9XieYujJGj0F1ENyxtOYz_td6vIm6d_ofNQOEPtcGP24rML3POdLoEeK9QjBlSvYVhkY4zaiWlMM6fyHhvTVhXLIvRxL91aqC_JXsOcKzpeHHS__c3jgI6qDz_Riiny7Scapg';
-const EKYTE_CO = 3597;
+let D = null;
+let activeTab = 'growth';
 
-const CLIENTS = {
-  FCE:   { name:'FiveCred',           pace:{ id:'1naAmFNzrycM5cddVQDhGduDQx0nZFe0GlgtajOA2fUI', gid:'617612824'  }, com:{ id:'1duCquoJj-NEf2sGF_25oD6lHWZegCOoiGgoJ6F1N5TU', gid:'0'         } },
-  ACCE:  { name:'VLoca',              pace:{ id:'1DJYnq3qXC9Td8Fip1LJvFy4qn8XBIIkcGhT8QC2m_M8', gid:'2105044438' }, com:null },
-  MSZB:  { name:'Massimo Zanetti',    pace:{ id:'1Trpq5YTb4e_spNIG94bE12z1u6ZWPkPEr_wDPlcz29Y', gid:'368538734'  }, com:null },
-  TAWV:  { name:'Tawa Veiculos',      pace:{ id:'1qGWXaxS2yLu3jX9hTIxX87jwnT1ONi59kFNSSXVIaDY', gid:'2105044438' }, com:null },
-  TECN1: { name:'Tecnipool',          pace:{ id:'1e2PKWFMxEHoc-9K_0_omXVLiLIT8bASte0J_s6KCiMg', gid:'2105044438' }, com:{ id:'1Q4cgA_XG2Q6TxPzIB5oKb0vHGUyaQa-bFsJwFc41hrQ', gid:'0'         } },
-  FARS:  { name:'Fares Aquino',       pace:{ id:'1y_veFQsSb7q8Nzz_Q0ZD68D29vWM20c578JZDVZLkpU', gid:'105734657'  }, com:{ id:'1X-tCWiJeRVLuRiCXjuGlpXBVbhcQRROQJRn_QefJeIo', gid:'285026569'  } },
-  SOTB:  { name:'Atlantica Maquinas', pace:{ id:'1GDiRcey6G4kmx0ybSoIhVJSMRx-LGM5Ae7LepLNMoB0', gid:'617612824'  }, com:null },
-};
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// INIT
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-let paceChart = null;
-let timerIval = null, timerStart = null, timerTask = null;
-let tsLog = JSON.parse(localStorage.getItem('ts_' + todayKey()) || '[]');
-
-function todayKey() { return new Date().toISOString().slice(0,10); }
-
-document.addEventListener('DOMContentLoaded', () => {
-  // date
-  const now = new Date();
-  const d = now.toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long' });
-  document.getElementById('s-date').textContent = d.charAt(0).toUpperCase() + d.slice(1);
-  document.getElementById('agenda-sub').textContent = now.toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long', year:'numeric' });
-  document.getElementById('m-date').value = todayKey();
-
-  // nav
-  document.querySelectorAll('.nav-item').forEach(n => {
-    n.addEventListener('click', () => {
-      document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
-      document.querySelectorAll('.tab-panel').forEach(x => x.classList.remove('active'));
-      n.classList.add('active');
-      const tab = n.dataset.tab;
-      document.getElementById('tab-' + tab).classList.add('active');
-      if (tab === 'pace')        loadPace();
-      if (tab === 'comercial')   loadComercial();
-      if (tab === 'agenda')      loadAgenda();
-      if (tab === 'healthscore') loadHealthScoreTab();
-    });
-  });
-
-  // agenda usa embed direto — sem configuracao necessaria
-
-  renderTsLog();
-  loadSyncTime();
-});
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// TOAST
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function toast(msg, type) {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.className = 'toast show ' + (type||'');
-  setTimeout(() => el.classList.remove('show'), 3200);
+// ── UTILS ────────────────────────────────────
+function esc(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function hsColor(flag) {
+  return { Safe:'#22C55E', Care:'#F59E0B', Critical:'#FF6E00', Danger:'#E50914' }[flag] || '#9CA3AF';
+}
+function paceCls(st) {
+  return { ATRASADO:'p-atrasado','Atraso leve':'p-atraso-l','No pace':'p-nopace',
+    Acelerado:'p-acelerado',ACELERADO:'p-acelerado','Aguardando GT':'p-aguard','Sem budget':'p-aguard' }[st] || 'p-aguard';
+}
+function hsBadge(flag) {
+  const m = { Safe:['hs-safe','Safe ●'], Care:['hs-care','Care ●'], Critical:['hs-critical','Critical ●'], Danger:['hs-danger','Danger ●'] };
+  const [cls, lbl] = m[flag] || ['hs-nd', flag || 'N/D'];
+  return `<span class="badge ${cls}">${lbl}</span>`;
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// EKYTE API
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const EK = {
-  headers() { return { 'Authorization':'Bearer '+EKYTE_TOKEN, 'Accept':'application/json', 'Content-Type':'application/json' }; },
-  async get(path) {
-    const r = await fetch('https://api.ekyte.com'+path, { headers:this.headers(), mode:'cors' });
-    if (!r.ok) throw new Error('HTTP '+r.status);
-    return r.json();
-  },
-  async post(path, body) {
-    const r = await fetch('https://api.ekyte.com'+path, { method:'POST', headers:this.headers(), mode:'cors', body:JSON.stringify(body) });
-    if (!r.ok) { const t = await r.text(); throw new Error('HTTP '+r.status+': '+t); }
-    return r.json().catch(()=>({}));
-  }
-};
+// ── TABS ─────────────────────────────────────
+const TABS = ['growth','saude','comercial'];
+function setTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', TABS[i] === tab));
+  document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  if (D) renderTab(tab);
+}
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// GOOGLE SHEETS FETCH + PARSE
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-async function fetchCSV(key, tipo) {
-  // tipo = 'pace' ou 'com'
-  const path = `data/${tipo}/${key}.csv`;
+// ── FETCH ─────────────────────────────────────
+async function loadData(force = false) {
+  // Modo estático: dados embutidos no HTML (GitHub Pages / snapshot)
+  if (!force && window.STATIC_MODE && window.STATIC_DATA) {
+    D = window.STATIC_DATA;
+    renderAll();
+    const el = document.getElementById('lastUpdated');
+    if (el) el.textContent = 'Snapshot: ' + (window.STATIC_GENERATED_AT || '');
+    return;
+  }
   try {
-    const r = await fetch(path);
-    if (!r.ok) throw new Error(`${r.status}`);
-    const t = await r.text();
-    if (t.length < 10 || t.trim().startsWith('<')) throw new Error('arquivo vazio ou invalido');
-    return t;
+    const r = await fetch(force ? '/api/sprint-data?force=1' : '/api/sprint-data');
+    const d = await r.json();
+    if (d.error) throw new Error(d.error);
+    D = d;
+    renderAll();
   } catch(e) {
-    throw new Error(`Arquivo nao encontrado (${path}). Execute o sync primeiro.`);
+    console.warn('Backend error:', e.message);
+    D = getMockData();
+    renderAll();
   }
 }
 
-function parseCSV(text) {
-  return text.split('\n').map(row => {
-    const cols=[]; let q=false, cur='';
-    for (let i=0;i<row.length;i++) {
-      const c=row[i];
-      if (c==='"') { q=!q; continue; }
-      if (c===','&&!q) { cols.push(cur.trim()); cur=''; continue; }
-      cur+=c;
-    }
-    cols.push(cur.trim()); return cols;
-  });
-}
-
-function brl(s) {
-  if (!s) return 0;
-  const n=parseFloat(s.replace(/R\$\s*/g,'').replace(/\./g,'').replace(',','.').trim());
-  return isNaN(n)?0:n;
-}
-
-function fmtBRL(v) {
-  if (!v||v===0) return '—';
-  return 'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0});
-}
-
-function extractPace(csv) {
-  const rows = parseCSV(csv);
-  const now = new Date();
-  const mnPT = ['janeiro','fevereiro','marco','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
-  const curMn = mnPT[now.getMonth()];
-  const curMm = String(now.getMonth()+1).padStart(2,'0');
-
-  let budget=0, invested=0, leads=0, cpl=0, meta=0, google=0;
-
-  // Find column index for current month
-  let hdrRow=null, colIdx=-1;
-  for (const row of rows) {
-    const s = row.join('|').toLowerCase();
-    if (s.includes(curMn)||s.includes('/'+curMm+'/')||s.includes('01/'+curMm)) {
-      hdrRow=row;
-      for(let j=0;j<row.length;j++) {
-        const c=row[j].toLowerCase();
-        if(c.includes(curMn)||c.includes('/'+curMm+'/')||c.includes('01/'+curMm)){colIdx=j;break;}
-      }
-      break;
-    }
+async function refreshData() {
+  if (window.STATIC_MODE) {
+    alert('Este é um snapshot estático. Para dados ao vivo, acesse o dashboard local em localhost:3001');
+    return;
   }
-
-  for (const row of rows) {
-    const lbl=(row[0]||'').trim();
-    const lblL=lbl.toLowerCase();
-    const vals=row.slice(1).map(brl);
-    const nonzero=vals.filter(v=>v>0);
-    const last=nonzero.length?nonzero[nonzero.length-1]:0;
-
-    if (/^(total|verba|budget|orcamento)/i.test(lbl)||/budget|verba\s*(total|mes|mensal)/i.test(lbl)||/investimento\s*previsto/i.test(lbl)) { const bv=row.slice(1).map(brl).filter(v=>v>100); if(bv.length&&!budget) budget=Math.max(...bv); }
-    if (/^investimento$/i.test(lbl))         { invested = (colIdx>0&&brl(row[colIdx])>0)?brl(row[colIdx]):last||invested; }
-    if (/^investimento\s*meta/i.test(lbl))   { meta   = last; }
-    if (/^investimento\s*google/i.test(lbl)) { google = last; }
-    if (/^leads$/i.test(lbl))                { const n=row.slice(1).map(v=>parseInt(v)||0).filter(v=>v>0); if(n.length) leads=n[n.length-1]; }
-    if (/custo.*lead|^cpl$/i.test(lblL))     { cpl = (colIdx>0&&brl(row[colIdx])>0)?brl(row[colIdx]):last||cpl; }
-    if (/^r\$\s*[\d]/.test(row[2]||'') && /total/i.test(lbl) && !budget) budget=brl(row[2]);
-  }
-
-  return { budget, invested, leads, cpl, meta, google };
-}
-
-function paceStatus(real, exp) {
-  const d = real - exp;
-  if (d >  20) return { lbl:'Acelerado',            cls:'b-red',    col:'#DC2626' };
-  if (d >  10) return { lbl:'Levemente acelerado',  cls:'b-yellow', col:'#D97706' };
-  if (d > -10) return { lbl:'No pace',              cls:'b-green',  col:'#15803D' };
-  if (d > -20) return { lbl:'Ligeiro atraso',       cls:'b-yellow', col:'#D97706' };
-  return               { lbl:'Atrasado',             cls:'b-red',    col:'#DC2626' };
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// HEALTH SCORES
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const HS_FLAG = {
-  Safe:     { cls:'b-green',  color:'#15803D', bg:'#DCFCE7', emoji:'🟢', label:'Safe'     },
-  Care:     { cls:'b-yellow', color:'#B45309', bg:'#FEF3C7', emoji:'🟡', label:'Care'     },
-  Critical: { cls:'b-red',    color:'#DC2626', bg:'#FEE2E2', emoji:'🔴', label:'Critical' },
-  Danger:   { cls:'b-red',    color:'#7F1D1D', bg:'#FEE2E2', emoji:'⚫', label:'Danger'   },
-};
-let hsChart = null;
-
-// Carrega health scores para a mini-strip na aba Pace
-async function loadHealthScores() {
-  const el = document.getElementById('hs-cards');
-  const timeEl = document.getElementById('hs-sync-time');
+  const btn = document.getElementById('refreshBtn');
+  btn.classList.add('loading'); btn.disabled = true; btn.textContent = '↻ Buscando GrowthPacks...';
   try {
-    const r = await fetch('data/health_scores.json?' + Date.now());
-    const json = await r.json();
-    if (!json.data?.length) { el.innerHTML='<p style="font-size:12px;color:var(--gray-400);">Sync pendente.</p>'; return; }
-    timeEl.textContent = json.updatedAtBRT ? 'Atualizado: '+json.updatedAtBRT : '';
-    el.innerHTML = json.data.map(hs => {
-      const f = HS_FLAG[hs.flag] || HS_FLAG.Care;
-      return `<div style="background:${f.bg};border:1px solid ${f.color}33;border-radius:8px;padding:8px 12px;min-width:90px;text-align:center;">
-        <div style="font-size:11px;font-weight:700;color:var(--black);">${hs.ticker}</div>
-        <div style="font-size:20px;font-weight:800;color:${f.color};margin:3px 0;">${hs.score||'—'}</div>
-        <div style="font-size:10px;font-weight:600;color:${f.color};">${f.emoji} ${f.label}</div>
-      </div>`;
-    }).join('');
-    const crit = json.data.filter(d=>d.flag==='Critical'||d.flag==='Danger');
-    const alertEl = document.getElementById('mgr-alert');
-    if (crit.length) {
-      alertEl.style.display='';
-      alertEl.innerHTML=`<div class="alert">⚠️ Atenção: ${crit.map(c=>`<strong>${c.ticker}</strong> em ${c.flag}`).join(', ')}. Priorize o atendimento e verifique o backlog.</div>`;
-    }
-  } catch(e) { el.innerHTML=`<p style="font-size:12px;color:var(--gray-400);">HS: ${e.message}</p>`; }
-}
-
-// Aba dedicada de Health Score — visualizacao completa
-async function loadHealthScoreTab() {
-  const cards = document.getElementById('hs-full-cards');
-  const sub   = document.getElementById('hs-page-sub');
-  cards.innerHTML = '<div class="loading"><div class="spin"></div> Carregando...</div>';
-  try {
-    const r = await fetch('data/health_scores.json?' + Date.now());
-    const json = await r.json();
-    if (!json.data?.length) { cards.innerHTML='<p style="color:var(--gray-400);">Sync pendente. Execute o workflow no GitHub Actions.</p>'; return; }
-
-    sub.textContent = 'Sincronizado em ' + (json.updatedAtBRT||'—');
-
-    // Contadores
-    let nDanger=0,nCritical=0,nCare=0,nSafe=0,totalScore=0,nScore=0;
-    json.data.forEach(d=>{
-      if(d.flag==='Danger')   nDanger++;
-      if(d.flag==='Critical') nCritical++;
-      if(d.flag==='Care')     nCare++;
-      if(d.flag==='Safe')     nSafe++;
-      if(d.score){totalScore+=parseFloat(d.score);nScore++;}
-    });
-    document.getElementById('hs-danger').textContent   = nDanger;
-    document.getElementById('hs-critical').textContent = nCritical;
-    document.getElementById('hs-care').textContent     = nCare;
-    document.getElementById('hs-safe').textContent     = nSafe;
-    document.getElementById('hs-avg-score').textContent = nScore ? (totalScore/nScore).toFixed(1) : '—';
-
-    // Cards completos
-    cards.innerHTML = json.data.map(hs => {
-      const f = HS_FLAG[hs.flag] || HS_FLAG.Care;
-      const scoreBar = hs.score ? Math.min(100, (hs.score/30)*100).toFixed(0) : 0;
-      const lt = hs.lt ? `LT ${hs.lt}m` : '';
-      const since = hs.projectStartDate ? new Date(hs.projectStartDate).toLocaleDateString('pt-BR',{month:'short',year:'numeric'}) : '';
-      return `
-        <div style="background:var(--white);border:2px solid ${f.color}40;border-radius:14px;padding:20px 22px;position:relative;overflow:hidden;">
-          <!-- faixa colorida lateral -->
-          <div style="position:absolute;left:0;top:0;bottom:0;width:4px;background:${f.color};border-radius:4px 0 0 4px;"></div>
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
-            <div>
-              <div style="font-size:14px;font-weight:800;color:var(--black);">${hs.name||hs.ticker}</div>
-              <div style="font-size:11px;color:var(--gray-400);margin-top:2px;">${hs.ticker}${lt?' · '+lt:''}${since?' · desde '+since:''}</div>
-            </div>
-            <span class="badge ${f.cls}" style="font-size:12px;padding:4px 10px;">${f.emoji} ${f.label}</span>
-          </div>
-
-          <!-- Score grande -->
-          <div style="display:flex;align-items:flex-end;gap:6px;margin-bottom:8px;">
-            <div style="font-size:42px;font-weight:900;color:${f.color};line-height:1;">${hs.score||'—'}</div>
-            <div style="font-size:13px;color:var(--gray-500);margin-bottom:6px;">/ 30 pts</div>
-          </div>
-
-          <!-- Barra de score -->
-          <div style="height:6px;background:var(--gray-200);border-radius:99px;margin-bottom:14px;">
-            <div style="height:100%;width:${scoreBar}%;background:${f.color};border-radius:99px;transition:width 0.6s;"></div>
-          </div>
-
-          <!-- Acoes necessarias por flag -->
-          ${f.label==='Danger'   ? `<div style="font-size:12px;color:#7F1D1D;background:#FEE2E2;border-radius:6px;padding:7px 10px;line-height:1.5;">⚡ Acao imediata. Agendar reuniao de alinhamento e revisar toda a entrega.</div>` : ''}
-          ${f.label==='Critical' ? `<div style="font-size:12px;color:#991B1B;background:#FEF2F2;border-radius:6px;padding:7px 10px;line-height:1.5;">⚠️ Situacao critica. Reforcar comunicacao e apresentar plano de recuperacao.</div>` : ''}
-          ${f.label==='Care'     ? `<div style="font-size:12px;color:#92400E;background:#FEF3C7;border-radius:6px;padding:7px 10px;line-height:1.5;">👀 Monitorar de perto. Manter atendimento proativo e antecipar dificuldades.</div>` : ''}
-          ${f.label==='Safe'     ? `<div style="font-size:12px;color:#166534;background:#DCFCE7;border-radius:6px;padding:7px 10px;line-height:1.5;">✅ Operacao saudavel. Manter padrao e planejar evolucao do contrato.</div>` : ''}
-        </div>`;
-    }).join('');
-
-    // Grafico de barras
-    const ctx = document.getElementById('hsChart').getContext('2d');
-    if (hsChart) hsChart.destroy();
-    hsChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: json.data.map(d=>d.ticker),
-        datasets: [{
-          label: 'Health Score',
-          data:  json.data.map(d=>parseFloat(d.score)||0),
-          backgroundColor: json.data.map(d=>(HS_FLAG[d.flag]||HS_FLAG.Care).color+'CC'),
-          borderRadius: 6, borderSkipped: false
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false },
-          annotation: { annotations: { meta: { type:'line', yMin:20, yMax:20, borderColor:'#9CA3AF', borderDash:[5,4], borderWidth:2,
-            label: { content:'Meta: 20', display:true, position:'end', color:'#6B7280', font:{size:11} }
-          }}}
-        },
-        scales: {
-          y: { beginAtZero:true, max:30, grid:{color:'rgba(0,0,0,0.04)'}, ticks:{font:{family:'Inter',size:11}} },
-          x: { grid:{display:false}, ticks:{font:{family:'Inter',size:11}} }
-        }
-      }
-    });
-
-    // Alerta gestora
-    const crit = json.data.filter(d=>d.flag==='Critical'||d.flag==='Danger');
-    const alertEl = document.getElementById('hs-manager-alert');
-    if (crit.length) {
-      alertEl.style.display='';
-      alertEl.innerHTML=`<div class="card" style="border-color:var(--red);background:var(--red-light);margin-top:4px;">
-        <div style="font-size:13px;font-weight:700;color:var(--red);margin-bottom:8px;">Visao de Gestora — Clientes que precisam de atencao agora</div>
-        ${crit.map(c=>`<div style="display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #FECACA;">
-          <span class="badge b-red">${c.flag}</span>
-          <div><strong>${c.name||c.ticker}</strong> · Score ${c.score||'—'}/30
-          <div style="font-size:11px;color:var(--gray-500);margin-top:2px;">
-            ${c.flag==='Danger'?'Reuniao imediata + plano de recuperacao urgente':
-              c.flag==='Critical'?'Reforcar atendimento + apresentar plano de acao na proxima semana':''}
-          </div></div>
-        </div>`).join('')}
-      </div>`;
-    }
-  } catch(e) {
-    cards.innerHTML=`<div class="alert">Erro: ${e.message}</div>`;
-  }
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// ABA PACE
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-async function loadPace() {
-  loadHealthScores();
-  const now = new Date();
-  const dim = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
-  const day = now.getDate();
-  const exp = (day/dim)*100;
-
-  document.getElementById('pace-sub').textContent = `Dia ${day} de ${dim} — Pace esperado: ${exp.toFixed(1)}%`;
-  document.getElementById('p-exp').textContent = exp.toFixed(1)+'%';
-  document.getElementById('pace-cards').innerHTML = '<div class="loading"><div class="spin"></div> Buscando dados...</div>';
-
-  const keys = Object.keys(CLIENTS);
-  const res = await Promise.allSettled(keys.map(async (key) => {
-    const csv = await fetchCSV(key, 'pace');
-    const data = extractPace(csv);
-    return { key, ...CLIENTS[key], ...data, err: null };
-  }));
-
-  const data = res.map((r,i)=> r.status==='fulfilled' ? r.value : { key:keys[i], name:CLIENTS[keys[i]].name, budget:0,invested:0,leads:0,cpl:0,meta:0,google:0, err:r.reason?.message||'Erro' });
-
-  data.sort((a,b)=>{
-    const pa=a.budget>0?(a.invested/a.budget)*100:0;
-    const pb=b.budget>0?(b.invested/b.budget)*100:0;
-    return Math.abs(pb-exp)-Math.abs(pa-exp);
-  });
-
-  let nOk=0, nWarn=0, nCrit=0;
-  const cLabels=[], cReal=[], cExp=[];
-
-  document.getElementById('pace-cards').innerHTML='';
-  data.forEach(r=>{
-    const pct = r.budget>0?(r.invested/r.budget)*100:0;
-    const st = r.err ? {lbl:'Sem acesso',cls:'b-gray',col:'#9CA3AF'}
-             : (r.invested===0&&day<=3) ? {lbl:'Aguardando GT',cls:'b-gray',col:'#9CA3AF'}
-             : paceStatus(pct, exp);
-
-    if(!r.err && r.invested>0) {
-      if(st.lbl==='No pace') nOk++;
-      else if(st.cls==='b-yellow') nWarn++;
-      else nCrit++;
-    }
-
-    const pBar = Math.min(100,pct).toFixed(1);
-    const expL = Math.min(100,exp).toFixed(1);
-
-    const card = document.createElement('div');
-    card.className = 'pace-card';
-    card.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px;">
-        <div><div class="pace-client">${r.name}</div><div class="pace-ticker">${r.key}</div></div>
-        <span class="badge ${st.cls}">${st.lbl}</span>
-      </div>
-      ${r.err ? `<div style="font-size:12px;color:var(--gray-400);margin-top:6px;">⚠️ ${r.err}</div>` : `
-        <div class="pace-pct" style="color:${st.col}">${pct.toFixed(1)}%</div>
-        <div style="font-size:11px;color:var(--gray-400);">Budget: ${fmtBRL(r.budget)}</div>
-        <div class="pace-track">
-          <div class="pace-fill" style="width:${pBar}%;background:${st.col};"></div>
-          <div class="pace-needle" style="left:${expL}%;"></div>
-        </div>
-        <div class="pace-meta">
-          <span>Investido: <strong>${fmtBRL(r.invested)}</strong></span>
-          <span>Leads: <strong>${r.leads||'—'}</strong></span>
-        </div>
-        <div class="pace-meta" style="margin-top:4px;">
-          <span>CPL: <strong>${fmtBRL(r.cpl)}</strong></span>
-          ${r.meta>0?`<span>Meta: <strong>${fmtBRL(r.meta)}</strong></span>`:''}
-        </div>
-      `}
-    `;
-    document.getElementById('pace-cards').appendChild(card);
-
-    cLabels.push(r.key);
-    cReal.push(parseFloat(pct.toFixed(1)));
-    cExp.push(parseFloat(exp.toFixed(1)));
-  });
-
-  document.getElementById('p-total').textContent = data.length;
-  document.getElementById('p-ok').textContent = nOk;
-  document.getElementById('p-warn').textContent = nWarn;
-  document.getElementById('p-crit').textContent = nCrit;
-  renderPaceChart(cLabels, cReal, cExp);
-}
-
-function renderPaceChart(labels, real, exp) {
-  const ctx = document.getElementById('paceChart').getContext('2d');
-  if (paceChart) paceChart.destroy();
-  paceChart = new Chart(ctx, {
-    type:'bar',
-    data:{
-      labels,
-      datasets:[
-        { label:'Pace Real (%)', data:real, backgroundColor:real.map((v,i)=>{
-            const d=v-exp[i];
-            if(Math.abs(d)<=10) return 'rgba(21,128,61,0.75)';
-            if(Math.abs(d)<=20) return 'rgba(180,83,9,0.75)';
-            return 'rgba(204,27,43,0.8)';
-          }), borderRadius:5, borderSkipped:false },
-        { label:'Pace Esperado (%)', data:exp, type:'line',
-          borderColor:'#6B7280', borderDash:[5,4], pointRadius:0, borderWidth:2, fill:false, tension:0 }
-      ]
-    },
-    options:{
-      responsive:true,
-      plugins:{ legend:{ position:'top', labels:{ font:{ family:'Inter',size:12 }, boxWidth:12 } } },
-      scales:{
-        y:{ beginAtZero:true, max:100, ticks:{ callback:v=>v+'%', font:{family:'Inter',size:11} }, grid:{color:'rgba(0,0,0,0.04)'} },
-        x:{ ticks:{ font:{family:'Inter',size:11} }, grid:{display:false} }
-      }
-    }
-  });
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// ABA COMERCIAL
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-async function loadComercial() {
-  document.getElementById('com-content').innerHTML = '<div class="loading"><div class="spin"></div> Carregando...</div>';
-
-  const comClients = Object.entries(CLIENTS).filter(([,c])=>c.com);
-  let html='', totalAlerts=0;
-
-  for (const [key,c] of comClients) {
-    try {
-      const csv = await fetchCSV(key, 'com');
-      const rows = parseCSV(csv);
-      if(rows.length<2){continue;}
-      const headers = rows[0];
-      const data = rows.slice(1).filter(r=>r.some(x=>x.trim()));
-
-      const obsIdx = headers.findIndex(h=>/observa|follow|coment|obs/i.test(h));
-      const nameIdx = headers.findIndex(h=>/nome|lead|cliente|contato/i.test(h));
-      const empty = data.filter(r=>obsIdx>=0&&!(r[obsIdx]||'').trim());
-      totalAlerts += empty.length;
-
-      html += `
-        <div class="card" style="margin-bottom:16px;" data-client="${key}">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-            <div>
-              <span style="font-size:14px;font-weight:700;">${c.name}</span>
-              <span style="font-size:11px;color:var(--gray-400);margin-left:8px;">${key}</span>
-            </div>
-            <div style="display:flex;gap:8px;align-items:center;">
-              ${empty.length>0?`<span class="badge b-red">⚠️ ${empty.length} sem obs.</span>`:'<span class="badge b-green">✓ Atualizado</span>'}
-              <span style="font-size:12px;color:var(--gray-400);">${data.length} leads</span>
-            </div>
-          </div>
-          ${empty.length>0?`<div class="alert">⚠️ ${empty.length} lead(s) sem preenchimento na coluna de observacao.</div>`:''}
-          <div class="table-wrap">
-            <table>
-              <thead><tr>${headers.slice(0,6).map(h=>`<th>${h}</th>`).join('')}</tr></thead>
-              <tbody>${data.slice(0,25).map(r=>{
-                const warn = obsIdx>=0&&!(r[obsIdx]||'').trim();
-                return `<tr class="${warn?'row-warn':''}">${r.slice(0,6).map(cell=>`<td>${cell||'<span style="color:var(--gray-300);">—</span>'}</td>`).join('')}</tr>`;
-              }).join('')}</tbody>
-            </table>
-          </div>
-          ${data.length>25?`<p style="font-size:11px;color:var(--gray-400);margin-top:8px;text-align:right;">Mostrando 25 de ${data.length}</p>`:''}
-        </div>`;
-    } catch(e) {
-      html += `<div class="card" style="margin-bottom:14px;" data-client="${key}">
-        <div style="font-weight:700;margin-bottom:8px;">${c.name} <span style="font-size:11px;color:var(--gray-400);">${key}</span></div>
-        <div class="alert">Planilha nao acessivel: ${e.message}</div>
-      </div>`;
-    }
-  }
-
-  document.getElementById('com-content').innerHTML = html||'<p style="color:var(--gray-400);font-size:13px;">Sem planilhas comerciais configuradas.</p>';
-  document.getElementById('com-summary').textContent = totalAlerts>0 ? `⚠️ ${totalAlerts} lead(s) precisam de atualizacao` : '';
-}
-
-function filterCom() {
-  const v = document.getElementById('com-filter').value;
-  document.querySelectorAll('#com-content .card[data-client]').forEach(c=>{
-    c.style.display = (v==='all'||c.dataset.client===v)?'':'none';
-  });
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// ABA ATENDIMENTO
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-async function loadAtendContext() {
-  const key = document.getElementById('a-client').value;
-  document.getElementById('a-context-wrap').style.display = key?'':'none';
-  document.getElementById('a-placeholder').style.display = key?'none':'';
-  if (!key) return;
-
-  const c = CLIENTS[key];
-
-  // Ekyte tasks
-  const el = document.getElementById('a-ekyte-tasks');
-  el.innerHTML = '<div class="loading"><div class="spin"></div></div>';
-  try {
-    const d = await EK.get(`/api/companies/${EKYTE_CO}/workspaces/0/tasks?title=&page=1&pageSize=30&statusCodes=1,2`);
-    const items = (d.items||d||[]);
-    const tasks = items.filter(t=>{
-      const ws = (t.workspace?.name||'').toLowerCase();
-      const title = (t.title||t.name||'').toLowerCase();
-      const nm = c.name.toLowerCase();
-      return ws.includes(nm)||ws.includes(key.toLowerCase())||title.includes(nm);
-    }).slice(0,10);
-
-    el.innerHTML = tasks.length
-      ? tasks.map(t=>`<div class="task-row"><div><span class="task-id-tag">#${t.id||t.ctcTaskId}</span></div><div style="font-size:13px;font-weight:500;">${t.title||t.name}</div></div>`).join('')
-      : '<p style="font-size:13px;color:var(--gray-400);">Nenhuma tarefa em aberto.</p>';
-  } catch(e) {
-    const isCors = e.message.includes('fetch')||e.message.includes('NetworkError');
-    el.innerHTML = `<p style="font-size:12px;color:var(--gray-400);">${isCors?'API Ekyte: CORS bloqueado no navegador. Consulte via Claude com /growthpace ou /ekyte.':e.message}</p>`;
-  }
-
-  // Comercial
-  const comCard = document.getElementById('a-comercial-card');
-  const comEl = document.getElementById('a-comercial-content');
-  if (c.com) {
-    comCard.style.display='';
-    try {
-      const csv = await fetchCSV(key, 'com');
-      const rows = parseCSV(csv);
-      const hdr = rows[0]||[];
-      const data = rows.slice(1).filter(r=>r.some(x=>x.trim()));
-      const obsIdx = hdr.findIndex(h=>/observa|follow|coment|obs/i.test(h));
-      const empty = data.filter(r=>obsIdx>=0&&!(r[obsIdx]||'').trim());
-      comEl.innerHTML = empty.length>0
-        ? `<div class="alert">⚠️ ${empty.length} lead(s) sem atualizacao na observacao</div><p style="font-size:12px;color:var(--gray-400);">${data.length} leads na planilha.</p>`
-        : `<span class="badge b-green">✓ Planilha comercial OK</span><p style="font-size:12px;color:var(--gray-400);margin-top:6px;">${data.length} leads — todos com observacao.</p>`;
-    } catch(e) {
-      comEl.innerHTML = `<p style="font-size:12px;color:var(--gray-400);">Nao foi possivel carregar: ${e.message}</p>`;
-    }
-  } else { comCard.style.display='none'; }
-}
-
-// ── helpers ──
-function parseNum(txt, key) {
-  const m = txt.match(new RegExp(key + '[^\\d]*([\\d]{1,3}(?:[.,][\\d]{3})*(?:[.,]\\d{1,2})?)', 'i'));
-  if (!m) return null;
-  return m[1].replace(/\./g,'').replace(',','.');
-}
-function fmtN(v) { if(!v) return null; return parseFloat(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
-
-// Divide o input em blocos por canal
-// Cada bloco começa com linha sem emoji de metrica (= nome do canal)
-function splitBlocos(texto) {
-  const linhas = texto.split('\n').map(l=>l.trim()).filter(l=>l);
-  const blocos = [];
-  let cur = null;
-  const isMetric = l => /^[📌👁️📣🖱️📈💰🎯✅🚀]/u.test(l);
-
-  for (const l of linhas) {
-    if (!isMetric(l)) {
-      if (cur) blocos.push(cur);
-      cur = { header: l, lines: [] };
-    } else {
-      if (!cur) cur = { header: '', lines: [] };
-      cur.lines.push(l);
-    }
-  }
-  if (cur) blocos.push(cur);
-  return blocos;
-}
-
-// Extrai numeros de um bloco para analise
-function extraiMetricas(bloco) {
-  const txt = bloco.lines.join('\n');
-  const inv  = parseNum(txt, 'Investimento');
-  const imp  = parseNum(txt, 'Impres');
-  const alc  = parseNum(txt, 'Alcance');
-  const clk  = parseNum(txt, 'Cliques');
-  const ctr  = parseNum(txt, 'CTR');
-  const cpm  = parseNum(txt, 'CPM');
-  const lds  = parseNum(txt, 'Leads');
-  const cpl  = parseNum(txt, 'CPL') || (inv&&lds ? String(parseFloat(inv)/parseFloat(lds)) : null);
-  const vend = parseNum(txt, 'Vendas');
-  const cpa  = parseNum(txt, 'CPA')  || (inv&&vend ? String(parseFloat(inv)/parseFloat(vend)) : null);
-  const rec  = parseNum(txt, 'Receita');
-  const tick = parseNum(txt, 'Ticket') || (rec&&vend ? String(parseFloat(rec)/parseFloat(vend)) : null);
-  return { nome: bloco.header, inv, imp, alc, clk, ctr, cpm, lds, cpl, vend, cpa, rec, tick, isEco:!!(vend||cpa) };
-}
-
-// Gera analise narrativa fluida (igual a skill atendimento-diario)
-function gerarAnalise(canais, periodo) {
-  const partes = [];
-  const passos = [];
-
-  canais.forEach(c => {
-    const leads = parseInt(c.lds)||0;
-    const cpl   = parseFloat(c.cpl)||0;
-    const ctr   = parseFloat(c.ctr)||0;
-    const cpm   = parseFloat(c.cpm)||0;
-    const alc   = parseInt(c.alc)||0;
-    const vend  = parseInt(c.vend)||0;
-    const cpa   = parseFloat(c.cpa)||0;
-    const pref  = canais.length > 1 ? `No ${c.nome||'canal'}, ` : '';
-
-    // avaliacao por leads/cpl
-    if (leads > 0 && cpl > 0) {
-      const qual = cpl<20?'resultado excelente para o perfil do publico':cpl<50?'resultado eficiente para o perfil do publico':cpl<100?'resultado dentro da media do canal':'custo por lead elevado, recomendamos monitorar';
-      partes.push(`${pref}a campanha gerou ${leads} lead${leads>1?'s':''} com CPL de R$ ${fmtN(String(cpl))}, ${qual}.`);
-      if (cpl > 100) passos.push(`Avaliar pausa dos conjuntos com CPL mais elevado.`);
-    }
-
-    // avaliacao por vendas/cpa
-    if (vend > 0 && cpa > 0) {
-      const qual = cpa<80?'resultado eficiente de custo por venda':cpa<200?'resultado dentro da media':cpa<400?'custo por venda elevado, vale revisar segmentacao':'CPA critico, recomendamos revisao urgente';
-      partes.push(`${pref}${vend} venda${vend>1?'s':''} com CPA de R$ ${fmtN(String(cpa))}, ${qual}.`);
-    }
-
-    // CTR + alcance (juntados em frase unica quando possivel)
-    if (ctr > 0) {
-      const qualCtr = ctr>=2.5?'demonstra excelente atratividade do criativo':ctr>=1.5?'indica que o criativo esta atraindo cliques de forma saudavel':ctr>=0.8?'esta em faixa razoavel para o canal':'esta abaixo do ideal, sinalizando oportunidade de melhoria no criativo ou na segmentacao';
-      const alcParte = alc > 0 ? `, e o alcance de ${alc.toLocaleString('pt-BR')} mostra boa distribuicao dos anuncios dentro da segmentacao` : '';
-      partes.push(`O CTR de ${ctr.toFixed(2)}% ${qualCtr}${alcParte}.`);
-      if (ctr < 0.5) passos.push(`Revisar criativos e segmentacao.`);
-    } else if (alc > 0) {
-      partes.push(`O alcance de ${alc.toLocaleString('pt-BR')} mostra boa distribuicao dos anuncios.`);
-    }
-
-    // CPM
-    if (cpm > 0) {
-      const qualCpm = cpm<20?'esta em faixa baixa para o canal':cpm<50?'esta em faixa razoavel para o canal':cpm<80?'esta levemente elevado, leilao pode estar mais competitivo':'esta alto, sugerindo saturacao de publico ou leilao muito competitivo';
-      partes.push(`O CPM de R$ ${fmtN(String(cpm))} ${qualCpm}.`);
-    }
-
-    // volume baixo
-    if (leads > 0 && leads < 3) {
-      passos.push(`Volume baixo de leads. Campanha pode estar em periodo de aprendizado.`);
-    }
-  });
-
-  // Abertura com avaliacao geral
-  const totLds  = canais.reduce((s,c)=>s+(parseInt(c.lds)||0),0);
-  const avgCpl  = canais.filter(c=>c.cpl).map(c=>parseFloat(c.cpl));
-  const mediaCpl = avgCpl.length ? avgCpl.reduce((s,v)=>s+v,0)/avgCpl.length : 0;
-  let abertura = '';
-  if      (totLds >= 10 && mediaCpl < 50) abertura = 'Bom desempenho no dia. ';
-  else if (totLds > 0   && mediaCpl < 80) abertura = 'Resultado satisfatorio no dia. ';
-  else if (totLds === 0 && canais.some(c=>c.inv))  abertura = 'Dia com baixa entrega de resultados. ';
-  else if (totLds > 0)                   abertura = 'Acompanhamento do dia: ';
-
-  const label = periodo==='mes' ? 'do periodo' : 'do dia';
-  let analise = `📊 *Analise ${label}:*\n\n${abertura}${partes.join(' ')}`;
-  if (passos.length) {
-    analise += `\n\n➡️ *Proximos passos:*\n` + [...new Set(passos)].map(p=>`• ${p}`).join('\n');
-  }
-  return analise;
-}
-
-function gerarMsg() {
-  const key   = document.getElementById('a-client').value;
-  const type  = document.getElementById('a-type').value;
-  const dados = document.getElementById('a-dados').value.trim();
-  if (!key) { toast('Selecione um cliente primeiro','err'); return; }
-
-  const now = new Date();
-  const h   = now.getHours();
-  const sauda    = h<12?'Bom dia':h<18?'Boa tarde':'Boa noite';
-  const mes      = now.toLocaleString('pt-BR',{month:'long'});
-  const mesTitle = mes.charAt(0).toUpperCase()+mes.slice(1);
-  let msg = '';
-
-  // ── DIARIO D-1 ──
-  if (type === 'diario') {
-    if (!dados) {
-      msg = `[MSG]\n${sauda}, time! 🚀 Passando com o acompanhamento de ontem (D-1):\n\n[MSG]\n[Cole os dados da campanha]\n\n[MSG]\nSeguimos acompanhando de perto. Qualquer duvida, fico a disposicao! 🙌`;
-    } else {
-      const blocos = splitBlocos(dados);
-      const canais = blocos.map(extraiMetricas);
-
-      const temMeta   = canais.some(c=>/meta|facebook|instagram/i.test(c.nome));
-      const temGoogle = canais.some(c=>/google/i.test(c.nome));
-
-      msg = `[MSG]\n${sauda}, time! 🚀 Passando com o acompanhamento de ontem (D-1):`;
-
-      // compilado so quando Meta + Google juntos
-      if (temMeta && temGoogle) {
-        const totInv  = canais.reduce((s,c)=>s+(parseFloat(c.inv)||0),0);
-        const totLds  = canais.reduce((s,c)=>s+(parseInt(c.lds)||0),0);
-        const totVend = canais.reduce((s,c)=>s+(parseInt(c.vend)||0),0);
-        const totCpl  = totLds>0 ? totInv/totLds : 0;
-        const totCpa  = totVend>0 ? totInv/totVend : 0;
-        msg += `\n\n[MSG]\n📝 *Compilado Geral*\n\n📌 Investimento Total: R$ ${fmtN(String(totInv))}\n`;
-        if (totLds)  { msg+=`🎯 Leads Gerados (Total): ${totLds}\n`; if(totCpl) msg+=`💰 CPL (Total): R$ ${fmtN(String(totCpl))}\n`; }
-        if (totVend) { msg+=`🎯 Vendas (Total): ${totVend}\n`;         if(totCpa) msg+=`💰 CPA (Total): R$ ${fmtN(String(totCpa))}\n`; }
-      }
-
-      // bloco de cada canal — preserva exatamente o que a GT mandou
-      blocos.forEach(b => {
-        msg += `\n\n[MSG]\n🔹 *${b.header || 'Canal'}*\n\n${b.lines.join('\n')}`;
-      });
-
-      // analise em MSG separado
-      msg += `\n\n[MSG]\n${gerarAnalise(canais,'dia')}`;
-      msg += `\n\n[MSG]\nSeguimos acompanhando de perto. Qualquer duvida, fico a disposicao! 🙌`;
-    }
-
-  // ── MENSAL ──
-  } else if (type === 'mensal') {
-    const blocos = dados ? splitBlocos(dados) : [];
-    const canais = blocos.map(extraiMetricas);
-    msg = `[MSG]\n${sauda}, time! 👋\n\n[MSG]\nPassando para atualizar voces sobre nossas metricas de campanhas no mes de ${mesTitle}:`;
-
-    if (canais.length > 0) {
-      const totInv = canais.reduce((s,c)=>s+(parseFloat(c.inv)||0),0);
-      const totLds = canais.reduce((s,c)=>s+(parseInt(c.lds)||0),0);
-      const totCpl = totLds>0 ? totInv/totLds : 0;
-      msg += `\n\n[MSG]\n📝 *Relatorio de Resultados — ${mesTitle}*\n\n`;
-      if(totInv) msg+=`📌 Investimento Total: R$ ${fmtN(String(totInv))}\n`;
-      if(totLds) msg+=`🎯 Leads Gerados (Total): ${totLds}\n`;
-      if(totCpl) msg+=`💰 Custo por Lead (CPL — Total): R$ ${fmtN(String(totCpl))}\n`;
-      if (blocos.length > 1) {
-        msg += `\n[MSG]\n📋 *Relatorios por canais:*\n`;
-        blocos.forEach(b => { msg += `\n[MSG]\n🔹 *${b.header||'Canal'}*\n\n${b.lines.join('\n')}`; });
-      }
-      msg += `\n\n[MSG]\n${gerarAnalise(canais,'mes')}`;
-    } else {
-      msg += `\n\n[MSG]\n📝 *Relatorio de Resultados — ${mesTitle}*\n\n${dados||'[Cole os dados]'}\n\n📊 *Analise do periodo:*\n\n[Analise estrategica]`;
-    }
-    msg += `\n\n[MSG]\nQualquer duvida ou se quiserem mais detalhes, fico a disposicao!`;
-
-  // ── SEMANAL ──
-  } else if (type === 'semanal') {
-    const blocos = dados ? splitBlocos(dados) : [];
-    const canais = blocos.map(extraiMetricas);
-    const totInv  = canais.reduce((s,c)=>s+(parseFloat(c.inv)||0),0);
-    const totLds  = canais.reduce((s,c)=>s+(parseInt(c.lds)||0),0);
-    const totVend = canais.reduce((s,c)=>s+(parseInt(c.vend)||0),0);
-    const totCpl  = totLds>0 ? totInv/totLds : 0;
-    const cac     = canais.reduce((s,c)=>s+(parseFloat(c.cac||c.cpa)||0),0) / Math.max(1,canais.filter(c=>c.cac||c.cpa).length);
-
-    const clientName = CLIENTS[key]?.name || key;
-    const hasNegative = canais.some(c=>parseFloat(c.cpl)>100 || parseInt(c.lds)<3);
-
-    msg = `[MSG]\nFala, ${clientName}! ${hasNegative ? 'Segue o resultado da semana.' : 'Otima semana!'}${hasNegative ? '' : ' ✊'}\nSegue uma visao do resultado geral.\n`;
-    msg += `\n[MSG]\n📊 RESULTADOS (${mesTitle.toUpperCase()})\n\n`;
-
-    if (totLds > 0 || totInv > 0) {
-      msg += `GERACAO DE DEMANDA\n`;
-      if (totInv) msg += `Investido:    R$ ${fmtN(String(totInv))}\n`;
-      if (totLds)  msg += `Leads:        ${totLds}\n`;
-      if (totCpl)  msg += `CPL:          R$ ${fmtN(String(totCpl))}\n`;
-    }
-    if (totVend > 0) {
-      const totRec = canais.reduce((s,c)=>s+(parseFloat(c.rec)||0),0);
-      msg += `\nCONVERSAO EM VENDAS\n`;
-      msg += `Vendas:       ${totVend}\n`;
-      if (totRec) msg += `Valor vendido: R$ ${fmtN(String(totRec))}\n`;
-      if (cac)   msg += `CAC:          R$ ${fmtN(String(cac))}\n`;
-    }
-
-    if (blocos.length > 1) {
-      msg += `\n[MSG]\n📋 Detalhamento por canal:\n`;
-      blocos.forEach(b => { msg += `\n🔹 *${b.header||'Canal'}*\n${b.lines.join('\n')}\n`; });
-    }
-
-    msg += `\n[MSG]\n📝 CONTEXTO\n\n${gerarAnalise(canais,'mes').replace(/📊 \*Analise do periodo:\*\n\n/,'')}`;
-    msg += `\n\n[MSG]\n🗂️ BACKLOG DA SEMANA\n\n→ [acoes em andamento]\n→ [o que sera entregue]\n→ [proximas acoes]`;
-    msg += `\n\n[MSG]\n📅 CRONOGRAMA\n[DD.MM] | [HH:MM as HH:MM] — Check-in\n// Descreva brevemente a pauta`;
-    msg += `\n\n[MSG]\nQualquer duvida, estou a disposicao.`;
-
-  // ── CRIATIVOS ──
-  } else if (type === 'criativo') {
-    msg = `[MSG]\n${sauda}, time! 👋\n\n[MSG]\n🎨 *Criativos para Aprovacao*\nSegue o link com os materiais desenvolvidos para a proxima campanha. Pedimos que verifiquem e nos retornem com o feedback ou aprovacao para darmos andamento! 🚀\n\n${dados||'[link aqui]'}\n\n[MSG]\nQualquer duvida, estamos a disposicao! 🙌`;
-
-  // ── ATUALIZACAO ──
-  } else {
-    msg = `[MSG]\n${sauda}, time! 👋\n\n[MSG]\nSegue nosso alinhamento do dia:\n\n[MSG]\n${dados||'[conteudo da atualizacao]'}\n\n[MSG]\nFicamos a disposicao! Vamos pra cima! 🚀`;
-  }
-
-  document.getElementById('a-output').textContent = msg;
-  document.getElementById('a-output-card').style.display = '';
-}
-
-function copyMsg() {
-  const t = document.getElementById('a-output').textContent;
-  if (!t) { toast('Gere a mensagem primeiro','err'); return; }
-  navigator.clipboard.writeText(t).then(()=>toast('Copiado!','ok'));
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// ABA AGENDA — embed Google Calendar
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const CAL_BASE = 'https://calendar.google.com/calendar/embed?src=julia.costa%40v4company.com&ctz=America%2FSao_Paulo&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0&bgcolor=%23ffffff&color=%23CC1B2B';
-
-function setCalView(mode) {
-  const modeMap = { day:'DAY', week:'WEEK', month:'MONTH', agenda:'AGENDA' };
-  const iframe = document.getElementById('cal-iframe');
-  iframe.src = CAL_BASE + '&mode=' + (modeMap[mode]||'WEEK');
-  document.querySelectorAll('#tab-agenda .btn').forEach(b => b.className = 'btn btn-gray btn-sm');
-  event.target.className = 'btn btn-red btn-sm';
-}
-
-function loadAgenda() {}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// ABA TIMESHEET
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// ABA TIMESHEET
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-async function loadTsEkyte() {
-  const today = todayKey(); // YYYY-MM-DD
-  const el = document.getElementById('t-log');
-  el.innerHTML = '<div class="loading"><div class="spin"></div> Carregando do Ekyte...</div>';
-  try {
-    // tenta endpoint de time-trackings por data
-    const data = await EK.get(`/api/companies/${EKYTE_CO}/time-trackings?startDate=${today}&endDate=${today}&page=1&pageSize=50`);
-    const items = data.items || data || [];
-    if (!items.length) { el.innerHTML='<p style="font-size:13px;color:var(--gray-400);text-align:center;padding:20px 0;">Nenhum apontamento encontrado no Ekyte para hoje.</p>'; return; }
-
-    // mescla com localStorage sem duplicar
-    items.forEach(item => {
-      const ini = (item.startDateTime||item.startDate||'').slice(11,16);
-      const fim = (item.endDateTime||item.endDate||'').slice(11,16);
-      const dur = item.effort || 0;
-      const taskId = item.ctcTaskId || item.taskId || '';
-      const taskName = item.ctcTask?.title || item.task?.title || item.comment || 'Task #'+taskId;
-      const existe = tsLog.find(e=>e.id==taskId&&e.ini===ini);
-      if (!existe) tsLog.push({ id:taskId, name:taskName, ini, fim, dur, date:today, reg:true });
-    });
-    localStorage.setItem('ts_'+today, JSON.stringify(tsLog));
-    renderTsLog();
-    toast(`${items.length} apontamento(s) carregado(s) do Ekyte`, 'ok');
-  } catch(e) {
-    const cors = e.message.includes('fetch') || e.message.includes('NetworkError');
-    el.innerHTML = cors
-      ? `<div class="alert">API Ekyte bloqueada por CORS no navegador. Os apontamentos feitos via Claude aparecem no Ekyte mas nao podem ser importados diretamente aqui. Use o painel do Ekyte para consultar.</div>`
-      : `<div class="alert">Erro: ${e.message}</div>`;
-  }
-}
-
-function renderTsLog() {
-  const el = document.getElementById('t-log');
-  const tot = document.getElementById('t-total');
-  if (!tsLog.length) {
-    el.innerHTML='<p style="font-size:13px;color:var(--gray-400);text-align:center;padding:28px 0;">Nenhum apontamento hoje.</p>';
-    tot.textContent='0h00'; return;
-  }
-  const mins = tsLog.reduce((s,e)=>s+e.dur,0);
-  tot.textContent = Math.floor(mins/60)+'h'+String(mins%60).padStart(2,'0');
-  el.innerHTML=`<table>
-    <thead><tr><th>Task</th><th>Inicio</th><th>Fim</th><th>Duracao</th><th></th></tr></thead>
-    <tbody>${tsLog.map(e=>`<tr>
-      <td><div style="font-size:11px;color:var(--gray-400);font-family:monospace;">#${e.id}</div><div style="font-weight:500;">${e.name}</div></td>
-      <td>${e.ini}</td><td>${e.fim}</td>
-      <td>${Math.floor(e.dur/60)}h${String(e.dur%60).padStart(2,'0')}</td>
-      <td><span class="badge ${e.reg?'b-green':'b-yellow'}">${e.reg?'✓ Ekyte':'Local'}</span></td>
-    </tr>`).join('')}</tbody>
-  </table>`;
-}
-
-function startTimer() {
-  const id = document.getElementById('t-id').value.trim();
-  const name = document.getElementById('t-name').value.trim();
-  if (!id||!name) { toast('Preencha o ID e o nome da task','err'); return; }
-  timerStart = new Date(); timerTask = {id,name};
-  document.getElementById('t-start').style.display='none';
-  document.getElementById('t-stop').style.display='';
-  document.getElementById('timer-card').classList.add('timer-running');
-  document.getElementById('t-sub').textContent = 'Rodando desde '+timerStart.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  timerIval = setInterval(()=>{
-    const s=Math.floor((new Date()-timerStart)/1000);
-    document.getElementById('t-clock').textContent=String(Math.floor(s/3600)).padStart(2,'0')+':'+String(Math.floor((s%3600)/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
-  },1000);
-}
-
-async function stopTimer() {
-  if(!timerStart) return;
-  const end=new Date();
-  clearInterval(timerIval); timerIval=null;
-  const ini=timerStart.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  const fim=end.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  const dur=Math.round((end-timerStart)/60000);
-  const date=timerStart.toISOString().slice(0,10);
-  document.getElementById('t-start').style.display='';
-  document.getElementById('t-stop').style.display='none';
-  document.getElementById('timer-card').classList.remove('timer-running');
-  document.getElementById('t-clock').textContent='00:00:00';
-  document.getElementById('t-sub').textContent='Pronto para iniciar';
-  await regEkyte(timerTask.id, timerTask.name, ini, fim, dur, date);
-  document.getElementById('t-id').value='';
-  document.getElementById('t-name').value='';
-  timerStart=null; timerTask=null;
-}
-
-async function registerManual() {
-  const id=document.getElementById('m-id').value.trim();
-  const name=document.getElementById('m-name').value.trim();
-  const ini=document.getElementById('m-start').value;
-  const fim=document.getElementById('m-end').value;
-  const date=document.getElementById('m-date').value;
-  if(!id||!name||!ini||!fim) { toast('Preencha todos os campos','err'); return; }
-  const [sh,sm]=ini.split(':').map(Number);
-  const [eh,em]=fim.split(':').map(Number);
-  const dur=(eh*60+em)-(sh*60+sm);
-  if(dur<=0) { toast('Horario de fim deve ser depois do inicio','err'); return; }
-  await regEkyte(id,name,ini,fim,dur,date);
-}
-
-async function regEkyte(taskId, taskName, ini, fim, dur, date) {
-  toast('Registrando no Ekyte...','');
-  let wsId=0, typeId=1, phaseId=0;
-  try {
-    const t = await EK.get(`/api/companies/${EKYTE_CO}/workspaces/0/tasks/${taskId}`);
-    wsId=t.workspaceId||0; typeId=t.ctcTaskTypeId||1; phaseId=t.phaseId||0;
-  } catch(_){}
-
-  const body={
-    typeTimeTracking:2,
-    startDate:`${date}T${ini}:00`, startDateTime:ini,
-    endDate:`${date}T${fim}:00`,   endDateTime:fim,
-    effort:dur, comment:'',
-    workspaceId:wsId, type:1,
-    ctcTaskId:parseInt(taskId), ctcTaskTypeId:typeId, phaseId, manualTime:ini
-  };
-
-  let reg=false;
-  try {
-    await EK.post(`/api/companies/${EKYTE_CO}/workspaces/${wsId}/time-trackings`, body);
-    reg=true;
-    toast(`✓ ${taskName} registrado (${Math.floor(dur/60)}h${String(dur%60).padStart(2,'0')})`, 'ok');
-  } catch(e) {
-    const cors=e.message.includes('fetch')||e.message.includes('NetworkError')||e.message.includes('CORS');
-    if(cors) {
-      toast('Ekyte CORS bloqueado — salvo localmente. Use /ekyte-log-timer no Claude para sincronizar.','err');
-    } else {
-      toast('Erro Ekyte: '+e.message,'err');
-    }
-  }
-
-  if(date===todayKey()) {
-    tsLog.push({id:taskId,name:taskName,ini,fim,dur,date,reg});
-    localStorage.setItem('ts_'+todayKey(), JSON.stringify(tsLog));
-    renderTsLog();
-  }
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// SYNC TIME
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-async function loadSyncTime() {
-  try {
-    const r = await fetch('data/last_sync.json');
-    const j = await r.json();
-    const el = document.getElementById('sidebar-date');
-    if (j.syncedAtBRT && j.syncedAtBRT !== 'Aguardando primeiro sync') {
-      // adiciona linha de sync abaixo da data
-      el.title = 'Dados sincronizados em: ' + j.syncedAtBRT;
+    const r = await fetch('/api/refresh');
+    const result = await r.json();
+    if (result.gp && !result.gp.ok) {
+      console.warn('[GP]', result.gp.msg);
     }
   } catch(_) {}
+  btn.textContent = '↻ Carregando dados...';
+  await loadData(true);
+  btn.classList.remove('loading'); btn.disabled = false; btn.textContent = '↻ Atualizar';
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// SYNC
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function syncActive() {
-  const tab = document.querySelector('.nav-item.active')?.dataset.tab;
-  if(tab==='pace')      loadPace();
-  else if(tab==='comercial') loadComercial();
-  else if(tab==='agenda')    loadAgenda();
-  else loadPace();
-  toast('Sincronizando...','');
+// ── RENDER ALL ────────────────────────────────
+function renderAll() {
+  document.getElementById('weekNum').textContent    = 'SEMANA ' + D.semana;
+  document.getElementById('semLabel').textContent   = D.semana;
+  document.getElementById('weekPeriod').textContent = `${D.periodo} · Dia ${D.diaAtual} de ${D.diasNoMes} · ${D.diasNoMes - D.diaAtual} dias restantes`;
+  document.getElementById('paceEsp').textContent    = D.paceEsperado + '%';
+  document.getElementById('diaAtual').textContent   = `Dia ${D.diaAtual} / ${D.diasNoMes}`;
+  document.getElementById('updatedAt').textContent  = D.updatedAt || '—';
+  document.getElementById('cacheInfo').textContent  = D.cacheInfo || '—';
+
+  const connBar = document.getElementById('connBar');
+  if (D.conexoes) {
+    connBar.innerHTML = Object.entries(D.conexoes).map(([k, v]) => {
+      const cls = v.startsWith('ok') ? 'conn-ok' : v.includes('offline') || v.includes('expirado') || v.includes('inválido') ? 'conn-off' : 'conn-warn';
+      return `<span class="conn-pill ${cls}"><span class="conn-dot"></span>${k}: ${v}</span>`;
+    }).join('');
+  }
+
+  const errBanner = document.getElementById('errBanner');
+  if (D.errors && D.errors.length) {
+    errBanner.classList.add('visible');
+    errBanner.innerHTML = D.errors.map(e => `<div class="err-item">${e}</div>`).join('');
+  } else {
+    errBanner.classList.remove('visible');
+  }
+
+  renderTab(activeTab);
 }
+
+function renderTab(tab) {
+  if (tab === 'growth')    renderGrowth();
+  if (tab === 'saude')     renderSaude();
+  if (tab === 'comercial') renderComercial();
+}
+
+// ── GROWTH ────────────────────────────────────
+function renderGrowth() {
+  document.getElementById('loadingGR').style.display = 'none';
+  document.getElementById('contentGR').style.display = 'block';
+
+  const cls    = D.clientes || [];
+  const paceEsp = parseFloat(D.paceEsperado);
+
+  document.getElementById('carteiraBody').innerHTML = cls.map(c => {
+    const paceR  = parseFloat(c.paceReal);
+    const desvio = parseFloat(c.desvio);
+    const desvCls = desvio > 10 ? 'desvio-pos' : desvio < -10 ? 'desvio-neg' : 'desvio-ok';
+    const desvSign = desvio > 0 ? '+' : '';
+    return `
+    <tr onclick="toggleCard('${c.ticker}')">
+      <td><b>${c.ticker}</b> <span style="color:var(--muted);font-weight:400">${c.nome}</span></td>
+      <td>${hsBadge(c.hs.flag)}</td>
+      <td style="font-weight:600">${c.gp.rawBudget}</td>
+      <td style="font-weight:600">${c.gp.rawInvest}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:5px">
+          <div style="width:50px;height:5px;background:var(--border);border-radius:3px;position:relative;overflow:visible">
+            <div style="width:${Math.min(100,Math.max(0,paceR||0))}%;height:100%;background:${isNaN(paceR)?'var(--border)':paceR<paceEsp-10?'var(--red)':paceR>paceEsp+10?'var(--yellow)':'var(--green)'};border-radius:3px"></div>
+            <div style="position:absolute;top:-3px;bottom:-3px;left:${Math.min(100,paceEsp)}%;width:2px;background:var(--yellow)"></div>
+          </div>
+          <b>${isNaN(paceR)?'—':paceR+'%'}</b>
+        </div>
+      </td>
+      <td class="${desvCls}">${isNaN(desvio)?'—':desvSign+desvio+'pp'}</td>
+      <td style="color:var(--muted)">${c.gp.metaLeads > 0 ? c.gp.metaLeads : '—'}</td>
+      <td><b>${c.gp.leads || '—'}</b></td>
+      <td>${c.gp.mql || '—'}</td>
+      <td>${c.gp.sql || '—'}</td>
+      <td style="color:${c.gp.vendas > 0 ? 'var(--green)' : 'var(--text)'};font-weight:${c.gp.vendas > 0 ? '700' : '400'}">${c.gp.vendas || '—'}</td>
+      <td style="color:var(--muted)">${c.gp.rawCPL}</td>
+      <td style="color:var(--muted)">${c.gp.rawFat}</td>
+      <td><span class="risco" style="background:${c.riscoColor}18;color:${c.riscoColor};border:1px solid ${c.riscoColor}44">${c.risco}</span></td>
+      <td class="cart-msg" title="${esc(c.mensagem)}">${c.mensagem || '<span style="color:var(--border)">—</span>'}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('clienteCards').innerHTML = cls.map(c => buildCard(c)).join('');
+}
+
+// ── CARD ─────────────────────────────────────
+function buildCard(c) {
+  const paceR    = parseFloat(c.paceReal);
+  const paceEsp  = parseFloat(D.paceEsperado);
+  const paceColor = isNaN(paceR) ? 'var(--muted)' : paceR < paceEsp - 10 ? 'var(--red)' : paceR > paceEsp + 10 ? 'var(--yellow)' : 'var(--green)';
+
+  return `
+<div class="client-card" id="card-${c.ticker}">
+  <div class="card-header" onclick="toggleCard('${c.ticker}')">
+    <div class="card-hl">
+      <span class="ticker">${c.ticker}</span>
+      <span class="client-name">${c.nome}</span>
+      ${hsBadge(c.hs.flag)}
+      <span class="risco" style="background:${c.riscoColor}18;color:${c.riscoColor};border:1px solid ${c.riscoColor}44">${c.risco}</span>
+    </div>
+    <div class="card-meta">
+      <span class="card-meta-item">Pace <b>${isNaN(paceR)?'—':paceR+'%'}</b></span>
+      <span class="card-meta-item">Budget <b>${c.gp.rawBudget}</b></span>
+      <span class="card-meta-item">Leads <b>${c.gp.leads || 0}</b></span>
+      <span class="card-meta-item">Vendas <b>${c.gp.vendas || 0}</b></span>
+      <span class="chevron" id="chev-${c.ticker}">▾</span>
+    </div>
+  </div>
+  <div class="card-body" id="body-${c.ticker}">
+    <div class="card-tabs">
+      <div class="card-tab active" onclick="setCardTab('${c.ticker}','metricas',this)">Métricas</div>
+      <div class="card-tab" onclick="setCardTab('${c.ticker}','analise',this)">Análise</div>
+      <div class="card-tab" onclick="setCardTab('${c.ticker}','planos',this)">Plano de Ação</div>
+      <div class="card-tab" onclick="setCardTab('${c.ticker}','justs',this)">Justificativas</div>
+      ${c.com ? `<div class="card-tab" onclick="setCardTab('${c.ticker}','comercial',this)">Comercial</div>` : ''}
+    </div>
+
+    <div class="card-panel active" id="panel-${c.ticker}-metricas">
+      ${c.mensagem ? `<div class="mensagem-box"><div class="mensagem-label">📌 Mensagem GrowthPack — Semana ${D.semana}</div>${c.mensagem}</div>` : ''}
+      <div class="metrics-grid">
+        <div class="metric-box"><div class="metric-lbl">Budget/Mês</div><div class="metric-val" style="font-size:16px">${c.gp.rawBudget}</div></div>
+        <div class="metric-box"><div class="metric-lbl">Investido</div><div class="metric-val" style="font-size:16px;color:var(--red)">${c.gp.rawInvest}</div><div class="metric-sub">${isNaN(paceR)?'—':paceR+'%'} do budget</div></div>
+        <div class="metric-box"><div class="metric-lbl">Pace</div><div class="metric-val" style="color:${paceColor}">${isNaN(paceR)?'—':paceR+'%'}</div><div class="metric-sub">${c.paceStatus}</div></div>
+        <div class="metric-box"><div class="metric-lbl">Desvio</div><div class="metric-val" style="color:${paceColor};font-size:16px">${isNaN(parseFloat(c.desvio))?'—':(parseFloat(c.desvio)>0?'+':'')+c.desvio+'pp'}</div></div>
+        <div class="metric-box">
+          <div class="metric-lbl">HS Score</div>
+          <div class="metric-val" style="color:${hsColor(c.hs.flag)};font-size:16px">${c.hs.score ? c.hs.score.toFixed(1) : '—'}<span style="font-size:12px;color:var(--muted)">/30</span></div>
+          <div class="metric-sub">${c.hs.flag !== 'N/D' ? c.hs.flag : 'Cockpit offline'}</div>
+        </div>
+        <div class="metric-box"><div class="metric-lbl">LT (meses)</div><div class="metric-val">${c.hs.lt || '—'}</div></div>
+        <div class="metric-box"><div class="metric-lbl">Leads</div><div class="metric-val" style="color:var(--blue)">${c.gp.leads || '—'}</div><div class="metric-sub">Meta: ${c.gp.metaLeads || '—'}</div></div>
+        <div class="metric-box"><div class="metric-lbl">MQL</div><div class="metric-val">${c.gp.mql || '—'}</div></div>
+        <div class="metric-box"><div class="metric-lbl">SQL</div><div class="metric-val">${c.gp.sql || '—'}</div></div>
+        <div class="metric-box"><div class="metric-lbl">Vendas</div><div class="metric-val" style="color:${c.gp.vendas>0?'var(--green)':'var(--muted)'}">${c.gp.vendas || '—'}</div></div>
+        <div class="metric-box"><div class="metric-lbl">CPL</div><div class="metric-val" style="font-size:15px">${c.gp.rawCPL}</div></div>
+        ${c.tipo==='EC' ? `<div class="metric-box"><div class="metric-lbl">Faturamento</div><div class="metric-val" style="font-size:14px">${c.gp.rawFat}</div></div>` : ''}
+        ${c.gp.rawMeta !== '—' ? `<div class="metric-box"><div class="metric-lbl">Meta Ads</div><div class="metric-val" style="font-size:14px">${c.gp.rawMeta}</div></div>` : ''}
+      </div>
+      <div class="pace-bar-wrap">
+        <div class="pace-bar-labels">
+          <span>Pace real: <b>${isNaN(paceR)?'—':paceR+'%'}</b></span>
+          <span style="color:var(--muted)">Esperado: ${D.paceEsperado}%</span>
+        </div>
+        <div class="pace-track">
+          <div class="pace-fill" style="width:${Math.min(100,Math.max(0,paceR||0))}%;background:${paceColor}"></div>
+          <div class="pace-marker" style="left:${Math.min(100,parseFloat(D.paceEsperado))}%" data-label="${D.paceEsperado}%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-panel" id="panel-${c.ticker}-analise">
+      <div class="analise-box">${gerarAnalise(c)}</div>
+    </div>
+
+    <div class="card-panel" id="panel-${c.ticker}-planos">
+      ${gerarPlanos(c)}
+    </div>
+
+    <div class="card-panel" id="panel-${c.ticker}-justs">
+      ${gerarJusts(c)}
+    </div>
+
+    ${c.com ? `<div class="card-panel" id="panel-${c.ticker}-comercial">${buildComPanel(c)}</div>` : ''}
+  </div>
+</div>`;
+}
+
+function toggleCard(ticker) {
+  const body = document.getElementById(`body-${ticker}`);
+  const chev = document.getElementById(`chev-${ticker}`);
+  const open = body.classList.toggle('open');
+  if (chev) chev.classList.toggle('open', open);
+}
+
+function setCardTab(ticker, tab, el) {
+  document.querySelectorAll(`[id^="panel-${ticker}-"]`).forEach(p => p.classList.remove('active'));
+  document.getElementById(`panel-${ticker}-${tab}`)?.classList.add('active');
+  document.querySelectorAll(`#body-${ticker} .card-tab`).forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+}
+
+// ── ANÁLISE PROFUNDA ──────────────────────────
+function gerarAnalise(c) {
+  const sections = [];
+  const paceR   = parseFloat(c.paceReal);
+  const desvio  = parseFloat(c.desvio);
+  const paceEsp = parseFloat(D.paceEsperado);
+  const dia = D.diaAtual, mes = D.diasNoMes, restam = mes - dia;
+  const budget  = c.gp.budget   || 0;
+  const investido = c.gp.investido || 0;
+  const faltaInv = Math.max(0, budget - investido);
+  const diarNecessario = restam > 0 && faltaInv > 0 ? (faltaInv / restam).toLocaleString('pt-BR', {maximumFractionDigits:0}) : '—';
+
+  // 1. PACE
+  let paceMsg = '';
+  if (isNaN(paceR) || c.gp.rawBudget === '—') {
+    paceMsg = 'GrowthPack não carregado. Rode <b>/dashboard-refresh</b> para sincronizar os dados de investimento e budget.';
+  } else if (paceR === 0 && dia <= 3) {
+    paceMsg = `Início de mês — investimento ainda não registrado pela GT. Aguardar confirmação de campanhas ativas.`;
+  } else if (desvio < -20) {
+    paceMsg = `<b>ATRASADO ${Math.abs(desvio).toFixed(0)}pp.</b> ${paceR}% investido vs ${paceEsp}% esperado no dia ${dia}/${mes}. Faltam R$${faltaInv.toLocaleString('pt-BR')} em ${restam} dias — necessário ~R$${diarNecessario}/dia. Acionamento imediato da GT para redistribuição de budget.`;
+  } else if (desvio < -10) {
+    paceMsg = `Pace ${Math.abs(desvio).toFixed(0)}pp abaixo do esperado — ainda recuperável. GT deve subir daily budget para ~R$${diarNecessario}/dia nos próximos 3 dias.`;
+  } else if (desvio > 20) {
+    paceMsg = `Pace ${desvio.toFixed(0)}pp acima — risco de esgotar budget antes do fim do mês. Distribuir os R$${faltaInv.toLocaleString('pt-BR')} restantes nos ${restam} dias com disciplina.`;
+  } else {
+    paceMsg = `Pace alinhado: ${paceR}% investido vs ${paceEsp}% esperado (dia ${dia}/${mes}). Investimento dentro da faixa.`;
+  }
+  sections.push({ title:'Pace de Investimento', body: paceMsg });
+
+  // 2. RESULTADOS
+  const leads  = c.gp.leads  || 0;
+  const mql    = c.gp.mql    || 0;
+  const sql    = c.gp.sql    || 0;
+  const vendas = c.gp.vendas || 0;
+  const metaLeads = c.gp.metaLeads || 0;
+
+  if (leads > 0 || c.gp.rawBudget !== '—') {
+    const mqlTax = leads > 0 ? Math.round(mql / leads * 100) : 0;
+    const sqlTax = mql   > 0 ? Math.round(sql / mql * 100)   : 0;
+    const fecTax = sql   > 0 ? Math.round(vendas / sql * 100) : 0;
+    let resMsg   = leads === 0
+      ? (dia > 5 ? 'Sem leads registrados após dia ' + dia + '. Verificar se campanhas estão ativas e pixel disparando.' : 'Aguardando primeiros leads do mês.')
+      : `Funil: <b>${leads} leads</b>${metaLeads > 0 ? ` (${Math.round(leads/metaLeads*100)}% da meta de ${metaLeads})` : ''} → <b>${mql} MQL</b> (${mqlTax}%)${sql > 0 ? ` → <b>${sql} SQL</b> (${sqlTax}%)` : ''}${vendas > 0 ? ` → <b>${vendas} vendas</b> (${fecTax}%)` : ''}.`;
+
+    const alertas = [];
+    if (leads > 20 && mqlTax < 15) alertas.push(`Taxa Lead→MQL baixa (${mqlTax}%) — público captado desalinhado com ICP. Revisar segmentação e criativo.`);
+    if (sql > 0 && fecTax < 10 && dia > 10) alertas.push(`Apenas ${fecTax}% dos SQL fecharam — gargalo no comercial, não na captação. Revisar processo de atendimento.`);
+    if (vendas === 0 && sql > 0 && dia > 10) alertas.push(`${sql} leads em SQL sem conversão até dia ${dia}. Escalada comercial urgente.`);
+    if (vendas === 0 && leads === 0 && dia > 5) alertas.push('Zero leads e zero vendas — verificar saúde das campanhas com a GT.');
+    if (c.tipo === 'EC' && c.gp.rawFat && c.gp.rawFat !== '—') resMsg += ` Faturamento: <b>${c.gp.rawFat}</b>.`;
+    if (alertas.length) resMsg += '<br>' + alertas.join('<br>');
+    sections.push({ title:'Resultados', body: resMsg });
+  }
+
+  // 3. HEALTH SCORE + DIMENSÕES
+  const dim = c.hs.dim || {};
+  const hasDim = dim.resultados !== undefined || dim.opsTrafego !== null;
+
+  let hsMsg = '';
+  if (c.hs.flag === 'N/D') {
+    hsMsg = 'Cockpit offline — Health Score indisponível. Com o token atualizado, os dados devem carregar automaticamente.';
+  } else {
+    const scoreStr = c.hs.score ? c.hs.score.toFixed(1) : '—';
+    const ltStr    = c.hs.lt ? `${c.hs.lt}m LT` : '';
+    if (c.hs.flag === 'Danger') {
+      hsMsg = `<b>ALERTA CRÍTICO:</b> HS em Danger (${scoreStr}/30)${ltStr ? ', ' + ltStr : ''}. Risco real de churn. Ação imediata necessária esta semana.`;
+    } else if (c.hs.flag === 'Critical') {
+      hsMsg = `HS em Critical (${scoreStr}/30)${ltStr ? ', ' + ltStr : ''}. Prioridade máxima — identificar e endereçar a dimensão crítica esta semana.`;
+    } else if (c.hs.flag === 'Care') {
+      hsMsg = `HS em Care (${scoreStr}/30)${ltStr ? ', ' + ltStr : ''}. Atenção ao processo — uma dimensão abaixo pode virar Critical.`;
+    } else {
+      hsMsg = `HS estável em Safe (${scoreStr}/30)${ltStr ? ', ' + ltStr : ''}. Processo saudável.`;
+    }
+
+    // Dimensões detalhadas
+    if (hasDim) {
+      const boolIcon = v => v === true || v === 'true' ? '<span style="color:#22C55E;font-weight:700">OK</span>' : '<span style="color:#E50914;font-weight:700">Problema</span>';
+      const dimRows = [
+        `Resultados: <b style="color:${(parseFloat(dim.resultados)||0)>=7?'#22C55E':'#E50914'}">${parseFloat(dim.resultados)||0}/10</b>`,
+        `Ops Tráfego: ${boolIcon(dim.opsTrafego)}`,
+        `Entregas: ${boolIcon(dim.entregas)}`,
+        `Prazo: ${boolIcon(dim.prazoEntregas)}`,
+        `Relacionamento: ${boolIcon(dim.relacionamento)}`,
+      ];
+      const dimProblemas = [];
+      if ((parseFloat(dim.resultados)||0) < 7) dimProblemas.push('resultados abaixo da meta (< 7/10)');
+      if (dim.opsTrafego === false || dim.opsTrafego === 'false') dimProblemas.push('anomalia em Ops Tráfego');
+      if (dim.entregas === false || dim.entregas === 'false') dimProblemas.push('pendência em Entregas');
+      if (dim.prazoEntregas === false || dim.prazoEntregas === 'false') dimProblemas.push('atraso em Prazo');
+      if (dim.relacionamento === false || dim.relacionamento === 'false') dimProblemas.push('problema em Relacionamento');
+
+      hsMsg += `<br><div style="display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:8px;font-size:11px;">${dimRows.map(r=>`<span>${r}</span>`).join('')}</div>`;
+      if (dimProblemas.length) {
+        hsMsg += `<br><span style="font-size:11px;color:var(--red)">Dimensões com problema: ${dimProblemas.join(', ')}. Endereçar estas áreas para elevar o HS.</span>`;
+      }
+    }
+  }
+  sections.push({ title:'Health Score', body: hsMsg });
+
+  // 4. CPL
+  if (c.gp.rawCPL && c.gp.rawCPL !== '—') {
+    sections.push({ title:'Custo por Lead', body: `CPL atual: <b>${c.gp.rawCPL}</b>. ${budget > 0 && leads > 0 ? `Benchmark: se o budget fosse totalmente investido com o CPL atual, atingiria ~${Math.round(budget / (investido / leads || 1))} leads no mês.` : ''}` });
+  }
+
+  if (!sections.length) return 'Dados insuficientes para diagnóstico.';
+  return sections.map(s =>
+    `<div class="analise-section"><div class="analise-section-title">${s.title}</div>${s.body}</div>`
+  ).join('<hr style="border:none;border-top:1px solid #FECACA;margin:10px 0">');
+}
+
+// ── PLANOS ───────────────────────────────────
+function gerarPlanos(c) {
+  const planos = [];
+  const desvio = parseFloat(c.desvio);
+  const d3 = new Date(); d3.setDate(d3.getDate()+3);
+  const d7 = new Date(); d7.setDate(d7.getDate()+7);
+  const p3 = d3.toLocaleDateString('pt-BR');
+  const p7 = d7.toLocaleDateString('pt-BR');
+
+  if (c.gp.rawBudget !== '—') {
+    if (desvio < -10) planos.push({ o:'Ajuste de pace', c:'Realocar budget — subir daily budget nos próximos 5 dias para cobrir o atraso', pq:`Pace ${Math.abs(desvio).toFixed(0)}pp abaixo do esperado`, q:p3, quem:'GT' });
+    if (c.hs.flag === 'Danger' || c.hs.flag === 'Critical') planos.push({ o:'Auditoria de processo (HS)', c:'Revisar dimensões no Cockpit: check-in, D-1, materiais, acompanhamento comercial ativo', pq:`HS em ${c.hs.flag} — risco de churn`, q:p3, quem:'AM' });
+    if (c.com?.leadsQuentes?.some(l=>l.dias>15)) planos.push({ o:'Escalada leads quentes', c:'Contato direto por ligação ou WhatsApp personalizado para leads com +15 dias em SQL', pq:'Leads esfriando — risco real de perda', q:p3, quem:'AM' });
+    if (c.gp.leads === 0 && D.diaAtual > 5) planos.push({ o:'Diagnóstico de captação', c:'Verificar campanhas ativas, budget rodando, pixel disparando, criativos aprovados', pq:`Zero leads após dia ${D.diaAtual}`, q:p3, quem:'GT' });
+    if (!planos.length) planos.push({ o:'Manutenção de criativos', c:'Analisar criativos com maior CPL e substituir por melhores performers. Testar novo formato.', pq:'Prevenção de fadiga de audiência', q:p7, quem:'GT' });
+  }
+
+  const autoHtml = planos.length
+    ? planos.map(p => `
+    <div class="plano-item">
+      <div class="plano-row"><span class="plano-key">O quê</span><span class="plano-val">${p.o}</span></div>
+      <div class="plano-row"><span class="plano-key">Como</span><span class="plano-val">${p.c}</span></div>
+      <div class="plano-row"><span class="plano-key">Por quê</span><span class="plano-val">${p.pq}</span></div>
+      <div class="plano-row"><span class="plano-key">Quando</span><span class="plano-val">${p.q}</span></div>
+      <div class="plano-row"><span class="plano-key">Quem</span><span class="plano-val"><b style="color:${p.quem==='AM'?'var(--yellow)':'var(--blue)'}">${p.quem === 'AM' ? 'AM — Julia Costa' : 'GT — Gestora de Tráfego'}</b></span></div>
+    </div>`).join('')
+    : `<div class="plano-item"><div class="plano-row"><span class="plano-key">Ação</span><span class="plano-val">Rode <b>/dashboard-refresh</b> para carregar os dados do GrowthPack.</span></div></div>`;
+
+  const savedPlan = esc(localStorage.getItem('plano-' + c.ticker) || '');
+  return `
+    ${autoHtml}
+    <div class="plano-manual-wrap">
+      <div class="plano-manual-label">Plano Manual — Julia Costa</div>
+      <textarea
+        class="plano-manual-area"
+        id="plano-manual-${c.ticker}"
+        placeholder="Digite aqui o plano de ação manual (decisões da reunião, combinados com cliente, próximos passos específicos)..."
+        oninput="salvarPlano('${c.ticker}', this.value)"
+      >${savedPlan}</textarea>
+      <div class="plano-manual-hint">Salvo automaticamente no navegador. Use para registrar combinados que não cabem nos planos automáticos.</div>
+    </div>`;
+}
+
+function salvarPlano(ticker, value) {
+  localStorage.setItem('plano-' + ticker, value);
+}
+
+// ── JUSTIFICATIVAS ────────────────────────────
+function gerarJusts(c) {
+  const desvio = parseFloat(c.desvio);
+  const dia    = D.diaAtual;
+  const items  = [];
+
+  items.push({ q:'Por que o pace está assim?',
+    a: isNaN(desvio) ? 'GrowthPack ainda não carregado — rode /dashboard-refresh no Claude.'
+     : desvio < -10 ? `Investimento acumulado ${Math.abs(desvio).toFixed(0)}pp abaixo do esperado até o dia ${dia}. GT já acionada para correção com aumento do daily budget.`
+     : desvio > 10  ? `Ritmo ${desvio.toFixed(0)}pp acima do esperado. Monitorando para redistribuição antes do fim do mês.`
+     : `Pace alinhado com o planejamento para o dia ${dia}/${D.diasNoMes}. Investimento dentro da faixa esperada.` });
+
+  if (c.hs.flag === 'Danger' || c.hs.flag === 'Critical') {
+    items.push({ q:`Por que o Health Score está em ${c.hs.flag}?`,
+      a:`Score ${c.hs.score?.toFixed(1)}/30 — um ou mais critérios de processo abaixo do mínimo. Gaps identificados no Cockpit e endereçados no plano desta semana. Próximo check-in já programado com foco na recuperação do HS.` });
+  }
+
+  if (c.com?.vendas === 0 && dia > 10) {
+    items.push({ q:'Por que ainda sem fechamentos?',
+      a:`Pipeline tem ${c.com.sql||0} leads em SQL. Gargalo no processo comercial — atendimento ou follow-up. Escalando leads quentes com acompanhamento direto esta semana.` });
+  }
+
+  if (c.gp.leads === 0 && dia > 5) {
+    items.push({ q:'Por que sem leads?',
+      a:`Zero leads registrados após dia ${dia}. Verificando com a GT se as campanhas estão rodando, orçamento aprovado e pixel disparando corretamente.` });
+  }
+
+  items.push({ q:'O que a V4 está fazendo esta semana?',
+    a:'Ajuste de pace com a GT, monitoramento de criativos, acompanhamento dos leads em SQL e revisão das dimensões de HS identificadas no Cockpit. Sprint já endereça os gaps desta semana.' });
+
+  return items.map((it, i) => `
+    <div class="just-block">
+      <div class="just-q"><span class="just-q-num">${i+1}</span>${it.q}</div>
+      <div class="just-a">${it.a}</div>
+    </div>`).join('<div class="divider" style="margin:10px 0"></div>');
+}
+
+// ── COMERCIAL PANEL ───────────────────────────
+function buildComPanel(c) {
+  if (!c.com) return '<p style="color:var(--muted)">Sem planilha comercial conectada.</p>';
+  const { total, mql, sql, vendas, receita, leadsQuentes, campanhas } = c.com;
+  const mqlP = total ? Math.round(mql/total*100) : 0;
+  const sqlP  = mql   ? Math.round(sql/mql*100)   : 0;
+  const fecP  = sql   ? Math.round(vendas/sql*100) : 0;
+  const rec   = receita ? `R$ ${receita.toLocaleString('pt-BR',{minimumFractionDigits:2})}` : '—';
+
+  const leadsHtml = leadsQuentes?.length ? `
+    <div class="sec-label" style="margin-top:16px">Leads Quentes em SQL</div>
+    <table class="leads-table">
+      <thead><tr><th>Nome</th><th>Campanha</th><th>Há</th><th>Obs</th></tr></thead>
+      <tbody>${leadsQuentes.slice(0,10).map(l=>`
+        <tr class="${l.dias>15?'lead-urg':''}">
+          <td><b>${l.nome}</b></td>
+          <td style="color:var(--muted)">${l.campanha}</td>
+          <td><span class="${l.dias>15?'dias-urg':'dias-ok'}">${l.dias}d</span></td>
+          <td style="color:var(--muted)">${l.obs||'—'}</td>
+        </tr>`).join('')}</tbody>
+    </table>` : '';
+
+  return `
+    <div class="metrics-grid">
+      <div class="metric-box"><div class="metric-lbl">Leads/Mês</div><div class="metric-val">${total}</div></div>
+      <div class="metric-box"><div class="metric-lbl">MQL</div><div class="metric-val">${mql}<span style="font-size:12px;color:var(--muted)"> (${mqlP}%)</span></div></div>
+      <div class="metric-box"><div class="metric-lbl">SQL</div><div class="metric-val">${sql}<span style="font-size:12px;color:var(--muted)"> (${sqlP}%)</span></div></div>
+      <div class="metric-box"><div class="metric-lbl">Vendas</div><div class="metric-val" style="color:${vendas>0?'var(--green)':'inherit'}">${vendas}<span style="font-size:12px;color:var(--muted)"> (${fecP}%)</span></div></div>
+      <div class="metric-box"><div class="metric-lbl">Receita</div><div class="metric-val" style="font-size:14px">${rec}</div></div>
+    </div>
+    ${leadsHtml}`;
+}
+
+// ── SAÚDE TAB ────────────────────────────────
+function dimCell(val, isScore) {
+  if (val === null || val === undefined) return '<td style="color:var(--muted)">—</td>';
+  if (isScore) {
+    const n = parseFloat(val) || 0;
+    const ok = n >= 7;
+    return `<td style="color:${ok?'var(--green)':'var(--red)'};font-weight:700">${n.toFixed(1)}</td>`;
+  }
+  const ok = val === true || val === 'true';
+  return `<td><span style="background:${ok?'#DCFCE7':'#FEE2E2'};color:${ok?'#166534':'#991B1B'};padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">${ok?'OK':'Problema'}</span></td>`;
+}
+
+function renderSaude() {
+  const el  = document.getElementById('saudeContent');
+  const ck  = D.cockpit;
+  const cls = D.clientes || [];
+
+  let topHtml = '';
+  if (ck) {
+    const fd = ck.flagDist || {};
+    const total = ck.projetos || 1;
+    const flagColors = { Danger:'#E50914', Critical:'#FF6E00', Care:'#F59E0B', Safe:'#22C55E' };
+    const flagBarHtml = Object.entries(fd).filter(([,n])=>n>0).map(([flag, n]) =>
+      `<div class="saude-flag-item">
+        <span class="saude-flag-dot" style="background:${flagColors[flag]}"></span>
+        <span>${flag}: <b>${n}</b> (${(n/total*100).toFixed(0)}%)</span>
+      </div>`).join('');
+
+    topHtml = `
+      <div class="saude-kpis">
+        <div class="metric-box">
+          <div class="metric-lbl">Projetos Mapeados</div>
+          <div class="metric-val">${ck.projetos}</div>
+          <div class="metric-sub">de ${cls.length} na carteira</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-lbl">Em Risco</div>
+          <div class="metric-val" style="color:var(--red)">${ck.emRisco}</div>
+          <div class="metric-sub">Critical + Danger</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-lbl">Score Operacional</div>
+          <div class="metric-val">${ck.scoreOp}%</div>
+          <div class="metric-sub">Fee em Safe + Care</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-lbl">HS Médio</div>
+          <div class="metric-val">${ck.hsMedia}<span style="font-size:12px;color:var(--muted)">/30</span></div>
+          <div class="metric-sub">Score atual dos clientes</div>
+        </div>
+      </div>
+      <div class="saude-flag-bar">${flagBarHtml}
+        <span style="font-size:10px;color:var(--muted);margin-left:auto">Atualizado: ${ck.lastOk}</span>
+      </div>`;
+  } else {
+    topHtml = `<div class="saude-offline">
+      Cockpit não conectado — ${D.conexoes?.cockpit || 'offline'}.<br>
+      Clique em <b>↻ Atualizar</b> para tentar novamente.
+    </div>`;
+  }
+
+  // Tabela principal Health Score + Dimensões
+  const tableHtml = `
+    <div class="sec-label">Health Score + Dimensões por Cliente</div>
+    <div class="carteira-wrap">
+      <table class="carteira">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Flag</th>
+            <th>Score</th>
+            <th>LT</th>
+            <th title="Resultados (0-10, ≥7 = OK)">Resultados</th>
+            <th title="Ops Tráfego (bool)">Ops Tráfego</th>
+            <th title="Entregas (bool)">Entregas</th>
+            <th title="Prazo (bool)">Prazo</th>
+            <th title="Relacionamento (bool)">Relac.</th>
+            <th>Pace GP</th>
+            <th>Risco</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${cls.map(c => {
+            const paceR   = parseFloat(c.paceReal);
+            const paceEsp = parseFloat(D.paceEsperado);
+            const paceColor = isNaN(paceR) ? 'var(--muted)' : paceR < paceEsp-10 ? 'var(--red)' : paceR > paceEsp+10 ? 'var(--yellow)' : 'var(--green)';
+            const dim = c.hs.dim || {};
+            return `<tr onclick="setTab('growth'); setTimeout(()=>{ toggleCard('${c.ticker}'); setCardTab('${c.ticker}','analise',document.querySelector('#body-${c.ticker} .card-tab:nth-child(2)')); },80)">
+              <td><b>${c.ticker}</b> <span style="color:var(--muted)">${c.nome}</span></td>
+              <td>${hsBadge(c.hs.flag)}</td>
+              <td>
+                <div class="score-bar-wrap">
+                  <div class="score-bar"><div class="score-fill" style="width:${((c.hs.score||0)/30*100).toFixed(0)}%;background:${hsColor(c.hs.flag)}"></div></div>
+                  <b style="font-size:12px;color:${hsColor(c.hs.flag)}">${c.hs.score || '—'}</b>
+                </div>
+              </td>
+              <td style="color:var(--muted)">${c.hs.lt ? c.hs.lt + 'm' : '—'}</td>
+              ${dimCell(dim.resultados, true)}
+              ${dimCell(dim.opsTrafego, false)}
+              ${dimCell(dim.entregas, false)}
+              ${dimCell(dim.prazoEntregas, false)}
+              ${dimCell(dim.relacionamento, false)}
+              <td style="font-weight:700;color:${paceColor}">${isNaN(paceR)?'—':paceR+'%'}</td>
+              <td><span class="risco" style="background:${c.riscoColor}18;color:${c.riscoColor};border:1px solid ${c.riscoColor}44">${c.risco}</span></td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>`;
+
+  // Legenda das dimensões
+  const legendaHtml = `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 16px;margin-top:4px">
+      <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Legenda das Dimensões</div>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:11px">
+        <span><b>Resultados:</b> score 0-10, abaixo de 7 = problema</span>
+        <span><b>Ops Tráfego:</b> campanhas rodando sem anomalia</span>
+        <span><b>Entregas:</b> backlog sem pendências críticas</span>
+        <span><b>Prazo:</b> entregas dentro do prazo</span>
+        <span><b>Relac.:</b> check-in, atendimento, NPS</span>
+      </div>
+    </div>`;
+
+  el.innerHTML = `
+    <div class="sec-label">Saúde da Carteira — Cockpit Health Score</div>
+    ${topHtml}
+    <div class="divider"></div>
+    ${tableHtml}
+    ${legendaHtml}`;
+}
+
+// ── COMERCIAL TAB ─────────────────────────────
+function renderComercial() {
+  const el  = document.getElementById('comercialContent');
+  const cls = (D.clientes||[]).filter(c => c.com);
+  if (!cls.length) {
+    el.innerHTML = '<p style="color:var(--muted);padding:20px">Nenhuma planilha comercial disponível. Será implementado em breve.</p>';
+    return;
+  }
+  el.innerHTML = cls.map(c => `
+    <div style="margin-bottom:24px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <span class="ticker">${c.ticker}</span>
+        <span style="font-size:15px;font-weight:700">${c.nome}</span>
+      </div>
+      ${buildComPanel(c)}
+      <div class="divider"></div>
+    </div>`).join('');
+}
+
+// ── MOCK DATA ─────────────────────────────────
+function getMockData() {
+  const hoje = new Date();
+  const dia  = hoje.getDate();
+  const mes  = new Date(hoje.getFullYear(), hoje.getMonth()+1, 0).getDate();
+  const d2   = new Date(Date.UTC(hoje.getFullYear(), hoje.getMonth(), hoje.getDate()));
+  const dy   = d2.getUTCDay() || 7; d2.setUTCDate(d2.getUTCDate()+4-dy);
+  const semana = Math.ceil((((d2 - new Date(Date.UTC(d2.getUTCFullYear(),0,1)))/86400000)+1)/7);
+  const paceEsp = (dia/mes*100).toFixed(1);
+
+  return {
+    semana, periodo: hoje.toLocaleDateString('pt-BR'), paceEsperado: paceEsp,
+    diaAtual: dia, diasNoMes: mes, updatedAt: '(modo offline — servidor indisponível)',
+    cacheInfo: '—', errors: ['Servidor dashboard offline — inicie com node server.js na pasta dashboard'],
+    conexoes: { servidor: 'offline' }, cockpit: null,
+    clientes: [
+      { ticker:'TECN1', nome:'Tecnipool', tipo:'IS',
+        hs:{ flag:'Danger', score:8.2, lt:14 },
+        gp:{ rawBudget:'R$4.000,00', rawInvest:'R$480,00', budget:4000, investido:480, leads:14, mql:6, sql:3, vendas:1, rawCPL:'R$34,28', rawFat:'—', rawMeta:'—', rawGoogle:'—', metaLeads:40 },
+        com:{ total:22, mql:6, sql:3, vendas:1, receita:3500, leadsQuentes:[{ nome:'Carlos Henrique', campanha:'ad02-video-piscina', dias:18, obs:'Enviou medidas' }], campanhas:[] },
+        paceReal:'12.0', desvio:'-31.3', paceStatus:'ATRASADO', risco:'CRÍTICO TOTAL', riscoColor:'#B8000E', riscoScore:4, mensagem:'' },
+      { ticker:'ACCE', nome:'VLoca', tipo:'EC',
+        hs:{ flag:'Safe', score:24.1, lt:22 },
+        gp:{ rawBudget:'R$3.000,00', rawInvest:'—', budget:3000, investido:0, leads:0, mql:0, sql:0, vendas:0, rawCPL:'—', rawFat:'—', rawMeta:'—', rawGoogle:'—', metaLeads:0 },
+        com:null, paceReal:'—', desvio:'—', paceStatus:'Aguardando GT', risco:'OK', riscoColor:'#22C55E', riscoScore:0, mensagem:'' },
+    ]
+  };
+}
+
+// ── INIT ──────────────────────────────────────
+loadData();
 </script>
 </body>
 </html>
