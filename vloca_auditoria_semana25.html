@@ -1,0 +1,3093 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Auditoria Funil Kommo · VLOCA × V4 — Semana 25</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --vloca:#FF6A00;--vloca2:#ff8a33;
+  --bg:#0a0b0d;--panel:#14161b;--panel2:#1c1f26;
+  --line:#272a33;--text:#eef0f3;--muted:#9aa1ad;
+  --ok:#22c55e;--warn:#f59e0b;--bad:#ef4444;
+  --maio:#ef4444;--junho:#22c55e;
+  --r:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:10;background:rgba(10,11,13,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{max-width:1300px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logos{display:flex;align-items:center;gap:10px}
+.vloca-logo{height:40px;background:var(--vloca);border-radius:8px;padding:0 14px;display:flex;align-items:center;gap:8px;font-weight:900;font-size:15px;color:#000;letter-spacing:.3px;white-space:nowrap}
+.vloca-logo .sub{font-size:9px;font-weight:700;opacity:.75;letter-spacing:.5px;text-transform:uppercase}
+.sep{color:var(--muted);font-size:18px;font-weight:200}
+.v4-logo{height:40px;border-radius:8px;background:#000;padding:4px 10px;border:1px solid var(--line)}
+.htitle{font-size:16px;font-weight:700;margin:0}
+.htitle small{display:block;font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.hspace{flex:1}
+.week-chip{display:flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid var(--vloca);border-radius:10px;background:rgba(255,106,0,.08);font-weight:700;font-size:13px}
+.week-chip b{color:var(--vloca)}
+.hbtns{display:flex;gap:8px}
+.btn{cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--text);padding:8px 14px;border-radius:10px;font-weight:600;font-size:13px;transition:.15s}
+.btn:hover{border-color:var(--vloca);color:var(--vloca)}
+.btn.prim{background:var(--vloca);border-color:var(--vloca);color:#000}
+.btn.prim:hover{background:var(--vloca2)}
+
+/* TABS */
+.tabbar{max-width:1300px;margin:0 auto;padding:0 24px;display:flex;gap:2px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tab{padding:13px 18px;cursor:pointer;border:0;background:transparent;color:var(--muted);font-weight:600;font-size:14px;border-bottom:2px solid transparent;white-space:nowrap;transition:.15s}
+.tab.active{color:var(--vloca);border-bottom-color:var(--vloca)}
+.tab:hover{color:var(--text)}
+
+/* MAIN */
+main{max-width:1300px;margin:0 auto;padding:28px 24px 80px}
+.sec{display:none}
+.sec.active{display:block;animation:fd .2s ease}
+@keyframes fd{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+h2.sh{margin:0 0 20px;font-size:24px;letter-spacing:-.01em}
+h3.sub{font-size:16px;color:var(--muted);font-weight:600;margin:28px 0 14px}
+
+/* LEAD TEXT */
+.lead-txt{font-size:15px;line-height:1.7;color:#c8cdd6;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--vloca);border-radius:12px;padding:20px 24px;margin-bottom:28px}
+.lead-txt strong{color:var(--text)}
+
+/* CARDS GRID */
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+@media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:22px;border-top:4px solid}
+.card.red{border-top-color:var(--bad)}
+.card.orange{border-top-color:var(--vloca)}
+.card.green{border-top-color:var(--ok)}
+.card.blue{border-top-color:#4299e1}
+.card .cn{font-size:40px;font-weight:800;line-height:1}
+.card.red .cn{color:var(--bad)}
+.card.orange .cn{color:var(--vloca)}
+.card.green .cn{color:var(--ok)}
+.card.blue .cn{color:#4299e1}
+.card .cl{font-size:12px;color:var(--muted);margin-top:6px}
+
+/* 2 COL GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px}
+@media(max-width:800px){.g2{grid-template-columns:1fr}}
+
+/* MONTH COL */
+.mc{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+.mc.maio{border-top:4px solid var(--maio)}
+.mc.junho{border-top:4px solid var(--junho)}
+.mc-hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:18px}
+.mc-nm{font-size:22px;font-weight:800}
+.mc-nm.maio{color:var(--maio)}
+.mc-nm.junho{color:var(--junho)}
+.mc-per{color:var(--muted);font-size:12px}
+.kgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:14px}
+.kpi .kl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:6px}
+.kpi .kv{font-size:20px;font-weight:800}
+.kpi .kv.hidden{color:var(--muted);letter-spacing:.18em;font-size:16px}
+.eye-btn{cursor:pointer;background:none;border:1px solid var(--line);border-radius:8px;color:var(--muted);padding:7px 14px;display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;transition:.15s}
+.eye-btn:hover{border-color:var(--vloca);color:var(--vloca)}
+
+/* DIAG BOX */
+.diagbox{background:linear-gradient(135deg,rgba(255,106,0,.10),rgba(34,197,94,.06));border:1px solid var(--vloca);border-radius:12px;padding:18px 24px;font-size:15px;line-height:1.7;margin-top:20px}
+.diagbox b{color:var(--vloca)}
+.alertbox{background:#1a0808;border:1px solid #5c1c1c;border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:13px;color:#fca5a5}
+.alertbox strong{display:block;font-size:14px;color:var(--bad);margin-bottom:4px}
+.infobox{background:#0a1628;border-left:4px solid #4299e1;border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:18px;font-size:13px;color:#90cdf4}
+.infobox strong{display:block;font-size:14px;color:#63b3ed;margin-bottom:4px}
+
+/* FUNNEL */
+.funnel-wrap{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:24px;margin-bottom:24px}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+@media(max-width:800px){.fg{grid-template-columns:1fr}}
+.fc h3{margin:0 0 16px;font-size:17px;display:flex;align-items:center;gap:10px}
+.fbadge{font-size:11px;padding:4px 10px;border-radius:20px;font-weight:700}
+.fc.maio .fbadge{background:rgba(239,68,68,.15);color:var(--maio);border:1px solid rgba(239,68,68,.4)}
+.fc.junho .fbadge{background:rgba(34,197,94,.15);color:var(--junho);border:1px solid rgba(34,197,94,.4)}
+.fstage{padding:12px 16px;border-radius:8px;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;font-weight:700;color:#000}
+.fstage .fq{font-size:20px}
+.fstage .fn{font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.fconv{text-align:center;color:var(--muted);font-size:12px;padding:5px 0;font-weight:600}
+.fconv b{color:var(--text);font-size:13px}
+.ffinal{margin-top:12px;padding:14px;border-radius:10px;text-align:center;font-weight:800;border:2px dashed}
+.ffinal.maio{border-color:var(--maio);color:var(--maio);background:rgba(239,68,68,.05)}
+.ffinal.junho{border-color:var(--junho);color:var(--junho);background:rgba(34,197,94,.05)}
+.ffinal small{display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+.ffinal span{font-size:26px}
+
+/* CHARTS */
+.chart-box{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:22px;margin-bottom:22px}
+.chart-box h3{margin:0 0 16px;font-size:15px;color:var(--text)}
+.chart-inner{height:280px;position:relative}
+
+/* TABLES */
+.tbl-wrap{overflow-x:auto;margin-bottom:28px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--panel2);color:var(--muted);font-weight:600;text-align:left;padding:10px 12px;border-bottom:2px solid var(--line);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:hover>td{background:rgba(255,255,255,.02)}
+td a{color:#4299e1;text-decoration:none;font-weight:500}
+td a:hover{text-decoration:underline}
+td.resp{font-size:12px;color:var(--muted)}
+.dtag{display:inline-block;padding:3px 9px;border-radius:20px;font-size:12px;font-weight:700}
+.dtag.danger{background:rgba(239,68,68,.15);color:var(--bad)}
+.dtag.warn{background:rgba(245,158,11,.15);color:var(--warn)}
+.dtag.notice{background:rgba(66,153,225,.15);color:#63b3ed}
+.dtag.ok{background:rgba(34,197,94,.15);color:var(--ok)}
+.sb{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.sb.closed{background:rgba(239,68,68,.12);color:var(--bad)}
+.sb.open{background:rgba(34,197,94,.12);color:var(--ok)}
+.sb.none{background:rgba(154,161,173,.12);color:var(--muted)}
+
+/* EVIDENCE */
+.ev-btn{background:none;border:1.5px dashed var(--line);border-radius:6px;color:var(--muted);padding:4px 10px;font-size:12px;cursor:pointer;transition:.15s;white-space:nowrap}
+.ev-btn:hover{border-color:var(--vloca);color:var(--vloca)}
+.ev-btn.has{border-style:solid;border-color:var(--ok);color:var(--ok)}
+.ev-row>td{padding:0;background:rgba(255,106,0,.03);border-bottom:2px solid rgba(255,106,0,.2)}
+.ev-mini{padding:14px 18px;display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start}
+.ev-drop-area{flex:0 0 220px;border:2px dashed rgba(66,153,225,.4);border-radius:10px;padding:16px 12px;text-align:center;background:var(--panel);cursor:pointer;font-size:12px;color:var(--muted);transition:.15s;line-height:1.5}
+.ev-drop-area:hover,.ev-drop-area.over{border-color:#4299e1;background:#0d1f33}
+.ev-thumbs{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start}
+.ev-thumb-w{position:relative}
+.ev-thumb{width:120px;height:85px;object-fit:cover;border-radius:8px;border:2px solid var(--line);cursor:pointer;display:block}
+.ev-thumb:hover{border-color:#4299e1}
+.ev-del{position:absolute;top:-5px;right:-5px;width:18px;height:18px;background:var(--bad);color:#fff;border:none;border-radius:50%;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.ev-note{flex:1 1 180px;min-width:180px;min-height:70px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;font-size:13px;font-family:inherit;resize:vertical;color:var(--text);outline:none}
+.ev-note:focus{border-color:var(--vloca)}
+
+/* LIGHTBOX */
+.lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9999;align-items:center;justify-content:center}
+.lb.open{display:flex}
+.lb img{max-width:92vw;max-height:90vh;border-radius:10px}
+.lb-x{position:absolute;top:18px;right:24px;color:#fff;font-size:32px;cursor:pointer;line-height:1}
+
+/* PLAN */
+.day-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:22px;margin-bottom:20px}
+.day-hd{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.day-title{font-size:20px;font-weight:800;display:flex;align-items:center;gap:12px}
+.day-badge{background:var(--vloca);color:#000;padding:4px 12px;border-radius:6px;font-size:13px;font-weight:700}
+.prog{font-size:13px;color:var(--muted);font-weight:600}
+.task{display:flex;gap:14px;padding:15px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);margin-bottom:10px;transition:.15s;cursor:pointer}
+.task.done{opacity:.5;background:rgba(34,197,94,.05);border-color:rgba(34,197,94,.3)}
+.task input[type=checkbox]{width:20px;height:20px;accent-color:var(--ok);margin-top:3px;cursor:pointer;flex-shrink:0}
+.task .tbody{flex:1}
+.task .thead{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap;margin-bottom:5px}
+.task .ttime{font-size:12px;color:var(--vloca);font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+.task .tdur{font-size:11px;color:var(--muted);font-weight:600}
+.task h4{margin:0 0 5px;font-size:14px}
+.task p{margin:0;font-size:13px;color:#bfc4cd;line-height:1.5}
+.task p b{color:var(--text)}
+.closing-box{margin-top:24px;padding:20px 24px;background:linear-gradient(135deg,rgba(255,106,0,.10),rgba(0,200,140,.06));border:1px solid rgba(255,106,0,.4);border-radius:12px;font-size:15px;line-height:1.7;text-align:center;font-style:italic}
+.closing-box b{color:var(--vloca);font-style:normal}
+
+/* TOOLBAR */
+.toolbar{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<div class="lb" id="lb" onclick="closeLB()">
+  <span class="lb-x" onclick="closeLB()">×</span>
+  <img id="lb-img" src="" alt="">
+</div>
+
+<header>
+  <div class="hbar">
+    <div class="logos">
+      <div class="vloca-logo">
+        <div>
+          <div>VLOCA</div>
+          <div class="sub">Aluguel de Motos</div>
+        </div>
+      </div>
+      <span class="sep">×</span>
+      <img class="v4-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAAM+klEQVR4AezZB8glRRIH8OW8NaFiwqyYs4IJFQNiRDGjqGBCFBVBUBT1BANyBgQVA2bEiBhwFQVRMKGomPOaD7OisIppb2/hfmzB3GPe2/3e7jc9781ZH0V91dXd1T3/f1d3z7y/Tcm/ziKQ5HWWuilTkrwkr8MIdHjqmXlJXocR6PDUM/OSvA4j0OGpZ+YleYMQSF9pBDLzSiNcMH6SVxDc0qGTvNIIF4yf5BUEt3ToJK80wgXjJ3kFwS0dOskrjXDB+EleQXBLh+4meaVR6Uj8JK8jRA2aZpI3CJWO+JK8jhA1aJpJ3iBUOuJL8jpC1KBpJnmDUOmIL8nrCFGDppnkDUKlI74kr0ZUl4pJXpfYqs01yasB0qViktcltmpzTfJqgHSpmOR1ia3aXJO8GiBdKiZ5XWKrNtckrwZIl4pJXntsNT5Sktc4pO0FTPLaw7rxkZK8xiFtL2CS1x7WjY+U5DUOaXsBk7z2sG58pCSvcUjbC5jktYd14yMleY1D2l7A/5HX3pg5UkMIJHkNATmKMEneKFBvaMwkryEgRxEmyRsF6g2NmeQ1BOQowiR5o0C9oTGTvIaAHEWYJG8UqDc0ZivkNTTXDFNDIMmrAdKlYpLXJbZqc03yaoB0qViKvL8P+usHJlr1+8MTtXQUU9cQKEVeNcx/5vwp+k/XhJPUnFVx6tSp86irmv1ljSLkVbkS0O+5556MlVZa6eyzz/7ncH/HH388Sv744w+h9GWn9CNQhLwYBujbbbfdK6+8gi+ezTff/LTTTvvHcH833HDDk08+ueaaawqib8pABJonT64YKUA/9thjt9566z//PPPPOSKuS/Ly8s6c+eMmRkODZczMzIzMzMiS2sAB/f2+u2t7e09PT09f29ra3t7e29Pf3t7e3t7e3t7e2t4=" alt="V4 Company">
+    </div>
+    <div>
+      <h1 class="htitle">Auditoria de Funil — Kommo<small>Rodrigo Campos · Maio &amp; Junho 2026</small></h1>
+    </div>
+    <div class="hspace"></div>
+    <div class="week-chip">Acompanhamento <b>Semana 25</b></div>
+    <div class="hbtns">
+      <button class="btn" onclick="window.print()">Exportar</button>
+      <button class="btn prim" onclick="toggleFS()">Apresentar</button>
+    </div>
+  </div>
+  <div class="tabbar" id="tabbar">
+    <button class="tab active" data-tab="visao">Visao Geral</button>
+    <button class="tab" data-tab="funil">Funil Kommo</button>
+    <button class="tab" data-tab="audit">Auditoria CRM</button>
+    <button class="tab" data-tab="plano">Plano 18–19/06</button>
+    <button class="tab" data-tab="diag">Diagnostico</button>
+  </div>
+</header>
+
+<main>
+
+<!-- VISAO GERAL -->
+<section class="sec active" data-sec="visao">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <h2 class="sh" style="margin:0">Visao Geral — Maio vs Junho</h2>
+    <button class="eye-btn" id="eyeToggle" onclick="toggleEye()">
+      <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      <span id="eyeTxt">Ocultar valores</span>
+    </button>
+  </div>
+  <div class="lead-txt">
+    O criativo leva o lead. <strong>O vendedor fecha.</strong> Para saber quantos leads precisamos gerar,
+    precisamos primeiro saber a taxa de conversao do vendedor — a cada quantas pessoas atendidas, quantas compram?<br><br>
+    Essa auditoria fecha esse ciclo. Os dados de midia estao aqui. Os dados do comercial tambem.
+    <strong>Em maio, 1 venda a cada 44 leads. Em junho, 1 a cada 16 — com metade do investimento.</strong>
+    O gargalo nao e a midia. E o que acontece depois que o lead chega.
+  </div>
+
+  <div class="g2">
+    <div class="mc maio">
+      <div class="mc-hd"><div class="mc-nm maio">MAIO</div><div class="mc-per">01/05 – 31/05/2026</div></div>
+      <div class="kgrid">
+        <div class="kpi"><div class="kl">Investimento</div><div class="kv sensitive" data-v="R$ 3.625">R$ 3.625</div></div>
+        <div class="kpi"><div class="kl">Leads gerados</div><div class="kv">401</div></div>
+        <div class="kpi"><div class="kl">Vendas fechadas</div><div class="kv">9</div></div>
+        <div class="kpi"><div class="kl">Receita faturada</div><div class="kv sensitive" data-v="R$ 41.392">R$ 41.392</div></div>
+        <div class="kpi"><div class="kl">ROAS</div><div class="kv">11,42×</div></div>
+        <div class="kpi"><div class="kl">Ticket medio</div><div class="kv">R$ 4.599</div></div>
+        <div class="kpi"><div class="kl">Custo por Lead</div><div class="kv">R$ 9,04</div></div>
+        <div class="kpi"><div class="kl">Custo por Venda</div><div class="kv">R$ 402,81</div></div>
+      </div>
+    </div>
+    <div class="mc junho">
+      <div class="mc-hd"><div class="mc-nm junho">JUNHO</div><div class="mc-per">01/06 – 30/06/2026</div></div>
+      <div class="kgrid">
+        <div class="kpi"><div class="kl">Investimento</div><div class="kv sensitive" data-v="R$ 1.679">R$ 1.679</div></div>
+        <div class="kpi"><div class="kl">Leads gerados</div><div class="kv">113</div></div>
+        <div class="kpi"><div class="kl">Vendas fechadas</div><div class="kv">7</div></div>
+        <div class="kpi"><div class="kl">Receita faturada</div><div class="kv sensitive" data-v="R$ 43.611">R$ 43.611</div></div>
+        <div class="kpi"><div class="kl">ROAS</div><div class="kv" style="color:var(--ok)">25,96×</div></div>
+        <div class="kpi"><div class="kl">Ticket medio</div><div class="kv" style="color:var(--ok)">R$ 6.230</div></div>
+        <div class="kpi"><div class="kl">Custo por Lead</div><div class="kv">R$ 14,87</div></div>
+        <div class="kpi"><div class="kl">Custo por Venda</div><div class="kv" style="color:var(--ok)">R$ 239,99</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="diagbox">
+    <b>Tese central:</b> Se replicarmos a conversao de junho (6,19%) com o volume de maio (401 leads), seriam
+    <b>~25 vendas/mes</b> — quase 3× o resultado atual com a mesma midia. O destravamento esta no funil comercial, nao na geracao.
+  </div>
+</section>
+
+<!-- FUNIL KOMMO -->
+<section class="sec" data-sec="funil">
+  <h2 class="sh">Funil Kommo — Conversao por Etapa</h2>
+  <div class="funnel-wrap">
+    <div class="fg">
+      <div class="fc maio">
+        <h3>Maio <span class="fbadge">2,24% Lead→Venda</span></h3>
+        <div class="fstage" style="background:#fca5a5;width:100%"><span class="fn">Leads</span><span class="fq">401</span></div>
+        <div class="fconv">↓ <b>39,65%</b> Lead → MQL</div>
+        <div class="fstage" style="background:#f87171;width:78%"><span class="fn">MQL</span><span class="fq">159</span></div>
+        <div class="fconv">↓ <b>15,72%</b> MQL → SQL</div>
+        <div class="fstage" style="background:#ef4444;width:52%;color:#fff"><span class="fn">SQL</span><span class="fq">25</span></div>
+        <div class="fconv">↓ <b>36,00%</b> SQL → Venda</div>
+        <div class="fstage" style="background:#b91c1c;width:32%;color:#fff"><span class="fn">Vendas</span><span class="fq">9</span></div>
+        <div class="ffinal maio"><small>Conversao total</small><span>2,24%</span></div>
+      </div>
+      <div class="fc junho">
+        <h3>Junho <span class="fbadge">6,19% Lead→Venda</span></h3>
+        <div class="fstage" style="background:#86efac;width:100%"><span class="fn">Leads</span><span class="fq">113</span></div>
+        <div class="fconv">↓ <b>55,75%</b> Lead → MQL</div>
+        <div class="fstage" style="background:#4ade80;width:83%"><span class="fn">MQL</span><span class="fq">63</span></div>
+        <div class="fconv">↓ <b>15,87%</b> MQL → SQL</div>
+        <div class="fstage" style="background:#22c55e;width:58%;color:#fff"><span class="fn">SQL</span><span class="fq">10</span></div>
+        <div class="fconv">↓ <b>70,00%</b> SQL → Venda</div>
+        <div class="fstage" style="background:#15803d;width:42%;color:#fff"><span class="fn">Vendas</span><span class="fq">7</span></div>
+        <div class="ffinal junho"><small>Conversao total</small><span>6,19%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="chart-box">
+      <h3>Taxas de Conversao por Etapa (%)</h3>
+      <div class="chart-inner"><canvas id="cConv"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <h3>Volume Absoluto — Leads > MQL > SQL > Vendas</h3>
+      <div class="chart-inner"><canvas id="cVol"></canvas></div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="chart-box">
+      <h3>Custo por Etapa (R$)</h3>
+      <div class="chart-inner"><canvas id="cCusto"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <h3>Receita vs Investimento (R$)</h3>
+      <div class="chart-inner"><canvas id="cRec"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- AUDITORIA CRM -->
+<section class="sec" data-sec="audit">
+  <h2 class="sh">Auditoria CRM — Kommo</h2>
+
+  <div class="cards">
+    <div class="card red">
+      <div class="cn">257</div>
+      <div class="cl">Total em NOVO LEAD</div>
+    </div>
+    <div class="card orange">
+      <div class="cn">15</div>
+      <div class="cl">Conv. fechada — desqualificar</div>
+    </div>
+    <div class="card orange" style="border-top-color:#f59e0b">
+      <div class="cn" style="color:#f59e0b">209</div>
+      <div class="cl">Sem nenhuma conversa</div>
+    </div>
+    <div class="card blue">
+      <div class="cn">97</div>
+      <div class="cl">Em INTERESSE REAL (53 parados +7d)</div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn" onclick="expandAll()">Abrir todos os prints</button>
+    <button class="btn" onclick="collapseAll()">Fechar todos</button>
+  </div>
+
+  <!-- NOVO LEAD FECHADOS -->
+  <h3 class="sub">NOVO LEAD — 15 leads com conversa fechada</h3>
+  <div class="alertbox">
+    <strong>Acao imediata</strong>
+    14 de 15 sao responsabilidade de Guilherme de Sousa Alves. Conversa encerrada, lead parado em NOVO LEAD.
+    Precisam ser movidos para DESQUALIFICADO — e o motivo do encerramento precisa ser registrado.
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Lead ID</th><th>Nome</th><th>Parado</th>
+          <th>Criado em</th><th>Conv. fechada</th><th>Responsavel</th><th>Print</th>
+        </tr>
+      </thead>
+      <tbody><tr>
+    <td>1</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59859936" target="_blank">59859936</a></td>
+    <td>Lucas Morais</td>
+    <td><span class="dtag notice">8d</span></td>
+    <td>08/06/2026</td>
+    <td>16/06/2026</td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('f59859936')"><span id="ic-f59859936">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="f59859936" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-f59859936" onclick="triggerFile('f59859936')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'f59859936')">
+        <input type="file" id="file-f59859936" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'f59859936')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-f59859936"></div>
+      <textarea class="ev-note" id="note-f59859936" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>2</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59868932" target="_blank">59868932</a></td>
+    <td>Lead #59868932</td>
+    <td><span class="dtag ok">7d</span></td>
+    <td>08/06/2026</td>
+    <td>16/06/2026</td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('f59868932')"><span id="ic-f59868932">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="f59868932" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-f59868932" onclick="triggerFile('f59868932')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'f59868932')">
+        <input type="file" id="file-f59868932" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'f59868932')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-f59868932"></div>
+      <textarea class="ev-note" id="note-f59868932" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>3</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59221809" target="_blank">59221809</a></td>
+    <td>Lead #59221809</td>
+    <td><span class="dtag ok">7d</span></td>
+    <td>22/05/2026</td>
+    <td>10/06/2026</td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('f59221809')"><span id="ic-f59221809">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="f59221809" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-f59221809" onclick="triggerFile('f59221809')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'f59221809')">
+        <input type="file" id="file-f59221809" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'f59221809')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-f59221809"></div>
+      <textarea class="ev-note" id="note-f59221809" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>4</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59749128" target="_blank">59749128</a></td>
+    <td>Lead #59749128</td>
+    <td><span class="dtag ok">6d</span></td>
+    <td>04/06/2026</td>
+    <td>16/06/2026</td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('f59749128')"><span id="ic-f59749128">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="f59749128" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-f59749128" onclick="triggerFile('f59749128')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'f59749128')">
+        <input type="file" id="file-f59749128" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'f59749128')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-f59749128"></div>
+      <textarea class="ev-note" id="note-f59749128" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>5</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59919738" target="_blank">59919738</a></td>
+    <td>Lead #59919738</td>
+    <td><span class="dtag ok">5d</span></td>
+    <td>09/06/2026</td>
+    <td>16/06/2026</td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('f59919738')"><span id="ic-f59919738">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="f59919738" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-f59919738" onclick="triggerFile('f59919738')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'f59919738')">
+        <input type="file" id="file-f59919738" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'f59919738')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-f59919738"></div>
+      <textarea class="ev-note" id="note-f59919738" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>6</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59834872" target="_blank">59834872</a></td>
+    <td>Lead #59834872</td>
+    <td><span class="dtag ok">4d</span></td>
+    <td>07/06/2026</td>
+    <td>16/06/2026</td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('f59834872')"><span id="ic-f59834872">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="f59834872" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-f59834872" onclick="triggerFile('f59834872')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'f59834872')">
+        <input type="file" id="file-f59834872" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'f59834872')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-f59834872"></div>
+      <textarea class="ev-note" id="note-f59834872" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>7</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59855540" target="_blank">59855540</a></td>
+    <td>Dionatan Gomes</td>
+    <td><span class="dtag ok">4d</span></td>
+    <td>08/06/2026</td>
+    <td>16/06/2026</td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('f59855540')"><span id="ic-f59855540">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="f59855540" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-f59855540" onclick="triggerFile('f59855540')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'f59855540')">
+        <input type="file" id="file-f59855540" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'f59855540')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-f59855540"></div>
+      <textarea class="ev-note" id="note-f59855540" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>8</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59859376" target="_blank">59859376</a></td>
+    <td>Matheus da Costa Santos</td>
+    <td><span class="dtag ok">4d</span></td>
+    <td>08/06/2026</td>
+    <td>16/06/2026</td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('f59859376')"><span id="ic-f59859376">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="f59859376" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-f59859376" onclick="triggerFile('f59859376')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'f59859376')">
+        <input type="file" id="file-f59859376" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'f59859376')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-f59859376"></div>
+      <textarea class="ev-note" id="note-f59859376" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>9</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59863986" target="_blank">59863986</a></td>
+    <td>Roneilson Oliveira</td>
+    <td><span class="dtag ok">2d</span></td>
+    <td>08/06/2026</td>
+    <td>16/06/2026</td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('f59863986')"><span id="ic-f59863986">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="f59863986" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-f59863986" onclick="triggerFile('f59863986')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'f59863986')">
+        <input type="file" id="file-f59863986" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'f59863986')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-f59863986"></div>
+      <textarea class="ev-note" id="note-f59863986" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>10</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59992966" target="_blank">59992966</a></td>
+    <td>Lead #59992966</td>
+    <td><span class="dtag ok">2d</span></td>
+    <td>11/06/2026</td>
+    <td>16/06/2026</td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('f59992966')"><span id="ic-f59992966">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="f59992966" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-f59992966" onclick="triggerFile('f59992966')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'f59992966')">
+        <input type="file" id="file-f59992966" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'f59992966')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-f59992966"></div>
+      <textarea class="ev-note" id="note-f59992966" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>11</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59869696" target="_blank">59869696</a></td>
+    <td>wner max</td>
+    <td><span class="dtag ok">2d</span></td>
+    <td>08/06/2026</td>
+    <td>16/06/2026</td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('f59869696')"><span id="ic-f59869696">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="f59869696" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-f59869696" onclick="triggerFile('f59869696')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'f59869696')">
+        <input type="file" id="file-f59869696" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'f59869696')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-f59869696"></div>
+      <textarea class="ev-note" id="note-f59869696" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>12</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59878536" target="_blank">59878536</a></td>
+    <td>Matheus Silva</td>
+    <td><span class="dtag ok">2d</span></td>
+    <td>08/06/2026</td>
+    <td>16/06/2026</td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('f59878536')"><span id="ic-f59878536">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="f59878536" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-f59878536" onclick="triggerFile('f59878536')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'f59878536')">
+        <input type="file" id="file-f59878536" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'f59878536')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-f59878536"></div>
+      <textarea class="ev-note" id="note-f59878536" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>13</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59885268" target="_blank">59885268</a></td>
+    <td>Rodrigo Sousa</td>
+    <td><span class="dtag ok">2d</span></td>
+    <td>09/06/2026</td>
+    <td>16/06/2026</td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('f59885268')"><span id="ic-f59885268">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="f59885268" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-f59885268" onclick="triggerFile('f59885268')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'f59885268')">
+        <input type="file" id="file-f59885268" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'f59885268')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-f59885268"></div>
+      <textarea class="ev-note" id="note-f59885268" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>14</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/60134024" target="_blank">60134024</a></td>
+    <td>Lead #60134024</td>
+    <td><span class="dtag ok">1d</span></td>
+    <td>14/06/2026</td>
+    <td>16/06/2026</td>
+    <td class="resp">7Club</td>
+    <td><button class="ev-btn" onclick="toggleEv('f60134024')"><span id="ic-f60134024">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="f60134024" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-f60134024" onclick="triggerFile('f60134024')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'f60134024')">
+        <input type="file" id="file-f60134024" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'f60134024')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-f60134024"></div>
+      <textarea class="ev-note" id="note-f60134024" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>15</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/60161102" target="_blank">60161102</a></td>
+    <td>teste</td>
+    <td><span class="dtag ok">0d</span></td>
+    <td>15/06/2026</td>
+    <td>17/06/2026</td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('f60161102')"><span id="ic-f60161102">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="f60161102" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-f60161102" onclick="triggerFile('f60161102')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'f60161102')">
+        <input type="file" id="file-f60161102" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'f60161102')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-f60161102"></div>
+      <textarea class="ev-note" id="note-f60161102" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr></tbody>
+    </table>
+  </div>
+
+  <!-- NOVO LEAD SEM CONVERSA -->
+  <h3 class="sub">NOVO LEAD — 209 leads sem nenhuma conversa</h3>
+  <div class="infobox">
+    <strong>Impacto no pipeline</strong>
+    209 leads nunca foram abordados. Inflam o NOVO LEAD de 257, mas o trabalho real ativo sao apenas 33.
+    Leads com mais de 30 dias sem contato: desqualificar. Leads recentes: acionar SDR IA imediatamente.
+  </div>
+
+  <!-- INTERESSE REAL POR RESPONSAVEL -->
+  <h3 class="sub">INTERESSE REAL — Por responsavel</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>Responsavel</th><th>Total</th><th>Media parado</th><th>Max parado</th><th>Sem conv.</th><th>Conv. fechada</th><th>Conv. aberta</th></tr>
+      </thead>
+      <tbody><tr>
+    <td><strong>Guilherme de Sousa Alves</strong></td>
+    <td>93</td>
+    <td>8.8 dias</td>
+    <td>29 dias</td>
+    <td>66</td>
+    <td>21</td>
+    <td>6</td>
+  </tr><tr>
+    <td><strong>Rodrigo Campos</strong></td>
+    <td>3</td>
+    <td>0.0 dias</td>
+    <td>0 dias</td>
+    <td>0</td>
+    <td>1</td>
+    <td>2</td>
+  </tr><tr>
+    <td><strong>7Club</strong></td>
+    <td>1</td>
+    <td>21.0 dias</td>
+    <td>21 dias</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+  </tr></tbody>
+    </table>
+  </div>
+
+  <!-- INTERESSE REAL TODOS -->
+  <h3 class="sub">INTERESSE REAL — 97 leads (mais parados primeiro)</h3>
+  <div class="alertbox">
+    <strong>Diagnostico</strong>
+    67 dos 97 leads (69%) estao sem conversa ativa. Media: 8,6 dias parado. Maximo: 29 dias.
+    Leads com conversa fechada precisam de revisao antes de desqualificar — podem ser reconquistados por ligacao.
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Lead ID</th><th>Nome</th><th>Parado</th>
+          <th>Ult. att.</th><th>Conv.</th><th>Responsavel</th><th>Print</th>
+        </tr>
+      </thead>
+      <tbody><tr>
+    <td>1</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59048923" target="_blank">59048923</a></td>
+    <td>Keven Willian</td>
+    <td><span class="dtag warn">29d</span></td>
+    <td>19/05/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59048923')"><span id="ic-ir59048923">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59048923" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59048923" onclick="triggerFile('ir59048923')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59048923')">
+        <input type="file" id="file-ir59048923" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59048923')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59048923"></div>
+      <textarea class="ev-note" id="note-ir59048923" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>2</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59097153" target="_blank">59097153</a></td>
+    <td>Ezequiel Rodrigues</td>
+    <td><span class="dtag warn">25d</span></td>
+    <td>23/05/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59097153')"><span id="ic-ir59097153">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59097153" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59097153" onclick="triggerFile('ir59097153')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59097153')">
+        <input type="file" id="file-ir59097153" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59097153')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59097153"></div>
+      <textarea class="ev-note" id="note-ir59097153" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>3</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59285627" target="_blank">59285627</a></td>
+    <td>Claiton Silva</td>
+    <td><span class="dtag warn">23d</span></td>
+    <td>25/05/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59285627')"><span id="ic-ir59285627">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59285627" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59285627" onclick="triggerFile('ir59285627')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59285627')">
+        <input type="file" id="file-ir59285627" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59285627')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59285627"></div>
+      <textarea class="ev-note" id="note-ir59285627" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>4</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/58577681" target="_blank">58577681</a></td>
+    <td>Lead #58577681</td>
+    <td><span class="dtag warn">21d</span></td>
+    <td>26/05/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">7Club</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir58577681')"><span id="ic-ir58577681">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir58577681" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir58577681" onclick="triggerFile('ir58577681')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir58577681')">
+        <input type="file" id="file-ir58577681" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir58577681')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir58577681"></div>
+      <textarea class="ev-note" id="note-ir58577681" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>5</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59106351" target="_blank">59106351</a></td>
+    <td>Regis Diogo</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59106351')"><span id="ic-ir59106351">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59106351" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59106351" onclick="triggerFile('ir59106351')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59106351')">
+        <input type="file" id="file-ir59106351" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59106351')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59106351"></div>
+      <textarea class="ev-note" id="note-ir59106351" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>6</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59177173" target="_blank">59177173</a></td>
+    <td>Leonel Alves de Oliveira</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59177173')"><span id="ic-ir59177173">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59177173" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59177173" onclick="triggerFile('ir59177173')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59177173')">
+        <input type="file" id="file-ir59177173" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59177173')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59177173"></div>
+      <textarea class="ev-note" id="note-ir59177173" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>7</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59216591" target="_blank">59216591</a></td>
+    <td>Vagner Sousa</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59216591')"><span id="ic-ir59216591">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59216591" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59216591" onclick="triggerFile('ir59216591')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59216591')">
+        <input type="file" id="file-ir59216591" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59216591')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59216591"></div>
+      <textarea class="ev-note" id="note-ir59216591" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>8</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59095843" target="_blank">59095843</a></td>
+    <td>Nilson Pereira</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59095843')"><span id="ic-ir59095843">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59095843" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59095843" onclick="triggerFile('ir59095843')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59095843')">
+        <input type="file" id="file-ir59095843" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59095843')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59095843"></div>
+      <textarea class="ev-note" id="note-ir59095843" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>9</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59293797" target="_blank">59293797</a></td>
+    <td>flavio_cardosovilela</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59293797')"><span id="ic-ir59293797">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59293797" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59293797" onclick="triggerFile('ir59293797')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59293797')">
+        <input type="file" id="file-ir59293797" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59293797')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59293797"></div>
+      <textarea class="ev-note" id="note-ir59293797" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>10</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59055943" target="_blank">59055943</a></td>
+    <td>Lucas Martins</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59055943')"><span id="ic-ir59055943">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59055943" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59055943" onclick="triggerFile('ir59055943')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59055943')">
+        <input type="file" id="file-ir59055943" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59055943')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59055943"></div>
+      <textarea class="ev-note" id="note-ir59055943" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>11</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59072015" target="_blank">59072015</a></td>
+    <td>Tyago Da Silva</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59072015')"><span id="ic-ir59072015">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59072015" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59072015" onclick="triggerFile('ir59072015')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59072015')">
+        <input type="file" id="file-ir59072015" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59072015')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59072015"></div>
+      <textarea class="ev-note" id="note-ir59072015" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>12</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59128621" target="_blank">59128621</a></td>
+    <td>Vilmar Santos Souza</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59128621')"><span id="ic-ir59128621">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59128621" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59128621" onclick="triggerFile('ir59128621')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59128621')">
+        <input type="file" id="file-ir59128621" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59128621')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59128621"></div>
+      <textarea class="ev-note" id="note-ir59128621" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>13</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59079687" target="_blank">59079687</a></td>
+    <td>Francisco AraÃºjo Martins</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>03/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59079687')"><span id="ic-ir59079687">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59079687" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59079687" onclick="triggerFile('ir59079687')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59079687')">
+        <input type="file" id="file-ir59079687" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59079687')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59079687"></div>
+      <textarea class="ev-note" id="note-ir59079687" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>14</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59639626" target="_blank">59639626</a></td>
+    <td>Rodrigo Fagundes</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>03/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59639626')"><span id="ic-ir59639626">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59639626" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59639626" onclick="triggerFile('ir59639626')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59639626')">
+        <input type="file" id="file-ir59639626" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59639626')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59639626"></div>
+      <textarea class="ev-note" id="note-ir59639626" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>15</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59095261" target="_blank">59095261</a></td>
+    <td>Vitor Soares</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59095261')"><span id="ic-ir59095261">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59095261" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59095261" onclick="triggerFile('ir59095261')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59095261')">
+        <input type="file" id="file-ir59095261" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59095261')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59095261"></div>
+      <textarea class="ev-note" id="note-ir59095261" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>16</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59239241" target="_blank">59239241</a></td>
+    <td>Ricardo Rodrigues Carneiro</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59239241')"><span id="ic-ir59239241">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59239241" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59239241" onclick="triggerFile('ir59239241')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59239241')">
+        <input type="file" id="file-ir59239241" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59239241')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59239241"></div>
+      <textarea class="ev-note" id="note-ir59239241" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>17</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59290023" target="_blank">59290023</a></td>
+    <td>Kesley Gordim</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59290023')"><span id="ic-ir59290023">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59290023" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59290023" onclick="triggerFile('ir59290023')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59290023')">
+        <input type="file" id="file-ir59290023" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59290023')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59290023"></div>
+      <textarea class="ev-note" id="note-ir59290023" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>18</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59035283" target="_blank">59035283</a></td>
+    <td>Washington Luiz</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59035283')"><span id="ic-ir59035283">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59035283" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59035283" onclick="triggerFile('ir59035283')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59035283')">
+        <input type="file" id="file-ir59035283" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59035283')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59035283"></div>
+      <textarea class="ev-note" id="note-ir59035283" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>19</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59086597" target="_blank">59086597</a></td>
+    <td>amarildo costa</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59086597')"><span id="ic-ir59086597">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59086597" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59086597" onclick="triggerFile('ir59086597')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59086597')">
+        <input type="file" id="file-ir59086597" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59086597')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59086597"></div>
+      <textarea class="ev-note" id="note-ir59086597" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>20</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59166729" target="_blank">59166729</a></td>
+    <td>Lead #59166729</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59166729')"><span id="ic-ir59166729">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59166729" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59166729" onclick="triggerFile('ir59166729')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59166729')">
+        <input type="file" id="file-ir59166729" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59166729')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59166729"></div>
+      <textarea class="ev-note" id="note-ir59166729" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>21</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59204061" target="_blank">59204061</a></td>
+    <td>Lead #59204061</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59204061')"><span id="ic-ir59204061">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59204061" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59204061" onclick="triggerFile('ir59204061')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59204061')">
+        <input type="file" id="file-ir59204061" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59204061')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59204061"></div>
+      <textarea class="ev-note" id="note-ir59204061" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>22</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59079293" target="_blank">59079293</a></td>
+    <td>Antonio Lima Felipe</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59079293')"><span id="ic-ir59079293">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59079293" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59079293" onclick="triggerFile('ir59079293')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59079293')">
+        <input type="file" id="file-ir59079293" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59079293')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59079293"></div>
+      <textarea class="ev-note" id="note-ir59079293" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>23</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59095321" target="_blank">59095321</a></td>
+    <td>Cristiano Moraes</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59095321')"><span id="ic-ir59095321">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59095321" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59095321" onclick="triggerFile('ir59095321')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59095321')">
+        <input type="file" id="file-ir59095321" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59095321')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59095321"></div>
+      <textarea class="ev-note" id="note-ir59095321" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>24</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59041727" target="_blank">59041727</a></td>
+    <td>Alan Alves Pexoto</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59041727')"><span id="ic-ir59041727">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59041727" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59041727" onclick="triggerFile('ir59041727')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59041727')">
+        <input type="file" id="file-ir59041727" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59041727')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59041727"></div>
+      <textarea class="ev-note" id="note-ir59041727" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>25</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59044575" target="_blank">59044575</a></td>
+    <td>AntÃ´nio Marcos Pereira dos Santos</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59044575')"><span id="ic-ir59044575">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59044575" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59044575" onclick="triggerFile('ir59044575')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59044575')">
+        <input type="file" id="file-ir59044575" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59044575')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59044575"></div>
+      <textarea class="ev-note" id="note-ir59044575" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>26</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59162315" target="_blank">59162315</a></td>
+    <td>Dione Pereira</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59162315')"><span id="ic-ir59162315">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59162315" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59162315" onclick="triggerFile('ir59162315')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59162315')">
+        <input type="file" id="file-ir59162315" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59162315')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59162315"></div>
+      <textarea class="ev-note" id="note-ir59162315" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>27</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59276873" target="_blank">59276873</a></td>
+    <td>Evilasio Cruz</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59276873')"><span id="ic-ir59276873">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59276873" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59276873" onclick="triggerFile('ir59276873')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59276873')">
+        <input type="file" id="file-ir59276873" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59276873')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59276873"></div>
+      <textarea class="ev-note" id="note-ir59276873" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>28</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59286561" target="_blank">59286561</a></td>
+    <td>Edivan Alves Sobrinho</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59286561')"><span id="ic-ir59286561">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59286561" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59286561" onclick="triggerFile('ir59286561')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59286561')">
+        <input type="file" id="file-ir59286561" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59286561')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59286561"></div>
+      <textarea class="ev-note" id="note-ir59286561" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>29</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59048231" target="_blank">59048231</a></td>
+    <td>Jorge Dantas Cavalcante</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59048231')"><span id="ic-ir59048231">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59048231" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59048231" onclick="triggerFile('ir59048231')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59048231')">
+        <input type="file" id="file-ir59048231" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59048231')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59048231"></div>
+      <textarea class="ev-note" id="note-ir59048231" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>30</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59225067" target="_blank">59225067</a></td>
+    <td>Lead #59225067</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59225067')"><span id="ic-ir59225067">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59225067" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59225067" onclick="triggerFile('ir59225067')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59225067')">
+        <input type="file" id="file-ir59225067" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59225067')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59225067"></div>
+      <textarea class="ev-note" id="note-ir59225067" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>31</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59036321" target="_blank">59036321</a></td>
+    <td>Delvan F. Evangelista</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59036321')"><span id="ic-ir59036321">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59036321" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59036321" onclick="triggerFile('ir59036321')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59036321')">
+        <input type="file" id="file-ir59036321" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59036321')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59036321"></div>
+      <textarea class="ev-note" id="note-ir59036321" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>32</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59037649" target="_blank">59037649</a></td>
+    <td>Junior Francisco Da Silva Junior</td>
+    <td><span class="dtag notice">14d</span></td>
+    <td>02/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59037649')"><span id="ic-ir59037649">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59037649" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59037649" onclick="triggerFile('ir59037649')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59037649')">
+        <input type="file" id="file-ir59037649" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59037649')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59037649"></div>
+      <textarea class="ev-note" id="note-ir59037649" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>33</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59725510" target="_blank">59725510</a></td>
+    <td>Dionata Santos</td>
+    <td><span class="dtag notice">12d</span></td>
+    <td>05/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59725510')"><span id="ic-ir59725510">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59725510" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59725510" onclick="triggerFile('ir59725510')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59725510')">
+        <input type="file" id="file-ir59725510" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59725510')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59725510"></div>
+      <textarea class="ev-note" id="note-ir59725510" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>34</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59044685" target="_blank">59044685</a></td>
+    <td>Silva Walisson</td>
+    <td><span class="dtag notice">12d</span></td>
+    <td>05/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59044685')"><span id="ic-ir59044685">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59044685" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59044685" onclick="triggerFile('ir59044685')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59044685')">
+        <input type="file" id="file-ir59044685" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59044685')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59044685"></div>
+      <textarea class="ev-note" id="note-ir59044685" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>35</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59739750" target="_blank">59739750</a></td>
+    <td>Eudivaldo Oliveira Moraes Pinto</td>
+    <td><span class="dtag notice">12d</span></td>
+    <td>05/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59739750')"><span id="ic-ir59739750">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59739750" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59739750" onclick="triggerFile('ir59739750')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59739750')">
+        <input type="file" id="file-ir59739750" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59739750')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59739750"></div>
+      <textarea class="ev-note" id="note-ir59739750" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>36</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59695162" target="_blank">59695162</a></td>
+    <td>Leonardo Prudencio</td>
+    <td><span class="dtag notice">12d</span></td>
+    <td>04/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59695162')"><span id="ic-ir59695162">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59695162" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59695162" onclick="triggerFile('ir59695162')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59695162')">
+        <input type="file" id="file-ir59695162" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59695162')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59695162"></div>
+      <textarea class="ev-note" id="note-ir59695162" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>37</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59636862" target="_blank">59636862</a></td>
+    <td>Valdemar Basilio Costa</td>
+    <td><span class="dtag notice">12d</span></td>
+    <td>04/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59636862')"><span id="ic-ir59636862">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59636862" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59636862" onclick="triggerFile('ir59636862')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59636862')">
+        <input type="file" id="file-ir59636862" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59636862')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59636862"></div>
+      <textarea class="ev-note" id="note-ir59636862" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>38</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59127985" target="_blank">59127985</a></td>
+    <td>Wesley Torress</td>
+    <td><span class="dtag notice">11d</span></td>
+    <td>06/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59127985')"><span id="ic-ir59127985">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59127985" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59127985" onclick="triggerFile('ir59127985')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59127985')">
+        <input type="file" id="file-ir59127985" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59127985')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59127985"></div>
+      <textarea class="ev-note" id="note-ir59127985" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>39</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59618680" target="_blank">59618680</a></td>
+    <td>laercio VinÃ­cius Ferreira</td>
+    <td><span class="dtag notice">10d</span></td>
+    <td>07/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59618680')"><span id="ic-ir59618680">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59618680" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59618680" onclick="triggerFile('ir59618680')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59618680')">
+        <input type="file" id="file-ir59618680" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59618680')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59618680"></div>
+      <textarea class="ev-note" id="note-ir59618680" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>40</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59274535" target="_blank">59274535</a></td>
+    <td>Joely alves de melo</td>
+    <td><span class="dtag notice">9d</span></td>
+    <td>08/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59274535')"><span id="ic-ir59274535">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59274535" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59274535" onclick="triggerFile('ir59274535')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59274535')">
+        <input type="file" id="file-ir59274535" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59274535')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59274535"></div>
+      <textarea class="ev-note" id="note-ir59274535" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>41</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59250385" target="_blank">59250385</a></td>
+    <td>Kaio Santos</td>
+    <td><span class="dtag notice">9d</span></td>
+    <td>08/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59250385')"><span id="ic-ir59250385">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59250385" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59250385" onclick="triggerFile('ir59250385')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59250385')">
+        <input type="file" id="file-ir59250385" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59250385')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59250385"></div>
+      <textarea class="ev-note" id="note-ir59250385" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>42</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59267187" target="_blank">59267187</a></td>
+    <td>zelin-sem grau 244</td>
+    <td><span class="dtag notice">9d</span></td>
+    <td>08/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59267187')"><span id="ic-ir59267187">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59267187" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59267187" onclick="triggerFile('ir59267187')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59267187')">
+        <input type="file" id="file-ir59267187" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59267187')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59267187"></div>
+      <textarea class="ev-note" id="note-ir59267187" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>43</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59687136" target="_blank">59687136</a></td>
+    <td>Gabriel Pinheiro</td>
+    <td><span class="dtag notice">9d</span></td>
+    <td>08/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59687136')"><span id="ic-ir59687136">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59687136" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59687136" onclick="triggerFile('ir59687136')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59687136')">
+        <input type="file" id="file-ir59687136" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59687136')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59687136"></div>
+      <textarea class="ev-note" id="note-ir59687136" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>44</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59637714" target="_blank">59637714</a></td>
+    <td>Guilherme Henrique do Nascimento cardoso</td>
+    <td><span class="dtag notice">9d</span></td>
+    <td>08/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59637714')"><span id="ic-ir59637714">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59637714" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59637714" onclick="triggerFile('ir59637714')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59637714')">
+        <input type="file" id="file-ir59637714" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59637714')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59637714"></div>
+      <textarea class="ev-note" id="note-ir59637714" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>45</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59801804" target="_blank">59801804</a></td>
+    <td>Gabriel Ferreira</td>
+    <td><span class="dtag notice">9d</span></td>
+    <td>08/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59801804')"><span id="ic-ir59801804">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59801804" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59801804" onclick="triggerFile('ir59801804')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59801804')">
+        <input type="file" id="file-ir59801804" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59801804')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59801804"></div>
+      <textarea class="ev-note" id="note-ir59801804" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>46</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59625416" target="_blank">59625416</a></td>
+    <td>RogÃ©rio Oliveira Soares</td>
+    <td><span class="dtag notice">9d</span></td>
+    <td>07/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59625416')"><span id="ic-ir59625416">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59625416" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59625416" onclick="triggerFile('ir59625416')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59625416')">
+        <input type="file" id="file-ir59625416" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59625416')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59625416"></div>
+      <textarea class="ev-note" id="note-ir59625416" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>47</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59744416" target="_blank">59744416</a></td>
+    <td>Joseph Ozorio Dos Santos</td>
+    <td><span class="dtag notice">9d</span></td>
+    <td>08/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59744416')"><span id="ic-ir59744416">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59744416" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59744416" onclick="triggerFile('ir59744416')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59744416')">
+        <input type="file" id="file-ir59744416" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59744416')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59744416"></div>
+      <textarea class="ev-note" id="note-ir59744416" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>48</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59181403" target="_blank">59181403</a></td>
+    <td>Gustavinho Nimmer</td>
+    <td><span class="dtag notice">9d</span></td>
+    <td>08/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59181403')"><span id="ic-ir59181403">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59181403" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59181403" onclick="triggerFile('ir59181403')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59181403')">
+        <input type="file" id="file-ir59181403" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59181403')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59181403"></div>
+      <textarea class="ev-note" id="note-ir59181403" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>49</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59656200" target="_blank">59656200</a></td>
+    <td>Paulo Henrique Oliveira da Silva</td>
+    <td><span class="dtag notice">9d</span></td>
+    <td>08/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59656200')"><span id="ic-ir59656200">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59656200" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59656200" onclick="triggerFile('ir59656200')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59656200')">
+        <input type="file" id="file-ir59656200" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59656200')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59656200"></div>
+      <textarea class="ev-note" id="note-ir59656200" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>50</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59238643" target="_blank">59238643</a></td>
+    <td>MoisÃ©s Franco</td>
+    <td><span class="dtag notice">8d</span></td>
+    <td>08/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59238643')"><span id="ic-ir59238643">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59238643" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59238643" onclick="triggerFile('ir59238643')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59238643')">
+        <input type="file" id="file-ir59238643" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59238643')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59238643"></div>
+      <textarea class="ev-note" id="note-ir59238643" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>51</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59678652" target="_blank">59678652</a></td>
+    <td>Edinaldo Fideles de Souza</td>
+    <td><span class="dtag notice">8d</span></td>
+    <td>09/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59678652')"><span id="ic-ir59678652">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59678652" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59678652" onclick="triggerFile('ir59678652')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59678652')">
+        <input type="file" id="file-ir59678652" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59678652')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59678652"></div>
+      <textarea class="ev-note" id="note-ir59678652" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>52</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59660454" target="_blank">59660454</a></td>
+    <td>aguinaldo</td>
+    <td><span class="dtag notice">8d</span></td>
+    <td>08/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59660454')"><span id="ic-ir59660454">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59660454" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59660454" onclick="triggerFile('ir59660454')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59660454')">
+        <input type="file" id="file-ir59660454" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59660454')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59660454"></div>
+      <textarea class="ev-note" id="note-ir59660454" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>53</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59672436" target="_blank">59672436</a></td>
+    <td>Kauan Henrique</td>
+    <td><span class="dtag notice">8d</span></td>
+    <td>08/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59672436')"><span id="ic-ir59672436">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59672436" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59672436" onclick="triggerFile('ir59672436')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59672436')">
+        <input type="file" id="file-ir59672436" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59672436')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59672436"></div>
+      <textarea class="ev-note" id="note-ir59672436" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>54</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59735438" target="_blank">59735438</a></td>
+    <td>Emanoel Silva</td>
+    <td><span class="dtag ok">7d</span></td>
+    <td>10/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59735438')"><span id="ic-ir59735438">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59735438" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59735438" onclick="triggerFile('ir59735438')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59735438')">
+        <input type="file" id="file-ir59735438" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59735438')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59735438"></div>
+      <textarea class="ev-note" id="note-ir59735438" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>55</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59725162" target="_blank">59725162</a></td>
+    <td>Geovane dos santos de moura</td>
+    <td><span class="dtag ok">7d</span></td>
+    <td>09/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59725162')"><span id="ic-ir59725162">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59725162" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59725162" onclick="triggerFile('ir59725162')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59725162')">
+        <input type="file" id="file-ir59725162" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59725162')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59725162"></div>
+      <textarea class="ev-note" id="note-ir59725162" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>56</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59715444" target="_blank">59715444</a></td>
+    <td>Paulo Henrique Silva</td>
+    <td><span class="dtag ok">7d</span></td>
+    <td>09/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59715444')"><span id="ic-ir59715444">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59715444" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59715444" onclick="triggerFile('ir59715444')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59715444')">
+        <input type="file" id="file-ir59715444" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59715444')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59715444"></div>
+      <textarea class="ev-note" id="note-ir59715444" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>57</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59833050" target="_blank">59833050</a></td>
+    <td>Denis Oliveira</td>
+    <td><span class="dtag ok">6d</span></td>
+    <td>11/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59833050')"><span id="ic-ir59833050">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59833050" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59833050" onclick="triggerFile('ir59833050')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59833050')">
+        <input type="file" id="file-ir59833050" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59833050')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59833050"></div>
+      <textarea class="ev-note" id="note-ir59833050" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>58</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59761320" target="_blank">59761320</a></td>
+    <td>Eduardo Freitas</td>
+    <td><span class="dtag ok">6d</span></td>
+    <td>11/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59761320')"><span id="ic-ir59761320">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59761320" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59761320" onclick="triggerFile('ir59761320')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59761320')">
+        <input type="file" id="file-ir59761320" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59761320')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59761320"></div>
+      <textarea class="ev-note" id="note-ir59761320" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>59</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59768752" target="_blank">59768752</a></td>
+    <td>Charles Oliveira Guedes</td>
+    <td><span class="dtag ok">6d</span></td>
+    <td>11/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59768752')"><span id="ic-ir59768752">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59768752" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59768752" onclick="triggerFile('ir59768752')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59768752')">
+        <input type="file" id="file-ir59768752" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59768752')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59768752"></div>
+      <textarea class="ev-note" id="note-ir59768752" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>60</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59756684" target="_blank">59756684</a></td>
+    <td>Jonas Goes</td>
+    <td><span class="dtag ok">5d</span></td>
+    <td>12/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59756684')"><span id="ic-ir59756684">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59756684" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59756684" onclick="triggerFile('ir59756684')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59756684')">
+        <input type="file" id="file-ir59756684" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59756684')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59756684"></div>
+      <textarea class="ev-note" id="note-ir59756684" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>61</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59963146" target="_blank">59963146</a></td>
+    <td>JANIO RODRIGUES DE JESUS</td>
+    <td><span class="dtag ok">4d</span></td>
+    <td>13/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59963146')"><span id="ic-ir59963146">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59963146" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59963146" onclick="triggerFile('ir59963146')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59963146')">
+        <input type="file" id="file-ir59963146" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59963146')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59963146"></div>
+      <textarea class="ev-note" id="note-ir59963146" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>62</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59976698" target="_blank">59976698</a></td>
+    <td>Lead #59976698</td>
+    <td><span class="dtag ok">4d</span></td>
+    <td>13/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59976698')"><span id="ic-ir59976698">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59976698" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59976698" onclick="triggerFile('ir59976698')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59976698')">
+        <input type="file" id="file-ir59976698" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59976698')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59976698"></div>
+      <textarea class="ev-note" id="note-ir59976698" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>63</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59938766" target="_blank">59938766</a></td>
+    <td>Calebe Barros</td>
+    <td><span class="dtag ok">4d</span></td>
+    <td>13/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59938766')"><span id="ic-ir59938766">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59938766" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59938766" onclick="triggerFile('ir59938766')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59938766')">
+        <input type="file" id="file-ir59938766" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59938766')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59938766"></div>
+      <textarea class="ev-note" id="note-ir59938766" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>64</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59956676" target="_blank">59956676</a></td>
+    <td>Lead #59956676</td>
+    <td><span class="dtag ok">4d</span></td>
+    <td>13/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59956676')"><span id="ic-ir59956676">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59956676" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59956676" onclick="triggerFile('ir59956676')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59956676')">
+        <input type="file" id="file-ir59956676" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59956676')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59956676"></div>
+      <textarea class="ev-note" id="note-ir59956676" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>65</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59986962" target="_blank">59986962</a></td>
+    <td>Jessica Vilar</td>
+    <td><span class="dtag ok">4d</span></td>
+    <td>13/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59986962')"><span id="ic-ir59986962">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59986962" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59986962" onclick="triggerFile('ir59986962')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59986962')">
+        <input type="file" id="file-ir59986962" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59986962')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59986962"></div>
+      <textarea class="ev-note" id="note-ir59986962" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>66</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/60020734" target="_blank">60020734</a></td>
+    <td>Elenilson de Paula pereira</td>
+    <td><span class="dtag ok">4d</span></td>
+    <td>13/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir60020734')"><span id="ic-ir60020734">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir60020734" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir60020734" onclick="triggerFile('ir60020734')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir60020734')">
+        <input type="file" id="file-ir60020734" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir60020734')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir60020734"></div>
+      <textarea class="ev-note" id="note-ir60020734" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>67</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59934144" target="_blank">59934144</a></td>
+    <td>Victor Hugo</td>
+    <td><span class="dtag ok">4d</span></td>
+    <td>13/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59934144')"><span id="ic-ir59934144">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59934144" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59934144" onclick="triggerFile('ir59934144')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59934144')">
+        <input type="file" id="file-ir59934144" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59934144')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59934144"></div>
+      <textarea class="ev-note" id="note-ir59934144" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>68</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/60003036" target="_blank">60003036</a></td>
+    <td>Lead #60003036</td>
+    <td><span class="dtag ok">4d</span></td>
+    <td>13/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir60003036')"><span id="ic-ir60003036">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir60003036" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir60003036" onclick="triggerFile('ir60003036')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir60003036')">
+        <input type="file" id="file-ir60003036" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir60003036')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir60003036"></div>
+      <textarea class="ev-note" id="note-ir60003036" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>69</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/60004288" target="_blank">60004288</a></td>
+    <td>Waldiran De Sousa Dias</td>
+    <td><span class="dtag ok">4d</span></td>
+    <td>13/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir60004288')"><span id="ic-ir60004288">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir60004288" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir60004288" onclick="triggerFile('ir60004288')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir60004288')">
+        <input type="file" id="file-ir60004288" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir60004288')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir60004288"></div>
+      <textarea class="ev-note" id="note-ir60004288" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>70</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59803954" target="_blank">59803954</a></td>
+    <td>M Maik SF Msf</td>
+    <td><span class="dtag ok">4d</span></td>
+    <td>13/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59803954')"><span id="ic-ir59803954">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59803954" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59803954" onclick="triggerFile('ir59803954')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59803954')">
+        <input type="file" id="file-ir59803954" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59803954')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59803954"></div>
+      <textarea class="ev-note" id="note-ir59803954" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>71</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59818920" target="_blank">59818920</a></td>
+    <td>Luiz Fernando</td>
+    <td><span class="dtag ok">4d</span></td>
+    <td>13/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59818920')"><span id="ic-ir59818920">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59818920" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59818920" onclick="triggerFile('ir59818920')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59818920')">
+        <input type="file" id="file-ir59818920" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59818920')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59818920"></div>
+      <textarea class="ev-note" id="note-ir59818920" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>72</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59837270" target="_blank">59837270</a></td>
+    <td>LuÃ­s SÃ©rgio Dida</td>
+    <td><span class="dtag ok">4d</span></td>
+    <td>12/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59837270')"><span id="ic-ir59837270">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59837270" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59837270" onclick="triggerFile('ir59837270')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59837270')">
+        <input type="file" id="file-ir59837270" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59837270')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59837270"></div>
+      <textarea class="ev-note" id="note-ir59837270" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>73</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/60017930" target="_blank">60017930</a></td>
+    <td>Paulo Twitch</td>
+    <td><span class="dtag ok">4d</span></td>
+    <td>13/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir60017930')"><span id="ic-ir60017930">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir60017930" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir60017930" onclick="triggerFile('ir60017930')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir60017930')">
+        <input type="file" id="file-ir60017930" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir60017930')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir60017930"></div>
+      <textarea class="ev-note" id="note-ir60017930" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>74</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59834462" target="_blank">59834462</a></td>
+    <td>Flavio Lima</td>
+    <td><span class="dtag ok">4d</span></td>
+    <td>13/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59834462')"><span id="ic-ir59834462">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59834462" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59834462" onclick="triggerFile('ir59834462')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59834462')">
+        <input type="file" id="file-ir59834462" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59834462')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59834462"></div>
+      <textarea class="ev-note" id="note-ir59834462" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>75</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59885428" target="_blank">59885428</a></td>
+    <td>Jailson de Melo Silva</td>
+    <td><span class="dtag ok">4d</span></td>
+    <td>13/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59885428')"><span id="ic-ir59885428">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59885428" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59885428" onclick="triggerFile('ir59885428')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59885428')">
+        <input type="file" id="file-ir59885428" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59885428')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59885428"></div>
+      <textarea class="ev-note" id="note-ir59885428" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>76</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59918786" target="_blank">59918786</a></td>
+    <td>Lucas</td>
+    <td><span class="dtag ok">4d</span></td>
+    <td>13/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59918786')"><span id="ic-ir59918786">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59918786" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59918786" onclick="triggerFile('ir59918786')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59918786')">
+        <input type="file" id="file-ir59918786" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59918786')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59918786"></div>
+      <textarea class="ev-note" id="note-ir59918786" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>77</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59840640" target="_blank">59840640</a></td>
+    <td>Lead #59840640</td>
+    <td><span class="dtag ok">4d</span></td>
+    <td>13/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59840640')"><span id="ic-ir59840640">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59840640" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59840640" onclick="triggerFile('ir59840640')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59840640')">
+        <input type="file" id="file-ir59840640" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59840640')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59840640"></div>
+      <textarea class="ev-note" id="note-ir59840640" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>78</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59874002" target="_blank">59874002</a></td>
+    <td>Mycon Douglas Pd ni</td>
+    <td><span class="dtag ok">4d</span></td>
+    <td>13/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59874002')"><span id="ic-ir59874002">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59874002" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59874002" onclick="triggerFile('ir59874002')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59874002')">
+        <input type="file" id="file-ir59874002" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59874002')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59874002"></div>
+      <textarea class="ev-note" id="note-ir59874002" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>79</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59849828" target="_blank">59849828</a></td>
+    <td>Jeferson Medina Fontes</td>
+    <td><span class="dtag ok">3d</span></td>
+    <td>14/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59849828')"><span id="ic-ir59849828">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59849828" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59849828" onclick="triggerFile('ir59849828')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59849828')">
+        <input type="file" id="file-ir59849828" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59849828')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59849828"></div>
+      <textarea class="ev-note" id="note-ir59849828" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>80</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59985070" target="_blank">59985070</a></td>
+    <td>cleomir Lopes dos Santos</td>
+    <td><span class="dtag ok">3d</span></td>
+    <td>14/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59985070')"><span id="ic-ir59985070">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59985070" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59985070" onclick="triggerFile('ir59985070')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59985070')">
+        <input type="file" id="file-ir59985070" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59985070')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59985070"></div>
+      <textarea class="ev-note" id="note-ir59985070" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>81</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59857402" target="_blank">59857402</a></td>
+    <td>Diego Bras</td>
+    <td><span class="dtag ok">3d</span></td>
+    <td>14/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59857402')"><span id="ic-ir59857402">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59857402" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59857402" onclick="triggerFile('ir59857402')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59857402')">
+        <input type="file" id="file-ir59857402" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59857402')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59857402"></div>
+      <textarea class="ev-note" id="note-ir59857402" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>82</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59831410" target="_blank">59831410</a></td>
+    <td>Alessandro Souza</td>
+    <td><span class="dtag ok">3d</span></td>
+    <td>13/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59831410')"><span id="ic-ir59831410">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59831410" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59831410" onclick="triggerFile('ir59831410')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59831410')">
+        <input type="file" id="file-ir59831410" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59831410')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59831410"></div>
+      <textarea class="ev-note" id="note-ir59831410" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>83</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59954386" target="_blank">59954386</a></td>
+    <td>Andre Melo Silva</td>
+    <td><span class="dtag ok">3d</span></td>
+    <td>13/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59954386')"><span id="ic-ir59954386">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59954386" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59954386" onclick="triggerFile('ir59954386')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59954386')">
+        <input type="file" id="file-ir59954386" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59954386')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59954386"></div>
+      <textarea class="ev-note" id="note-ir59954386" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>84</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59914566" target="_blank">59914566</a></td>
+    <td>Marcos Henrique Lopes Cardoso</td>
+    <td><span class="dtag ok">3d</span></td>
+    <td>13/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59914566')"><span id="ic-ir59914566">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59914566" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59914566" onclick="triggerFile('ir59914566')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59914566')">
+        <input type="file" id="file-ir59914566" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59914566')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59914566"></div>
+      <textarea class="ev-note" id="note-ir59914566" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>85</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59880316" target="_blank">59880316</a></td>
+    <td>Elias Dos Anjos felix</td>
+    <td><span class="dtag ok">2d</span></td>
+    <td>14/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59880316')"><span id="ic-ir59880316">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59880316" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59880316" onclick="triggerFile('ir59880316')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59880316')">
+        <input type="file" id="file-ir59880316" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59880316')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59880316"></div>
+      <textarea class="ev-note" id="note-ir59880316" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>86</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59877448" target="_blank">59877448</a></td>
+    <td>Thiago Martins Pereira</td>
+    <td><span class="dtag ok">2d</span></td>
+    <td>14/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59877448')"><span id="ic-ir59877448">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59877448" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59877448" onclick="triggerFile('ir59877448')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59877448')">
+        <input type="file" id="file-ir59877448" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59877448')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59877448"></div>
+      <textarea class="ev-note" id="note-ir59877448" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>87</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59880278" target="_blank">59880278</a></td>
+    <td>Hugo CÃ©sar Pereira Lopes</td>
+    <td><span class="dtag ok">1d</span></td>
+    <td>16/06/2026</td>
+    <td><span class="sb open">Conv. aberta</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59880278')"><span id="ic-ir59880278">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59880278" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59880278" onclick="triggerFile('ir59880278')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59880278')">
+        <input type="file" id="file-ir59880278" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59880278')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59880278"></div>
+      <textarea class="ev-note" id="note-ir59880278" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>88</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/60180264" target="_blank">60180264</a></td>
+    <td>Rony Marcos de Oliveira lima</td>
+    <td><span class="dtag ok">1d</span></td>
+    <td>16/06/2026</td>
+    <td><span class="sb open">Conv. aberta</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir60180264')"><span id="ic-ir60180264">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir60180264" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir60180264" onclick="triggerFile('ir60180264')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir60180264')">
+        <input type="file" id="file-ir60180264" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir60180264')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir60180264"></div>
+      <textarea class="ev-note" id="note-ir60180264" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>89</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59877504" target="_blank">59877504</a></td>
+    <td>Diogo FOXXYD</td>
+    <td><span class="dtag ok">1d</span></td>
+    <td>16/06/2026</td>
+    <td><span class="sb open">Conv. aberta</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59877504')"><span id="ic-ir59877504">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59877504" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59877504" onclick="triggerFile('ir59877504')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59877504')">
+        <input type="file" id="file-ir59877504" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59877504')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59877504"></div>
+      <textarea class="ev-note" id="note-ir59877504" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>90</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59735974" target="_blank">59735974</a></td>
+    <td>Brunno Marques</td>
+    <td><span class="dtag ok">1d</span></td>
+    <td>16/06/2026</td>
+    <td><span class="sb none">Sem conversa</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59735974')"><span id="ic-ir59735974">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59735974" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59735974" onclick="triggerFile('ir59735974')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59735974')">
+        <input type="file" id="file-ir59735974" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59735974')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59735974"></div>
+      <textarea class="ev-note" id="note-ir59735974" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>91</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59882684" target="_blank">59882684</a></td>
+    <td>Anderson Costa Sousa</td>
+    <td><span class="dtag ok">1d</span></td>
+    <td>16/06/2026</td>
+    <td><span class="sb open">Conv. aberta</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59882684')"><span id="ic-ir59882684">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59882684" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59882684" onclick="triggerFile('ir59882684')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59882684')">
+        <input type="file" id="file-ir59882684" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59882684')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59882684"></div>
+      <textarea class="ev-note" id="note-ir59882684" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>92</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/59755388" target="_blank">59755388</a></td>
+    <td>Lead #59755388</td>
+    <td><span class="dtag ok">0d</span></td>
+    <td>16/06/2026</td>
+    <td><span class="sb open">Conv. aberta</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir59755388')"><span id="ic-ir59755388">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir59755388" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir59755388" onclick="triggerFile('ir59755388')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir59755388')">
+        <input type="file" id="file-ir59755388" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir59755388')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir59755388"></div>
+      <textarea class="ev-note" id="note-ir59755388" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>93</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/60194896" target="_blank">60194896</a></td>
+    <td>Alberto Moura da Silva</td>
+    <td><span class="dtag ok">0d</span></td>
+    <td>16/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir60194896')"><span id="ic-ir60194896">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir60194896" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir60194896" onclick="triggerFile('ir60194896')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir60194896')">
+        <input type="file" id="file-ir60194896" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir60194896')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir60194896"></div>
+      <textarea class="ev-note" id="note-ir60194896" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>94</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/60166690" target="_blank">60166690</a></td>
+    <td>Alberto Silva</td>
+    <td><span class="dtag ok">0d</span></td>
+    <td>17/06/2026</td>
+    <td><span class="sb closed">Conv. fechada</span></td>
+    <td class="resp">Rodrigo Campos</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir60166690')"><span id="ic-ir60166690">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir60166690" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir60166690" onclick="triggerFile('ir60166690')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir60166690')">
+        <input type="file" id="file-ir60166690" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir60166690')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir60166690"></div>
+      <textarea class="ev-note" id="note-ir60166690" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>95</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/60180988" target="_blank">60180988</a></td>
+    <td>Jose adenilson Carvalho santiago</td>
+    <td><span class="dtag ok">0d</span></td>
+    <td>16/06/2026</td>
+    <td><span class="sb open">Conv. aberta</span></td>
+    <td class="resp">Rodrigo Campos</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir60180988')"><span id="ic-ir60180988">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir60180988" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir60180988" onclick="triggerFile('ir60180988')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir60180988')">
+        <input type="file" id="file-ir60180988" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir60180988')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir60180988"></div>
+      <textarea class="ev-note" id="note-ir60180988" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>96</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/60181468" target="_blank">60181468</a></td>
+    <td>Ender Orlando</td>
+    <td><span class="dtag ok">0d</span></td>
+    <td>16/06/2026</td>
+    <td><span class="sb open">Conv. aberta</span></td>
+    <td class="resp">Guilherme de Sousa Alves</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir60181468')"><span id="ic-ir60181468">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir60181468" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir60181468" onclick="triggerFile('ir60181468')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir60181468')">
+        <input type="file" id="file-ir60181468" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir60181468')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir60181468"></div>
+      <textarea class="ev-note" id="note-ir60181468" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr><tr>
+    <td>97</td>
+    <td><a href="https://rodrigocampos716.kommo.com/leads/detail/60192784" target="_blank">60192784</a></td>
+    <td>Jose elim pantoja Braga</td>
+    <td><span class="dtag ok">0d</span></td>
+    <td>16/06/2026</td>
+    <td><span class="sb open">Conv. aberta</span></td>
+    <td class="resp">Rodrigo Campos</td>
+    <td><button class="ev-btn" onclick="toggleEv('ir60192784')"><span id="ic-ir60192784">+</span> Print</button></td>
+  </tr><tr class="ev-row" id="ir60192784" style="display:none"><td colspan="8">
+    <div class="ev-mini">
+      <div class="ev-drop-area" id="drop-ir60192784" onclick="triggerFile('ir60192784')"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handleDrop(event,'ir60192784')">
+        <input type="file" id="file-ir60192784" accept="image/*" multiple style="display:none" onchange="loadImgs(this.files,'ir60192784')">
+        Arraste prints aqui ou <span style="text-decoration:underline;cursor:pointer">selecione</span>
+      </div>
+      <div class="ev-thumbs" id="thumbs-ir60192784"></div>
+      <textarea class="ev-note" id="note-ir60192784" placeholder="Observacao sobre este lead..."></textarea>
+    </div>
+  </td></tr></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- PLANO -->
+<section class="sec" data-sec="plano">
+  <h2 class="sh">Plano de Acao — Time Comercial</h2>
+  <div class="lead-txt">
+    O SDR IA ja fez o trabalho inicial. <strong>O historico esta la — so precisa ser lido.</strong>
+    A unica tarefa do time e ler antes de ligar e registrar depois de falar.
+  </div>
+
+  <div class="day-card">
+    <div class="day-hd">
+      <div class="day-title">Quinta-feira</div>
+      <div class="prog" id="prog-qui">0 / 3 concluidas</div>
+    </div>
+    <label class="task" data-day="qui">
+      <input type="checkbox">
+      <div class="tbody">
+        <div class="thead"><span class="ttime">09h — Limpeza imediata da base</span><span class="tdur">30 min</span></div>
+        <h4>Mover para DESQUALIFICADO os 15 leads em NOVO LEAD com conversa ja encerrada</h4>
+        <p><b>Responsavel:</b> Guilherme. <b>Criterio:</b> conversa fechada + lead sem movimento ha mais de 2 dias. Lista completa na aba Auditoria CRM.</p>
+      </div>
+    </label>
+    <label class="task" data-day="qui">
+      <input type="checkbox">
+      <div class="tbody">
+        <div class="thead"><span class="ttime">10h — Revisao INTERESSE REAL com conv. fechada</span><span class="tdur">1h</span></div>
+        <h4>22 leads chegaram qualificados pelo SDR IA e tiveram conversa encerrada sem avanco</h4>
+        <p>Antes de desqualificar: <b>abrir o historico do SDR, identificar onde travou</b>.
+        Se travou em preco ou condicao — nao desqualifica. <b>Liga.</b> Registrar motivo no Kommo.</p>
+      </div>
+    </label>
+    <label class="task" data-day="qui">
+      <input type="checkbox">
+      <div class="tbody">
+        <div class="thead"><span class="ttime">14h — Ligacoes para leads parados em preco</span><span class="tdur">Tarde</span></div>
+        <h4>Todo lead em INTERESSE REAL parado sem resposta recebe ligacao hoje</h4>
+        <p><b>Roteiro unico:</b> "Vi que voce chegou a conversar com a gente. O que travou?" —
+        Nao repetir o pitch. Ouvir. Registrar a resposta no Kommo antes de fechar a aba.</p>
+      </div>
+    </label>
+  </div>
+
+  <div class="day-card">
+    <div class="day-hd">
+      <div class="day-title">Sexta-feira</div>
+      <div class="prog" id="prog-sex">0 / 3 concluidas</div>
+    </div>
+    <label class="task" data-day="sex">
+      <input type="checkbox">
+      <div class="tbody">
+        <div class="thead"><span class="ttime">09h — Pipeline limpo</span><span class="tdur">Manha</span></div>
+        <h4>Kommo deve ter ZERO leads em NOVO LEAD sem contato ha mais de 7 dias</h4>
+        <p>Quem nao foi abordado: <b>desqualifica ou redistribui</b>. Pipeline sujo distorce todas as leituras.</p>
+      </div>
+    </label>
+    <label class="task" data-day="sex">
+      <input type="checkbox">
+      <div class="tbody">
+        <div class="thead"><span class="ttime">10h — Revisao de capacidade</span><span class="tdur">Reuniao</span></div>
+        <h4>93 leads em INTERESSE REAL estao sob Guilherme — media 8,8 dias, maximo 29 dias</h4>
+        <p>Pergunta direta: <b>o volume esta dentro do que consegue absorver?</b>
+        Se nao — redistribuir, nao ignorar. Sobrecarga gera abandono invisivel.</p>
+      </div>
+    </label>
+    <label class="task" data-day="sex">
+      <input type="checkbox">
+      <div class="tbody">
+        <div class="thead"><span class="ttime">Final do dia — Atualizacao de status</span><span class="tdur">17h</span></div>
+        <h4>Todo lead tocado esta semana precisa ter o Kommo atualizado com o motivo</h4>
+        <p>Avancou, perdeu ou remarcou contato. <b>Nenhum lead em branco.</b>
+        Sem isso, a proxima auditoria encontra os mesmos problemas.</p>
+      </div>
+    </label>
+  </div>
+
+  <div class="closing-box">
+    O SDR IA ja fez o trabalho inicial. O historico esta la.<br>
+    A unica tarefa do time agora e <b>ler antes de ligar e registrar depois de falar.</b>
+  </div>
+</section>
+
+<!-- DIAGNOSTICO -->
+<section class="sec" data-sec="diag">
+  <h2 class="sh">Diagnostico — Onde esta o gargalo</h2>
+  <div class="g2">
+    <div class="mc" style="border-top:4px solid var(--ok)">
+      <h3 style="margin:0 0 16px;color:var(--ok);font-size:17px">O que esta funcionando</h3>
+      <ul style="margin:0;padding-left:18px;line-height:2;color:#c8cdd6;font-size:14px">
+        <li><b>Midia em junho:</b> CAC caiu de R$ 402 para R$ 239 com metade do investimento.</li>
+        <li><b>SDR IA:</b> taxa Lead→MQL subiu de 39,65% para 55,75%.</li>
+        <li><b>Fechamento SQL→Venda:</b> saltou de 36% para 70%.</li>
+        <li><b>Ticket medio:</b> cresceu de R$ 4.599 para R$ 6.230 (+35%).</li>
+        <li><b>ROAS:</b> de 11,42× para 25,96× com menos verba.</li>
+      </ul>
+    </div>
+    <div class="mc" style="border-top:4px solid var(--bad)">
+      <h3 style="margin:0 0 16px;color:var(--bad);font-size:17px">Onde esta sangrando</h3>
+      <ul style="margin:0;padding-left:18px;line-height:2;color:#c8cdd6;font-size:14px">
+        <li><b>MQL→SQL travado em ~15,8%:</b> mesmo gargalo nos 2 meses. Aqui o lead qualificado se perde.</li>
+        <li><b>93 leads sob 1 responsavel:</b> pode estar acima da capacidade individual.</li>
+        <li><b>209 leads sem nenhum contato</b> em NOVO LEAD — pipeline sujo.</li>
+        <li><b>Sem registro de motivo de perda:</b> impossivel atacar causa raiz.</li>
+        <li><b>Time nao le historico do SDR IA</b> antes de ligar — re-trabalho e friccao.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="diagbox" style="margin-top:24px">
+    <b>Se replicarmos junho em maio:</b> 401 leads × 6,19% = <b>~25 vendas/mes</b> —
+    quase 3× o resultado atual com a mesma verba. A alavanca nao e investir mais. E converter melhor o que ja chega.
+  </div>
+
+  <div class="chart-box" style="margin-top:24px">
+    <h3>Comparativo completo de taxas — Maio vs Junho</h3>
+    <div class="chart-inner"><canvas id="cDiag"></canvas></div>
+  </div>
+</section>
+
+</main>
+
+<script>
+// TABS
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.sec').forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  document.querySelector('.sec[data-sec="'+t.dataset.tab+'"]').classList.add('active');
+}));
+document.addEventListener('keydown', e => {
+  if (!document.fullscreenElement) return;
+  const order = ['visao','funil','audit','plano','diag'];
+  const cur = document.querySelector('.tab.active').dataset.tab;
+  const i = order.indexOf(cur);
+  if (e.key==='ArrowRight' && i<order.length-1) document.querySelector('.tab[data-tab="'+order[i+1]+'"]').click();
+  if (e.key==='ArrowLeft' && i>0) document.querySelector('.tab[data-tab="'+order[i-1]+'"]').click();
+});
+function toggleFS() {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+  else document.exitFullscreen();
+}
+
+// CHARTS
+const chartOpts = {
+  responsive: true, maintainAspectRatio: false,
+  scales: {
+    y: { ticks: { color: '#9aa1ad' }, grid: { color: '#272a33' } },
+    x: { ticks: { color: '#9aa1ad' }, grid: { display: false } }
+  },
+  plugins: { legend: { labels: { color: '#eef0f3' } } }
+};
+
+new Chart(document.getElementById('cConv').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels: ['Lead → MQL', 'MQL → SQL', 'SQL → Venda', 'Lead → Venda'],
+    datasets: [
+      { label: 'Maio', data: [39.65, 15.72, 36, 2.24], backgroundColor: '#ef4444' },
+      { label: 'Junho', data: [55.75, 15.87, 70, 6.19], backgroundColor: '#22c55e' }
+    ]
+  },
+  options: { ...chartOpts, scales: { ...chartOpts.scales, y: { ...chartOpts.scales.y, ticks: { ...chartOpts.scales.y.ticks, callback: v => v + '%' } } } }
+});
+
+new Chart(document.getElementById('cVol').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels: ['Leads', 'MQL', 'SQL', 'Vendas'],
+    datasets: [
+      { label: 'Maio', data: [401, 159, 25, 9], backgroundColor: '#ef4444' },
+      { label: 'Junho', data: [113, 63, 10, 7], backgroundColor: '#22c55e' }
+    ]
+  },
+  options: chartOpts
+});
+
+new Chart(document.getElementById('cCusto').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels: ['CPL', 'Custo MQL', 'Custo SQL', 'Custo Venda'],
+    datasets: [
+      { label: 'Maio', data: [9.04, 22.80, 145.01, 402.81], backgroundColor: '#ef4444' },
+      { label: 'Junho', data: [14.87, 26.67, 167.99, 239.99], backgroundColor: '#22c55e' }
+    ]
+  },
+  options: { ...chartOpts, scales: { ...chartOpts.scales, y: { ...chartOpts.scales.y, ticks: { ...chartOpts.scales.y.ticks, callback: v => 'R$' + v } } } }
+});
+
+new Chart(document.getElementById('cRec').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels: ['Investimento', 'Receita Faturada'],
+    datasets: [
+      { label: 'Maio', data: [3625, 41392], backgroundColor: '#ef4444' },
+      { label: 'Junho', data: [1679, 43611], backgroundColor: '#22c55e' }
+    ]
+  },
+  options: { ...chartOpts, scales: { ...chartOpts.scales, y: { ...chartOpts.scales.y, ticks: { ...chartOpts.scales.y.ticks, callback: v => 'R$' + v.toLocaleString('pt-BR') } } } }
+});
+
+new Chart(document.getElementById('cDiag').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels: ['Lead → MQL', 'MQL → SQL', 'SQL → Venda', 'Lead → Venda', 'ROAS'],
+    datasets: [
+      { label: 'Maio', data: [39.65, 15.72, 36, 2.24, 11.42], backgroundColor: '#ef4444' },
+      { label: 'Junho', data: [55.75, 15.87, 70, 6.19, 25.96], backgroundColor: '#22c55e' }
+    ]
+  },
+  options: { ...chartOpts }
+});
+
+// EVIDENCE
+function toggleEv(uid) {
+  const row = document.getElementById(uid);
+  const open = row.style.display !== 'none';
+  row.style.display = open ? 'none' : 'table-row';
+  document.getElementById('ic-' + uid).textContent = open ? '+' : '−';
+}
+function expandAll() {
+  document.querySelectorAll('.ev-row').forEach(r => r.style.display = 'table-row');
+  document.querySelectorAll('.ev-btn span').forEach(s => s.textContent = '−');
+}
+function collapseAll() {
+  document.querySelectorAll('.ev-row').forEach(r => r.style.display = 'none');
+  document.querySelectorAll('.ev-btn span').forEach(s => s.textContent = '+');
+}
+function triggerFile(uid) { document.getElementById('file-' + uid).click(); }
+function handleDrop(e, uid) {
+  e.preventDefault();
+  document.getElementById('drop-' + uid).classList.remove('over');
+  loadImgs(e.dataTransfer.files, uid);
+}
+function loadImgs(files, uid) {
+  const thumbs = document.getElementById('thumbs-' + uid);
+  const btn = document.querySelector('.ev-btn[onclick*="' + uid + '"]');
+  Array.from(files).forEach(f => {
+    if (!f.type.startsWith('image/')) return;
+    const r = new FileReader();
+    r.onload = ev => {
+      const wrap = document.createElement('div');
+      wrap.className = 'ev-thumb-w';
+      const img = document.createElement('img');
+      img.className = 'ev-thumb';
+      img.src = ev.target.result;
+      img.onclick = () => openLB(ev.target.result);
+      const del = document.createElement('button');
+      del.className = 'ev-del';
+      del.textContent = '×';
+      del.onclick = e => { e.stopPropagation(); wrap.remove(); if (!thumbs.children.length && btn) btn.classList.remove('has'); };
+      wrap.appendChild(img);
+      wrap.appendChild(del);
+      thumbs.appendChild(wrap);
+      if (btn) btn.classList.add('has');
+    };
+    r.readAsDataURL(f);
+  });
+}
+function openLB(src) { document.getElementById('lb-img').src = src; document.getElementById('lb').classList.add('open'); }
+function closeLB() { document.getElementById('lb').classList.remove('open'); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLB(); });
+
+// CHECKLIST
+document.querySelectorAll('.task').forEach((t, i) => {
+  const cb = t.querySelector('input');
+  const k = 'vloca_t_' + i;
+  cb.checked = localStorage.getItem(k) === '1';
+  if (cb.checked) t.classList.add('done');
+  cb.addEventListener('change', () => {
+    localStorage.setItem(k, cb.checked ? '1' : '0');
+    t.classList.toggle('done', cb.checked);
+    updateProg();
+  });
+});
+function updateProg() {
+  ['qui', 'sex'].forEach(d => {
+    const all = document.querySelectorAll('.task[data-day="' + d + '"]');
+    const done = [...all].filter(t => t.querySelector('input').checked).length;
+    const el = document.getElementById('prog-' + d);
+    if (el) el.textContent = done + ' / ' + all.length + ' concluidas';
+  });
+}
+updateProg();
+
+// EYE TOGGLE
+let eyeOpen = true;
+const EYE_OPEN = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+const EYE_CLOSED = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+function toggleEye() {
+  eyeOpen = !eyeOpen;
+  document.querySelectorAll('.kv.sensitive').forEach(el => {
+    if (eyeOpen) { el.textContent = el.dataset.v; el.classList.remove('hidden'); }
+    else { el.textContent = '••••••'; el.classList.add('hidden'); }
+  });
+  document.getElementById('eyeIcon').innerHTML = eyeOpen ? EYE_OPEN : EYE_CLOSED;
+  document.getElementById('eyeTxt').textContent = eyeOpen ? 'Ocultar valores' : 'Mostrar valores';
+}
+</script>
+</body>
+</html>
