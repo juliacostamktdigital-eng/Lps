@@ -1,48 +1,48 @@
-     ,2026,2026,2026,2026,2026,2026,2026,2026,2026
-,01/04/2026,01/05/2026,01/06/2026,01/07/2026,01/08/2026,01/09/2026,01/10/2026,01/11/2026,01/12/2026
-,30/04/2026,31/05/2026,30/06/2026,31/07/2026,31/08/2026,30/09/2026,31/10/2026,30/11/2026,31/12/2026
-Mês,abril,maio,junho,julho,agosto,setembro,outubro,novembro,dezembro
-Investimento,"R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00"
-Ticket Médio,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Impressões,0,0,0,0,0,0,0,0,0
-Sessões Gerais,0,0,0,0,0,0,0,0,0
-Cliques Totais,0,0,0,0,0,0,0,0,0
-Leads,0,0,0,0,0,0,0,0,0
-MQL (Manual),0,0,0,0,,,,,
-SQL (Manual),0,0,0,0,,,,,
-Vendas (Manual),0,0,0,0,,,,,
-Receita Faturada (Manual),"R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 80.000,00","R$ 0,00","R$ 0,00","R$ 0,00"
-ROAS,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Taxa de Conversão Leads(Clique->Lead),#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-,,,,,,,,,
-Custo por Clique,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-,,,,,,,,,
-Custo por Lead,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Custo por MQL ,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Custo por SQL,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Custo por Compra,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-,,,,,,,,,
-% Lead - MQL,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
- % MQL - SQL,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-% SQL - Vendas,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-,,,,,,,,,
-Investimento Meta,"R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00"
-Impressões,0,0,0,0,0,0,0,0,0
-Cliques,0,0,0,0,0,0,0,0,0
-CTR,,,,,,,,,
-Leads(Conversões),0,0,0,0,0,0,0,0,0
-Taxa de Conversão(Clique->Lead),,,,,,,,,
-,,,,,,,,,
-Custo por Clique,,,,,,,,,
-Custo por Lead,,,,,,,,,
-,,,,,,,,,
-,,,,,,,,,
-Investimento Google,"R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00"
-Impressões,0,0,0,0,0,0,0,0,0
-Cliques,0,0,0,0,0,0,0,0,0
-CTR,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Leads(Conversões),0,0,0,0,0,0,0,0,0
-Taxa de Conversão(Clique->Lead),#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-,,,,,,,,,
-Custo por Clique,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Custo por Lead,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+     ,2026,2026,2026,2026,2026,2026,2026
+,01/06/2026,01/07/2026,01/08/2026,01/09/2026,01/10/2026,01/11/2026,01/12/2026
+,30/06/2026,31/07/2026,31/08/2026,30/09/2026,31/10/2026,30/11/2026,31/12/2026
+Mês,junho,julho,agosto,setembro,outubro,novembro,dezembro
+Investimento,"R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00"
+Ticket Médio,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Impressões,2,0,0,0,0,0,0
+Sessões Gerais,0,0,0,0,0,0,0
+Cliques Totais,0,0,0,0,0,0,0
+Leads,0,0,0,0,0,0,0
+MQL (Manual),,,,,,,
+SQL (Manual),,,,,,,
+Vendas (Manual),,,,,,,
+Receita Faturada (Manual),"R$ 0,00","R$ 0,00","R$ 0,00","R$ 80.000,00","R$ 0,00","R$ 0,00","R$ 0,00"
+ROAS,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Taxa de Conversão Leads(Clique->Lead),#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+,,,,,,,
+Custo por Clique,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+,,,,,,,
+Custo por Lead,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Custo por MQL ,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Custo por SQL,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Custo por Compra,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+,,,,,,,
+% Lead - MQL,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+ % MQL - SQL,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+% SQL - Vendas,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+,,,,,,,
+Investimento Meta,"R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00"
+Impressões,0,0,0,0,0,0,0
+Cliques,0,0,0,0,0,0,0
+CTR,,,,,,,
+Leads(Conversões),0,0,0,0,0,0,0
+Taxa de Conversão(Clique->Lead),,,,,,,
+,,,,,,,
+Custo por Clique,,,,,,,
+Custo por Lead,,,,,,,
+,,,,,,,
+,,,,,,,
+Investimento Google,"R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00"
+Impressões,2,0,0,0,0,0,0
+Cliques,0,0,0,0,0,0,0
+CTR,"0,00%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Leads(Conversões),0,0,0,0,0,0,0
+Taxa de Conversão(Clique->Lead),#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+,,,,,,,
+Custo por Clique,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Custo por Lead,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
