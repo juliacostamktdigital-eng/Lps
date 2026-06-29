@@ -2,22 +2,22 @@
 ,01/06/2026,01/07/2026,01/08/2026,01/09/2026,01/10/2026,01/11/2026,01/12/2026
 ,30/06/2026,31/07/2026,31/08/2026,30/09/2026,31/10/2026,30/11/2026,31/12/2026
 Mês,junho,julho,agosto,setembro,outubro,novembro,dezembro
-Investimento,"R$ 180,83","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00"
+Investimento,"R$ 405,28","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00"
 Ticket Médio,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Impressões,409,0,0,0,0,0,0
+Impressões,842,0,0,0,0,0,0
 Sessões Gerais,0,0,0,0,0,0,0
-Cliques Totais,41,0,0,0,0,0,0
+Cliques Totais,84,0,0,0,0,0,0
 Leads,2,0,0,0,0,0,0
 MQL (Manual),,,,,,,
 SQL (Manual),,,,,,,
 Vendas (Manual),,,,,,,
 Receita Faturada (Manual),"R$ 0,00","R$ 0,00","R$ 0,00","R$ 80.000,00","R$ 0,00","R$ 0,00","R$ 0,00"
 ROAS,"0,00",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Taxa de Conversão Leads(Clique->Lead),"4,88%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Taxa de Conversão Leads(Clique->Lead),"2,38%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
 ,,,,,,,
-Custo por Clique,"R$ 4,41",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Custo por Clique,"R$ 4,82",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
 ,,,,,,,
-Custo por Lead,"R$ 90,42",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Custo por Lead,"R$ 202,64",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
 Custo por MQL ,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
 Custo por SQL,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
 Custo por Compra,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
@@ -37,12 +37,12 @@ Custo por Clique,,,,,,,
 Custo por Lead,,,,,,,
 ,,,,,,,
 ,,,,,,,
-Investimento Google,"R$ 180,83","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00"
-Impressões,409,0,0,0,0,0,0
-Cliques,41,0,0,0,0,0,0
-CTR,"10,02%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Investimento Google,"R$ 405,28","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00"
+Impressões,842,0,0,0,0,0,0
+Cliques,84,0,0,0,0,0,0
+CTR,"9,98%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
 Leads(Conversões),2,0,0,0,0,0,0
-Taxa de Conversão(Clique->Lead),"4,88%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Taxa de Conversão(Clique->Lead),"2,38%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
 ,,,,,,,
-Custo por Clique,"R$ 4,41",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Custo por Lead,"R$ 90,42",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Custo por Clique,"R$ 4,82",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Custo por Lead,"R$ 202,64",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
