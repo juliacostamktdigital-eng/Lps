@@ -160,6 +160,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--g1);color:var(--g
   <div class="sb-nav">
     <button class="nav-btn active" data-section="priorities" onclick="showSection('priorities')">✅ Prioridades</button>
     <button class="nav-btn" data-section="overview" onclick="showSection('overview')">📊 Visao Geral</button>
+    <button class="nav-btn" data-section="annual" onclick="showSection('annual')">📅 Anual</button>
   </div>
 
   <div class="sb-section">Clientes</div>
@@ -233,6 +234,19 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--g1);color:var(--g
     <div id="ov-grid" class="g3" style="gap:14px;">
       <div class="ld"><div class="sp"></div> Carregando clientes...</div>
     </div>
+  </section>
+
+  <!-- ANUAL -->
+  <section class="section" id="sec-annual">
+    <div class="ph">
+      <div>
+        <div class="ph-title">Painel Anual 2026</div>
+        <div class="ph-sub">Por cliente e mes — GrowthPack, midia direta e entregas</div>
+      </div>
+    </div>
+    <div id="an-client-nav" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;"></div>
+    <div id="an-month-nav" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;"></div>
+    <div id="an-content"><div class="ld"><div class="sp"></div> Carregando arquivo anual...</div></div>
   </section>
 
   <!-- CLIENTE DETAIL -->
@@ -404,13 +418,14 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--g1);color:var(--g
 <script>
 // ─── CONFIG ────────────────────────────────────────────────────────────────
 const CLIENTS = {
-  FCE:   { name:'FiveCred',          type:'is' },
-  ACCE:  { name:'VLoca',             type:'is', kommo:true },
-  MSZB:  { name:'Massimo Zanetti',   type:'ec' },
-  TAWV:  { name:'Tawa Veiculos',     type:'is' },
-  TECN1: { name:'Tecnipool',         type:'is' },
-  FARS:  { name:'Fares Aquino',      type:'is' },
-  SOTB:  { name:'Atlantica Maquinas',type:'is', kommo:true },
+  ACCE:  { name:'VLoca',                type:'is', kommo:true },
+  NATU:  { name:'Natuclean',            type:'is' },
+  FARE1: { name:'Fares Aquino',         type:'is' },
+  MSZB:  { name:'Massimo Zanetti',      type:'ec' },
+  SOTB:  { name:'Atlantica Maquinas',   type:'is', kommo:true },
+  TAWV:  { name:'Tawa Veiculos',        type:'is' },
+  SOLC:  { name:'Solucoes e Locacoes',  type:'is' },
+  NWSF:  { name:'New Safes',            type:'is' },
 };
 const HS = {
   Safe:     { color:'#15803D', bg:'#DCFCE7', emoji:'🟢' },
@@ -692,6 +707,110 @@ function renderOverview(){
   document.getElementById('ov-critical').textContent=nCr;
   document.getElementById('ov-care').textContent=nCa;
   document.getElementById('ov-safe').textContent=nS;
+}
+
+// ─── ANUAL (2026) ──────────────────────────────────────────────────────────
+const AN_MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const anCache = {};
+let anTicker = null;
+let anMonthIdx = new Date().getMonth();
+
+function anPillStyle(active, dashed){
+  return `padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.12s;
+    ${active?'background:var(--red);color:white;border:1px solid var(--red);':'background:var(--g1);color:var(--g5);border:1px solid var(--g2);'}
+    ${dashed?'border-style:dashed;':''}`;
+}
+
+async function renderAnnualTab(){
+  const tickers = Object.keys(CLIENTS);
+  if (!anTicker) anTicker = tickers[0];
+
+  document.getElementById('an-client-nav').innerHTML = tickers.map(t =>
+    `<button style="${anPillStyle(t===anTicker)}" onclick="anSelectClient('${t}')">${t}</button>`
+  ).join('');
+
+  await anLoadIfNeeded(anTicker);
+  anRenderMonthNav();
+  anRenderContent();
+}
+
+function anSelectClient(t){ anTicker = t; renderAnnualTab(); }
+function anSelectMonth(i){ anMonthIdx = i; anRenderMonthNav(); anRenderContent(); }
+
+async function anLoadIfNeeded(t){
+  if (anCache[t]) return;
+  try{
+    const r = await fetch(`data/annual/${t}-2026.json?`+Date.now());
+    anCache[t] = r.ok ? await r.json() : { error:true };
+  }catch(_){ anCache[t] = { error:true }; }
+}
+
+function anRenderMonthNav(){
+  const archive = anCache[anTicker];
+  const months = archive && archive.months;
+  document.getElementById('an-month-nav').innerHTML = AN_MESES.map((label,i) => {
+    const st = months ? months[i].status : (i<new Date().getMonth()?'closed':i===new Date().getMonth()?'current':'planned');
+    return `<button style="${anPillStyle(i===anMonthIdx, st==='planned')}" onclick="anSelectMonth(${i})">${label}</button>`;
+  }).join('');
+}
+
+function anCard(title, bodyHtml){
+  return `<div style="background:var(--white,#fff);border:1px solid var(--g2);border-radius:12px;padding:16px 20px;margin-bottom:14px;">
+    <div style="font-size:13px;font-weight:800;margin-bottom:10px;">${title}</div>
+    ${bodyHtml}
+  </div>`;
+}
+function anKpi(label, val){
+  return `<div style="border:1px solid var(--g2);border-radius:8px;padding:8px 12px;">
+    <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g5);">${label}</div>
+    <div style="font-size:15px;font-weight:800;margin-top:2px;">${val}</div>
+  </div>`;
+}
+
+function anRenderContent(){
+  const el = document.getElementById('an-content');
+  const archive = anCache[anTicker];
+  if (!archive || archive.error){
+    el.innerHTML = `<div style="color:var(--g4);font-size:12px;font-style:italic;">Sem arquivo anual publicado ainda para ${anTicker}.</div>`;
+    return;
+  }
+  const mes = archive.months[anMonthIdx];
+  const statusLabel = {closed:'Fechado', current:'Ao vivo', planned:'Projetado'}[mes.status];
+  const gp = mes.growthpack, midia = mes.midia, entregas = mes.entregas, ck = mes.cockpit;
+  const grid = 'display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;';
+
+  const gpBody = gp ? `<div style="${grid}">
+      ${anKpi('Budget', gp.rawBudget||'—')}
+      ${anKpi('Investido', gp.rawInvest||'—')}
+      ${anKpi('Leads', fmtN(gp.leads))}
+      ${anKpi('MQL', fmtN(gp.mql))}
+      ${anKpi('SQL', fmtN(gp.sql))}
+      ${anKpi('Vendas', fmtN(gp.vendas))}
+      ${anKpi('CPL', gp.rawCPL||'—')}
+      ${anKpi('Faturamento', gp.rawFat||'—')}
+    </div>` : `<div style="color:var(--g4);font-size:12px;font-style:italic;">Sem GrowthPack pra este mes.</div>`;
+
+  const midiaBody = midia ? `<div style="${grid}">
+      ${midia.meta ? anKpi('Meta — Invest.', fmtBRL(midia.meta.cost))+anKpi('Meta — Leads', fmtN(midia.meta.leads))+anKpi('Meta — CPL', midia.meta.cpl?fmtBRL(midia.meta.cpl):'—') : ''}
+      ${midia.google ? anKpi('Google — Invest.', fmtBRL(midia.google.cost))+anKpi('Google — Leads', fmtN(midia.google.leads))+anKpi('Google — CPL', midia.google.cpl?fmtBRL(midia.google.cpl):'—') : ''}
+    </div>` : `<div style="color:var(--g4);font-size:12px;font-style:italic;">Sem midia direta pra este mes.</div>`;
+
+  const ckBody = ck ? `<div style="${grid}">
+      ${anKpi('Flag', ck.flag||'—')}
+      ${anKpi('Score', ck.score||'—')}
+      ${anKpi('Pace budget', ck.ckPace?(ck.ckPace*100).toFixed(1)+'%':'—')}
+    </div>` : '';
+
+  const entregasBody = entregas ? `<div style="font-size:12px;">Total: <strong>${entregas.total}</strong>
+    ${entregas.tasks.length ? `<ul style="margin-top:8px;padding-left:18px;line-height:1.8;">${entregas.tasks.map(t=>
+      `<li>${t.link?`<a href="${t.link}" target="_blank" style="color:var(--red);">${t.title}</a>`:t.title}</li>`).join('')}</ul>` : ''}
+    </div>` : `<div style="color:var(--g4);font-size:12px;font-style:italic;">Sem entregas localizadas pra este mes.</div>`;
+
+  el.innerHTML =
+    anCard(`GrowthPack — ${AN_MESES[anMonthIdx]}/2026 <span style="font-size:9px;font-weight:700;text-transform:uppercase;padding:2px 8px;border-radius:10px;background:var(--g1);color:var(--g5);margin-left:6px;">${statusLabel}</span>`, gpBody) +
+    anCard('Midia direta (Meta / Google)', midiaBody) +
+    (ck ? anCard('Health Score (ao vivo)', ckBody) : '') +
+    anCard('Entregas Ekyte concluidas', entregasBody);
 }
 
 // ─── CLIENT DETAIL ─────────────────────────────────────────────────────────
@@ -1069,7 +1188,7 @@ const COM_SCHEMA = {
       receita:['receita de vendas','receita','valor'],
     }
   },
-  FARS: {
+  FARE1: {
     style:'mqsql', boolVal: true,
     h: {
       nome:   ['nome','nome completo','name'],
@@ -1458,9 +1577,10 @@ function renderChart(history, metric){
 function showSection(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id==='sec-'+id));
   document.querySelectorAll('.nav-btn[data-section]').forEach(b=>b.classList.toggle('active',b.dataset.section===id));
-  if(id==='overview'||id==='priorities'){
+  if(id==='overview'||id==='priorities'||id==='annual'){
     document.querySelectorAll('.client-btn').forEach(b=>b.classList.remove('active'));
   }
+  if(id==='annual') renderAnnualTab();
 }
 
 // ─── PRIORIDADES DO DIA ────────────────────────────────────────────────────

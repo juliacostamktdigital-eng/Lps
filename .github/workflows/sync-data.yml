@@ -36,22 +36,26 @@ jobs:
           SESSION=$(grep -i 'mcp-session-id:' /tmp/hs_headers.txt | awk '{print $2}' | tr -d '\r\n')
           echo "Cockpit session: $SESSION"
 
-          # 2. Query all projects with health score
+          # 2. Query all projects with health score (fetchAllPages: sem isso, so os primeiros 50 projetos vinham -
+          #    alguns tickers da carteira podiam ficar de fora dependendo da posicao na lista)
           curl -s -X POST \
             "https://mcp-cockpit.dados.collieassociados.com/mcp" \
             -H "Authorization: Bearer $COCKPIT_TOKEN" \
             -H "Content-Type: application/json" \
             -H "Accept: application/json, text/event-stream" \
             -H "mcp-session-id: $SESSION" \
-            -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"cockpit_query_table","arguments":{"page":1,"pageSize":50,"resolveCalculations":true}}}' \
-            -o /tmp/hs_raw.txt --max-time 20
+            -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"cockpit_query_table","arguments":{"resolveCalculations":true,"fetchAllPages":true}}}' \
+            -o /tmp/hs_raw.txt --max-time 40
 
-          # 3. Extrair JSON e filtrar clientes Colli
+          # 3. Extrair JSON e filtrar clientes Colli. Ticker real da Fares Aquino no Cockpit e FARE1 (nao FARS).
+          #    "SOL" (Solucao Locadora) e "NEWS" (New Safes) sao renomeados pro apelido interno usado no resto
+          #    do painel (SOLC/NWSF), igual ao CK_TICKER_MAP do dashboard/server.js.
           grep '^data:' /tmp/hs_raw.txt | sed 's/^data: //' | \
             jq '.result.content[0].text | fromjson |
               { updatedAt: (now | todate),
-                data: [.data[] | select(.ticker | test("FCE|ACCE|MSZB|TAWV|TECN1|FARS|SOTB")) |
-                  { ticker, name, algorithm_flag, algorithm_health_avg_score, lt,
+                data: [.data[] | select(.ticker | test("^(ACCE|NATU|FARE1|MSZB|SOTB|TAWV|SOL|NEWS)$")) |
+                  { ticker: ({SOL:"SOLC", NEWS:"NWSF"}[.ticker] // .ticker),
+                    name, algorithm_flag, algorithm_health_avg_score, lt,
                     projectStartDate, churnDate, atendimentoDiarioAtivo }]
               }' > painel/data/health_scores.json 2>/dev/null \
             || echo '{"updatedAt":"","data":[],"error":"parse failed"}' > painel/data/health_scores.json
@@ -61,24 +65,18 @@ jobs:
       # ── GROWTHPACE (Google Sheets) ────────────────────────────────────────
       - name: GrowthPace — Google Sheets
         run: |
+          # NATU/SOLC/NWSF ficam de fora por enquanto: nao localizei ainda a aba/gid certa da tabela mensal
+          # nessas planilhas (o parser do dashboard/server.js descobre isso dinamicamente testando todas as
+          # abas; aqui e feito por gid fixo). Prefiro deixar de fora a inventar um gid errado.
           declare -A PACE_SHEETS=(
-            ["FCE"]="1naAmFNzrycM5cddVQDhGduDQx0nZFe0GlgtajOA2fUI:617612824"
             ["ACCE"]="1DJYnq3qXC9Td8Fip1LJvFy4qn8XBIIkcGhT8QC2m_M8:2105044438"
             ["MSZB"]="1Trpq5YTb4e_spNIG94bE12z1u6ZWPkPEr_wDPlcz29Y:368538734"
             ["TAWV"]="1qGWXaxS2yLu3jX9hTIxX87jwnT1ONi59kFNSSXVIaDY:2105044438"
-            ["TECN1"]="1e2PKWFMxEHoc-9K_0_omXVLiLIT8bASte0J_s6KCiMg:2105044438"
-            ["FARS"]="1y_veFQsSb7q8Nzz_Q0ZD68D29vWM20c578JZDVZLkpU:105734657"
+            ["FARE1"]="1y_veFQsSb7q8Nzz_Q0ZD68D29vWM20c578JZDVZLkpU:105734657"
             ["SOTB"]="1GDiRcey6G4kmx0ybSoIhVJSMRx-LGM5Ae7LepLNMoB0:617612824"
           )
           declare -A COM_SHEETS=(
-            ["FCE_CONS"]="1duCquoJj-NEf2sGF_25oD6lHWZegCOoiGgoJ6F1N5TU:589062535"
-            ["FCE_FGTS"]="1duCquoJj-NEf2sGF_25oD6lHWZegCOoiGgoJ6F1N5TU:1121972824"
-            ["FCE_CARTA"]="1duCquoJj-NEf2sGF_25oD6lHWZegCOoiGgoJ6F1N5TU:0"
-            ["FCE_CGI"]="1duCquoJj-NEf2sGF_25oD6lHWZegCOoiGgoJ6F1N5TU:1071369815"
-            ["FCE_LUZ"]="1duCquoJj-NEf2sGF_25oD6lHWZegCOoiGgoJ6F1N5TU:804001817"
-            ["FCE_EXT"]="1duCquoJj-NEf2sGF_25oD6lHWZegCOoiGgoJ6F1N5TU:1243633650"
-            ["TECN1"]="1Q4cgA_XG2Q6TxPzIB5oKb0vHGUyaQa-bFsJwFc41hrQ:0"
-            ["FARS"]="1X-tCWiJeRVLuRiCXjuGlpXBVbhcQRROQJRn_QefJeIo:285026569"
+            ["FARE1"]="1X-tCWiJeRVLuRiCXjuGlpXBVbhcQRROQJRn_QefJeIo:285026569"
           )
 
           for TICKER in "${!PACE_SHEETS[@]}"; do
