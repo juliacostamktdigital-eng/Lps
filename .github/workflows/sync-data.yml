@@ -36,15 +36,16 @@ jobs:
           SESSION=$(grep -i 'mcp-session-id:' /tmp/hs_headers.txt | awk '{print $2}' | tr -d '\r\n')
           echo "Cockpit session: $SESSION"
 
-          # 2. Query all projects with health score (fetchAllPages: sem isso, so os primeiros 50 projetos vinham -
-          #    alguns tickers da carteira podiam ficar de fora dependendo da posicao na lista)
+          # 2. Query all projects with health score. NOTA: "fetchAllPages":true da 403 Forbidden com o
+          #    token deste repo (Strapi rejeita — token com escopo mais restrito que o do dashboard local).
+          #    Usa pageSize maior (200, cobre toda a carteira ~199 projetos) sem fetchAllPages.
           curl -s -X POST \
             "https://mcp-cockpit.dados.collieassociados.com/mcp" \
             -H "Authorization: Bearer $COCKPIT_TOKEN" \
             -H "Content-Type: application/json" \
             -H "Accept: application/json, text/event-stream" \
             -H "mcp-session-id: $SESSION" \
-            -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"cockpit_query_table","arguments":{"resolveCalculations":true,"fetchAllPages":true}}}' \
+            -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"cockpit_query_table","arguments":{"page":1,"pageSize":200,"resolveCalculations":true}}}' \
             -o /tmp/hs_raw.txt --max-time 60
 
           # 3. Extrair o corpo JSON — resposta pode vir como SSE ("data: {...}") ou como JSON puro,
