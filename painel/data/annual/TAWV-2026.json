@@ -2,7 +2,7 @@
   "ticker": "TAWV",
   "nome": "Tawa Veiculos",
   "tipo": "IS",
-  "updatedAt": "2026-07-07T13:48:56.182Z",
+  "updatedAt": "2026-07-07T15:56:01.111Z",
   "months": [
     {
       "month": "janeiro",
@@ -272,7 +272,7 @@
         "flag": "Care",
         "score": 25,
         "documentId": "haglpi4rxc474azwltm9j77b",
-        "lt": 0,
+        "lt": 2,
         "nome": "TAWÁ VEÍCULOS",
         "fee": 6064.16,
         "dim": {
