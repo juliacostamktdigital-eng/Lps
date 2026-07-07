@@ -45,20 +45,25 @@ jobs:
             -H "Accept: application/json, text/event-stream" \
             -H "mcp-session-id: $SESSION" \
             -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"cockpit_query_table","arguments":{"resolveCalculations":true,"fetchAllPages":true}}}' \
-            -o /tmp/hs_raw.txt --max-time 40
+            -o /tmp/hs_raw.txt --max-time 60
 
-          # 3. Extrair JSON e filtrar clientes Colli. Ticker real da Fares Aquino no Cockpit e FARE1 (nao FARS).
+          # 3. Extrair o corpo JSON — resposta pode vir como SSE ("data: {...}") ou como JSON puro,
+          #    dependendo do gateway. Trata os dois formatos.
+          BODY=$(grep '^data:' /tmp/hs_raw.txt | sed 's/^data: //')
+          if [ -z "$BODY" ]; then BODY=$(cat /tmp/hs_raw.txt); fi
+
+          # 4. Filtrar clientes Colli. Ticker real da Fares Aquino no Cockpit e FARE1 (nao FARS).
           #    "SOL" (Solucao Locadora) e "NEWS" (New Safes) sao renomeados pro apelido interno usado no resto
           #    do painel (SOLC/NWSF), igual ao CK_TICKER_MAP do dashboard/server.js.
-          grep '^data:' /tmp/hs_raw.txt | sed 's/^data: //' | \
-            jq '.result.content[0].text | fromjson |
+          echo "$BODY" | jq '.result.content[0].text | fromjson |
               { updatedAt: (now | todate),
                 data: [.data[] | select(.ticker | test("^(ACCE|NATU|FARE1|MSZB|SOTB|TAWV|SOL|NEWS)$")) |
                   { ticker: ({SOL:"SOLC", NEWS:"NWSF"}[.ticker] // .ticker),
                     name, algorithm_flag, algorithm_health_avg_score, lt,
                     projectStartDate, churnDate, atendimentoDiarioAtivo }]
-              }' > painel/data/health_scores.json 2>/dev/null \
-            || echo '{"updatedAt":"","data":[],"error":"parse failed"}' > painel/data/health_scores.json
+              }' > painel/data/health_scores.json 2>/tmp/hs_jq_err.txt \
+            || { echo "jq falhou — primeiros 300 chars da resposta:"; echo "$BODY" | head -c 300; echo; cat /tmp/hs_jq_err.txt; \
+                 echo '{"updatedAt":"","data":[],"error":"parse failed"}' > painel/data/health_scores.json; }
 
           echo "Health scores salvos: $(jq '.data | length' painel/data/health_scores.json) clientes"
 
