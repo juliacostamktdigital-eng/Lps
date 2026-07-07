@@ -1,0 +1,176 @@
+{
+  "ticker": "SOLC",
+  "nome": "Solucoes e Locacoes",
+  "tipo": "IS",
+  "updatedAt": "2026-07-07T13:50:03.115Z",
+  "months": [
+    {
+      "month": "janeiro",
+      "monthIdx": 0,
+      "year": 2026,
+      "status": "closed",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": null
+    },
+    {
+      "month": "fevereiro",
+      "monthIdx": 1,
+      "year": 2026,
+      "status": "closed",
+      "growthpack": null,
+      "midia": {
+        "meta": {
+          "cost": 817.0299999999999,
+          "clicks": 353,
+          "impressions": 57450,
+          "leads": 0,
+          "purchases": 0,
+          "purchaseValue": 0,
+          "cpl": null,
+          "roas": null
+        },
+        "google": null
+      },
+      "entregas": null,
+      "cockpit": null
+    },
+    {
+      "month": "março",
+      "monthIdx": 2,
+      "year": 2026,
+      "status": "closed",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": null
+    },
+    {
+      "month": "abril",
+      "monthIdx": 3,
+      "year": 2026,
+      "status": "closed",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": null
+    },
+    {
+      "month": "maio",
+      "monthIdx": 4,
+      "year": 2026,
+      "status": "closed",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": null
+    },
+    {
+      "month": "junho",
+      "monthIdx": 5,
+      "year": 2026,
+      "status": "closed",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": null
+    },
+    {
+      "month": "julho",
+      "monthIdx": 6,
+      "year": 2026,
+      "status": "current",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": {
+        "flag": "N/D",
+        "score": 0,
+        "documentId": "ghg3loowgt1qf3egp1qfer0h",
+        "lt": 0,
+        "nome": "Solucao Locadora",
+        "fee": 5149.57,
+        "dim": {
+          "resultados": 0,
+          "opsTrafego": null,
+          "prazoEntregas": null,
+          "entregas": null,
+          "relacionamento": null
+        },
+        "ckPace": 0,
+        "ckBudgetPlan": 0,
+        "ckBudgetReal": 0,
+        "ckLeadsMeta": 0,
+        "ckMqlMeta": 0,
+        "ckSqlMeta": 0,
+        "ckVendasMeta": 0,
+        "ckLeads": 0,
+        "ckMql": 0,
+        "ckSql": 0,
+        "ckVendas": 0,
+        "ckLeadsPacing": 0,
+        "ckMqlPacing": 0,
+        "ckSqlPacing": 0,
+        "ckVendasPacing": 0,
+        "ckRevenuePacing": 0,
+        "ckRevenueMeta": 0,
+        "ckRevenueReal": 0,
+        "goalReached": 1,
+        "ckSynthesis": "",
+        "ckWhatsapp": "",
+        "ckActionPlan": ""
+      }
+    },
+    {
+      "month": "agosto",
+      "monthIdx": 7,
+      "year": 2026,
+      "status": "planned",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": null
+    },
+    {
+      "month": "setembro",
+      "monthIdx": 8,
+      "year": 2026,
+      "status": "planned",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": null
+    },
+    {
+      "month": "outubro",
+      "monthIdx": 9,
+      "year": 2026,
+      "status": "planned",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": null
+    },
+    {
+      "month": "novembro",
+      "monthIdx": 10,
+      "year": 2026,
+      "status": "planned",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": null
+    },
+    {
+      "month": "dezembro",
+      "monthIdx": 11,
+      "year": 2026,
+      "status": "planned",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": null
+    }
+  ]
+}

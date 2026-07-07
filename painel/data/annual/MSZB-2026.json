@@ -1,0 +1,164 @@
+{
+  "ticker": "MSZB",
+  "nome": "Massimo Zanetti",
+  "tipo": "EC",
+  "updatedAt": "2026-07-07T13:37:44.089Z",
+  "months": [
+    {
+      "month": "janeiro",
+      "monthIdx": 0,
+      "year": 2026,
+      "status": "closed",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": null
+    },
+    {
+      "month": "fevereiro",
+      "monthIdx": 1,
+      "year": 2026,
+      "status": "closed",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": null
+    },
+    {
+      "month": "março",
+      "monthIdx": 2,
+      "year": 2026,
+      "status": "closed",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": null
+    },
+    {
+      "month": "abril",
+      "monthIdx": 3,
+      "year": 2026,
+      "status": "closed",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": null
+    },
+    {
+      "month": "maio",
+      "monthIdx": 4,
+      "year": 2026,
+      "status": "closed",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": null
+    },
+    {
+      "month": "junho",
+      "monthIdx": 5,
+      "year": 2026,
+      "status": "closed",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": null
+    },
+    {
+      "month": "julho",
+      "monthIdx": 6,
+      "year": 2026,
+      "status": "current",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": {
+        "flag": "Safe",
+        "score": 30,
+        "documentId": "umc8om8dne121vd6qbeoct6n",
+        "lt": 2,
+        "nome": "Massimo Zanetti Beverage Brasil Ltda",
+        "fee": 6750.2,
+        "dim": {
+          "resultados": 10,
+          "opsTrafego": "true",
+          "prazoEntregas": "true",
+          "entregas": "true",
+          "relacionamento": "true"
+        },
+        "ckPace": 0.07334,
+        "ckBudgetPlan": 500,
+        "ckBudgetReal": 36.67,
+        "ckLeadsMeta": 0,
+        "ckMqlMeta": 0,
+        "ckSqlMeta": 0,
+        "ckVendasMeta": 38,
+        "ckLeads": 0,
+        "ckMql": 0,
+        "ckSql": 0,
+        "ckVendas": 2,
+        "ckLeadsPacing": 0,
+        "ckMqlPacing": 0,
+        "ckSqlPacing": 0,
+        "ckVendasPacing": 0.05263157894736842,
+        "ckRevenuePacing": 0.04661754385964913,
+        "ckRevenueMeta": 5700,
+        "ckRevenueReal": 265.72,
+        "goalReached": 1,
+        "ckSynthesis": "",
+        "ckWhatsapp": "",
+        "ckActionPlan": ""
+      }
+    },
+    {
+      "month": "agosto",
+      "monthIdx": 7,
+      "year": 2026,
+      "status": "planned",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": null
+    },
+    {
+      "month": "setembro",
+      "monthIdx": 8,
+      "year": 2026,
+      "status": "planned",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": null
+    },
+    {
+      "month": "outubro",
+      "monthIdx": 9,
+      "year": 2026,
+      "status": "planned",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": null
+    },
+    {
+      "month": "novembro",
+      "monthIdx": 10,
+      "year": 2026,
+      "status": "planned",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": null
+    },
+    {
+      "month": "dezembro",
+      "monthIdx": 11,
+      "year": 2026,
+      "status": "planned",
+      "growthpack": null,
+      "midia": null,
+      "entregas": null,
+      "cockpit": null
+    }
+  ]
+}
