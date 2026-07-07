@@ -1,11 +1,17 @@
 {
-  "updatedAt": "2026-07-07T15:28:28Z",
+  "updatedAt": "2026-07-07T15:32:36Z",
   "data": [
     {
       "ticker": "SOTB",
       "name": "SOTOBI MAQUINAS E ACESSORIOS PARA FABRICAS DE BLOCOS LTDA",
-      "algorithm_flag": null,
-      "algorithm_health_avg_score": null,
+      "algorithm_flag": {
+        "value": "Care",
+        "createdAt": "2026-07-03T17:53:37.499Z"
+      },
+      "algorithm_health_avg_score": {
+        "value": "21.6",
+        "createdAt": "2026-07-03T17:53:37.987Z"
+      },
       "lt": 32,
       "projectStartDate": "2023-10-30T00:00:00.000Z",
       "churnDate": null,
@@ -24,18 +30,46 @@
     {
       "ticker": "NWSF",
       "name": "New Safes",
-      "algorithm_flag": null,
-      "algorithm_health_avg_score": null,
+      "algorithm_flag": {
+        "value": "Critical",
+        "createdAt": "2026-07-03T17:53:41.049Z"
+      },
+      "algorithm_health_avg_score": {
+        "value": "0",
+        "createdAt": "2026-07-03T17:53:41.294Z"
+      },
       "lt": 0,
       "projectStartDate": "2026-07-01T03:00:00.000Z",
       "churnDate": null,
       "atendimentoDiarioAtivo": false
     },
     {
+      "ticker": "NATU",
+      "name": "Natuclean",
+      "algorithm_flag": {
+        "value": "Care",
+        "createdAt": "2026-07-03T17:53:38.714Z"
+      },
+      "algorithm_health_avg_score": {
+        "value": "25",
+        "createdAt": "2026-07-03T17:53:39.060Z"
+      },
+      "lt": 1,
+      "projectStartDate": "2026-05-30T03:00:00.000Z",
+      "churnDate": null,
+      "atendimentoDiarioAtivo": false
+    },
+    {
       "ticker": "FARE1",
       "name": "FARES AQUINO SOCIEDADE INDIVIDUAL DE ADVOCACIA",
-      "algorithm_flag": null,
-      "algorithm_health_avg_score": null,
+      "algorithm_flag": {
+        "value": "Safe",
+        "createdAt": "2026-07-03T17:53:37.494Z"
+      },
+      "algorithm_health_avg_score": {
+        "value": "21.6",
+        "createdAt": "2026-07-03T17:53:37.937Z"
+      },
       "lt": 3,
       "projectStartDate": "2026-04-03T12:00:00.000Z",
       "churnDate": null,
@@ -44,8 +78,14 @@
     {
       "ticker": "ACCE",
       "name": "ACCENTURE PARTICIPACOES LTDA(ACCENTURE PARTICIPACOES LTDA - 54.271.277/0001-88)",
-      "algorithm_flag": null,
-      "algorithm_health_avg_score": null,
+      "algorithm_flag": {
+        "value": "Care",
+        "createdAt": "2026-07-03T17:53:40.495Z"
+      },
+      "algorithm_health_avg_score": {
+        "value": "23.1",
+        "createdAt": "2026-07-03T17:53:40.781Z"
+      },
       "lt": 9,
       "projectStartDate": "2025-09-26T03:00:00.000Z",
       "churnDate": null,
@@ -54,8 +94,14 @@
     {
       "ticker": "TAWV",
       "name": "TAWÁ VEÍCULOS",
-      "algorithm_flag": null,
-      "algorithm_health_avg_score": null,
+      "algorithm_flag": {
+        "value": "Care",
+        "createdAt": "2026-07-03T17:53:38.123Z"
+      },
+      "algorithm_health_avg_score": {
+        "value": "15.8",
+        "createdAt": "2026-07-03T17:53:38.460Z"
+      },
       "lt": 2,
       "projectStartDate": "2026-04-27T03:00:00.000Z",
       "churnDate": null,
@@ -64,8 +110,14 @@
     {
       "ticker": "MSZB",
       "name": "Massimo Zanetti Beverage Brasil Ltda",
-      "algorithm_flag": null,
-      "algorithm_health_avg_score": null,
+      "algorithm_flag": {
+        "value": "Safe",
+        "createdAt": "2026-07-03T17:53:39.329Z"
+      },
+      "algorithm_health_avg_score": {
+        "value": "22.7",
+        "createdAt": "2026-07-03T17:53:39.613Z"
+      },
       "lt": 2,
       "projectStartDate": "2026-04-15T03:00:00.000Z",
       "churnDate": null,
