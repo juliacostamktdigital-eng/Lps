@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sprint Growth — V4 Colli&Co</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red:    #E50914;
+  --red2:   #B8000E;
+  --green:  #16A34A;
+  --yellow: #D97706;
+  --orange: #EA580C;
+  --blue:   #2563EB;
+  --bg:     #FFFFFF;
+  --white:  #FFFFFF;
+  --card:   #FFFFFF;
+  --border: #E4E4E7;
+  --border2:#D4D4D8;
+  --text:   #18181B;
+  --muted:  #71717A;
+  --dim:    #A1A1AA;
+  --th-bg:  #E50914;
+  --th2-bg: #111111;
+  --th3-bg: #3F3F46;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Space Grotesk',sans-serif; background:var(--bg); color:var(--text); font-size:13px; }
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:#F8F8F8; }
+::-webkit-scrollbar-thumb { background:#D4D4D8; border-radius:3px; }
+
+/* TOPBAR */
+.topbar { height:3px; background:var(--red); position:fixed; top:0; left:0; right:0; z-index:300; }
+
+/* HEADER */
+.header {
+  background:rgba(255,255,255,0.97); border-bottom:1px solid var(--border);
+  backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:space-between;
+  padding:0 24px; height:52px; position:fixed; top:3px; left:0; right:0; z-index:200;
+  box-shadow:0 1px 3px rgba(0,0,0,.06);
+}
+.brand { display:flex; align-items:center; gap:10px; }
+.logo { background:var(--red); color:#fff; font-weight:800; font-size:12px; padding:5px 10px; border-radius:3px; letter-spacing:1px; }
+.brand-name { font-size:11px; font-weight:600; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; }
+.nav { display:flex; gap:2px; }
+.tab-btn {
+  background:none; border:none; padding:7px 16px; font-family:inherit; font-size:11px;
+  font-weight:700; color:var(--muted); border-radius:4px; cursor:pointer;
+  letter-spacing:.8px; text-transform:uppercase; transition:all .15s;
+}
+.tab-btn:hover { background:#F4F4F5; color:var(--text); }
+.tab-btn.active { background:var(--red); color:#fff; }
+.header-right { display:flex; align-items:center; gap:12px; }
+.updated-tag { font-size:10px; color:var(--muted); }
+.refresh-btn {
+  background:var(--white); border:1px solid var(--border2); color:var(--muted);
+  padding:5px 14px; border-radius:4px; cursor:pointer; font-family:inherit;
+  font-size:11px; font-weight:700; letter-spacing:.5px; text-transform:uppercase;
+  transition:all .15s; box-shadow:0 1px 2px rgba(0,0,0,.05);
+}
+.refresh-btn:hover { border-color:var(--red); color:var(--red); }
+.refresh-btn.loading { opacity:.5; cursor:not-allowed; }
+
+/* HERO */
+.hero {
+  margin-top:55px; background:var(--white);
+  border-bottom:1px solid var(--border);
+  padding:20px 24px 16px;
+  box-shadow:0 1px 3px rgba(0,0,0,.04);
+}
+.hero-top { display:flex; align-items:flex-start; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-bottom:14px; }
+.hero-title { font-size:22px; font-weight:800; letter-spacing:-0.5px; line-height:1; }
+.hero-title span { color:var(--red); }
+.hero-period { font-size:11px; color:var(--muted); margin-top:4px; }
+.hero-kpis { display:flex; gap:0; border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+.hero-kpi { padding:10px 20px; text-align:center; border-right:1px solid var(--border); min-width:90px; }
+.hero-kpi:last-child { border-right:none; }
+.hero-kpi-val { font-size:24px; font-weight:800; line-height:1; color:var(--red); }
+.hero-kpi-label { font-size:9px; font-weight:700; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-top:3px; }
+.hero-kpi-sub { font-size:10px; color:var(--dim); margin-top:2px; }
+.hero-flags { display:flex; gap:8px; flex-wrap:wrap; }
+.flag-pill { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:.3px; border:1px solid; }
+.flag-danger   { background:#FEF2F2; color:#DC2626; border-color:#FECACA; }
+.flag-critical { background:#FFF7ED; color:#EA580C; border-color:#FED7AA; }
+.flag-care     { background:#FFFBEB; color:#D97706; border-color:#FDE68A; }
+.flag-safe     { background:#F0FDF4; color:#16A34A; border-color:#BBF7D0; }
+.flag-nd       { background:#F4F4F5; color:var(--muted); border-color:var(--border); }
+
+/* CONN BAR */
+.conn-bar {
+  background:var(--white); border-bottom:1px solid var(--border);
+  display:flex; gap:10px; padding:5px 24px; flex-wrap:wrap;
+}
+.conn-pill { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:20px; font-size:10px; font-weight:600; border:1px solid; }
+.conn-ok   { background:#F0FDF4; color:var(--green); border-color:#BBF7D0; }
+.conn-warn { background:#FFFBEB; color:var(--yellow); border-color:#FDE68A; }
+.conn-off  { background:#FEF2F2; color:#DC2626; border-color:#FECACA; }
+.conn-dot  { width:5px; height:5px; border-radius:50%; background:currentColor; }
+.err-banner { display:none; background:#FFFBEB; border-bottom:1px solid #FDE68A; padding:6px 24px; font-size:11px; color:var(--yellow); }
+.err-banner.visible { display:block; }
+
+/* ANUAL */
+.anual-client-nav, .anual-month-nav { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+.pill-btn {
+  background:var(--white); border:1px solid var(--border2); color:var(--muted);
+  padding:5px 12px; border-radius:20px; cursor:pointer; font-family:inherit;
+  font-size:11px; font-weight:700; letter-spacing:.3px; transition:all .15s;
+}
+.pill-btn:hover { border-color:var(--red); color:var(--red); }
+.pill-btn.active { background:var(--red); border-color:var(--red); color:#fff; }
+.pill-btn.month-closed { opacity:.75; }
+.pill-btn.month-planned { border-style:dashed; }
+.pill-btn.month-current.active { box-shadow:0 0 0 2px #FEE2E2; }
+.anual-card { background:var(--white); border:1px solid var(--border); border-radius:6px; padding:16px 20px; margin-bottom:16px; }
+.anual-card h3 { font-size:13px; font-weight:700; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.anual-status-tag { font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:2px 8px; border-radius:10px; }
+.anual-status-closed  { background:#F4F4F5; color:var(--muted); }
+.anual-status-current { background:#FEF2F2; color:var(--red); }
+.anual-status-planned { background:#EFF6FF; color:var(--blue); }
+.anual-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; }
+.anual-kpi { border:1px solid var(--border); border-radius:5px; padding:8px 12px; }
+.anual-kpi-lbl { font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); }
+.anual-kpi-real { font-size:16px; font-weight:800; margin-top:2px; }
+.anual-kpi-proj { font-size:10px; color:var(--dim); margin-top:1px; }
+.anual-slot { color:var(--dim); font-size:11px; font-style:italic; padding:6px 0; }
+
+/* PRIORIDADES */
+.prio-wrap { max-width:640px; }
+.prio-add-row { display:flex; gap:8px; margin-bottom:14px; }
+.prio-input {
+  flex:1; border:1px solid var(--border2); border-radius:5px; padding:8px 12px;
+  font-family:inherit; font-size:13px; color:var(--text);
+}
+.prio-list { display:flex; flex-direction:column; gap:6px; }
+.prio-item {
+  display:flex; align-items:center; gap:10px; background:var(--white);
+  border:1px solid var(--border); border-radius:5px; padding:9px 12px; cursor:grab;
+}
+.prio-item.dragging { opacity:.4; }
+.prio-item.drag-over { border-top:2px solid var(--red); }
+.prio-item .prio-handle { color:var(--dim); font-size:14px; }
+.prio-item input[type=checkbox] { width:16px; height:16px; accent-color:var(--red); cursor:pointer; }
+.prio-item .prio-text { flex:1; font-size:13px; }
+.prio-item.done .prio-text { text-decoration:line-through; color:var(--dim); }
+.prio-item .prio-del { color:var(--dim); cursor:pointer; font-size:14px; padding:2px 6px; }
+.prio-item .prio-del:hover { color:#DC2626; }
+.prio-empty { color:var(--dim); font-size:12px; padding:20px 0; text-align:center; }
+
+/* MAIN */
+.main { padding:20px 24px; }
+.tab-section { display:none; }
+.tab-section.active { display:block; }
+
+/* SECTION LABEL */
+.sec-label {
+  font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+  color:var(--red); margin-bottom:10px; display:flex; align-items:center; gap:8px;
+}
+.sec-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* SPRINT SUMMARY */
+.sprint-card {
+  background:var(--white); border:1px solid var(--border); border-radius:6px;
+  padding:14px 20px; margin-bottom:20px; display:flex; align-items:center;
+  justify-content:space-between; gap:20px; flex-wrap:wrap;
+  box-shadow:0 1px 3px rgba(0,0,0,.04);
+}
+.sprint-left h2 { font-size:18px; font-weight:800; }
+.sprint-left h2 b { color:var(--red); }
+.sprint-period { font-size:11px; color:var(--muted); margin-top:2px; }
+.sprint-kpis-row { display:flex; gap:24px; flex-wrap:wrap; }
+.sprint-kpi { text-align:right; }
+.sprint-kpi-val { font-size:18px; font-weight:800; color:var(--red); line-height:1; }
+.sprint-kpi-label { font-size:9px; font-weight:700; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-top:2px; }
+
+/* PORTFOLIO TABLE */
+.table-wrap { overflow-x:auto; margin-bottom:24px; border-radius:6px; border:1px solid var(--border); box-shadow:0 1px 3px rgba(0,0,0,.04); }
+table.t { width:100%; border-collapse:collapse; background:var(--white); }
+table.t th { background:#F4F4F5; color:var(--muted); font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:9px 12px; text-align:left; border-bottom:1px solid var(--border); white-space:nowrap; }
+table.t td { padding:9px 12px; border-bottom:1px solid var(--border); font-size:12px; vertical-align:middle; }
+table.t tbody tr:last-child td { border-bottom:none; }
+table.t tbody tr { cursor:pointer; transition:background .1s; }
+table.t tbody tr:hover td { background:#F9F9F9; }
+
+/* BADGES */
+.badge { display:inline-flex; align-items:center; gap:3px; padding:2px 7px; border-radius:20px; font-size:9px; font-weight:700; letter-spacing:.3px; border:1px solid; white-space:nowrap; }
+.hs-safe     { background:#F0FDF4; color:var(--green); border-color:#BBF7D0; }
+.hs-care     { background:#FFFBEB; color:var(--yellow); border-color:#FDE68A; }
+.hs-critical { background:#FFF7ED; color:var(--orange); border-color:#FED7AA; }
+.hs-danger   { background:#FEF2F2; color:#DC2626; border-color:#FECACA; }
+.hs-nd       { background:#F4F4F5; color:var(--muted); border-color:var(--border); }
+.ticker { background:var(--red); color:#fff; font-size:10px; font-weight:800; padding:2px 7px; border-radius:3px; letter-spacing:1px; }
+.risco-badge { display:inline-flex; align-items:center; padding:2px 7px; border-radius:3px; font-size:9px; font-weight:800; letter-spacing:.5px; border:1px solid; }
+
+/* CLIENT CARD */
+.client-card {
+  background:var(--white); border:1px solid var(--border); border-radius:6px;
+  margin-bottom:12px; overflow:hidden;
+  box-shadow:0 1px 4px rgba(0,0,0,.05);
+  border-left-width:4px;
+}
+.client-card.risco-critico-total { border-left-color:#B8000E; }
+.client-card.risco-critico       { border-left-color:#E50914; }
+.client-card.risco-alto          { border-left-color:#EA580C; }
+.client-card.risco-medio         { border-left-color:#D97706; }
+.client-card.risco-ok            { border-left-color:#16A34A; }
+
+.card-header { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; cursor:pointer; transition:background .1s; }
+.card-header:hover { background:#FAFAFA; }
+.card-hl { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.client-name { font-size:15px; font-weight:700; }
+.card-right-info { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+.card-pace-big { font-size:24px; font-weight:800; line-height:1; }
+.pace-badge { display:inline-block; padding:2px 7px; border-radius:3px; font-size:9px; font-weight:700; border:1px solid; }
+.p-atrasado { background:#FEF2F2; color:#DC2626; border-color:#FECACA; }
+.p-atraso-l { background:#FFF7ED; color:var(--orange); border-color:#FED7AA; }
+.p-nopace   { background:#F0FDF4; color:var(--green); border-color:#BBF7D0; }
+.p-acelerado{ background:#FFFBEB; color:var(--yellow); border-color:#FDE68A; }
+.p-aguard   { background:#F4F4F5; color:var(--muted); border-color:var(--border); }
+.chevron { font-size:14px; color:var(--muted); transition:transform .2s; margin-left:4px; }
+.chevron.open { transform:rotate(180deg); }
+
+.card-body { display:none; border-top:1px solid var(--border); }
+.card-body.open { display:block; }
+
+/* GP METRICS TABLE */
+.gp-table-wrap { padding:16px; }
+.gp-table { width:100%; border-collapse:collapse; border:1px solid var(--border); }
+.gp-table-title { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+.gp-tr-head  td { background:var(--th-bg);  color:#fff; font-size:10px; font-weight:700; padding:7px 12px; text-align:center; }
+.gp-tr-head2 td { background:var(--th2-bg); color:#fff; font-size:10px; font-weight:700; padding:6px 12px; }
+.gp-tr-head3 td { background:var(--th3-bg); color:#fff; font-size:10px; font-weight:700; padding:5px 12px; }
+.gp-tr-sub   td { background:#F4F4F5; color:var(--muted); font-size:10px; font-weight:600; padding:5px 12px; }
+.gp-table td   { padding:6px 12px; border-bottom:1px solid var(--border); font-size:12px; }
+.gp-table tr:last-child td { border-bottom:none; }
+.gp-table .lbl { color:var(--muted); font-size:11px; }
+.gp-table .val { font-weight:700; text-align:right; }
+.gp-table .val-highlight { font-weight:800; color:var(--red); text-align:right; }
+.gp-table .val-green { font-weight:700; color:var(--green); text-align:right; }
+.gp-table .val-warn  { font-weight:700; color:var(--yellow); text-align:right; }
+.gp-table .val-bad   { font-weight:700; color:#DC2626; text-align:right; }
+
+/* PACE BAR */
+.pace-bar-wrap { padding:0 16px 14px; }
+.pace-bar-header { display:flex; justify-content:space-between; font-size:11px; margin-bottom:4px; color:var(--muted); }
+.pace-bar-header b { color:var(--text); font-weight:700; }
+.pace-track { height:8px; background:#E4E4E7; border-radius:20px; position:relative; overflow:visible; }
+.pace-fill  { height:100%; border-radius:20px; }
+.pace-marker { position:absolute; top:-5px; width:2px; height:18px; background:var(--yellow); border-radius:2px; }
+.pace-marker::after { content:attr(data-label); position:absolute; top:-16px; left:50%; transform:translateX(-50%); font-size:9px; color:var(--yellow); font-weight:700; white-space:nowrap; }
+
+/* CARD TABS */
+.card-tabs { display:flex; background:#F9F9F9; border-bottom:1px solid var(--border); overflow-x:auto; }
+.card-tab { padding:9px 16px; font-size:10px; font-weight:700; color:var(--muted); cursor:pointer; border-bottom:2px solid transparent; letter-spacing:.8px; text-transform:uppercase; transition:all .15s; white-space:nowrap; }
+.card-tab:hover { color:var(--text); }
+.card-tab.active { color:var(--red); border-bottom-color:var(--red); background:var(--white); }
+
+.card-panel { display:none; padding:18px; }
+.card-panel.active { display:block; }
+
+/* ANALISE (estilo PDF) */
+.analise-header { font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--red); margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--red); }
+.analise-body { font-size:13px; line-height:1.8; color:#3F3F46; margin-bottom:16px; }
+.analise-body p { margin-bottom:10px; }
+.analise-body b { color:var(--text); }
+.synthesis-box { background:#EFF6FF; border-left:3px solid var(--blue); border-radius:0 4px 4px 0; padding:10px 14px; font-size:12px; line-height:1.7; color:#1E40AF; margin-bottom:14px; }
+.synthesis-label { font-size:9px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--blue); margin-bottom:4px; }
+
+/* PLANO */
+.plano-header { font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--text); margin:14px 0 8px; padding-bottom:6px; border-bottom:2px solid var(--text); }
+.plano-item { margin-bottom:12px; }
+.plano-title { font-size:13px; font-weight:700; color:var(--text); margin-bottom:4px; }
+.plano-sub { font-size:12px; color:var(--muted); padding-left:0; line-height:1.7; }
+.plano-sub li { list-style:none; padding:1px 0; }
+.plano-sub li::before { content:'◦ '; color:var(--red); font-weight:700; }
+
+/* TASKS */
+.tasks-header { font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--text); margin:14px 0 8px; padding-bottom:6px; border-bottom:2px solid #D4D4D8; }
+.task-item { display:flex; align-items:flex-start; gap:8px; padding:5px 0; border-bottom:1px solid var(--border); font-size:12px; }
+.task-item:last-child { border-bottom:none; }
+.task-check { width:14px; height:14px; border:2px solid var(--border2); border-radius:2px; flex-shrink:0; margin-top:1px; }
+.task-text { flex:1; line-height:1.5; }
+.task-date { font-size:10px; font-weight:700; color:var(--muted); white-space:nowrap; }
+.task-who  { font-size:10px; color:var(--blue); white-space:nowrap; }
+.plano-manual-wrap { margin-top:14px; border-top:1px dashed var(--border2); padding-top:12px; }
+.plano-manual-label { font-size:9px; font-weight:700; color:var(--blue); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:6px; }
+.plano-manual-area { width:100%; min-height:80px; border:1px solid var(--border2); border-radius:5px; padding:10px 12px; font-family:'Space Grotesk',sans-serif; font-size:12px; line-height:1.7; resize:vertical; outline:none; background:var(--white); color:var(--text); transition:border-color .15s; }
+.plano-manual-area:focus { border-color:var(--blue); }
+
+/* SAUDE */
+.saude-kpis { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; margin-bottom:16px; }
+.metric-box { background:var(--white); border:1px solid var(--border); border-radius:5px; padding:12px; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+.metric-lbl { font-size:9px; font-weight:700; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; }
+.metric-val { font-size:20px; font-weight:800; }
+.metric-sub { font-size:10px; color:var(--muted); margin-top:2px; }
+.score-bar-wrap { display:flex; align-items:center; gap:6px; }
+.score-bar { width:60px; height:5px; background:#E4E4E7; border-radius:3px; overflow:hidden; }
+.score-fill { height:100%; border-radius:3px; }
+.dim-ok  { background:#F0FDF4; color:var(--green); border:1px solid #BBF7D0; padding:2px 7px; border-radius:3px; font-size:9px; font-weight:700; }
+.dim-bad { background:#FEF2F2; color:#DC2626; border:1px solid #FECACA; padding:2px 7px; border-radius:3px; font-size:9px; font-weight:700; }
+.dim-nd  { background:#F4F4F5; color:var(--muted); border:1px solid var(--border); padding:2px 7px; border-radius:3px; font-size:9px; font-weight:700; }
+
+/* ALERTAS */
+.alertas-strip { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:10px; margin-bottom:20px; }
+.alerta-card { background:var(--white); border:1px solid var(--border); border-left-width:3px; border-radius:5px; padding:12px 14px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+.alerta-top { display:flex; align-items:center; gap:7px; margin-bottom:6px; }
+.alerta-body { font-size:11px; color:var(--muted); line-height:1.6; }
+.alerta-action { margin-top:6px; font-size:11px; color:var(--text); background:#F9F9F9; border-radius:3px; padding:5px 9px; }
+.alerta-action::before { content:'→ '; color:var(--red); font-weight:700; }
+
+/* DESVIO */
+.desvio-pos { color:var(--yellow); font-weight:700; }
+.desvio-ok  { color:var(--green);  font-weight:700; }
+.desvio-neg { color:#DC2626;       font-weight:700; }
+
+/* MSG BOX */
+.msg-box { background:#FFFBEB; border-left:3px solid var(--yellow); border-radius:0 4px 4px 0; padding:8px 12px; font-size:11px; color:var(--yellow); margin-bottom:12px; }
+
+/* COMERCIAL */
+.camp-table { width:100%; border-collapse:collapse; }
+.camp-table th { background:#F4F4F5; color:var(--muted); font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:7px 10px; text-align:left; border-bottom:1px solid var(--border); }
+.camp-table td { padding:7px 10px; border-bottom:1px solid var(--border); font-size:11px; }
+.camp-table tr:last-child td { border-bottom:none; }
+.camp-conv { color:var(--green); font-weight:700; }
+.camp-warn { color:var(--yellow); font-weight:600; }
+.camp-bad  { color:#DC2626; }
+.leads-table { width:100%; border-collapse:collapse; margin-top:12px; }
+.leads-table th { background:#F4F4F5; color:var(--muted); font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:7px 10px; border-bottom:1px solid var(--border); }
+.leads-table td { padding:7px 10px; border-bottom:1px solid var(--border); font-size:11px; }
+.lead-urg td { border-left:2px solid #E50914 !important; }
+.dias-urg { background:#FEF2F2; color:#DC2626; padding:2px 6px; border-radius:3px; font-size:10px; font-weight:700; border:1px solid #FECACA; }
+.dias-ok  { background:#F4F4F5; color:var(--muted); padding:2px 6px; border-radius:3px; font-size:10px; font-weight:700; }
+
+/* LOADING */
+.loading { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px; gap:10px; }
+.spinner { width:24px; height:24px; border:2px solid var(--border2); border-top-color:var(--red); border-radius:50%; animation:spin .7s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.loading-txt { font-size:12px; color:var(--muted); }
+.divider { height:1px; background:var(--border); margin:12px 0; }
+
+/* GOLIVE BADGE */
+.golive-badge { background:#EFF6FF; color:var(--blue); border:1px solid #BFDBFE; padding:2px 8px; border-radius:3px; font-size:9px; font-weight:800; letter-spacing:.5px; }
+
+/* EKYTE TAB */
+.ekyte-layout { display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start; }
+@media(max-width:900px) { .ekyte-layout { grid-template-columns:1fr; } }
+
+.ekyte-panel { background:var(--white); border:1px solid var(--border); border-radius:6px; box-shadow:0 1px 3px rgba(0,0,0,.04); overflow:hidden; }
+.ekyte-panel-head { background:#F4F4F5; border-bottom:1px solid var(--border); padding:10px 16px; font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); display:flex; align-items:center; gap:8px; }
+.ekyte-panel-body { padding:16px; }
+
+.ek-select { width:100%; padding:7px 10px; border:1px solid var(--border2); border-radius:4px; font-family:inherit; font-size:12px; background:var(--white); color:var(--text); outline:none; margin-bottom:8px; }
+.ek-select:focus { border-color:var(--blue); }
+.ek-textarea { width:100%; min-height:200px; border:1px solid var(--border2); border-radius:4px; padding:10px 12px; font-family:inherit; font-size:12px; line-height:1.7; resize:vertical; outline:none; color:var(--text); background:var(--white); transition:border-color .15s; }
+.ek-textarea:focus { border-color:var(--blue); }
+.ek-hint { font-size:10px; color:var(--dim); margin-bottom:8px; line-height:1.5; }
+
+.ek-btn { display:inline-flex; align-items:center; gap:6px; padding:8px 18px; border-radius:4px; font-family:inherit; font-size:11px; font-weight:700; cursor:pointer; letter-spacing:.5px; border:none; transition:all .15s; }
+.ek-btn-primary { background:var(--blue); color:#fff; }
+.ek-btn-primary:hover { background:#1D4ED8; }
+.ek-btn-primary:disabled { opacity:.5; cursor:not-allowed; }
+.ek-btn-red { background:var(--red); color:#fff; }
+.ek-btn-red:hover { background:var(--red2); }
+.ek-btn-red:disabled { opacity:.5; cursor:not-allowed; }
+.ek-btn-ghost { background:none; border:1px solid var(--border2); color:var(--muted); }
+.ek-btn-ghost:hover { border-color:var(--text); color:var(--text); }
+
+.ek-task-table { width:100%; border-collapse:collapse; font-size:12px; }
+.ek-task-table th { background:#F4F4F5; color:var(--muted); font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:7px 10px; text-align:left; border-bottom:1px solid var(--border); }
+.ek-task-table td { padding:8px 10px; border-bottom:1px solid var(--border); vertical-align:middle; }
+.ek-task-table tr:last-child td { border-bottom:none; }
+.ek-task-table tr:hover td { background:#F9F9F9; }
+
+.ek-task-input { width:100%; border:1px solid transparent; border-radius:3px; padding:3px 6px; font-family:inherit; font-size:12px; background:transparent; color:var(--text); outline:none; }
+.ek-task-input:focus { border-color:var(--blue); background:var(--white); }
+.ek-date-input { width:90px; border:1px solid transparent; border-radius:3px; padding:3px 6px; font-family:inherit; font-size:11px; background:transparent; color:var(--muted); outline:none; }
+.ek-date-input:focus { border-color:var(--blue); background:var(--white); color:var(--text); }
+
+.ek-resp-pill { display:inline-block; padding:2px 8px; border-radius:3px; font-size:9px; font-weight:700; }
+.ek-resp-am { background:#EFF6FF; color:var(--blue); }
+.ek-resp-gt { background:#F0FDF4; color:var(--green); }
+.ek-resp-cs { background:#FFFBEB; color:var(--yellow); }
+
+.ek-status-ok  { color:var(--green); font-size:10px; font-weight:700; }
+.ek-status-err { color:#DC2626; font-size:10px; font-weight:700; }
+.ek-status-wait{ color:var(--muted); font-size:10px; }
+
+.ek-empty { padding:40px; text-align:center; color:var(--dim); font-size:12px; }
+.ek-empty-icon { font-size:28px; margin-bottom:8px; }
+
+.ek-actions-row { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px; flex-wrap:wrap; }
+.ek-counter { font-size:11px; color:var(--muted); }
+.ek-counter b { color:var(--text); }
+</style>
+
+<script>
+/* Snapshot gerado em 07/07/2026, 13:43:14 */
+window.STATIC_MODE         = true;
+window.STATIC_GENERATED_AT = '07/07/2026, 13:43:14';
+window.STATIC_DATA = {"semana":28,"periodo":"06/07 a 12/07","paceEsperado":"22.6","diaAtual":7,"diasNoMes":31,"updatedAt":"07/07/2026, 13:43:14","cacheInfo":"GP: 07/07, 11:32","errors":[],"conexoes":{"growthpack":"ok — 2h atrás","cockpit":"ok — 07/07/2026, 13:43:14 · 1 em risco"},"clientes":[{"ticker":"NATU","nome":"Natuclean","tipo":"IS","goLive":false,"hs":{"flag":"Care","score":25,"documentId":"fd5z59x4yy7shuczs21ydhl1","lt":1,"nome":"Natuclean","fee":8364.36,"dim":{"resultados":10,"opsTrafego":"true","prazoEntregas":"true","entregas":"false","relacionamento":"true"},"ckPace":85.93526210254942,"ckBudgetPlan":34.91,"ckBudgetReal":3000,"ckLeadsMeta":195,"ckMqlMeta":68,"ckSqlMeta":24,"ckVendasMeta":10,"ckLeads":6,"ckMql":6,"ckSql":0,"ckVendas":0,"ckLeadsPacing":0.03076923076923077,"ckMqlPacing":0.08823529411764706,"ckSqlPacing":0,"ckVendasPacing":0,"ckRevenuePacing":0,"ckRevenueMeta":600000,"ckRevenueReal":0,"goalReached":1,"ckSynthesis":"","ckWhatsapp":"","ckActionPlan":""},"com":null,"gp":{"budget":34.91,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"rawBudget":"R$ 35","rawInvest":"—","rawCPL":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","mensagem":"Planilha não pública → Compartilhar → \"Qualquer pessoa com o link\" → Leitor"},"paceReal":"8593.5","desvio":"8570.9","paceStatus":"ACELERADO","risco":"ALTO","riscoColor":"#FF6E00","riscoScore":2,"mensagem":"Planilha não pública → Compartilhar → \"Qualquer pessoa com o link\" → Leitor"},{"ticker":"NWSF","nome":"New Safes","tipo":"IS","goLive":true,"hs":{"flag":"Critical","score":0,"documentId":"j1mkltry8wh6ogwr4oukerya","lt":0,"nome":"New Safes","fee":6328.7,"dim":{"resultados":0,"opsTrafego":null,"prazoEntregas":null,"entregas":null,"relacionamento":null},"ckPace":0,"ckBudgetPlan":0,"ckBudgetReal":0,"ckLeadsMeta":0,"ckMqlMeta":0,"ckSqlMeta":0,"ckVendasMeta":0,"ckLeads":0,"ckMql":0,"ckSql":0,"ckVendas":0,"ckLeadsPacing":0,"ckMqlPacing":0,"ckSqlPacing":0,"ckVendasPacing":0,"ckRevenuePacing":0,"ckRevenueMeta":0,"ckRevenueReal":0,"goalReached":0,"ckSynthesis":"","ckWhatsapp":"","ckActionPlan":""},"com":null,"gp":{"budget":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0},"paceReal":"—","desvio":"—","paceStatus":"Sem budget","risco":"ALTO","riscoColor":"#FF6E00","riscoScore":2,"mensagem":""},{"ticker":"ACCE","nome":"VLoca","tipo":"EC","goLive":false,"hs":{"flag":"Care","score":24,"documentId":"bxnt4vzw5x4yo5hty8hhrjdb","lt":9,"nome":"ACCENTURE PARTICIPACOES LTDA(ACCENTURE PARTICIPACOES LTDA - 54.271.277/0001-88)","fee":6000,"dim":{"resultados":4,"opsTrafego":"true","prazoEntregas":"true","entregas":"true","relacionamento":"true"},"ckPace":0.06546666666666667,"ckBudgetPlan":4500,"ckBudgetReal":294.6,"ckLeadsMeta":274,"ckMqlMeta":80,"ckSqlMeta":25,"ckVendasMeta":20,"ckLeads":25,"ckMql":14,"ckSql":2,"ckVendas":2,"ckLeadsPacing":0.09124087591240876,"ckMqlPacing":0.175,"ckSqlPacing":0.08,"ckVendasPacing":0.1,"ckRevenuePacing":0.5403424077434967,"ckRevenueMeta":82650,"ckRevenueReal":44659.3,"goalReached":0.4,"ckSynthesis":"","ckWhatsapp":"","ckActionPlan":"Ativar régua de automação (régua A em revisão, régua B pronta; resolver conflito com réguas da Set Club) Resolver bug da LP no V4 Pages (40% incompleta; acionar designer para correção urgente — estava há 2 semanas parada) Subir campanha no Google assim que LP for corrigida Cobrar cliente sobre plano e valor das 3 vendas fechadas (campos não preenchidos no CRM) Criar Growth Pack com visualização mês a mês de lead → MQL → SQL → venda Levantar faturamento retroativo para calcular break-even, ticket médio e CAC real Solicitar ao cliente que leads que chegam diretamente na loja física sejam cadastrados em funil separado Pedir ao cliente prova social (depoimentos em vídeo) para usar em remarketing Revisar copy da promoção nova (estava confusa)"},"com":{"total":832,"mql":0,"sql":0,"vendas":0,"receita":0,"leadsQuentes":[],"campanhas":[{"nome":"[V4][cbo][leads][motoboys][frio]","leads":234,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"[V4][abo][leads][motoboys][frio]","leads":354,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"[V4][abo][leads][motoboys][formulario]","leads":237,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"}],"mqlColFound":true},"gp":{"budget":4500,"investido":743.77,"meta":590.23,"google":153.54,"cpl":12.8,"faturamento":44659.3,"leads":47,"mql":22,"sql":3,"vendas":3,"metaLeads":18,"ticketMedio":14886.43,"impressoes":18047,"cliques":257,"roas":60.04,"cplMQL":33.81,"cplSQL":0,"cplCompra":247.92,"pctCliqueL":16.67,"pctLeadMQL":46.81,"pctMQLSQL":13.636363636363635,"pctSQLVenda":100,"pctLeadVenda":6.382978723404255,"rawBudget":"R$ 4.500","rawInvest":"R$ 744","rawCPL":"R$ 12,80","rawCPLMQL":"R$ 33,81","rawCPLSQL":"—","rawCPLComp":"R$ 247,92","rawFat":"R$ 44.659","rawMeta":"R$ 590","rawGoogle":"R$ 154","rawTicket":"R$ 14886,43","rawImpressoes":"18.047","rawCliques":"257","rawROAS":"60,04","rawPctCL":"16,67%","rawPctLMQL":"46,81%","rawPctMS":"13,64%","rawPctSV":"100,00%","rawPctLV":"6,38%","mensagem":""},"paceReal":"16.5","desvio":"-6.1","paceStatus":"No pace","risco":"MÉDIO","riscoColor":"#F59E0B","riscoScore":1,"mensagem":""},{"ticker":"FARE1","nome":"Fares Aquino","tipo":"IS","goLive":false,"hs":{"flag":"Safe","score":30,"documentId":"kf61m3ds7c306c5quctel0b5","lt":3,"nome":"FARES AQUINO SOCIEDADE INDIVIDUAL DE ADVOCACIA","fee":6602.01,"dim":{"resultados":10,"opsTrafego":"true","prazoEntregas":"true","entregas":"true","relacionamento":"true"},"ckPace":0.05929142857142857,"ckBudgetPlan":3500,"ckBudgetReal":207.52,"ckLeadsMeta":130,"ckMqlMeta":45,"ckSqlMeta":20,"ckVendasMeta":6,"ckLeads":12,"ckMql":2,"ckSql":0,"ckVendas":0,"ckLeadsPacing":0.09230769230769231,"ckMqlPacing":0.044444444444444446,"ckSqlPacing":0,"ckVendasPacing":0,"ckRevenuePacing":0,"ckRevenueMeta":100000,"ckRevenueReal":0,"goalReached":1.69,"ckSynthesis":"","ckWhatsapp":"","ckActionPlan":"Conectar número do WhatsApp Business ao SDRA (Vini estava realizando no dia) Verificar se leads que caem no SDRA são visíveis para o cliente no celular Falar com Denis sobre situação da estruturação comercial (Wilson dando no-show nas reuniões há um mês) Ligar para Wilson para retomar o projeto Analisar segmentação com material enviado pelo Thiago Estruturar PPT de apresentação com antecedência"},"com":{"total":165,"mql":11,"sql":4,"vendas":3,"receita":58650,"leadsQuentes":[{"nome":"Carlos jacoby santos","campanha":"🟡[v4][continua][leads][condicional]","dias":4220,"obs":"Pimeira tentativa realizada, mas cliente havia dado entrada com outro advogado."},{"nome":"valter beraldo","campanha":"🟡[v4][continua][leads][condicional]","dias":76,"obs":"Cliente entrou em contato, na 1° tentativa, sendo realizada com sucesso. Mas, mais adiante, deixou de responder."},{"nome":"Luana Gonzaga Carola","campanha":"—","dias":70,"obs":"Cliente entrou em contato, na 1° tentativa, sendo realizada com sucesso. Não fechado, pois o bebê (fato gerador) ainda não naceu."},{"nome":"Cristiane","campanha":"🟡[v4][continua][leads][condicional]","dias":61,"obs":"Cliente entrou em contato, na 1° tentativa, sendo realizada com sucesso.Após a analise, não possui qualidade de segurada."},{"nome":"Antonio","campanha":"🟡[v4][continua][leads][condicional]","dias":57,"obs":"Cliente entrou em contato, na 1° tentativa, sendo realizada com sucesso. Após a analise, não possui qualidade de segurado."},{"nome":"Ruby","campanha":"🟡[v4][continua][leads][condicional]","dias":54,"obs":"Não tive o acesso ao contato do cliente, numero sem retorno."},{"nome":"Glaucia","campanha":"🟡[v4][continua][leads][condicional]","dias":53,"obs":"AGUARDANDO RETORNO DESTA"},{"nome":"Josi","campanha":"🟡[v4][continua][leads][condicional]","dias":50,"obs":"Cliente entrou em contato, na 1° tentativa, sendo realizada com sucesso. Após a analise, não possui qualidade de segurado."}],"campanhas":[{"nome":"🟡[v4][continua][leads][condicional]","leads":153,"mqlPct":6,"sqlPct":33,"vendas":2,"status":"Convertendo"},{"nome":"23805258425","leads":1,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"cpc","leads":4,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"}],"mqlColFound":true},"gp":{"budget":3500,"investido":712.92,"meta":531.2,"google":181.72,"cpl":13.98,"faturamento":0,"leads":38,"mql":2,"sql":0,"vendas":0,"metaLeads":14,"ticketMedio":0,"impressoes":39733,"cliques":274,"roas":0,"cplMQL":356.46,"cplSQL":0,"cplCompra":0,"pctCliqueL":19.79,"pctLeadMQL":5.26,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"R$ 3.500","rawInvest":"R$ 713","rawCPL":"R$ 13,98","rawCPLMQL":"R$ 356,46","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"R$ 531","rawGoogle":"R$ 182","rawTicket":"—","rawImpressoes":"39.733","rawCliques":"274","rawROAS":"—","rawPctCL":"19,79%","rawPctLMQL":"5,26%","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"paceReal":"20.4","desvio":"-2.2","paceStatus":"No pace","risco":"MÉDIO","riscoColor":"#F59E0B","riscoScore":1,"mensagem":""},{"ticker":"MSZB","nome":"Massimo Zanetti","tipo":"EC","goLive":false,"hs":{"flag":"Safe","score":30,"documentId":"umc8om8dne121vd6qbeoct6n","lt":2,"nome":"Massimo Zanetti Beverage Brasil Ltda","fee":6750.2,"dim":{"resultados":10,"opsTrafego":"true","prazoEntregas":"true","entregas":"true","relacionamento":"true"},"ckPace":0.07334,"ckBudgetPlan":500,"ckBudgetReal":36.67,"ckLeadsMeta":0,"ckMqlMeta":0,"ckSqlMeta":0,"ckVendasMeta":38,"ckLeads":0,"ckMql":0,"ckSql":0,"ckVendas":2,"ckLeadsPacing":0,"ckMqlPacing":0,"ckSqlPacing":0,"ckVendasPacing":0.05263157894736842,"ckRevenuePacing":0.04661754385964913,"ckRevenueMeta":5700,"ckRevenueReal":265.72,"goalReached":1,"ckSynthesis":"","ckWhatsapp":"","ckActionPlan":""},"com":null,"gp":{"budget":500,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"rawBudget":"R$ 500","rawInvest":"—","rawCPL":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","mensagem":"Planilha não pública → Compartilhar → \"Qualquer pessoa com o link\" → Leitor"},"paceReal":"7.3","desvio":"-15.3","paceStatus":"Atraso leve","risco":"MÉDIO","riscoColor":"#F59E0B","riscoScore":1,"mensagem":"Planilha não pública → Compartilhar → \"Qualquer pessoa com o link\" → Leitor"},{"ticker":"SOTB","nome":"Atlantica Maquinas","tipo":"IS","goLive":false,"hs":{"flag":"Care","score":25,"documentId":"xbom9n4qhvzdorhpvh7v7suq","lt":32,"nome":"SOTOBI MAQUINAS E ACESSORIOS PARA FABRICAS DE BLOCOS LTDA","fee":6000,"dim":{"resultados":10,"opsTrafego":"true","prazoEntregas":"false","entregas":"true","relacionamento":"true"},"ckPace":0.06033142857142857,"ckBudgetPlan":7000,"ckBudgetReal":422.32,"ckLeadsMeta":550,"ckMqlMeta":83,"ckSqlMeta":30,"ckVendasMeta":12,"ckLeads":60,"ckMql":5,"ckSql":5,"ckVendas":3,"ckLeadsPacing":0.10909090909090909,"ckMqlPacing":0.060240963855421686,"ckSqlPacing":0.16666666666666666,"ckVendasPacing":0.25,"ckRevenuePacing":0.0562,"ckRevenueMeta":500000,"ckRevenueReal":28100,"goalReached":1.8641,"ckSynthesis":"Clima positivo e colaborativo, com recorde de faturamento e elogios ao trabalho; tráfego performou muito bem. Houve ruído/erro operacional na estruturação comercial (material com nome de outra empresa) e desafios/otimizações de CRM e proposta de novo site.","ckWhatsapp":"seguro","ckActionPlan":"Subir os dois vídeos aprovados para social mídia como criativos nas campanhas enquanto aguarda Bruno editar os demais Aguardar aprovação do Lucas para os vídeos restantes (projetado mais uma semana) Testar nova LP (tesque pendente com Julia)"},"com":{"total":10752,"mql":0,"sql":0,"vendas":0,"receita":0,"leadsQuentes":[],"campanhas":[{"nome":"[V4CO][ONGOING][ABO][CADASTRO][MISTO][BRASIL]- Webnario","leads":925,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"20848125317","leads":325,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"20872346802","leads":221,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"[V4][TESTE][ABO][CADASTRO][LP][BRASIL][WEBNARIO][NOVOS]","leads":194,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"120205333296160506","leads":770,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"120212953256450506","leads":734,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"120202577387970506","leads":317,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"120232101124430506","leads":18,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"[V4CO][TESTE][PUBLICOS][ABO][CADASTRO][LP][WEBNARIO]","leads":954,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"120232103480400506","leads":405,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"[V4CO][ONGOING][ABO][CADASTRO][LP][WEBNARIO]","leads":102,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"[V4][TESTE][CRIATIVOS][ABO][CADASTRO][LP][BRASIL][WEBNARIO][NOVOS]","leads":7,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"{{campaign.name}}","leads":4,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"sitelink","leads":6,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"23064496701","leads":3,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"23070245951","leads":2,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"{CampaignName}","leads":70,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"120235295908870506","leads":149,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"120239206020640506","leads":24,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"[V4CO][ONGOING][ABO][CADASTRO][TST][LP][BLACK]","leads":17,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"120240224317740506","leads":895,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"?[V4CO][TESTE][PUBLICOS][ABO][CADASTRO][LP][WEBNARIO]","leads":59,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"v4-pmax","leads":2,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"🟡[V4CO][TESTE][PUBLICOS][ABO][CADASTRO][LP][WEBNARIO]","leads":490,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"🟡[V4CO][TESTE][CRIATIVOS][ABO][CADASTRO][LP][WEBNARIO]","leads":43,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"🟡[V4CO][TST][FORM CONDICIONADO][CBO][CADASTRO][NATIVO][BRASIL][MAQUINAS]","leads":250,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"🟡[V4CO][TST][CBO][CADASTRO][NATIVO][BRASIL][MAQUINAS]","leads":18,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"[V4CO][ONGOING][ABO][CADASTRO][NATIVO][MISTO][BRASIL][MOTION][MAQUINAS]","leads":1614,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"[V4CO][ONGOING][ABO][CADASTRO][NATIVO][MISTO][BRASIL][FORMAS]","leads":332,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"[V4CO][ONGOING][ABO][CADASTRO][NATIVO][MISTO][BRASIL][MAQUINAS]","leads":1201,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"{utm_campaign}","leads":2,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"🟡[V4CO][TESTE][PUBLICOS][CBO][CADASTRO][LP][WEBNARIO]","leads":56,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"🟡[V4CO][TESTE][PUBLICOS][CBO][CADASTRO][LP][COMPRA+DIRETA]","leads":58,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"🟡[V4CO][TST02][FORM CONDICIONADO][CBO][CADASTRO][NATIVO][BRASIL][MAQUINAS]","leads":44,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"🟡[V4CO][TST][CRIATIVO][FORM CONDICIONADO][CBO][CADASTRO][NATIVO][BRASIL][MAQUINAS]","leads":5,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"V4-SEARCH-DPO","leads":3,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"},{"nome":"🔴[V4]][SITE][CBO][CADASTRO][BRASIL][MAQUINAS]","leads":23,"mqlPct":0,"sqlPct":0,"vendas":0,"status":"Sem qualificação"}],"mqlColFound":true},"gp":{"budget":7000,"investido":1386.81,"meta":1078.27,"google":308.54,"cpl":6.2,"faturamento":48100,"leads":184,"mql":5,"sql":5,"vendas":4,"metaLeads":2,"ticketMedio":12025,"impressoes":73465,"cliques":952,"roas":34.68,"cplMQL":277.36,"cplSQL":277.36,"cplCompra":346.7,"pctCliqueL":5.32,"pctLeadMQL":2.72,"pctMQLSQL":100,"pctSQLVenda":80,"pctLeadVenda":2.1739130434782608,"rawBudget":"R$ 7.000","rawInvest":"R$ 1.387","rawCPL":"R$ 6,20","rawCPLMQL":"R$ 277,36","rawCPLSQL":"R$ 277,36","rawCPLComp":"R$ 346,70","rawFat":"R$ 48.100","rawMeta":"R$ 1.078","rawGoogle":"R$ 309","rawTicket":"R$ 12025,00","rawImpressoes":"73.465","rawCliques":"952","rawROAS":"34,68","rawPctCL":"5,32%","rawPctLMQL":"2,72%","rawPctMS":"100,00%","rawPctSV":"80,00%","rawPctLV":"2,17%","mensagem":""},"paceReal":"19.8","desvio":"-2.8","paceStatus":"No pace","risco":"MÉDIO","riscoColor":"#F59E0B","riscoScore":1,"mensagem":""},{"ticker":"TAWV","nome":"Tawa Veiculos","tipo":"IS","goLive":false,"hs":{"flag":"Care","score":25,"documentId":"haglpi4rxc474azwltm9j77b","lt":2,"nome":"TAWÁ VEÍCULOS","fee":6064.16,"dim":{"resultados":10,"opsTrafego":"true","prazoEntregas":"false","entregas":"true","relacionamento":"true"},"ckPace":0.27318000000000003,"ckBudgetPlan":500,"ckBudgetReal":136.59,"ckLeadsMeta":10,"ckMqlMeta":2,"ckSqlMeta":1,"ckVendasMeta":0,"ckLeads":0,"ckMql":0,"ckSql":0,"ckVendas":0,"ckLeadsPacing":0,"ckMqlPacing":0,"ckSqlPacing":0,"ckVendasPacing":0,"ckRevenuePacing":0,"ckRevenueMeta":0,"ckRevenueReal":0,"goalReached":1,"ckSynthesis":"A transcrição contém apenas metadados e informa encerramento após 1 minuto, sem falas/conteúdo útil; não é possível avaliar sentimento, verticais, incidentes ou oportunidades com base no que foi dito.","ckWhatsapp":"","ckActionPlan":""},"com":null,"gp":{"budget":500,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"rawBudget":"R$ 500","rawInvest":"—","rawCPL":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","mensagem":"Planilha não pública → Compartilhar → \"Qualquer pessoa com o link\" → Leitor"},"paceReal":"27.3","desvio":"4.7","paceStatus":"No pace","risco":"MÉDIO","riscoColor":"#F59E0B","riscoScore":1,"mensagem":"Planilha não pública → Compartilhar → \"Qualquer pessoa com o link\" → Leitor"},{"ticker":"SOLC","nome":"Solucoes e Locacoes","tipo":"IS","goLive":true,"hs":{"flag":"N/D","score":0,"documentId":"ghg3loowgt1qf3egp1qfer0h","lt":0,"nome":"Solucao Locadora","fee":5149.57,"dim":{"resultados":0,"opsTrafego":null,"prazoEntregas":null,"entregas":null,"relacionamento":null},"ckPace":0,"ckBudgetPlan":0,"ckBudgetReal":0,"ckLeadsMeta":0,"ckMqlMeta":0,"ckSqlMeta":0,"ckVendasMeta":0,"ckLeads":0,"ckMql":0,"ckSql":0,"ckVendas":0,"ckLeadsPacing":0,"ckMqlPacing":0,"ckSqlPacing":0,"ckVendasPacing":0,"ckRevenuePacing":0,"ckRevenueMeta":0,"ckRevenueReal":0,"goalReached":1,"ckSynthesis":"","ckWhatsapp":"","ckActionPlan":""},"com":null,"gp":{"budget":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0},"paceReal":"—","desvio":"—","paceStatus":"Sem budget","risco":"OK","riscoColor":"#22C55E","riscoScore":0,"mensagem":""}],"cockpit":{"projetos":8,"emRisco":1,"scoreOp":"77.6","hsMedia":"26.5","flagDist":{"Safe":2,"Care":4,"Critical":1,"Danger":0},"lastOk":"07/07/2026, 13:43:14"}};
+window.STATIC_MONTHLY = {"ACCE":{"ticker":"ACCE","nome":"VLoca","tipo":"EC","updatedAt":"2026-07-07T16:13:41.166Z","months":[{"month":"janeiro","monthIdx":0,"year":2026,"status":"closed","growthpack":{"budget":0,"investido":1068.55,"meta":1068.55,"google":0,"cpl":133.57,"faturamento":0,"leads":8,"mql":0,"sql":0,"vendas":0,"metaLeads":3,"ticketMedio":0,"impressoes":62617,"cliques":245,"roas":0,"cplMQL":12.72,"cplSQL":0,"cplCompra":0,"pctCliqueL":3.27,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"R$ 1.069","rawCPL":"R$ 133,57","rawCPLMQL":"R$ 12,72","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"R$ 1.069","rawGoogle":"—","rawTicket":"—","rawImpressoes":"62.617","rawCliques":"245","rawROAS":"—","rawPctCL":"3,27%","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"fevereiro","monthIdx":1,"year":2026,"status":"closed","growthpack":{"budget":0,"investido":3205.38,"meta":3205.38,"google":0,"cpl":5.21,"faturamento":0,"leads":615,"mql":84,"sql":0,"vendas":0,"metaLeads":34,"ticketMedio":0,"impressoes":218677,"cliques":1820,"roas":0,"cplMQL":38.16,"cplSQL":0,"cplCompra":0,"pctCliqueL":33.79,"pctLeadMQL":13.66,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"R$ 3.205","rawCPL":"R$ 5,21","rawCPLMQL":"R$ 38,16","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"R$ 3.205","rawGoogle":"—","rawTicket":"—","rawImpressoes":"218.677","rawCliques":"1.820","rawROAS":"—","rawPctCL":"33,79%","rawPctLMQL":"13,66%","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"março","monthIdx":2,"year":2026,"status":"closed","growthpack":{"budget":0,"investido":2070.36,"meta":2070.36,"google":0,"cpl":9.54,"faturamento":38164,"leads":217,"mql":29,"sql":4,"vendas":4,"metaLeads":27,"ticketMedio":9541,"impressoes":81460,"cliques":797,"roas":18.43,"cplMQL":71.39,"cplSQL":517.59,"cplCompra":517.59,"pctCliqueL":27.23,"pctLeadMQL":13.36,"pctMQLSQL":13.79,"pctSQLVenda":100,"pctLeadVenda":1.8433179723502304,"rawBudget":"—","rawInvest":"R$ 2.070","rawCPL":"R$ 9,54","rawCPLMQL":"R$ 71,39","rawCPLSQL":"R$ 517,59","rawCPLComp":"R$ 517,59","rawFat":"R$ 38.164","rawMeta":"R$ 2.070","rawGoogle":"—","rawTicket":"R$ 9541,00","rawImpressoes":"81.460","rawCliques":"797","rawROAS":"18,43","rawPctCL":"27,23%","rawPctLMQL":"13,36%","rawPctMS":"13,79%","rawPctSV":"100,00%","rawPctLV":"1,84%","mensagem":""},"midia":{"meta":{"cost":0,"clicks":0,"impressions":999,"leads":0,"purchases":0,"purchaseValue":0,"cpl":null,"roas":null},"google":null},"entregas":null,"cockpit":null},{"month":"abril","monthIdx":3,"year":2026,"status":"closed","growthpack":{"budget":0,"investido":2943.53,"meta":2943.53,"google":0,"cpl":8.2,"faturamento":40573.05,"leads":359,"mql":27,"sql":16,"vendas":5,"metaLeads":27,"ticketMedio":8114.61,"impressoes":158775,"cliques":1349,"roas":13.78,"cplMQL":109.02,"cplSQL":183.97,"cplCompra":588.71,"pctCliqueL":26.61,"pctLeadMQL":7.52,"pctMQLSQL":59.26,"pctSQLVenda":31.25,"pctLeadVenda":1.392757660167131,"rawBudget":"—","rawInvest":"R$ 2.944","rawCPL":"R$ 8,20","rawCPLMQL":"R$ 109,02","rawCPLSQL":"R$ 183,97","rawCPLComp":"R$ 588,71","rawFat":"R$ 40.573","rawMeta":"R$ 2.944","rawGoogle":"—","rawTicket":"R$ 8114,61","rawImpressoes":"158.775","rawCliques":"1.349","rawROAS":"13,78","rawPctCL":"26,61%","rawPctLMQL":"7,52%","rawPctMS":"59,26%","rawPctSV":"31,25%","rawPctLV":"1,39%","mensagem":""},"midia":{"meta":{"cost":0,"clicks":0,"impressions":748,"leads":0,"purchases":0,"purchaseValue":0,"cpl":null,"roas":null},"google":null},"entregas":null,"cockpit":null},{"month":"maio","monthIdx":4,"year":2026,"status":"closed","growthpack":{"budget":0,"investido":3625.31,"meta":3625.31,"google":0,"cpl":9.04,"faturamento":41392.81,"leads":401,"mql":159,"sql":25,"vendas":11,"metaLeads":28,"ticketMedio":4599.2,"impressoes":137855,"cliques":1416,"roas":11.42,"cplMQL":22.8,"cplSQL":145.01,"cplCompra":402.81,"pctCliqueL":28.32,"pctLeadMQL":39.65,"pctMQLSQL":15.72,"pctSQLVenda":36,"pctLeadVenda":2.7431421446384037,"rawBudget":"—","rawInvest":"R$ 3.625","rawCPL":"R$ 9,04","rawCPLMQL":"R$ 22,80","rawCPLSQL":"R$ 145,01","rawCPLComp":"R$ 402,81","rawFat":"R$ 41.393","rawMeta":"R$ 3.625","rawGoogle":"—","rawTicket":"R$ 4599,20","rawImpressoes":"137.855","rawCliques":"1.416","rawROAS":"11,42","rawPctCL":"28,32%","rawPctLMQL":"39,65%","rawPctMS":"15,72%","rawPctSV":"36,00%","rawPctLV":"2,74%","mensagem":""},"midia":{"meta":{"cost":0,"clicks":0,"impressions":976,"leads":0,"purchases":0,"purchaseValue":0,"cpl":null,"roas":null},"google":null},"entregas":null,"cockpit":null},{"month":"junho","monthIdx":5,"year":2026,"status":"closed","growthpack":{"budget":0,"investido":4112.1,"meta":3182.56,"google":929.54,"cpl":14.8,"faturamento":45227.8,"leads":257,"mql":81,"sql":43,"vendas":11,"metaLeads":18,"ticketMedio":5653.48,"impressoes":105287,"cliques":1395,"roas":11,"cplMQL":50.77,"cplSQL":95.63,"cplCompra":514.01,"pctCliqueL":11.73,"pctLeadMQL":31.52,"pctMQLSQL":53.09,"pctSQLVenda":18.6,"pctLeadVenda":4.280155642023346,"rawBudget":"—","rawInvest":"R$ 4.112","rawCPL":"R$ 14,80","rawCPLMQL":"R$ 50,77","rawCPLSQL":"R$ 95,63","rawCPLComp":"R$ 514,01","rawFat":"R$ 45.228","rawMeta":"R$ 3.183","rawGoogle":"R$ 930","rawTicket":"R$ 5653,48","rawImpressoes":"105.287","rawCliques":"1.395","rawROAS":"11,00","rawPctCL":"11,73%","rawPctLMQL":"31,52%","rawPctMS":"53,09%","rawPctSV":"18,60%","rawPctLV":"4,28%","mensagem":""},"midia":{"meta":{"cost":0,"clicks":35,"impressions":1546,"leads":0,"purchases":0,"purchaseValue":0,"cpl":null,"roas":null},"google":null},"entregas":null,"cockpit":null},{"month":"julho","monthIdx":6,"year":2026,"status":"current","growthpack":{"budget":0,"investido":743.77,"meta":590.23,"google":153.54,"cpl":12.8,"faturamento":44659.3,"leads":47,"mql":22,"sql":3,"vendas":3,"metaLeads":18,"ticketMedio":14886.43,"impressoes":18047,"cliques":257,"roas":60.04,"cplMQL":33.81,"cplSQL":0,"cplCompra":247.92,"pctCliqueL":16.67,"pctLeadMQL":46.81,"pctMQLSQL":13.636363636363635,"pctSQLVenda":100,"pctLeadVenda":6.382978723404255,"rawBudget":"—","rawInvest":"R$ 744","rawCPL":"R$ 12,80","rawCPLMQL":"R$ 33,81","rawCPLSQL":"—","rawCPLComp":"R$ 247,92","rawFat":"R$ 44.659","rawMeta":"R$ 590","rawGoogle":"R$ 154","rawTicket":"R$ 14886,43","rawImpressoes":"18.047","rawCliques":"257","rawROAS":"60,04","rawPctCL":"16,67%","rawPctLMQL":"46,81%","rawPctMS":"13,64%","rawPctSV":"100,00%","rawPctLV":"6,38%","mensagem":""},"midia":{"meta":{"cost":0,"clicks":0,"impressions":168,"leads":0,"purchases":0,"purchaseValue":0,"cpl":null,"roas":null},"google":null},"entregas":null,"cockpit":{"flag":"Care","score":24,"documentId":"bxnt4vzw5x4yo5hty8hhrjdb","lt":9,"nome":"ACCENTURE PARTICIPACOES LTDA(ACCENTURE PARTICIPACOES LTDA - 54.271.277/0001-88)","fee":6000,"dim":{"resultados":4,"opsTrafego":"true","prazoEntregas":"true","entregas":"true","relacionamento":"true"},"ckPace":0.06546666666666667,"ckBudgetPlan":4500,"ckBudgetReal":294.6,"ckLeadsMeta":274,"ckMqlMeta":80,"ckSqlMeta":25,"ckVendasMeta":20,"ckLeads":25,"ckMql":14,"ckSql":2,"ckVendas":2,"ckLeadsPacing":0.09124087591240876,"ckMqlPacing":0.175,"ckSqlPacing":0.08,"ckVendasPacing":0.1,"ckRevenuePacing":0.5403424077434967,"ckRevenueMeta":82650,"ckRevenueReal":44659.3,"goalReached":0.4,"ckSynthesis":"","ckWhatsapp":"","ckActionPlan":"Ativar régua de automação (régua A em revisão, régua B pronta; resolver conflito com réguas da Set Club) Resolver bug da LP no V4 Pages (40% incompleta; acionar designer para correção urgente — estava há 2 semanas parada) Subir campanha no Google assim que LP for corrigida Cobrar cliente sobre plano e valor das 3 vendas fechadas (campos não preenchidos no CRM) Criar Growth Pack com visualização mês a mês de lead → MQL → SQL → venda Levantar faturamento retroativo para calcular break-even, ticket médio e CAC real Solicitar ao cliente que leads que chegam diretamente na loja física sejam cadastrados em funil separado Pedir ao cliente prova social (depoimentos em vídeo) para usar em remarketing Revisar copy da promoção nova (estava confusa)"}},{"month":"agosto","monthIdx":7,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"setembro","monthIdx":8,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"outubro","monthIdx":9,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"novembro","monthIdx":10,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"dezembro","monthIdx":11,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null}]},"NATU":{"ticker":"NATU","nome":"Natuclean","tipo":"IS","updatedAt":"2026-07-07T16:17:43.306Z","months":[{"month":"janeiro","monthIdx":0,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"fevereiro","monthIdx":1,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"março","monthIdx":2,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"abril","monthIdx":3,"year":2026,"status":"closed","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"maio","monthIdx":4,"year":2026,"status":"closed","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"junho","monthIdx":5,"year":2026,"status":"closed","growthpack":{"budget":0,"investido":34.27,"meta":34.27,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":5374,"cliques":178,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"R$ 34","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"R$ 34","rawGoogle":"—","rawTicket":"—","rawImpressoes":"5.374","rawCliques":"178","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":{"meta":{"cost":34.269999999999996,"clicks":176,"impressions":5374,"leads":0,"purchases":0,"purchaseValue":0,"cpl":null,"roas":null},"google":null},"entregas":null,"cockpit":null},{"month":"julho","monthIdx":6,"year":2026,"status":"current","growthpack":{"budget":0,"investido":473.37,"meta":242.31,"google":231.06,"cpl":5.05,"faturamento":0,"leads":54,"mql":6,"sql":0,"vendas":0,"metaLeads":16,"ticketMedio":0,"impressoes":449,"cliques":328,"roas":0,"cplMQL":78.9,"cplSQL":0,"cplCompra":0,"pctCliqueL":9.38,"pctLeadMQL":11.11,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"R$ 473","rawCPL":"R$ 5,05","rawCPLMQL":"R$ 78,90","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"R$ 242","rawGoogle":"R$ 231","rawTicket":"—","rawImpressoes":"449","rawCliques":"328","rawROAS":"—","rawPctCL":"9,38%","rawPctLMQL":"11,11%","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":{"meta":{"cost":244.02000000000004,"clicks":417,"impressions":16322,"leads":37,"purchases":0,"purchaseValue":0,"cpl":6.595135135135136,"roas":null},"google":{"cost":231054743,"clicks":64,"impressions":449,"leads":0,"purchases":0,"purchaseValue":0,"cpl":null,"roas":null}},"entregas":null,"cockpit":{"flag":"Care","score":25,"documentId":"fd5z59x4yy7shuczs21ydhl1","lt":1,"nome":"Natuclean","fee":8364.36,"dim":{"resultados":10,"opsTrafego":"true","prazoEntregas":"true","entregas":"false","relacionamento":"true"},"ckPace":85.93526210254942,"ckBudgetPlan":34.91,"ckBudgetReal":3000,"ckLeadsMeta":195,"ckMqlMeta":68,"ckSqlMeta":24,"ckVendasMeta":10,"ckLeads":6,"ckMql":6,"ckSql":0,"ckVendas":0,"ckLeadsPacing":0.03076923076923077,"ckMqlPacing":0.08823529411764706,"ckSqlPacing":0,"ckVendasPacing":0,"ckRevenuePacing":0,"ckRevenueMeta":600000,"ckRevenueReal":0,"goalReached":1,"ckSynthesis":"","ckWhatsapp":"","ckActionPlan":""}},{"month":"agosto","monthIdx":7,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"setembro","monthIdx":8,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"outubro","monthIdx":9,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"novembro","monthIdx":10,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"dezembro","monthIdx":11,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null}]},"FARE1":{"ticker":"FARE1","nome":"Fares Aquino","tipo":"IS","updatedAt":"2026-07-07T16:19:48.654Z","months":[{"month":"janeiro","monthIdx":0,"year":2026,"status":"closed","growthpack":null,"midia":{"meta":{"cost":2574.1,"clicks":2480,"impressions":321297,"leads":0,"purchases":0,"purchaseValue":0,"cpl":null,"roas":null},"google":null},"entregas":null,"cockpit":null},{"month":"fevereiro","monthIdx":1,"year":2026,"status":"closed","growthpack":null,"midia":{"meta":{"cost":1946.6900000000005,"clicks":1526,"impressions":191969,"leads":0,"purchases":0,"purchaseValue":0,"cpl":null,"roas":null},"google":null},"entregas":null,"cockpit":null},{"month":"março","monthIdx":2,"year":2026,"status":"closed","growthpack":null,"midia":{"meta":{"cost":2130.7200000000003,"clicks":1612,"impressions":200035,"leads":2,"purchases":0,"purchaseValue":0,"cpl":1065.3600000000001,"roas":null},"google":null},"entregas":null,"cockpit":null},{"month":"abril","monthIdx":3,"year":2026,"status":"closed","growthpack":{"budget":0,"investido":1917.64,"meta":1917.64,"google":0,"cpl":19.77,"faturamento":4500,"leads":97,"mql":2,"sql":2,"vendas":1,"metaLeads":14,"ticketMedio":4500,"impressoes":183194,"cliques":685,"roas":2.35,"cplMQL":958.82,"cplSQL":958.82,"cplCompra":1917.64,"pctCliqueL":14.16,"pctLeadMQL":2.06,"pctMQLSQL":100,"pctSQLVenda":50,"pctLeadVenda":1.0309278350515463,"rawBudget":"—","rawInvest":"R$ 1.918","rawCPL":"R$ 19,77","rawCPLMQL":"R$ 958,82","rawCPLSQL":"R$ 958,82","rawCPLComp":"R$ 1917,64","rawFat":"R$ 4.500","rawMeta":"R$ 1.918","rawGoogle":"—","rawTicket":"R$ 4500,00","rawImpressoes":"183.194","rawCliques":"685","rawROAS":"2,35","rawPctCL":"14,16%","rawPctLMQL":"2,06%","rawPctMS":"100,00%","rawPctSV":"50,00%","rawPctLV":"1,03%","mensagem":""},"midia":{"meta":{"cost":1917.6399999999996,"clicks":1511,"impressions":183194,"leads":12,"purchases":0,"purchaseValue":0,"cpl":159.8033333333333,"roas":null},"google":null},"entregas":null,"cockpit":null},{"month":"maio","monthIdx":4,"year":2026,"status":"closed","growthpack":{"budget":0,"investido":1860.72,"meta":1860.72,"google":0,"cpl":14.1,"faturamento":61650,"leads":132,"mql":61,"sql":12,"vendas":2,"metaLeads":16,"ticketMedio":30825,"impressoes":140030,"cliques":836,"roas":33.13,"cplMQL":30.5,"cplSQL":155.06,"cplCompra":930.36,"pctCliqueL":15.79,"pctLeadMQL":46.21,"pctMQLSQL":19.67,"pctSQLVenda":16.67,"pctLeadVenda":1.5151515151515151,"rawBudget":"—","rawInvest":"R$ 1.861","rawCPL":"R$ 14,10","rawCPLMQL":"R$ 30,50","rawCPLSQL":"R$ 155,06","rawCPLComp":"R$ 930,36","rawFat":"R$ 61.650","rawMeta":"R$ 1.861","rawGoogle":"—","rawTicket":"R$ 30825,00","rawImpressoes":"140.030","rawCliques":"836","rawROAS":"33,13","rawPctCL":"15,79%","rawPctLMQL":"46,21%","rawPctMS":"19,67%","rawPctSV":"16,67%","rawPctLV":"1,52%","mensagem":""},"midia":{"meta":{"cost":3551.129999999998,"clicks":3399,"impressions":255347,"leads":87,"purchases":0,"purchaseValue":0,"cpl":40.81758620689653,"roas":null},"google":null},"entregas":null,"cockpit":null},{"month":"junho","monthIdx":5,"year":2026,"status":"closed","growthpack":{"budget":0,"investido":3558.79,"meta":3419.58,"google":139.21,"cpl":12.81,"faturamento":169000,"leads":267,"mql":50,"sql":21,"vendas":9,"metaLeads":19,"ticketMedio":18777.78,"impressoes":246499,"cliques":1420,"roas":47.49,"cplMQL":71.18,"cplSQL":169.47,"cplCompra":395.42,"pctCliqueL":19.4,"pctLeadMQL":18.73,"pctMQLSQL":42,"pctSQLVenda":42.86,"pctLeadVenda":3.3707865168539324,"rawBudget":"—","rawInvest":"R$ 3.559","rawCPL":"R$ 12,81","rawCPLMQL":"R$ 71,18","rawCPLSQL":"R$ 169,47","rawCPLComp":"R$ 395,42","rawFat":"R$ 169.000","rawMeta":"R$ 3.420","rawGoogle":"R$ 139","rawTicket":"R$ 18777,78","rawImpressoes":"246.499","rawCliques":"1.420","rawROAS":"47,49","rawPctCL":"19,40%","rawPctLMQL":"18,73%","rawPctMS":"42,00%","rawPctSV":"42,86%","rawPctLV":"3,37%","mensagem":""},"midia":{"meta":{"cost":3419.58,"clicks":3054,"impressions":246499,"leads":83,"purchases":0,"purchaseValue":0,"cpl":41.19975903614458,"roas":null},"google":{"cost":139212103,"clicks":44,"impressions":799,"leads":0,"purchases":0,"purchaseValue":0,"cpl":null,"roas":null}},"entregas":null,"cockpit":null},{"month":"julho","monthIdx":6,"year":2026,"status":"current","growthpack":{"budget":0,"investido":712.92,"meta":531.2,"google":181.72,"cpl":13.98,"faturamento":0,"leads":40,"mql":2,"sql":0,"vendas":0,"metaLeads":15,"ticketMedio":0,"impressoes":39733,"cliques":274,"roas":0,"cplMQL":356.46,"cplSQL":0,"cplCompra":0,"pctCliqueL":2.44,"pctLeadMQL":5,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"R$ 713","rawCPL":"R$ 13,98","rawCPLMQL":"R$ 356,46","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"R$ 531","rawGoogle":"R$ 182","rawTicket":"—","rawImpressoes":"39.733","rawCliques":"274","rawROAS":"—","rawPctCL":"2,44%","rawPctLMQL":"5,00%","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":{"meta":{"cost":530.2299999999998,"clicks":408,"impressions":39656,"leads":16,"purchases":0,"purchaseValue":0,"cpl":33.13937499999999,"roas":null},"google":{"cost":181713955,"clicks":82,"impressions":1460,"leads":0,"purchases":0,"purchaseValue":0,"cpl":null,"roas":null}},"entregas":null,"cockpit":{"flag":"Safe","score":30,"documentId":"kf61m3ds7c306c5quctel0b5","lt":3,"nome":"FARES AQUINO SOCIEDADE INDIVIDUAL DE ADVOCACIA","fee":6602.01,"dim":{"resultados":10,"opsTrafego":"true","prazoEntregas":"true","entregas":"true","relacionamento":"true"},"ckPace":0.05929142857142857,"ckBudgetPlan":3500,"ckBudgetReal":207.52,"ckLeadsMeta":130,"ckMqlMeta":45,"ckSqlMeta":20,"ckVendasMeta":6,"ckLeads":12,"ckMql":2,"ckSql":0,"ckVendas":0,"ckLeadsPacing":0.09230769230769231,"ckMqlPacing":0.044444444444444446,"ckSqlPacing":0,"ckVendasPacing":0,"ckRevenuePacing":0,"ckRevenueMeta":100000,"ckRevenueReal":0,"goalReached":1.69,"ckSynthesis":"","ckWhatsapp":"","ckActionPlan":"Conectar número do WhatsApp Business ao SDRA (Vini estava realizando no dia) Verificar se leads que caem no SDRA são visíveis para o cliente no celular Falar com Denis sobre situação da estruturação comercial (Wilson dando no-show nas reuniões há um mês) Ligar para Wilson para retomar o projeto Analisar segmentação com material enviado pelo Thiago Estruturar PPT de apresentação com antecedência"}},{"month":"agosto","monthIdx":7,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"setembro","monthIdx":8,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"outubro","monthIdx":9,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"novembro","monthIdx":10,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"dezembro","monthIdx":11,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null}]},"MSZB":{"ticker":"MSZB","nome":"Massimo Zanetti","tipo":"EC","updatedAt":"2026-07-07T16:22:03.387Z","months":[{"month":"janeiro","monthIdx":0,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"fevereiro","monthIdx":1,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"março","monthIdx":2,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"abril","monthIdx":3,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"maio","monthIdx":4,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"junho","monthIdx":5,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"julho","monthIdx":6,"year":2026,"status":"current","growthpack":null,"midia":null,"entregas":null,"cockpit":{"flag":"Safe","score":30,"documentId":"umc8om8dne121vd6qbeoct6n","lt":2,"nome":"Massimo Zanetti Beverage Brasil Ltda","fee":6750.2,"dim":{"resultados":10,"opsTrafego":"true","prazoEntregas":"true","entregas":"true","relacionamento":"true"},"ckPace":0.07334,"ckBudgetPlan":500,"ckBudgetReal":36.67,"ckLeadsMeta":0,"ckMqlMeta":0,"ckSqlMeta":0,"ckVendasMeta":38,"ckLeads":0,"ckMql":0,"ckSql":0,"ckVendas":2,"ckLeadsPacing":0,"ckMqlPacing":0,"ckSqlPacing":0,"ckVendasPacing":0.05263157894736842,"ckRevenuePacing":0.04661754385964913,"ckRevenueMeta":5700,"ckRevenueReal":265.72,"goalReached":1,"ckSynthesis":"","ckWhatsapp":"","ckActionPlan":""}},{"month":"agosto","monthIdx":7,"year":2026,"status":"planned","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"setembro","monthIdx":8,"year":2026,"status":"planned","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"outubro","monthIdx":9,"year":2026,"status":"planned","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"novembro","monthIdx":10,"year":2026,"status":"planned","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"dezembro","monthIdx":11,"year":2026,"status":"planned","growthpack":null,"midia":null,"entregas":null,"cockpit":null}]},"SOTB":{"ticker":"SOTB","nome":"Atlantica Maquinas","tipo":"IS","updatedAt":"2026-07-07T16:26:57.806Z","months":[{"month":"janeiro","monthIdx":0,"year":2026,"status":"closed","growthpack":{"budget":0,"investido":4913.99,"meta":4521.59,"google":392.4,"cpl":6.48,"faturamento":175300,"leads":716,"mql":102,"sql":21,"vendas":4,"metaLeads":1,"ticketMedio":43825,"impressoes":770802,"cliques":24406,"roas":35.67,"cplMQL":48.18,"cplSQL":234,"cplCompra":1228.5,"pctCliqueL":5.07,"pctLeadMQL":14.25,"pctMQLSQL":20.59,"pctSQLVenda":19.05,"pctLeadVenda":0.5586592178770949,"rawBudget":"—","rawInvest":"R$ 4.914","rawCPL":"R$ 6,48","rawCPLMQL":"R$ 48,18","rawCPLSQL":"R$ 234,00","rawCPLComp":"R$ 1228,50","rawFat":"R$ 175.300","rawMeta":"R$ 4.522","rawGoogle":"R$ 392","rawTicket":"R$ 43825,00","rawImpressoes":"770.802","rawCliques":"24.406","rawROAS":"35,67","rawPctCL":"5,07%","rawPctLMQL":"14,25%","rawPctMS":"20,59%","rawPctSV":"19,05%","rawPctLV":"0,56%","mensagem":""},"midia":{"meta":{"cost":4505.810000000009,"clicks":31529,"impressions":767275,"leads":698,"purchases":0,"purchaseValue":0,"cpl":6.45531518624643,"roas":null},"google":{"cost":392389731,"clicks":355,"impressions":2339,"leads":0,"purchases":0,"purchaseValue":0,"cpl":null,"roas":null}},"entregas":null,"cockpit":null},{"month":"fevereiro","monthIdx":1,"year":2026,"status":"closed","growthpack":{"budget":0,"investido":6708.03,"meta":5547.06,"google":1160.97,"cpl":6.74,"faturamento":394200,"leads":882,"mql":83,"sql":32,"vendas":7,"metaLeads":1,"ticketMedio":56314.29,"impressoes":792522,"cliques":14016,"roas":58.77,"cplMQL":80.82,"cplSQL":209.63,"cplCompra":958.29,"pctCliqueL":7.66,"pctLeadMQL":9.41,"pctMQLSQL":38.55,"pctSQLVenda":21.88,"pctLeadVenda":0.7936507936507936,"rawBudget":"—","rawInvest":"R$ 6.708","rawCPL":"R$ 6,74","rawCPLMQL":"R$ 80,82","rawCPLSQL":"R$ 209,63","rawCPLComp":"R$ 958,29","rawFat":"R$ 394.200","rawMeta":"R$ 5.547","rawGoogle":"R$ 1.161","rawTicket":"R$ 56314,29","rawImpressoes":"792.522","rawCliques":"14.016","rawROAS":"58,77","rawPctCL":"7,66%","rawPctLMQL":"9,41%","rawPctMS":"38,55%","rawPctSV":"21,88%","rawPctLV":"0,79%","mensagem":""},"midia":{"meta":{"cost":5524.200000000009,"clicks":20291,"impressions":784908,"leads":812,"purchases":0,"purchaseValue":0,"cpl":6.803201970443361,"roas":null},"google":{"cost":1160982838,"clicks":770,"impressions":5369,"leads":0,"purchases":0,"purchaseValue":0,"cpl":null,"roas":null}},"entregas":null,"cockpit":null},{"month":"março","monthIdx":2,"year":2026,"status":"closed","growthpack":{"budget":0,"investido":5717.58,"meta":4143.95,"google":1573.63,"cpl":6.55,"faturamento":454350,"leads":695,"mql":131,"sql":38,"vendas":11,"metaLeads":2,"ticketMedio":41304.55,"impressoes":366607,"cliques":5428,"roas":79.47,"cplMQL":43.65,"cplSQL":150.46,"cplCompra":519.78,"pctCliqueL":5.44,"pctLeadMQL":18.85,"pctMQLSQL":29.01,"pctSQLVenda":28.95,"pctLeadVenda":1.5827338129496402,"rawBudget":"—","rawInvest":"R$ 5.718","rawCPL":"R$ 6,55","rawCPLMQL":"R$ 43,65","rawCPLSQL":"R$ 150,46","rawCPLComp":"R$ 519,78","rawFat":"R$ 454.350","rawMeta":"R$ 4.144","rawGoogle":"R$ 1.574","rawTicket":"R$ 41304,55","rawImpressoes":"366.607","rawCliques":"5.428","rawROAS":"79,47","rawPctCL":"5,44%","rawPctLMQL":"18,85%","rawPctMS":"29,01%","rawPctSV":"28,95%","rawPctLV":"1,58%","mensagem":""},"midia":{"meta":{"cost":4670.2,"clicks":8808,"impressions":403141,"leads":741,"purchases":0,"purchaseValue":0,"cpl":6.302564102564102,"roas":null},"google":{"cost":1853740036,"clicks":1345,"impressions":9629,"leads":0,"purchases":0,"purchaseValue":0,"cpl":null,"roas":null}},"entregas":null,"cockpit":null},{"month":"abril","monthIdx":3,"year":2026,"status":"closed","growthpack":{"budget":0,"investido":5327.4,"meta":4052.51,"google":1274.89,"cpl":6.11,"faturamento":339210,"leads":726,"mql":100,"sql":51,"vendas":13,"metaLeads":2,"ticketMedio":26093.08,"impressoes":329881,"cliques":5125,"roas":63.67,"cplMQL":53.27,"cplSQL":104.46,"cplCompra":409.8,"pctCliqueL":6.34,"pctLeadMQL":13.77,"pctMQLSQL":51,"pctSQLVenda":25.49,"pctLeadVenda":1.790633608815427,"rawBudget":"—","rawInvest":"R$ 5.327","rawCPL":"R$ 6,11","rawCPLMQL":"R$ 53,27","rawCPLSQL":"R$ 104,46","rawCPLComp":"R$ 409,80","rawFat":"R$ 339.210","rawMeta":"R$ 4.053","rawGoogle":"R$ 1.275","rawTicket":"R$ 26093,08","rawImpressoes":"329.881","rawCliques":"5.125","rawROAS":"63,67","rawPctCL":"6,34%","rawPctLMQL":"13,77%","rawPctMS":"51,00%","rawPctSV":"25,49%","rawPctLV":"1,79%","mensagem":""},"midia":{"meta":{"cost":4500.709999999996,"clicks":8741,"impressions":353915,"leads":710,"purchases":0,"purchaseValue":0,"cpl":6.339028169014079,"roas":null},"google":{"cost":1481236792,"clicks":1168,"impressions":8658,"leads":0,"purchases":0,"purchaseValue":0,"cpl":null,"roas":null}},"entregas":null,"cockpit":null},{"month":"maio","monthIdx":4,"year":2026,"status":"closed","growthpack":{"budget":0,"investido":7159.46,"meta":5522.73,"google":1636.73,"cpl":7.54,"faturamento":413500,"leads":809,"mql":146,"sql":69,"vendas":12,"metaLeads":1,"ticketMedio":34458.33,"impressoes":361374,"cliques":6008,"roas":57.76,"cplMQL":49.04,"cplSQL":103.76,"cplCompra":596.62,"pctCliqueL":5.83,"pctLeadMQL":18.05,"pctMQLSQL":47.26,"pctSQLVenda":17.39,"pctLeadVenda":1.4833127317676145,"rawBudget":"—","rawInvest":"R$ 7.159","rawCPL":"R$ 7,54","rawCPLMQL":"R$ 49,04","rawCPLSQL":"R$ 103,76","rawCPLComp":"R$ 596,62","rawFat":"R$ 413.500","rawMeta":"R$ 5.523","rawGoogle":"R$ 1.637","rawTicket":"R$ 34458,33","rawImpressoes":"361.374","rawCliques":"6.008","rawROAS":"57,76","rawPctCL":"5,83%","rawPctLMQL":"18,05%","rawPctMS":"47,26%","rawPctSV":"17,39%","rawPctLV":"1,48%","mensagem":""},"midia":{"meta":{"cost":5522.730000000004,"clicks":9146,"impressions":351270,"leads":732,"purchases":0,"purchaseValue":0,"cpl":7.544713114754104,"roas":null},"google":{"cost":1636745343,"clicks":1321,"impressions":10104,"leads":0,"purchases":0,"purchaseValue":0,"cpl":null,"roas":null}},"entregas":null,"cockpit":null},{"month":"junho","monthIdx":5,"year":2026,"status":"closed","growthpack":{"budget":0,"investido":6841.3,"meta":5400.38,"google":1440.92,"cpl":5.86,"faturamento":932050,"leads":989,"mql":156,"sql":66,"vendas":23,"metaLeads":2,"ticketMedio":40523.91,"impressoes":376552,"cliques":4990,"roas":136.24,"cplMQL":43.85,"cplSQL":103.66,"cplCompra":297.45,"pctCliqueL":7.19,"pctLeadMQL":15.77,"pctMQLSQL":42.31,"pctSQLVenda":34.85,"pctLeadVenda":2.3255813953488373,"rawBudget":"—","rawInvest":"R$ 6.841","rawCPL":"R$ 5,86","rawCPLMQL":"R$ 43,85","rawCPLSQL":"R$ 103,66","rawCPLComp":"R$ 297,45","rawFat":"R$ 932.050","rawMeta":"R$ 5.400","rawGoogle":"R$ 1.441","rawTicket":"R$ 40523,91","rawImpressoes":"376.552","rawCliques":"4.990","rawROAS":"136,24","rawPctCL":"7,19%","rawPctLMQL":"15,77%","rawPctMS":"42,31%","rawPctSV":"34,85%","rawPctLV":"2,33%","mensagem":""},"midia":{"meta":{"cost":5400.379999999998,"clicks":9363,"impressions":368493,"leads":922,"purchases":0,"purchaseValue":0,"cpl":5.857245119305855,"roas":null},"google":{"cost":1440910163,"clicks":932,"impressions":8059,"leads":0,"purchases":0,"purchaseValue":0,"cpl":null,"roas":null}},"entregas":null,"cockpit":null},{"month":"julho","monthIdx":6,"year":2026,"status":"current","growthpack":{"budget":0,"investido":1386.81,"meta":1078.27,"google":308.54,"cpl":6.2,"faturamento":48100,"leads":184,"mql":5,"sql":5,"vendas":4,"metaLeads":2,"ticketMedio":12025,"impressoes":73465,"cliques":952,"roas":34.68,"cplMQL":277.36,"cplSQL":277.36,"cplCompra":346.7,"pctCliqueL":5.32,"pctLeadMQL":2.72,"pctMQLSQL":100,"pctSQLVenda":80,"pctLeadVenda":2.1739130434782608,"rawBudget":"—","rawInvest":"R$ 1.387","rawCPL":"R$ 6,20","rawCPLMQL":"R$ 277,36","rawCPLSQL":"R$ 277,36","rawCPLComp":"R$ 346,70","rawFat":"R$ 48.100","rawMeta":"R$ 1.078","rawGoogle":"R$ 309","rawTicket":"R$ 12025,00","rawImpressoes":"73.465","rawCliques":"952","rawROAS":"34,68","rawPctCL":"5,32%","rawPctLMQL":"2,72%","rawPctMS":"100,00%","rawPctSV":"80,00%","rawPctLV":"2,17%","mensagem":""},"midia":{"meta":{"cost":1085.8900000000003,"clicks":1900,"impressions":71867,"leads":174,"purchases":0,"purchaseValue":0,"cpl":6.2407471264367835,"roas":null},"google":{"cost":308550819,"clicks":188,"impressions":2005,"leads":0,"purchases":0,"purchaseValue":0,"cpl":null,"roas":null}},"entregas":null,"cockpit":{"flag":"Care","score":25,"documentId":"xbom9n4qhvzdorhpvh7v7suq","lt":32,"nome":"SOTOBI MAQUINAS E ACESSORIOS PARA FABRICAS DE BLOCOS LTDA","fee":6000,"dim":{"resultados":10,"opsTrafego":"true","prazoEntregas":"false","entregas":"true","relacionamento":"true"},"ckPace":0.06033142857142857,"ckBudgetPlan":7000,"ckBudgetReal":422.32,"ckLeadsMeta":550,"ckMqlMeta":83,"ckSqlMeta":30,"ckVendasMeta":12,"ckLeads":60,"ckMql":5,"ckSql":5,"ckVendas":3,"ckLeadsPacing":0.10909090909090909,"ckMqlPacing":0.060240963855421686,"ckSqlPacing":0.16666666666666666,"ckVendasPacing":0.25,"ckRevenuePacing":0.0562,"ckRevenueMeta":500000,"ckRevenueReal":28100,"goalReached":1.8641,"ckSynthesis":"Clima positivo e colaborativo, com recorde de faturamento e elogios ao trabalho; tráfego performou muito bem. Houve ruído/erro operacional na estruturação comercial (material com nome de outra empresa) e desafios/otimizações de CRM e proposta de novo site.","ckWhatsapp":"seguro","ckActionPlan":"Subir os dois vídeos aprovados para social mídia como criativos nas campanhas enquanto aguarda Bruno editar os demais Aguardar aprovação do Lucas para os vídeos restantes (projetado mais uma semana) Testar nova LP (tesque pendente com Julia)"}},{"month":"agosto","monthIdx":7,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":3890.43,"meta":3890.43,"google":0,"cpl":7.57,"faturamento":437750,"leads":514,"mql":81,"sql":57,"vendas":9,"metaLeads":2,"ticketMedio":48638.89,"impressoes":420349,"cliques":3426,"roas":112.52,"cplMQL":48.03,"cplSQL":68.25,"cplCompra":432.27,"pctCliqueL":14.97,"pctLeadMQL":15.76,"pctMQLSQL":70.37,"pctSQLVenda":15.79,"pctLeadVenda":1.7509727626459144,"rawBudget":"—","rawInvest":"R$ 3.890","rawCPL":"R$ 7,57","rawCPLMQL":"R$ 48,03","rawCPLSQL":"R$ 68,25","rawCPLComp":"R$ 432,27","rawFat":"R$ 437.750","rawMeta":"R$ 3.890","rawGoogle":"—","rawTicket":"R$ 48638,89","rawImpressoes":"420.349","rawCliques":"3.426","rawROAS":"112,52","rawPctCL":"14,97%","rawPctLMQL":"15,76%","rawPctMS":"70,37%","rawPctSV":"15,79%","rawPctLV":"1,75%","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"setembro","monthIdx":8,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":2482.06,"meta":2482.06,"google":0,"cpl":3.93,"faturamento":682256,"leads":631,"mql":69,"sql":53,"vendas":19,"metaLeads":3,"ticketMedio":35908.21,"impressoes":232569,"cliques":3011,"roas":274.87,"cplMQL":35.97,"cplSQL":46.83,"cplCompra":130.63,"pctCliqueL":20.96,"pctLeadMQL":11.88,"pctMQLSQL":76.81,"pctSQLVenda":35.85,"pctLeadVenda":3.011093502377179,"rawBudget":"—","rawInvest":"R$ 2.482","rawCPL":"R$ 3,93","rawCPLMQL":"R$ 35,97","rawCPLSQL":"R$ 46,83","rawCPLComp":"R$ 130,63","rawFat":"R$ 682.256","rawMeta":"R$ 2.482","rawGoogle":"—","rawTicket":"R$ 35908,21","rawImpressoes":"232.569","rawCliques":"3.011","rawROAS":"274,87","rawPctCL":"20,96%","rawPctLMQL":"11,88%","rawPctMS":"76,81%","rawPctSV":"35,85%","rawPctLV":"3,01%","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"outubro","monthIdx":9,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":1364.94,"meta":1364.94,"google":0,"cpl":2.11,"faturamento":852610,"leads":646,"mql":108,"sql":56,"vendas":18,"metaLeads":3,"ticketMedio":47367.22,"impressoes":156406,"cliques":2025,"roas":624.65,"cplMQL":12.64,"cplSQL":24.37,"cplCompra":75.83,"pctCliqueL":22.07,"pctLeadMQL":16.72,"pctMQLSQL":51.85,"pctSQLVenda":32.14,"pctLeadVenda":2.786377708978328,"rawBudget":"—","rawInvest":"R$ 1.365","rawCPL":"R$ 2,11","rawCPLMQL":"R$ 12,64","rawCPLSQL":"R$ 24,37","rawCPLComp":"R$ 75,83","rawFat":"R$ 852.610","rawMeta":"R$ 1.365","rawGoogle":"—","rawTicket":"R$ 47367,22","rawImpressoes":"156.406","rawCliques":"2.025","rawROAS":"624,65","rawPctCL":"22,07%","rawPctLMQL":"16,72%","rawPctMS":"51,85%","rawPctSV":"32,14%","rawPctLV":"2,79%","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"novembro","monthIdx":10,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":201055,"leads":515,"mql":102,"sql":28,"vendas":10,"metaLeads":2,"ticketMedio":20105.5,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":19.81,"pctMQLSQL":27.45,"pctSQLVenda":35.71,"pctLeadVenda":1.9417475728155338,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"R$ 201.055","rawMeta":"—","rawGoogle":"—","rawTicket":"R$ 20105,50","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"19,81%","rawPctMS":"27,45%","rawPctSV":"35,71%","rawPctLV":"1,94%","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"dezembro","monthIdx":11,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":567005,"leads":412,"mql":66,"sql":15,"vendas":7,"metaLeads":2,"ticketMedio":81000.71,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":16.02,"pctMQLSQL":22.73,"pctSQLVenda":46.67,"pctLeadVenda":1.6990291262135921,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"R$ 567.005","rawMeta":"—","rawGoogle":"—","rawTicket":"R$ 81000,71","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"16,02%","rawPctMS":"22,73%","rawPctSV":"46,67%","rawPctLV":"1,70%","mensagem":""},"midia":null,"entregas":null,"cockpit":null}]},"TAWV":{"ticker":"TAWV","nome":"Tawa Veiculos","tipo":"IS","updatedAt":"2026-07-07T16:28:50.581Z","months":[{"month":"janeiro","monthIdx":0,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"fevereiro","monthIdx":1,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"março","monthIdx":2,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"abril","monthIdx":3,"year":2026,"status":"closed","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"maio","monthIdx":4,"year":2026,"status":"closed","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"junho","monthIdx":5,"year":2026,"status":"closed","growthpack":{"budget":0,"investido":526.82,"meta":0,"google":526.82,"cpl":105.36,"faturamento":0,"leads":5,"mql":2,"sql":2,"vendas":0,"metaLeads":5,"ticketMedio":0,"impressoes":1035,"cliques":100,"roas":0,"cplMQL":263.41,"cplSQL":263.41,"cplCompra":0,"pctCliqueL":5,"pctLeadMQL":40,"pctMQLSQL":100,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"R$ 527","rawCPL":"R$ 105,36","rawCPLMQL":"R$ 263,41","rawCPLSQL":"R$ 263,41","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"R$ 527","rawTicket":"—","rawImpressoes":"1.035","rawCliques":"100","rawROAS":"—","rawPctCL":"5,00%","rawPctLMQL":"40,00%","rawPctMS":"100,00%","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":{"meta":null,"google":{"cost":526819628,"clicks":100,"impressions":1035,"leads":0,"purchases":0,"purchaseValue":0,"cpl":null,"roas":null}},"entregas":null,"cockpit":null},{"month":"julho","monthIdx":6,"year":2026,"status":"current","growthpack":{"budget":0,"investido":418.74,"meta":0,"google":418.74,"cpl":104.69,"faturamento":0,"leads":4,"mql":4,"sql":0,"vendas":0,"metaLeads":5,"ticketMedio":0,"impressoes":630,"cliques":73,"roas":0,"cplMQL":104.69,"cplSQL":0,"cplCompra":0,"pctCliqueL":5.48,"pctLeadMQL":100,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"R$ 419","rawCPL":"R$ 104,69","rawCPLMQL":"R$ 104,69","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"R$ 419","rawTicket":"—","rawImpressoes":"630","rawCliques":"73","rawROAS":"—","rawPctCL":"5,48%","rawPctLMQL":"100,00%","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":{"meta":null,"google":{"cost":418746707,"clicks":73,"impressions":630,"leads":0,"purchases":0,"purchaseValue":0,"cpl":null,"roas":null}},"entregas":null,"cockpit":{"flag":"Care","score":25,"documentId":"haglpi4rxc474azwltm9j77b","lt":2,"nome":"TAWÁ VEÍCULOS","fee":6064.16,"dim":{"resultados":10,"opsTrafego":"true","prazoEntregas":"false","entregas":"true","relacionamento":"true"},"ckPace":0.27318000000000003,"ckBudgetPlan":500,"ckBudgetReal":136.59,"ckLeadsMeta":10,"ckMqlMeta":2,"ckSqlMeta":1,"ckVendasMeta":0,"ckLeads":0,"ckMql":0,"ckSql":0,"ckVendas":0,"ckLeadsPacing":0,"ckMqlPacing":0,"ckSqlPacing":0,"ckVendasPacing":0,"ckRevenuePacing":0,"ckRevenueMeta":0,"ckRevenueReal":0,"goalReached":1,"ckSynthesis":"A transcrição contém apenas metadados e informa encerramento após 1 minuto, sem falas/conteúdo útil; não é possível avaliar sentimento, verticais, incidentes ou oportunidades com base no que foi dito.","ckWhatsapp":"","ckActionPlan":""}},{"month":"agosto","monthIdx":7,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"setembro","monthIdx":8,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"outubro","monthIdx":9,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"novembro","monthIdx":10,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null},{"month":"dezembro","monthIdx":11,"year":2026,"status":"planned","growthpack":{"budget":0,"investido":0,"meta":0,"google":0,"cpl":0,"faturamento":0,"leads":0,"mql":0,"sql":0,"vendas":0,"metaLeads":0,"ticketMedio":0,"impressoes":0,"cliques":0,"roas":0,"cplMQL":0,"cplSQL":0,"cplCompra":0,"pctCliqueL":0,"pctLeadMQL":0,"pctMQLSQL":0,"pctSQLVenda":0,"pctLeadVenda":0,"rawBudget":"—","rawInvest":"—","rawCPL":"—","rawCPLMQL":"—","rawCPLSQL":"—","rawCPLComp":"—","rawFat":"—","rawMeta":"—","rawGoogle":"—","rawTicket":"—","rawImpressoes":"—","rawCliques":"—","rawROAS":"—","rawPctCL":"—","rawPctLMQL":"—","rawPctMS":"—","rawPctSV":"—","rawPctLV":"—","mensagem":""},"midia":null,"entregas":null,"cockpit":null}]},"SOLC":{"ticker":"SOLC","nome":"Solucoes e Locacoes","tipo":"IS","updatedAt":"2026-07-07T16:29:46.021Z","months":[{"month":"janeiro","monthIdx":0,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"fevereiro","monthIdx":1,"year":2026,"status":"closed","growthpack":null,"midia":{"meta":{"cost":817.0299999999999,"clicks":353,"impressions":57450,"leads":0,"purchases":0,"purchaseValue":0,"cpl":null,"roas":null},"google":null},"entregas":null,"cockpit":null},{"month":"março","monthIdx":2,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"abril","monthIdx":3,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"maio","monthIdx":4,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"junho","monthIdx":5,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"julho","monthIdx":6,"year":2026,"status":"current","growthpack":null,"midia":null,"entregas":null,"cockpit":{"flag":"N/D","score":0,"documentId":"ghg3loowgt1qf3egp1qfer0h","lt":0,"nome":"Solucao Locadora","fee":5149.57,"dim":{"resultados":0,"opsTrafego":null,"prazoEntregas":null,"entregas":null,"relacionamento":null},"ckPace":0,"ckBudgetPlan":0,"ckBudgetReal":0,"ckLeadsMeta":0,"ckMqlMeta":0,"ckSqlMeta":0,"ckVendasMeta":0,"ckLeads":0,"ckMql":0,"ckSql":0,"ckVendas":0,"ckLeadsPacing":0,"ckMqlPacing":0,"ckSqlPacing":0,"ckVendasPacing":0,"ckRevenuePacing":0,"ckRevenueMeta":0,"ckRevenueReal":0,"goalReached":1,"ckSynthesis":"","ckWhatsapp":"","ckActionPlan":""}},{"month":"agosto","monthIdx":7,"year":2026,"status":"planned","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"setembro","monthIdx":8,"year":2026,"status":"planned","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"outubro","monthIdx":9,"year":2026,"status":"planned","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"novembro","monthIdx":10,"year":2026,"status":"planned","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"dezembro","monthIdx":11,"year":2026,"status":"planned","growthpack":null,"midia":null,"entregas":null,"cockpit":null}]},"NWSF":{"ticker":"NWSF","nome":"New Safes","tipo":"IS","updatedAt":"2026-07-07T16:30:07.340Z","months":[{"month":"janeiro","monthIdx":0,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"fevereiro","monthIdx":1,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"março","monthIdx":2,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"abril","monthIdx":3,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"maio","monthIdx":4,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"junho","monthIdx":5,"year":2026,"status":"closed","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"julho","monthIdx":6,"year":2026,"status":"current","growthpack":null,"midia":null,"entregas":null,"cockpit":{"flag":"Critical","score":0,"documentId":"j1mkltry8wh6ogwr4oukerya","lt":0,"nome":"New Safes","fee":6328.7,"dim":{"resultados":0,"opsTrafego":null,"prazoEntregas":null,"entregas":null,"relacionamento":null},"ckPace":0,"ckBudgetPlan":0,"ckBudgetReal":0,"ckLeadsMeta":0,"ckMqlMeta":0,"ckSqlMeta":0,"ckVendasMeta":0,"ckLeads":0,"ckMql":0,"ckSql":0,"ckVendas":0,"ckLeadsPacing":0,"ckMqlPacing":0,"ckSqlPacing":0,"ckVendasPacing":0,"ckRevenuePacing":0,"ckRevenueMeta":0,"ckRevenueReal":0,"goalReached":0,"ckSynthesis":"","ckWhatsapp":"","ckActionPlan":""}},{"month":"agosto","monthIdx":7,"year":2026,"status":"planned","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"setembro","monthIdx":8,"year":2026,"status":"planned","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"outubro","monthIdx":9,"year":2026,"status":"planned","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"novembro","monthIdx":10,"year":2026,"status":"planned","growthpack":null,"midia":null,"entregas":null,"cockpit":null},{"month":"dezembro","monthIdx":11,"year":2026,"status":"planned","growthpack":null,"midia":null,"entregas":null,"cockpit":null}]}};
+</script>
+</head>
+<body>
+<div class="topbar"></div>
+
+<div class="header">
+  <div class="brand">
+    <div class="logo">V4</div>
+    <div class="brand-name">Colli &amp; Co — Sprint Growth</div>
+  </div>
+  <div class="nav">
+    <button class="tab-btn active" onclick="setTab('sprint')">Sprint Review</button>
+    <button class="tab-btn" onclick="setTab('saude')">Saude</button>
+    <button class="tab-btn" onclick="setTab('comercial')">Comercial</button>
+    <button class="tab-btn" onclick="setTab('ekyte')">Ekyte Tasks</button>
+    <button class="tab-btn" onclick="setTab('anual')">📅 Anual</button>
+    <button class="tab-btn" onclick="setTab('prioridades')">✅ Prioridades</button>
+  </div>
+  <div class="header-right">
+    <span class="updated-tag" id="updatedAt">—</span>
+    <button class="refresh-btn" id="refreshBtn" onclick="refreshData()">Atualizar</button>
+  </div>
+</div>
+
+<div class="hero" id="heroSection">
+  <div class="hero-top">
+    <div>
+      <div class="hero-title">SEMANA <span id="heroWeek">—</span></div>
+      <div class="hero-period" id="heroPeriod">Carregando...</div>
+    </div>
+    <div class="hero-kpis">
+      <div class="hero-kpi">
+        <div class="hero-kpi-val" id="hKpiPace">—%</div>
+        <div class="hero-kpi-label">Pace Esperado</div>
+        <div class="hero-kpi-sub" id="hKpiDia">Dia —/—</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-val" id="hKpiCriticos" style="color:#DC2626">—</div>
+        <div class="hero-kpi-label">Criticos</div>
+        <div class="hero-kpi-sub">acao imediata</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-val" id="hKpiAltos" style="color:var(--orange)">—</div>
+        <div class="hero-kpi-label">Em perigo</div>
+        <div class="hero-kpi-sub">ALTO risco</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-val" id="hKpiOk" style="color:var(--green)">—</div>
+        <div class="hero-kpi-label">Seguros</div>
+        <div class="hero-kpi-sub">no pace</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-flags" id="heroFlags"></div>
+</div>
+
+<div class="conn-bar" id="connBar"></div>
+<div class="err-banner" id="errBanner"></div>
+
+<div class="main">
+
+  <!-- SPRINT REVIEW -->
+  <div class="tab-section active" id="tab-sprint">
+    <div id="loadingSprint" class="loading"><div class="spinner"></div><div class="loading-txt">Puxando dados do GrowthPack e Cockpit...</div></div>
+    <div id="contentSprint" style="display:none">
+
+      <div class="sprint-card">
+        <div class="sprint-left">
+          <h2>SEMANA <b id="semLabel">—</b></h2>
+          <div class="sprint-period" id="sprintPeriod">—</div>
+        </div>
+        <div class="sprint-kpis-row">
+          <div class="sprint-kpi"><div class="sprint-kpi-val" id="spPace">—%</div><div class="sprint-kpi-label">Pace Esperado</div></div>
+          <div class="sprint-kpi"><div class="sprint-kpi-val" id="spDia" style="color:var(--text)">—</div><div class="sprint-kpi-label">Dia do mes</div></div>
+          <div class="sprint-kpi"><div class="sprint-kpi-val" id="spCache" style="color:var(--muted);font-size:12px">—</div><div class="sprint-kpi-label">Cache GP</div></div>
+        </div>
+      </div>
+
+      <div class="sec-label" id="secAlertas" style="display:none">Alertas — Acao Imediata</div>
+      <div class="alertas-strip" id="alertasStrip"></div>
+
+      <div class="sec-label">Carteira — Semana <span id="sem2Label">—</span></div>
+      <div class="table-wrap">
+        <table class="t">
+          <thead>
+            <tr><th>Cliente</th><th>HS</th><th>Budget</th><th>Investido</th><th>Pace %</th><th>Desvio</th><th>Leads</th><th>MQL</th><th>SQL</th><th>Vendas</th><th>CPL</th><th>Faturamento</th><th>ROAS</th><th>Risco</th></tr>
+          </thead>
+          <tbody id="carteiraBody"></tbody>
+        </table>
+      </div>
+
+      <div class="sec-label">Analise por Cliente</div>
+      <div id="clienteCards"></div>
+    </div>
+  </div>
+
+  <!-- SAUDE -->
+  <div class="tab-section" id="tab-saude">
+    <div id="saudeContent"><div class="loading"><div class="spinner"></div><div class="loading-txt">Carregando...</div></div></div>
+  </div>
+
+  <!-- COMERCIAL -->
+  <div class="tab-section" id="tab-comercial">
+    <div class="sec-label">Funil Comercial</div>
+    <div id="comercialContent"></div>
+  </div>
+
+  <!-- ANUAL -->
+  <div class="tab-section" id="tab-anual">
+    <div class="sec-label">Painel Anual 2026 — por cliente e mês</div>
+    <div class="anual-client-nav" id="anualClientNav"></div>
+    <div class="anual-month-nav" id="anualMonthNav"></div>
+    <div id="anualContent"><div class="loading"><div class="spinner"></div><div class="loading-txt">Carregando arquivo anual...</div></div></div>
+  </div>
+
+  <!-- PRIORIDADES DO DIA -->
+  <div class="tab-section" id="tab-prioridades">
+    <div class="sec-label">Prioridades do dia</div>
+    <div class="prio-wrap">
+      <div class="prio-add-row">
+        <input type="text" id="prioInput" class="prio-input" placeholder="Nova prioridade... (Enter para adicionar)" onkeydown="if(event.key==='Enter')addPrioridade()">
+        <button class="refresh-btn" onclick="addPrioridade()">Adicionar</button>
+        <button class="refresh-btn" onclick="resetPrioridades()" style="border-color:#DC2626;color:#DC2626">Resetar dia</button>
+      </div>
+      <div id="prioList" class="prio-list"></div>
+    </div>
+  </div>
+
+  <!-- EKYTE TASKS -->
+  <div class="tab-section" id="tab-ekyte">
+    <div class="ekyte-layout">
+
+      <!-- Coluna esquerda: input -->
+      <div>
+        <div class="ekyte-panel">
+          <div class="ekyte-panel-head">Colar Analise</div>
+          <div class="ekyte-panel-body">
+            <div class="ek-hint">Selecione o cliente e o projeto no Ekyte antes de parsear.</div>
+            <select id="ekClienteSel" class="ek-select" onchange="ekOnClienteChange()">
+              <option value="">Selecionar cliente...</option>
+            </select>
+            <select id="ekProjetSel" class="ek-select" disabled>
+              <option value="">Carregando projetos...</option>
+            </select>
+            <div class="ek-hint" style="margin-top:4px">Cole o texto da analise abaixo. O parser detecta automaticamente a secao <b>"Acoes (pra subir task):"</b> ou linhas no formato <b>Tarefa - DD/MM</b>.</div>
+            <textarea id="ekAnalyseText" class="ek-textarea" placeholder="Cole aqui o bloco de analise ou apenas as acoes...&#10;&#10;Exemplo:&#10;Criar script de follow up - 25/06&#10;Definir cadencia de follow-up - 25/06"></textarea>
+            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+              <button class="ek-btn ek-btn-primary" onclick="ekParsear()">Parsear Acoes</button>
+              <button class="ek-btn ek-btn-ghost" onclick="ekLimpar()">Limpar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coluna direita: tabela de tasks -->
+      <div>
+        <div class="ekyte-panel">
+          <div class="ekyte-panel-head">Tasks para Criar <span id="ekCounter" style="font-size:10px;font-weight:400;margin-left:auto;text-transform:none;letter-spacing:0"></span></div>
+          <div class="ekyte-panel-body" style="padding:0">
+            <div id="ekTasksWrap">
+              <div class="ek-empty">
+                <div class="ek-empty-icon">✦</div>
+                Cole uma analise e clique em <b>Parsear Acoes</b>
+              </div>
+            </div>
+            <div class="ek-actions-row" style="padding:12px 16px;border-top:1px solid var(--border);display:none" id="ekActionsRow">
+              <div class="ek-counter"><b id="ekSelCount">0</b> selecionadas</div>
+              <div style="display:flex;gap:8px">
+                <button class="ek-btn ek-btn-ghost" onclick="ekToggleAll()">Selec. Todas</button>
+                <button class="ek-btn ek-btn-red" id="ekCriarBtn" onclick="ekCriarTasks()">Criar no Ekyte</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+let D = null;
+let activeTab = 'sprint';
+const TABS = ['sprint','saude','comercial','ekyte','anual','prioridades'];
+
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmt(n) { return (n||0)>0 ? Number(n).toLocaleString('pt-BR') : '—'; }
+function hsColor(f) { return {Safe:'#16A34A',Care:'#D97706',Critical:'#EA580C',Danger:'#DC2626'}[f]||'#71717A'; }
+
+function hsBadge(flag) {
+  const m = {Safe:['hs-safe','Safe'],Care:['hs-care','Care'],Critical:['hs-critical','Critical'],Danger:['hs-danger','Danger']};
+  const [cls,lbl] = m[flag]||['hs-nd',flag||'N/D'];
+  return `<span class="badge ${cls}">&#9679; ${lbl}</span>`;
+}
+
+function riscoBadge(risco, color) {
+  return `<span class="risco-badge" style="background:${color}18;color:${color};border:1px solid ${color}44">${risco}</span>`;
+}
+
+function paceColor(r, esp) {
+  const d = r - esp;
+  return d > 10 ? 'var(--yellow)' : d < -10 ? '#DC2626' : 'var(--green)';
+}
+
+function paceCls(s) {
+  const m = {ATRASADO:'p-atrasado','Atraso leve':'p-atraso-l','No pace':'p-nopace',Acelerado:'p-acelerado',ACELERADO:'p-acelerado'};
+  return m[s]||'p-aguard';
+}
+
+function riscoCardClass(risco) {
+  const m = {'CRITICO TOTAL':'risco-critico-total','CRITICO':'risco-critico','ALTO':'risco-alto','MEDIO':'risco-medio','OK':'risco-ok'};
+  return m[risco] || m[(risco||'').replace(/[ÍÉÓÚ]/g,c=>({I:'I',E:'E',O:'O',U:'U'}[c]||c))] || '';
+}
+
+function setTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', TABS[i]===tab));
+  document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  if (D) renderTab(tab);
+}
+
+async function loadData(force) {
+  if (window.STATIC_MODE && window.STATIC_DATA && !force) {
+    D = window.STATIC_DATA; renderAll();
+    return;
+  }
+  try {
+    const url = force ? '/api/sprint-data?force=1' : '/api/sprint-data';
+    const r = await fetch(url);
+    const d = await r.json();
+    if (d.error) throw new Error(d.error);
+    D = d; renderAll();
+  } catch(e) {
+    console.warn('offline:', e.message);
+    D = getMockData(); renderAll();
+  }
+}
+
+async function refreshData() {
+  if (window.STATIC_MODE) { D = window.STATIC_DATA; renderAll(); return; } // pagina estatica: sem servidor pra atualizar
+  const btn = document.getElementById('refreshBtn');
+  btn.classList.add('loading'); btn.disabled=true; btn.textContent='Atualizando...';
+  try { await fetch('/api/refresh'); } catch(_) {}
+  btn.textContent='Carregando...';
+  await loadData(true);
+  btn.classList.remove('loading'); btn.disabled=false; btn.textContent='Atualizar';
+}
+
+function renderAll() {
+  const cls = D.clientes||[];
+  const criticos = cls.filter(c=>c.riscoScore>=3).length;
+  const altos    = cls.filter(c=>c.riscoScore===2).length;
+  const ok       = cls.filter(c=>c.riscoScore<=1).length;
+
+  document.getElementById('heroWeek').textContent    = D.semana||'—';
+  document.getElementById('heroPeriod').textContent  = `${D.periodo||'—'} · Dia ${D.diaAtual} de ${D.diasNoMes}`;
+  document.getElementById('hKpiPace').textContent    = (D.paceEsperado||'—')+'%';
+  document.getElementById('hKpiDia').textContent     = `Dia ${D.diaAtual}/${D.diasNoMes}`;
+  document.getElementById('hKpiCriticos').textContent= criticos;
+  document.getElementById('hKpiAltos').textContent   = altos;
+  document.getElementById('hKpiOk').textContent      = ok;
+  document.getElementById('updatedAt').textContent   = D.updatedAt||'—';
+  document.getElementById('semLabel').textContent    = D.semana||'—';
+  document.getElementById('sem2Label').textContent   = D.semana||'—';
+  document.getElementById('sprintPeriod').textContent= `${D.periodo||'—'} · ${(D.diasNoMes-D.diaAtual)||0} dias restantes`;
+  document.getElementById('spPace').textContent      = (D.paceEsperado||'—')+'%';
+  document.getElementById('spDia').textContent       = `${D.diaAtual}/${D.diasNoMes}`;
+  document.getElementById('spCache').textContent     = D.cacheInfo||'—';
+
+  const ck = D.cockpit;
+  if (ck && ck.flagDist) {
+    const fc = {Danger:'flag-danger',Critical:'flag-critical',Care:'flag-care',Safe:'flag-safe'};
+    document.getElementById('heroFlags').innerHTML = Object.entries(ck.flagDist)
+      .filter(([,n])=>n>0)
+      .map(([f,n])=>`<span class="flag-pill ${fc[f]||'flag-nd'}">&#9679; ${f} <b>${n}</b></span>`)
+      .join('');
+  }
+
+  const connBar = document.getElementById('connBar');
+  if (D.conexoes) {
+    connBar.innerHTML = Object.entries(D.conexoes).map(([k,v])=>{
+      const cls2 = (v||'').startsWith('ok')?'conn-ok':(v||'').includes('offline')||(v||'').includes('invalido')||(v||'').includes('expirado')?'conn-off':'conn-warn';
+      return `<span class="conn-pill ${cls2}"><span class="conn-dot"></span>${esc(k)}: ${esc(v)}</span>`;
+    }).join('');
+  }
+
+  const eb = document.getElementById('errBanner');
+  if (D.errors && D.errors.length) {
+    eb.classList.add('visible');
+    eb.innerHTML = D.errors.map(e=>`<div>&#9888; ${esc(e)}</div>`).join('');
+  } else {
+    eb.classList.remove('visible');
+  }
+
+  renderTab(activeTab);
+}
+
+function renderTab(tab) {
+  if (tab==='sprint')      renderSprint();
+  if (tab==='saude')       renderSaude();
+  if (tab==='comercial')   renderComercial();
+  if (tab==='ekyte')       renderEkyteTab();
+  if (tab==='anual')       renderAnual();
+  if (tab==='prioridades') renderPrioridades();
+}
+
+function renderSprint() {
+  document.getElementById('loadingSprint').style.display  = 'none';
+  document.getElementById('contentSprint').style.display  = 'block';
+  const cls     = D.clientes||[];
+  const paceEsp = parseFloat(D.paceEsperado)||0;
+
+  // Alertas
+  const criticos = cls.filter(c=>c.riscoScore>=3);
+  const secA = document.getElementById('secAlertas');
+  const strip = document.getElementById('alertasStrip');
+  if (criticos.length) {
+    secA.style.display='';
+    strip.innerHTML = criticos.map(c=>{
+      const leads  = (c.gp&&c.gp.leads)||0;
+      const desvio = parseFloat(c.desvio);
+      return `<div class="alerta-card" style="border-left-color:${c.riscoColor}">
+        <div class="alerta-top"><span class="ticker">${c.ticker}</span><b>${esc(c.nome)}</b>${hsBadge(c.hs&&c.hs.flag)}${riscoBadge(c.risco,c.riscoColor)}</div>
+        <div class="alerta-body">Pace: <b>${isNaN(parseFloat(c.paceReal))?'—':c.paceReal+'%'}</b>${!isNaN(desvio)?` (${desvio>0?'+':''}${desvio.toFixed(0)}pp)`:''} · Leads: <b>${leads||'—'}</b></div>
+        <div class="alerta-action">${esc(gerarAcaoRapida(c))}</div>
+      </div>`;
+    }).join('');
+  } else {
+    secA.style.display='none'; strip.innerHTML='';
+  }
+
+  // Tabela
+  document.getElementById('carteiraBody').innerHTML = cls.map(c=>{
+    const gp    = c.gp||{};
+    const hs    = c.hs||{};
+    const paceR = parseFloat(c.paceReal);
+    const desvio= parseFloat(c.desvio);
+    const pc    = isNaN(paceR)?'var(--muted)':paceColor(paceR,paceEsp);
+    const desvCls = desvio>10?'desvio-pos':desvio<-10?'desvio-neg':'desvio-ok';
+    const leads  = gp.leads||hs.ckLeads||0;
+    const mql    = gp.mql||hs.ckMql||0;
+    const sql    = gp.sql||hs.ckSql||0;
+    const vendas = gp.vendas||hs.ckVendas||0;
+    return `<tr onclick="toggleCard('${c.ticker}')">
+      <td><b>${c.ticker}</b> <span style="color:var(--muted)">${esc(c.nome)}</span>${c.goLive?` <span class="golive-badge">Go-live</span>`:''}</td>
+      <td>${hsBadge(hs.flag)}</td>
+      <td>${gp.rawBudget||'—'}</td>
+      <td style="font-weight:700">${gp.rawInvest||'—'}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="width:44px;height:4px;background:#E4E4E7;border-radius:3px;position:relative;overflow:hidden">
+            <div style="width:${Math.min(100,Math.max(0,paceR||0))}%;height:100%;background:${pc};border-radius:3px"></div>
+          </div>
+          <b style="color:${pc}">${isNaN(paceR)?'—':paceR+'%'}</b>
+        </div>
+      </td>
+      <td class="${desvCls}">${isNaN(desvio)?'—':(desvio>0?'+':'')+desvio.toFixed(0)+'pp'}</td>
+      <td><b>${leads||'—'}</b></td>
+      <td style="color:${mql>0?'var(--blue)':'var(--muted)'}">${mql||'—'}</td>
+      <td style="color:${sql>0?'var(--yellow)':'var(--muted)'}">${sql||'—'}</td>
+      <td style="font-weight:700;color:${vendas>0?'var(--green)':'var(--muted)'}">${vendas||'—'}</td>
+      <td>${gp.rawCPL||'—'}</td>
+      <td>${gp.rawFat||'—'}</td>
+      <td style="color:var(--muted)">${gp.rawROAS||'—'}</td>
+      <td>${riscoBadge(c.risco,c.riscoColor)}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('clienteCards').innerHTML = cls.map(c=>buildCard(c)).join('');
+}
+
+function buildCard(c) {
+  const gp      = c.gp||{};
+  const hs      = c.hs||{};
+  const paceR   = parseFloat(c.paceReal);
+  const paceEsp = parseFloat(D.paceEsperado)||0;
+  const pc      = isNaN(paceR)?'var(--muted)':paceColor(paceR,paceEsp);
+  const desvio  = parseFloat(c.desvio);
+  const rcc     = riscoCardClass(c.risco);
+
+  return `
+<div class="client-card ${rcc}" id="card-${c.ticker}">
+  <div class="card-header" onclick="toggleCard('${c.ticker}')">
+    <div class="card-hl">
+      <span class="ticker">${c.ticker}</span>
+      <span class="client-name">${esc(c.nome)}</span>
+      ${c.goLive?`<span class="golive-badge">Go-live</span>`:hsBadge(hs.flag)}
+      ${c.goLive?'':riscoBadge(c.risco,c.riscoColor)}
+    </div>
+    <div class="card-right-info">
+      <div style="text-align:right">
+        <div class="card-pace-big" style="color:${pc}">${isNaN(paceR)?'—':paceR+'%'}</div>
+        <div style="font-size:10px;color:var(--muted)">
+          pace${!isNaN(desvio)?` (${desvio>0?'+':''}${desvio.toFixed(0)}pp)`:''}
+          <span class="pace-badge ${paceCls(c.paceStatus)}" style="margin-left:4px">${esc(c.paceStatus||'—')}</span>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted)">
+        <div>Budget <b style="color:var(--text)">${gp.rawBudget||'—'}</b></div>
+        <div>Investido <b style="color:var(--text)">${gp.rawInvest||'—'}</b></div>
+      </div>
+      <span class="chevron" id="chev-${c.ticker}">&#9662;</span>
+    </div>
+  </div>
+
+  <div class="card-body" id="body-${c.ticker}">
+    <div class="card-tabs">
+      <div class="card-tab active" onclick="setCardTab('${c.ticker}','metricas',this)">Metricas</div>
+      <div class="card-tab" onclick="setCardTab('${c.ticker}','analise',this)">Analise</div>
+      <div class="card-tab" onclick="setCardTab('${c.ticker}','plano',this)">Plano de Acao</div>
+      <div class="card-tab" onclick="setCardTab('${c.ticker}','justs',this)">Justificativas</div>
+      ${c.com?`<div class="card-tab" onclick="setCardTab('${c.ticker}','comercial',this)">Comercial</div>`:''}
+    </div>
+    <div class="card-panel active" id="panel-${c.ticker}-metricas">
+      ${c.mensagem?`<div class="msg-box">${esc(c.mensagem)}</div>`:''}
+      ${buildMetricsTable(c)}
+      <div class="pace-bar-wrap">
+        <div class="pace-bar-header">
+          <span>Pace real: <b>${isNaN(paceR)?'—':paceR+'%'}</b></span>
+          <span>Esperado hoje: ${D.paceEsperado}%</span>
+        </div>
+        <div class="pace-track">
+          <div class="pace-fill" style="width:${Math.min(100,Math.max(0,paceR||0))}%;background:${pc}"></div>
+          <div class="pace-marker" style="left:${Math.min(99,paceEsp)}%" data-label="${D.paceEsperado}%"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-panel" id="panel-${c.ticker}-analise">${buildAnalise(c)}</div>
+    <div class="card-panel" id="panel-${c.ticker}-plano">${buildPlano(c)}</div>
+    <div class="card-panel" id="panel-${c.ticker}-justs">${buildJusts(c)}</div>
+    ${c.com?`<div class="card-panel" id="panel-${c.ticker}-comercial">${buildComPanel(c)}</div>`:''}
+  </div>
+</div>`;
+}
+
+function buildMetricsTable(c) {
+  const gp   = c.gp||{};
+  const hs   = c.hs||{};
+  const hoje = new Date();
+  const mesNome = ['Janeiro','Fevereiro','Marco','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'][hoje.getMonth()];
+  const leads  = gp.leads||hs.ckLeads||0;
+  const mql    = gp.mql||hs.ckMql||0;
+  const sql    = gp.sql||hs.ckSql||0;
+  const vendas = gp.vendas||hs.ckVendas||0;
+  const paceR  = parseFloat(c.paceReal);
+  const paceEsp= parseFloat(D.paceEsperado)||0;
+
+  const pLM = gp.rawPctLMQL || (leads>0&&mql>0?(mql/leads*100).toFixed(1).replace('.',',')+'%':'—');
+  const pMS = gp.rawPctMS   || (mql>0&&sql>0?(sql/mql*100).toFixed(1).replace('.',',')+'%':'—');
+  const pSV = gp.rawPctSV   || (sql>0&&vendas>0?(vendas/sql*100).toFixed(1).replace('.',',')+'%':'—');
+  const pLV = gp.rawPctLV   || (leads>0&&vendas>0?(vendas/leads*100).toFixed(1).replace('.',',')+'%':'—');
+
+  const pctCls = (v) => {
+    if (!v||v==='—') return 'val';
+    const n = parseFloat((v||'').replace(',','.'));
+    return n>=30?'val-green':n>=15?'val':'val-bad';
+  };
+
+  const row  = (lbl,val,cls) => `<tr><td class="lbl">${lbl}</td><td class="${cls||'val'}">${val||'—'}</td></tr>`;
+  const rowH = (lbl,bg)      => `<tr><td colspan="2" style="background:${bg||'#111'};color:#fff;font-size:10px;font-weight:700;padding:6px 12px">${lbl}</td></tr>`;
+
+  const diaNow = hoje.getDate();
+  const diaFim = new Date(hoje.getFullYear(),hoje.getMonth()+1,0).getDate();
+
+  return `
+  <div class="gp-table-wrap">
+    <div class="gp-table-title">GrowthPack — ${mesNome} ${hoje.getFullYear()}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <table class="gp-table">
+        <tr class="gp-tr-head"><td colspan="2">Resultados do Mes</td></tr>
+        <tr class="gp-tr-sub"><td colspan="2">01/${String(hoje.getMonth()+1).padStart(2,'0')} — ${String(diaFim).padStart(2,'0')}/${String(hoje.getMonth()+1).padStart(2,'0')}/2026</td></tr>
+        ${row('Investimento', gp.rawInvest, 'val-highlight')}
+        ${gp.rawTicket&&gp.rawTicket!=='—'?row('Ticket Medio', gp.rawTicket):''}
+        ${gp.rawImpressoes&&gp.rawImpressoes!=='—'?row('Impressoes', gp.rawImpressoes):''}
+        ${gp.rawCliques&&gp.rawCliques!=='—'?row('Cliques Totais', gp.rawCliques):''}
+        ${row('Leads', fmt(leads)||'—')}
+        ${rowH('Funil Comercial','#1C1C1E')}
+        <tr><td class="lbl">MQL</td><td class="val" style="color:var(--blue);font-weight:800">${fmt(mql)||'—'}</td></tr>
+        <tr><td class="lbl">SQL</td><td class="val" style="color:var(--yellow);font-weight:800">${fmt(sql)||'—'}</td></tr>
+        <tr><td class="lbl">Vendas</td><td class="${vendas>0?'val-green':'val'}" style="font-weight:800">${fmt(vendas)||'—'}</td></tr>
+        ${gp.rawFat&&gp.rawFat!=='—'?row('Receita Faturada', gp.rawFat, 'val-highlight'):''}
+        ${gp.rawROAS&&gp.rawROAS!=='—'?row('ROAS', gp.rawROAS):''}
+        ${hs.goalReached>0?row('Meta atingida', Math.round(hs.goalReached)+'%', hs.goalReached>=80?'val-green':hs.goalReached>=50?'val-warn':'val-bad'):''}
+      </table>
+      <table class="gp-table">
+        ${rowH('Custos por Etapa','#3F3F46')}
+        ${row('CPL (Custo por Lead)', gp.rawCPL||'—')}
+        ${gp.rawCPLMQL&&gp.rawCPLMQL!=='—'?row('Custo por MQL', gp.rawCPLMQL):''}
+        ${gp.rawCPLSQL&&gp.rawCPLSQL!=='—'?row('Custo por SQL', gp.rawCPLSQL):''}
+        ${gp.rawCPLComp&&gp.rawCPLComp!=='—'?row('Custo por Compra', gp.rawCPLComp):''}
+        ${gp.rawMeta&&gp.rawMeta!=='—'?row('Invest. Meta Ads', gp.rawMeta):''}
+        ${gp.rawGoogle&&gp.rawGoogle!=='—'?row('Invest. Google', gp.rawGoogle):''}
+        ${rowH('Taxas de Conversao','#1C1C1E')}
+        <tr><td class="lbl">% Lead → MQL</td><td class="${pctCls(pLM)}">${pLM}</td></tr>
+        <tr><td class="lbl">% MQL → SQL</td><td class="${pctCls(pMS)}">${pMS}</td></tr>
+        <tr><td class="lbl">% SQL → Vendas</td><td class="${pctCls(pSV)}">${pSV}</td></tr>
+        <tr><td class="lbl">% Leads → Vendas</td><td class="val">${pLV}</td></tr>
+        ${rowH('Pace de Investimento','#3F3F46')}
+        ${row('Budget/mes', gp.rawBudget||'—')}
+        ${row('Pace atual', isNaN(paceR)?'—':paceR+'%', isNaN(paceR)?'val':paceR<paceEsp-10?'val-bad':paceR>paceEsp+10?'val-warn':'val-green')}
+        ${row('Pace esperado (hoje)', (D.paceEsperado||'—')+'%')}
+        ${!isNaN(parseFloat(c.desvio))?row('Desvio', (parseFloat(c.desvio)>0?'+':'')+parseFloat(c.desvio).toFixed(0)+'pp', parseFloat(c.desvio)<-10?'val-bad':parseFloat(c.desvio)>10?'val-warn':'val-green'):''}
+        ${rowH('Health Score — Cockpit','#1C1C1E')}
+        ${row('Flag', hs.flag||'N/D')}
+        ${hs.score>0?row('Score', hs.score.toFixed(1)+'/30'):''}
+        ${hs.lt>0?row('LT', hs.lt+' meses'):''}
+      </table>
+    </div>
+  </div>`;
+}
+
+function buildAnalise(c) {
+  const gp     = c.gp||{};
+  const hs     = c.hs||{};
+  const leads  = gp.leads||hs.ckLeads||0;
+  const mql    = gp.mql||hs.ckMql||0;
+  const sql    = gp.sql||hs.ckSql||0;
+  const vendas = gp.vendas||hs.ckVendas||0;
+  const paceR  = parseFloat(c.paceReal);
+  const paceEsp= parseFloat(D.paceEsperado)||0;
+  const desvio = parseFloat(c.desvio);
+  const dia    = D.diaAtual, mes = D.diasNoMes;
+
+  const pLM = (leads>0&&mql>0)?mql/leads*100:0;
+  const pMS = (mql>0&&sql>0)?sql/mql*100:0;
+  const pSV = (sql>0&&vendas>0)?vendas/sql*100:0;
+
+  let html = `<div class="analise-header">ANALISE — ${esc(c.nome)}</div>`;
+
+  // Sintese Cockpit
+  if (hs.ckSynthesis) {
+    html += `<div class="synthesis-box"><div class="synthesis-label">Sintese da Ultima Reuniao — Cockpit</div>${esc(hs.ckSynthesis)}</div>`;
+  }
+
+  html += `<div class="analise-body">`;
+
+  // Investimento
+  if (gp.rawInvest&&gp.rawInvest!=='—') {
+    let p = `Investimento de <b>${gp.rawInvest}</b>`;
+    if (gp.rawCPL&&gp.rawCPL!=='—') p += ` com CPL de <b>${gp.rawCPL}</b>`;
+    if (gp.rawROAS&&gp.rawROAS!=='—') p += ` e ROAS de <b>${gp.rawROAS}</b>`;
+    if (gp.rawTicket&&gp.rawTicket!=='—') p += ` — ticket medio de <b>${gp.rawTicket}</b>`;
+    html += `<p>${p}.</p>`;
+  }
+
+  // Pace
+  if (!isNaN(paceR)&&c.paceReal!=='—') {
+    let p = '';
+    if (desvio < -15) {
+      const falta = Math.max(0,(gp.budget||hs.ckBudgetPlan||0)-(gp.investido||0));
+      const restam = mes-dia;
+      const diar = restam>0&&falta>0?Math.round(falta/restam):0;
+      p = `Pace em <b style="color:#DC2626">${c.paceReal}%</b> contra ${paceEsp}% esperado para o dia ${dia}/${mes} — atraso de <b>${Math.abs(desvio).toFixed(0)}pp</b>.${diar>0?` Necessario investir ~<b>R$ ${diar.toLocaleString('pt-BR')}/dia</b> nos proximos ${restam} dias para recuperar.`:''} GT deve ser acionada para ajuste de daily budget.`;
+    } else if (desvio > 15) {
+      p = `Pace em <b style="color:var(--yellow)">${c.paceReal}%</b> — <b>${desvio.toFixed(0)}pp acima</b> do esperado. Monitorar ritmo de queima para nao esgotar budget antes do fim do mes.`;
+    } else {
+      p = `Pace em <b style="color:var(--green)">${c.paceReal}%</b> — alinhado com os ${paceEsp}% esperados para o dia ${dia}/${mes}.`;
+    }
+    html += `<p>${p}</p>`;
+  }
+
+  // Funil
+  if (leads>0) {
+    let p = `Funil: <b>${fmt(leads)} leads</b>`;
+    if (mql>0) p += ` → <b>${mql} MQL</b> (${pLM.toFixed(1)}%)`;
+    if (sql>0) p += ` → <b>${sql} SQL</b> (${pMS.toFixed(1)}% do MQL)`;
+    p += ` → <b style="color:${vendas>0?'var(--green)':'#DC2626'}">${vendas} vendas</b>`;
+    if (sql>0&&vendas>0) p += ` (${pSV.toFixed(1)}% de SQL)`;
+    p += '.';
+
+    const gargalos = [];
+    if (pLM>0&&pLM<20&&leads>20) gargalos.push(`conversao Lead-MQL (${pLM.toFixed(1)}%) abaixo do esperado — revisar qualidade de lead`);
+    if (pMS>0&&pMS<20&&mql>5)    gargalos.push(`conversao MQL-SQL (${pMS.toFixed(1)}%) — revisar cadencia de follow-up`);
+    if (pSV>0&&pSV<25&&sql>2)    gargalos.push(`conversao SQL-Vendas (${pSV.toFixed(1)}%) — gargalo no fechamento`);
+    if (vendas===0&&sql>2&&dia>10) gargalos.push(`${sql} leads em SQL sem fechamento ate dia ${dia} — escalada urgente`);
+    if (gargalos.length) p += ` Principal gargalo: ${gargalos[0]}.`;
+    html += `<p>${p}</p>`;
+  }
+
+  // HS
+  if (hs.flag&&hs.flag!=='N/D') {
+    const dim = hs.dim||{};
+    const dimProbs = [];
+    if ((parseFloat(dim.resultados)||0)<7) dimProbs.push('Resultados');
+    if (dim.opsTrafego==='false'||dim.opsTrafego===false) dimProbs.push('Ops Trafego');
+    if (dim.prazoEntregas==='false'||dim.prazoEntregas===false) dimProbs.push('Prazo Entregas');
+    if (dim.entregas==='false'||dim.entregas===false) dimProbs.push('Entregas');
+    if (dim.relacionamento==='false'||dim.relacionamento===false) dimProbs.push('Relacionamento');
+
+    let p = `Health Score: <b style="color:${hsColor(hs.flag)}">${hs.flag}</b>`;
+    if (hs.score>0) p += ` (${hs.score.toFixed(1)}/30)`;
+    if (dimProbs.length) p += `. Dimensoes criticas: <b>${dimProbs.join(', ')}</b>`;
+    else p += ` — todas as dimensoes operacionais OK`;
+    html += `<p>${p}.</p>`;
+  }
+
+  if (hs.ckWhatsapp) {
+    const wc = hs.ckWhatsapp==='Risco'?'#DC2626':hs.ckWhatsapp==='Atencao'?'var(--yellow)':'var(--green)';
+    html += `<p>WhatsApp: <b style="color:${wc}">${esc(hs.ckWhatsapp)}</b></p>`;
+  }
+
+  html += '</div>';
+
+  // Plano do Cockpit
+  if (hs.ckActionPlan) {
+    html += `<div class="synthesis-box" style="background:#F0FDF4;border-color:#16A34A;color:#166534">
+      <div class="synthesis-label" style="color:#16A34A">Plano de Acao — Cockpit</div>
+      ${esc(hs.ckActionPlan).replace(/\n/g,'<br>')}
+    </div>`;
+  }
+
+  return html;
+}
+
+function buildPlano(c) {
+  const gp     = c.gp||{};
+  const hs     = c.hs||{};
+  const desvio = parseFloat(c.desvio);
+  const leads  = gp.leads||hs.ckLeads||0;
+  const mql    = gp.mql||hs.ckMql||0;
+  const sql    = gp.sql||hs.ckSql||0;
+  const vendas = gp.vendas||hs.ckVendas||0;
+  const pLM    = leads>0&&mql>0?mql/leads*100:0;
+  const dia    = D.diaAtual, mes = D.diasNoMes;
+
+  const addDias = (n) => { const d=new Date(); d.setDate(d.getDate()+n); return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}); };
+
+  const planos = [];
+  const tasks  = [];
+
+  if (!isNaN(desvio)&&desvio<-10&&c.paceReal!=='—') {
+    const falta  = Math.max(0,(gp.budget||hs.ckBudgetPlan||0)-(gp.investido||0));
+    const restam = mes-dia;
+    const diar   = restam>0&&falta>0?Math.round(falta/restam):0;
+    planos.push({ n:1, titulo:'Corrigir pace de investimento', itens:[
+      `Subir daily budget para ~R$ ${diar.toLocaleString('pt-BR')}/dia nos proximos ${restam} dias`,
+      'Verificar distribuicao entre Meta e Google para garantir queima',
+      'Monitorar CPL apos ajuste — nao sacrificar qualidade por volume',
+    ]});
+    tasks.push({ texto:'GT ajustar daily budget — recuperar pace', data:addDias(3), quem:'GT' });
+  }
+
+  if (pLM>0&&pLM<20&&leads>15) {
+    planos.push({ n:planos.length+1, titulo:'Mapear gargalo Lead-MQL', itens:[
+      `Reuniao com time comercial — analisar leads perdidos (taxa atual: ${pLM.toFixed(1)}%)`,
+      'Apresentar regua de automacao e entender processo comercial atual',
+      'Propor campo de descarte obrigatorio no CRM',
+    ]});
+    tasks.push({ texto:'Agendar reuniao com comercial — analise leads perdidos', data:addDias(5), quem:'AM' });
+  }
+
+  if (sql>2&&vendas===0&&dia>10) {
+    planos.push({ n:planos.length+1, titulo:`Escalada ${sql} leads em SQL sem fechamento`, itens:[
+      'Listar leads com mais de 10 dias em SQL sem retorno',
+      'Disparar mensagem personalizada via WhatsApp ou e-mail',
+      'Acionar coordenacao comercial se sem resposta em 48h',
+    ]});
+    tasks.push({ texto:`Escalada SQL: contato personalizado (${sql} leads parados)`, data:addDias(3), quem:'AM' });
+  }
+
+  const dim = hs.dim||{};
+  if (dim.opsTrafego==='false'||dim.opsTrafego===false) {
+    planos.push({ n:planos.length+1, titulo:'Resolver anomalia de Ops Trafego', itens:[
+      'Verificar pixel e tracking — confirmar eventos disparando',
+      'Auditar campanhas ativas: status, orcamento, aprovacoes',
+      'Checar CAPI e integracoes de conversao',
+    ]});
+    tasks.push({ texto:'Auditoria Ops Trafego — pixel, campanhas, CAPI', data:addDias(3), quem:'GT' });
+  }
+
+  if (hs.flag==='Danger'||hs.flag==='Critical') {
+    planos.push({ n:planos.length+1, titulo:`Plano de recuperacao HS (${hs.flag})`, itens:[
+      'Revisao semanal no Cockpit — identificar dimensoes criticas',
+      dim.prazoEntregas==='false'?'Resolver demandas em atraso no Ekyte':'Manter check-in semanal com cliente',
+      dim.relacionamento==='false'?'Reforcar relacionamento: agendar call de alinhamento':'Garantir NPS acima do minimo na proxima avaliacao',
+    ]});
+    tasks.push({ texto:`Revisao HS ${hs.flag} — auditoria Cockpit`, data:addDias(3), quem:'AM' });
+  }
+
+  if (!planos.length) {
+    planos.push({ n:1, titulo:'Manutencao e prevencao de fadiga criativa', itens:[
+      'Analisar criativos com maior CPL — substituir por novos testes',
+      'Briefar novos videos para reduzir CPM e ampliar alcance',
+      'Acompanhar CPL pos ajuste na proxima semana',
+    ]});
+    tasks.push({ texto:'Brief criativos em video para novos testes', data:addDias(7), quem:'GT' });
+  }
+
+  const planosHtml = planos.map(p=>`
+    <div class="plano-item">
+      <div class="plano-title">${p.n}. ${p.titulo}</div>
+      <ul class="plano-sub">${p.itens.map(i=>`<li>${i}</li>`).join('')}</ul>
+    </div>`).join('');
+
+  const tasksHtml = tasks.map(t=>`
+    <div class="task-item">
+      <div class="task-check"></div>
+      <div class="task-text">${t.texto}</div>
+      <div class="task-who" style="margin-right:8px">${t.quem}</div>
+      <div class="task-date">${t.data}</div>
+    </div>`).join('');
+
+  const saved = localStorage.getItem('plano-'+c.ticker)||'';
+
+  return `
+    <div class="plano-header">PLANOS DE ACAO</div>
+    ${planosHtml}
+    <div class="tasks-header">CHECKLIST — TASKS EKYTE</div>
+    ${tasksHtml}
+    <div class="plano-manual-wrap">
+      <div class="plano-manual-label">Anotacoes — Julia Costa</div>
+      <textarea class="plano-manual-area" id="plano-manual-${c.ticker}"
+        placeholder="Acoes combinadas na reuniao, proximos passos especificos..."
+        oninput="localStorage.setItem('plano-${c.ticker}',this.value)"
+      >${esc(saved)}</textarea>
+    </div>`;
+}
+
+function buildJusts(c) {
+  const gp   = c.gp||{};
+  const hs   = c.hs||{};
+  const desvio = parseFloat(c.desvio);
+  const dia  = D.diaAtual;
+  const sql  = gp.sql||hs.ckSql||0;
+  const vendas = gp.vendas||hs.ckVendas||0;
+  const items = [];
+
+  items.push({ q:'Por que o pace esta assim?',
+    a: isNaN(desvio)||c.paceReal==='—' ? 'GrowthPack nao acessivel — verificar compartilhamento da planilha.'
+      : desvio<-10 ? `Investimento ${Math.abs(desvio).toFixed(0)}pp abaixo do esperado ate o dia ${dia}. GT acionada para correcao do daily budget. Recuperacao projetada dentro do mes.`
+      : desvio>10  ? `Ritmo ${desvio.toFixed(0)}pp acima. Monitorando queima para nao ultrapassar budget antes do fim do mes.`
+      : `Pace alinhado com o planejamento — investimento dentro da faixa esperada.` });
+
+  if (hs.flag==='Danger'||hs.flag==='Critical') {
+    items.push({ q:`Por que o Health Score esta em ${hs.flag}?`,
+      a:`Score ${hs.score?hs.score.toFixed(1):'—'}/30. Gaps identificados nas dimensoes do Cockpit e endereçados no plano desta semana. Acompanhamento intensificado com check-ins semanais.` });
+  }
+
+  if (vendas===0&&sql>0&&dia>10) {
+    items.push({ q:'Por que ainda sem fechamentos?',
+      a:`Pipeline com ${sql} leads em SQL. Gargalo identificado no processo comercial — escalada em andamento. Leads sendo acompanhados diretamente pela AM.` });
+  } else if (vendas>0) {
+    items.push({ q:'Qual o resultado do mes ate agora?',
+      a:`${vendas} vendas confirmadas${gp.rawFat&&gp.rawFat!=='—'?' com receita de '+gp.rawFat:''}. Foco em acelerar o fechamento dos leads em SQL ainda abertos.` });
+  }
+
+  items.push({ q:'O que a V4 esta fazendo esta semana?',
+    a:'Ajuste de pace com GT, monitoramento de criativos e conversoes, acompanhamento dos leads em SQL e revisao das dimensoes do HS identificadas no Cockpit.' });
+
+  return items.map((it,i)=>`
+    <div style="margin-bottom:12px">
+      <div style="font-size:12px;font-weight:700;color:var(--text);display:flex;align-items:flex-start;gap:7px;margin-bottom:4px">
+        <span style="background:var(--red);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;flex-shrink:0;margin-top:1px">${i+1}</span>
+        ${it.q}
+      </div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7;padding-left:25px">${it.a}</div>
+    </div>
+    ${i<items.length-1?'<div class="divider"></div>':''}`).join('');
+}
+
+function buildComPanel(c) {
+  if (!c.com) return '<p style="color:var(--muted)">Sem planilha comercial conectada.</p>';
+  const com = c.com;
+  const {total,mql,sql,vendas,receita,leadsQuentes,campanhas} = com;
+  const mqlP = total?Math.round((mql||0)/total*100):0;
+  const sqlP = mql?Math.round((sql||0)/(mql||1)*100):0;
+  const fecP = sql?Math.round((vendas||0)/(sql||1)*100):0;
+  const rec  = receita?'R$ '+receita.toLocaleString('pt-BR',{minimumFractionDigits:2}):'—';
+
+  const campHtml = campanhas&&campanhas.length ? `
+    <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin:14px 0 6px">Performance por Campanha</div>
+    <div class="table-wrap" style="margin-bottom:0">
+      <table class="camp-table">
+        <thead><tr><th>Campanha</th><th>Leads</th><th>MQL%</th><th>SQL%</th><th>Vendas</th><th>Status</th></tr></thead>
+        <tbody>${campanhas.slice(0,10).map(cp=>{
+          const cls2 = cp.status==='Convertendo'?'camp-conv':cp.status.includes('nao')?'camp-warn':'camp-bad';
+          return `<tr><td style="font-weight:600">${esc(cp.nome)}</td><td>${cp.leads}</td>
+            <td style="color:${cp.mqlPct>=20?'var(--green)':cp.mqlPct>=10?'var(--yellow)':'#DC2626'}">${cp.mqlPct}%</td>
+            <td style="color:${cp.sqlPct>=15?'var(--green)':cp.sqlPct>=5?'var(--yellow)':'#DC2626'}">${cp.sqlPct}%</td>
+            <td style="font-weight:700;color:${cp.vendas>0?'var(--green)':'var(--muted)'}">${cp.vendas||'—'}</td>
+            <td class="${cls2}">${esc(cp.status)}</td></tr>`;
+        }).join('')}</tbody>
+      </table>
+    </div>` : '';
+
+  const leadsHtml = leadsQuentes&&leadsQuentes.length ? `
+    <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin:14px 0 6px">Leads Quentes em SQL</div>
+    <table class="leads-table">
+      <thead><tr><th>Nome</th><th>Campanha</th><th>Ha</th><th>Obs</th></tr></thead>
+      <tbody>${leadsQuentes.slice(0,10).map(l=>`
+        <tr class="${l.dias>15?'lead-urg':''}">
+          <td style="font-weight:700">${esc(l.nome)}</td>
+          <td style="font-size:10px">${esc(l.campanha||'—')}</td>
+          <td><span class="${l.dias>15?'dias-urg':'dias-ok'}">${l.dias}d</span></td>
+          <td style="font-size:11px;color:var(--muted)">${esc((l.obs||'').slice(0,60))}</td>
+        </tr>`).join('')}</tbody>
+    </table>` : '';
+
+  return `
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px">
+      <div class="metric-box"><div class="metric-lbl">Leads</div><div class="metric-val">${total||0}</div></div>
+      <div class="metric-box"><div class="metric-lbl">MQL</div><div class="metric-val" style="color:var(--blue)">${mql||0}<span style="font-size:10px;color:var(--muted)"> (${mqlP}%)</span></div></div>
+      <div class="metric-box"><div class="metric-lbl">SQL</div><div class="metric-val" style="color:var(--yellow)">${sql||0}<span style="font-size:10px;color:var(--muted)"> (${sqlP}%)</span></div></div>
+      <div class="metric-box"><div class="metric-lbl">Vendas</div><div class="metric-val" style="color:${vendas>0?'var(--green)':'var(--muted)'}">${vendas||0}<span style="font-size:10px;color:var(--muted)"> (${fecP}%)</span></div></div>
+      <div class="metric-box"><div class="metric-lbl">Receita</div><div class="metric-val" style="font-size:14px">${rec}</div></div>
+    </div>
+    ${campHtml}${leadsHtml}`;
+}
+
+function gerarAcaoRapida(c) {
+  const desvio = parseFloat(c.desvio);
+  if (!isNaN(desvio)&&desvio<-10) return `Acionar GT: ajuste de pace (${Math.abs(desvio).toFixed(0)}pp abaixo do esperado)`;
+  if (c.hs&&c.hs.flag==='Danger') return `Auditoria urgente HS Danger — revisao Cockpit esta semana`;
+  if ((c.gp&&c.gp.leads||0)===0&&D.diaAtual>5) return `Zero leads apos dia ${D.diaAtual} — verificar campanhas e pixel`;
+  return `Monitorar e manter rotina semanal`;
+}
+
+// ─────────────────────────────────────────────
+// EKYTE TAB
+// ─────────────────────────────────────────────
+let _ekProjects   = [];
+let _ekTasks      = [];  // { titulo, data_iso, data_label, selecionada, status, responsavel }
+let _ekProjLoaded = false;
+
+const CLIENTES_EKYTE = [
+  { ticker:'ACCE',  nome:'VLoca' },
+  { ticker:'NATU',  nome:'Natuclean' },
+  { ticker:'FARE1', nome:'Fares Aquino' },
+  { ticker:'MSZB',  nome:'Massimo Zanetti' },
+  { ticker:'SOTB',  nome:'Atlantica Maquinas' },
+  { ticker:'TAWV',  nome:'Tawa Veiculos' },
+  { ticker:'SOLC',  nome:'Solucoes e Locacoes' },
+];
+
+function renderEkyteTab() {
+  const sel = document.getElementById('ekClienteSel');
+  if (sel && sel.options.length <= 1) {
+    CLIENTES_EKYTE.forEach(c => {
+      const o = document.createElement('option');
+      o.value = c.ticker; o.textContent = `${c.ticker} — ${c.nome}`;
+      sel.appendChild(o);
+    });
+  }
+  if (!_ekProjLoaded) ekCarregarProjetos();
+}
+
+async function ekCarregarProjetos() {
+  _ekProjLoaded = true;
+  const sel = document.getElementById('ekProjetSel');
+  if (!sel) return;
+  if (window.STATIC_MODE) { sel.innerHTML = '<option value="">Criação de tasks só no painel local</option>'; sel.disabled = true; return; }
+  sel.innerHTML = '<option value="">Carregando projetos...</option>';
+  sel.disabled = true;
+  try {
+    const r = await fetch('/api/ekyte/projects');
+    const d = await r.json();
+    if (!d.ok) throw new Error(d.error || 'Erro ao carregar projetos');
+    const projs = Array.isArray(d.projects) ? d.projects
+      : Array.isArray(d.projects?.data) ? d.projects.data : [];
+    _ekProjects = projs;
+    sel.innerHTML = '<option value="">Selecionar projeto Ekyte...</option>';
+    projs.forEach(p => {
+      const o = document.createElement('option');
+      o.value = p.documentId || p.id || p.slug || '';
+      o.textContent = p.name || p.nome || p.title || o.value;
+      sel.appendChild(o);
+    });
+    sel.disabled = false;
+  } catch(e) {
+    sel.innerHTML = `<option value="">Erro: ${esc(e.message)}</option>`;
+    sel.disabled = false;
+  }
+}
+
+function ekOnClienteChange() {
+  // Filtra projetos pelo nome do cliente selecionado (busca fuzzy)
+  const ticker = document.getElementById('ekClienteSel').value;
+  const sel    = document.getElementById('ekProjetSel');
+  if (!sel || !ticker) return;
+  const cl = CLIENTES_EKYTE.find(c => c.ticker === ticker);
+  if (!cl || !_ekProjects.length) return;
+  const nome = cl.nome.toLowerCase();
+  // Tenta fazer match por nome
+  for (let i = 0; i < sel.options.length; i++) {
+    const txt = sel.options[i].textContent.toLowerCase();
+    if (txt.includes(nome.split(' ')[0])) {
+      sel.selectedIndex = i; break;
+    }
+  }
+}
+
+function ekParsear() {
+  const text = (document.getElementById('ekAnalyseText').value || '').trim();
+  if (!text) { alert('Cole um texto de analise antes de parsear.'); return; }
+
+  // Localiza secao "Acoes"
+  let linhas = [];
+  const acoesMatch = text.match(/[Aa][çc][oõ]es[\s\S]*?(?=\n\n|\n[A-Z]|\n\d\.|$)/);
+  if (acoesMatch) {
+    linhas = acoesMatch[0].split('\n').slice(1); // pula o cabecalho
+  } else {
+    linhas = text.split('\n');
+  }
+
+  // Regex para extrair "Título da task - DD/MM" ou "Título - DD/MM/YYYY"
+  const reData = /[-–—]\s*(\d{1,2})\/(\d{2})(?:\/(\d{4}))?\s*$/;
+  const hoje   = new Date();
+  const anoHoje = hoje.getFullYear();
+
+  const tasks = [];
+  for (const linha of linhas) {
+    const l = linha.replace(/^[^\w(]+/, '').trim();
+    if (!l) continue;
+    const m = l.match(reData);
+    if (!m) continue;
+    const titulo = l.replace(reData, '').trim();
+    if (!titulo || titulo.length < 3) continue;
+    const dia = m[1].padStart(2,'0');
+    const mes = m[2];
+    const ano = m[3] || anoHoje;
+    const iso = `${ano}-${mes}-${dia}`;
+    const label = `${dia}/${mes}`;
+    tasks.push({ titulo, data_iso: iso, data_label: label, selecionada: true, status: 'pendente', responsavel: 'AM' });
+  }
+
+  if (!tasks.length) {
+    document.getElementById('ekTasksWrap').innerHTML = `<div class="ek-empty"><div class="ek-empty-icon">!</div>Nenhuma tarefa encontrada no formato esperado.<br><small>Use: Titulo da task - DD/MM</small></div>`;
+    document.getElementById('ekActionsRow').style.display = 'none';
+    return;
+  }
+
+  _ekTasks = tasks;
+  ekRenderTasks();
+}
+
+function ekRenderTasks() {
+  if (!_ekTasks.length) {
+    document.getElementById('ekTasksWrap').innerHTML = '<div class="ek-empty"><div class="ek-empty-icon">✦</div>Sem tasks.</div>';
+    document.getElementById('ekActionsRow').style.display = 'none';
+    return;
+  }
+
+  const respCls = { AM:'ek-resp-am', GT:'ek-resp-gt', CS:'ek-resp-cs' };
+  const rows = _ekTasks.map((t, i) => {
+    const stCls = t.status==='ok' ? 'ek-status-ok' : t.status==='erro' ? 'ek-status-err' : 'ek-status-wait';
+    const stTxt = t.status==='ok' ? 'Criada' : t.status==='erro' ? 'Erro' : '—';
+    return `<tr>
+      <td><input type="checkbox" ${t.selecionada?'checked':''} onchange="ekToggleTask(${i},this.checked)"></td>
+      <td><input class="ek-task-input" value="${esc(t.titulo)}" oninput="_ekTasks[${i}].titulo=this.value"></td>
+      <td><input class="ek-date-input" value="${t.data_label}" oninput="ekUpdateDate(${i},this.value)" placeholder="DD/MM"></td>
+      <td>
+        <select class="ek-select" style="margin:0;width:auto;padding:3px 6px;font-size:11px" onchange="_ekTasks[${i}].responsavel=this.value">
+          ${['AM','GT','CS'].map(r=>`<option value="${r}" ${t.responsavel===r?'selected':''}>${r}</option>`).join('')}
+        </select>
+      </td>
+      <td><span class="${stCls}">${stTxt}</span>${t.statusMsg?`<br><span style="font-size:9px;color:var(--muted)">${esc(t.statusMsg)}</span>`:''}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('ekTasksWrap').innerHTML = `
+    <table class="ek-task-table">
+      <thead><tr><th style="width:30px"></th><th>Tarefa</th><th>Data</th><th>Resp.</th><th style="width:80px">Status</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  document.getElementById('ekActionsRow').style.display = 'flex';
+  ekAtualizarCounter();
+}
+
+function ekUpdateDate(i, val) {
+  const m = val.match(/^(\d{1,2})\/(\d{2})(?:\/(\d{4}))?$/);
+  if (!m) return;
+  const dia = m[1].padStart(2,'0'), mes = m[2], ano = m[3] || new Date().getFullYear();
+  _ekTasks[i].data_iso   = `${ano}-${mes}-${dia}`;
+  _ekTasks[i].data_label = `${dia}/${mes}`;
+}
+
+function ekToggleTask(i, v) {
+  _ekTasks[i].selecionada = v;
+  ekAtualizarCounter();
+}
+
+function ekToggleAll() {
+  const todas = _ekTasks.every(t => t.selecionada);
+  _ekTasks.forEach(t => t.selecionada = !todas);
+  ekRenderTasks();
+}
+
+function ekAtualizarCounter() {
+  const sel = _ekTasks.filter(t => t.selecionada).length;
+  const el  = document.getElementById('ekSelCount');
+  if (el) el.textContent = sel;
+  const ctr = document.getElementById('ekCounter');
+  if (ctr) ctr.textContent = `${_ekTasks.length} tarefa${_ekTasks.length!==1?'s':''}`;
+}
+
+async function ekCriarTasks() {
+  const projectId = document.getElementById('ekProjetSel').value;
+  if (!projectId) { alert('Selecione um projeto no Ekyte antes de criar as tasks.'); return; }
+
+  const selecionadas = _ekTasks.filter(t => t.selecionada && t.status !== 'ok');
+  if (!selecionadas.length) { alert('Nenhuma task selecionada (ou todas ja foram criadas).'); return; }
+
+  const btn = document.getElementById('ekCriarBtn');
+  btn.disabled = true; btn.textContent = 'Criando...';
+
+  for (const t of selecionadas) {
+    t.status = 'enviando';
+    ekRenderTasks();
+    try {
+      const r = await fetch('/api/ekyte/create-task', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: t.titulo, due_date: t.data_iso, project_id: projectId }),
+      });
+      const d = await r.json();
+      if (d.ok) {
+        t.status = 'ok'; t.statusMsg = '';
+      } else {
+        t.status = 'erro'; t.statusMsg = d.error || 'Erro desconhecido';
+      }
+    } catch(e) {
+      t.status = 'erro'; t.statusMsg = e.message;
+    }
+    ekRenderTasks();
+  }
+
+  btn.disabled = false; btn.textContent = 'Criar no Ekyte';
+}
+
+function ekLimpar() {
+  _ekTasks = [];
+  document.getElementById('ekAnalyseText').value = '';
+  document.getElementById('ekTasksWrap').innerHTML = '<div class="ek-empty"><div class="ek-empty-icon">✦</div>Cole uma analise e clique em <b>Parsear Acoes</b></div>';
+  document.getElementById('ekActionsRow').style.display = 'none';
+}
+
+function toggleCard(ticker) {
+  const body = document.getElementById('body-'+ticker);
+  const chev = document.getElementById('chev-'+ticker);
+  if (!body) return;
+  body.classList.toggle('open');
+  if (chev) chev.classList.toggle('open', body.classList.contains('open'));
+}
+
+function setCardTab(ticker, tab, el) {
+  document.querySelectorAll(`[id^="panel-${ticker}-"]`).forEach(p=>p.classList.remove('active'));
+  const panel = document.getElementById('panel-'+ticker+'-'+tab);
+  if (panel) panel.classList.add('active');
+  document.querySelectorAll('#body-'+ticker+' .card-tab').forEach(t=>t.classList.remove('active'));
+  if (el) el.classList.add('active');
+}
+
+function renderSaude() {
+  const el  = document.getElementById('saudeContent');
+  const ck  = D.cockpit;
+  const cls = D.clientes||[];
+
+  let topHtml = '';
+  if (ck) {
+    const fd = ck.flagDist||{};
+    const total = ck.projetos||1;
+    const fc = {Danger:'#DC2626',Critical:'var(--orange)',Care:'var(--yellow)',Safe:'var(--green)'};
+    const flagBarHtml = Object.entries(fd).filter(([,n])=>n>0).map(([f,n])=>
+      `<div style="display:flex;align-items:center;gap:6px;font-size:11px">
+        <span style="width:8px;height:8px;border-radius:50%;background:${fc[f]||'#999'};flex-shrink:0"></span>
+        ${f}: <b>${n}</b> (${(n/total*100).toFixed(0)}%)
+      </div>`).join('');
+    topHtml = `
+      <div class="saude-kpis">
+        <div class="metric-box"><div class="metric-lbl">Projetos</div><div class="metric-val">${ck.projetos}</div><div class="metric-sub">na carteira</div></div>
+        <div class="metric-box"><div class="metric-lbl">Em Risco</div><div class="metric-val" style="color:#DC2626">${ck.emRisco}</div><div class="metric-sub">Critical + Danger</div></div>
+        <div class="metric-box"><div class="metric-lbl">Score Op.</div><div class="metric-val">${ck.scoreOp}%</div><div class="metric-sub">fee em Safe+Care</div></div>
+        <div class="metric-box"><div class="metric-lbl">HS Medio</div><div class="metric-val">${ck.hsMedia}<span style="font-size:11px;color:var(--muted)">/30</span></div></div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:16px;padding:10px 14px;background:var(--white);border:1px solid var(--border);border-radius:5px">
+        ${flagBarHtml}
+        <span style="font-size:10px;color:var(--muted);margin-left:auto">Atualizado: ${ck.lastOk||'—'}</span>
+      </div>`;
+  } else {
+    topHtml = `<div style="background:#FFFBEB;border-left:3px solid var(--yellow);border-radius:0 4px 4px 0;padding:10px 14px;font-size:12px;color:var(--yellow);margin-bottom:16px">Cockpit nao conectado. Clique em Atualizar.</div>`;
+  }
+
+  const dimBadge = (v, isScore) => {
+    if (v===null||v===undefined) return '<span class="dim-nd">N/D</span>';
+    if (isScore) { const n=parseFloat(v)||0; return `<span class="${n>=7?'dim-ok':'dim-bad'}">${n.toFixed(1)}</span>`; }
+    const ok = v===true||v==='true';
+    return `<span class="${ok?'dim-ok':'dim-bad'}">${ok?'OK':'Problema'}</span>`;
+  };
+
+  const tableHtml = `
+    <div class="table-wrap">
+      <table class="t">
+        <thead><tr><th>Cliente</th><th>Flag</th><th>Score</th><th>LT</th><th>Resultados</th><th>Ops Trafego</th><th>Entregas</th><th>Prazo</th><th>Relac.</th><th>Pace</th><th>Risco</th></tr></thead>
+        <tbody>
+          ${cls.map(c=>{
+            const gp    = c.gp||{};
+            const hs    = c.hs||{};
+            const paceR = parseFloat(c.paceReal), paceEsp = parseFloat(D.paceEsperado)||0;
+            const pc    = isNaN(paceR)?'var(--muted)':paceColor(paceR,paceEsp);
+            const dim   = hs.dim||{};
+            return `<tr onclick="setTab('sprint');setTimeout(()=>toggleCard('${c.ticker}'),80)">
+              <td><b>${c.ticker}</b> <span style="color:var(--muted)">${esc(c.nome)}</span>${c.goLive?` <span class="golive-badge">Go-live</span>`:''}</td>
+              <td>${c.goLive?`<span class="golive-badge">Go-live</span>`:hsBadge(hs.flag)}</td>
+              <td>
+                <div class="score-bar-wrap">
+                  <div class="score-bar"><div class="score-fill" style="width:${((hs.score||0)/30*100).toFixed(0)}%;background:${hsColor(hs.flag)}"></div></div>
+                  <b style="color:${hsColor(hs.flag)}">${hs.score||'—'}</b>
+                </div>
+              </td>
+              <td style="color:var(--muted)">${hs.lt?hs.lt+'m':'—'}</td>
+              <td>${dimBadge(dim.resultados,true)}</td>
+              <td>${dimBadge(dim.opsTrafego)}</td>
+              <td>${dimBadge(dim.entregas)}</td>
+              <td>${dimBadge(dim.prazoEntregas)}</td>
+              <td>${dimBadge(dim.relacionamento)}</td>
+              <td><b style="color:${pc}">${isNaN(paceR)?'—':paceR+'%'}</b></td>
+              <td>${riscoBadge(c.risco,c.riscoColor)}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>`;
+
+  el.innerHTML = `
+    <div class="sec-label">Saude — Health Score Cockpit</div>
+    ${topHtml}
+    ${tableHtml}`;
+}
+
+function renderComercial() {
+  const el  = document.getElementById('comercialContent');
+  const cls = (D.clientes||[]).filter(c=>c.com);
+  if (!cls.length) {
+    el.innerHTML = `<div style="background:var(--white);border:1px solid var(--border);border-radius:6px;padding:40px;text-align:center">
+      <div style="font-size:14px;font-weight:700;margin-bottom:6px">Planilhas Comerciais</div>
+      <div style="font-size:12px;color:var(--muted)">Dados de MQL, SQL e campanhas aparecem nos cards de cada cliente quando a planilha comercial esta compartilhada.</div>
+    </div>`;
+    return;
+  }
+  el.innerHTML = cls.map(c=>`
+    <div style="margin-bottom:24px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <span class="ticker">${c.ticker}</span><b style="font-size:14px">${esc(c.nome)}</b>${hsBadge(c.hs&&c.hs.flag)}
+      </div>
+      ${buildComPanel(c)}
+      <div class="divider"></div>
+    </div>`).join('');
+}
+
+function getMockData() {
+  const hoje = new Date(), dia=hoje.getDate();
+  const mes  = new Date(hoje.getFullYear(),hoje.getMonth()+1,0).getDate();
+  const paceEsp = (dia/mes*100).toFixed(1);
+  const d2=new Date(Date.UTC(hoje.getFullYear(),hoje.getMonth(),dia));
+  const dy=d2.getUTCDay()||7; d2.setUTCDate(d2.getUTCDate()+4-dy);
+  const sem=Math.ceil((((d2-new Date(Date.UTC(d2.getUTCFullYear(),0,1)))/86400000)+1)/7);
+  return { semana:sem, periodo:hoje.toLocaleDateString('pt-BR'), paceEsperado:paceEsp, diaAtual:dia, diasNoMes:mes,
+    updatedAt:'(offline — abra terminal em /dashboard e rode: node server.js)', cacheInfo:'—',
+    errors:['Servidor dashboard offline — abra o terminal em /dashboard e rode: node server.js'],
+    conexoes:{servidor:'offline'}, cockpit:null,
+    clientes:[{
+      ticker:'SOTB', nome:'Atlantica Maquinas', tipo:'IS', riscoScore:3,
+      hs:{flag:'Danger',score:18,lt:31,dim:{resultados:6,opsTrafego:'true',prazoEntregas:'false',entregas:'true',relacionamento:'false'},ckLeads:391,ckMql:60,ckSql:18,ckVendas:8,ckBudgetPlan:7000,ckBudgetReal:2720},
+      gp:{rawBudget:'—',rawInvest:'R$ 3.511',budget:0,investido:3511,leads:494,mql:60,sql:18,vendas:8,rawCPL:'R$ 7,11',rawFat:'R$ 144.300',rawMeta:'R$ 2.702',rawGoogle:'R$ 809',rawROAS:'41,10',rawTicket:'R$ 18.037,50',rawPctLMQL:'12,15%',rawPctMS:'30,00%',rawPctSV:'44,44%'},
+      com:null, paceReal:'—', desvio:'—', paceStatus:'Sem budget', risco:'CRITICO', riscoColor:'#E50914', mensagem:''
+    }]};
+}
+
+// ─────────────────────────────────────────────
+// ANUAL — Cliente x Mês
+// ─────────────────────────────────────────────
+const MONTHLY_CACHE = {};
+let anualTicker = null;
+let anualMonthIdx = null;
+const MESES_LABEL = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+function fmtBRL(v) {
+  if (v===null || v===undefined || v===0) return '—';
+  return 'R$ ' + Math.round(v).toLocaleString('pt-BR');
+}
+function fmtN(v) {
+  if (v===null || v===undefined) return '—';
+  return Math.round(v).toLocaleString('pt-BR');
+}
+
+async function renderAnual() {
+  const cls = (D && D.clientes) || [];
+  if (!anualTicker && cls.length) anualTicker = cls[0].ticker;
+  if (anualMonthIdx===null) anualMonthIdx = new Date().getMonth();
+
+  const clientNav = document.getElementById('anualClientNav');
+  clientNav.innerHTML = cls.map(c =>
+    `<button class="pill-btn ${c.ticker===anualTicker?'active':''}" onclick="selectAnualClient('${c.ticker}')">${c.ticker}</button>`
+  ).join('');
+
+  await loadMonthlyIfNeeded(anualTicker);
+  renderAnualMonthNav();
+  renderAnualContent();
+}
+
+function selectAnualClient(ticker) {
+  anualTicker = ticker;
+  renderAnual();
+}
+
+function selectAnualMonth(idx) {
+  anualMonthIdx = idx;
+  renderAnualMonthNav();
+  renderAnualContent();
+}
+
+async function loadMonthlyIfNeeded(ticker) {
+  if (!ticker || MONTHLY_CACHE[ticker]) return;
+  if (window.STATIC_MODE) {
+    MONTHLY_CACHE[ticker] = (window.STATIC_MONTHLY && window.STATIC_MONTHLY[ticker]) || { error: true };
+    return;
+  }
+  try {
+    const r = await fetch(`/api/monthly/${ticker}`);
+    if (!r.ok) { MONTHLY_CACHE[ticker] = { error: true }; return; }
+    MONTHLY_CACHE[ticker] = await r.json();
+  } catch(e) {
+    MONTHLY_CACHE[ticker] = { error: true };
+  }
+}
+
+function renderAnualMonthNav() {
+  const nav = document.getElementById('anualMonthNav');
+  const archive = MONTHLY_CACHE[anualTicker];
+  const months = archive && archive.months;
+  nav.innerHTML = MESES_LABEL.map((label, i) => {
+    const st = months ? months[i].status : (i===new Date().getMonth() ? 'current' : (i<new Date().getMonth()?'closed':'planned'));
+    return `<button class="pill-btn month-${st} ${i===anualMonthIdx?'active':''}" onclick="selectAnualMonth(${i})">${label}</button>`;
+  }).join('');
+}
+
+function renderAnualContent() {
+  const el = document.getElementById('anualContent');
+  const archive = MONTHLY_CACHE[anualTicker];
+  if (!archive || archive.error) {
+    el.innerHTML = `<div class="anual-slot">Sem arquivo anual para ${esc(anualTicker||'')} ainda. Ele é gerado automaticamente pelo cron do servidor (ou via GET /api/refresh-annual).</div>`;
+    return;
+  }
+  const mes = archive.months[anualMonthIdx];
+  const statusLabel = {closed:'Fechado', current:'Ao vivo', planned:'Projetado'}[mes.status];
+  const gp = mes.growthpack;
+  const midia = mes.midia;
+  const entregas = mes.entregas;
+  const ck = mes.cockpit;
+
+  const gpBlock = gp ? `
+    <div class="anual-card">
+      <h3>GrowthPack — ${MESES_LABEL[anualMonthIdx]}/${archive.months[anualMonthIdx].year} <span class="anual-status-tag anual-status-${mes.status}">${statusLabel}</span></h3>
+      <div class="anual-grid">
+        <div class="anual-kpi"><div class="anual-kpi-lbl">Budget</div><div class="anual-kpi-real">${gp.rawBudget||'—'}</div></div>
+        <div class="anual-kpi"><div class="anual-kpi-lbl">Investido</div><div class="anual-kpi-real">${gp.rawInvest||'—'}</div></div>
+        <div class="anual-kpi"><div class="anual-kpi-lbl">Leads</div><div class="anual-kpi-real">${fmtN(gp.leads)}</div></div>
+        <div class="anual-kpi"><div class="anual-kpi-lbl">MQL</div><div class="anual-kpi-real">${fmtN(gp.mql)}</div></div>
+        <div class="anual-kpi"><div class="anual-kpi-lbl">SQL</div><div class="anual-kpi-real">${fmtN(gp.sql)}</div></div>
+        <div class="anual-kpi"><div class="anual-kpi-lbl">Vendas</div><div class="anual-kpi-real">${fmtN(gp.vendas)}</div></div>
+        <div class="anual-kpi"><div class="anual-kpi-lbl">CPL</div><div class="anual-kpi-real">${gp.rawCPL||'—'}</div></div>
+        <div class="anual-kpi"><div class="anual-kpi-lbl">Faturamento</div><div class="anual-kpi-real">${gp.rawFat||'—'}</div></div>
+      </div>
+    </div>` : `<div class="anual-card"><h3>GrowthPack</h3><div class="anual-slot">⚠ Sem dado de GrowthPack pra este mês (planilha sem essa coluna, ou cliente sem GrowthPack cadastrado).</div></div>`;
+
+  const midiaBlock = midia ? `
+    <div class="anual-card">
+      <h3>Mídia direta (Meta / Google)</h3>
+      <div class="anual-grid">
+        ${midia.meta ? `
+        <div class="anual-kpi"><div class="anual-kpi-lbl">Meta — Invest.</div><div class="anual-kpi-real">${fmtBRL(midia.meta.cost)}</div></div>
+        <div class="anual-kpi"><div class="anual-kpi-lbl">Meta — Leads</div><div class="anual-kpi-real">${fmtN(midia.meta.leads)}</div></div>
+        <div class="anual-kpi"><div class="anual-kpi-lbl">Meta — CPL</div><div class="anual-kpi-real">${midia.meta.cpl?fmtBRL(midia.meta.cpl):'—'}</div></div>` : ''}
+        ${midia.google ? `
+        <div class="anual-kpi"><div class="anual-kpi-lbl">Google — Invest.</div><div class="anual-kpi-real">${fmtBRL(midia.google.cost)}</div></div>
+        <div class="anual-kpi"><div class="anual-kpi-lbl">Google — Leads</div><div class="anual-kpi-real">${fmtN(midia.google.leads)}</div></div>
+        <div class="anual-kpi"><div class="anual-kpi-lbl">Google — CPL</div><div class="anual-kpi-real">${midia.google.cpl?fmtBRL(midia.google.cpl):'—'}</div></div>` : ''}
+      </div>
+    </div>` : `<div class="anual-card"><h3>Mídia direta (Meta / Google)</h3><div class="anual-slot">⚠ Sem dado de mídia pra este mês (canal não conectado no NEKT, ou mês futuro).</div></div>`;
+
+  const ckBlock = ck ? `
+    <div class="anual-card">
+      <h3>Health Score (ao vivo)</h3>
+      <div class="anual-grid">
+        <div class="anual-kpi"><div class="anual-kpi-lbl">Flag</div><div class="anual-kpi-real">${esc(ck.flag||'—')}</div></div>
+        <div class="anual-kpi"><div class="anual-kpi-lbl">Score</div><div class="anual-kpi-real">${ck.score||'—'}</div></div>
+        <div class="anual-kpi"><div class="anual-kpi-lbl">Pace budget</div><div class="anual-kpi-real">${ck.ckPace?(ck.ckPace*100).toFixed(1)+'%':'—'}</div></div>
+      </div>
+    </div>` : '';
+
+  const entregasBlock = entregas ? `
+    <div class="anual-card">
+      <h3>Entregas Ekyte concluídas — ${entregas.total}</h3>
+      ${entregas.tasks.length ? `<ul style="font-size:12px;line-height:1.8;padding-left:18px">${entregas.tasks.map(t=>
+        `<li>${t.link?`<a href="${t.link}" target="_blank" style="color:var(--red)">${esc(t.title)}</a>`:esc(t.title)}</li>`).join('')}</ul>` : ''}
+    </div>` : `<div class="anual-card"><h3>Entregas Ekyte</h3><div class="anual-slot">⚠ Sem entregas localizadas pra este mês (projeto Ekyte não resolvido, ou mês futuro).</div></div>`;
+
+  el.innerHTML = gpBlock + midiaBlock + ckBlock + entregasBlock;
+}
+
+// ─────────────────────────────────────────────
+// PRIORIDADES DO DIA — localStorage, sem backend
+// ─────────────────────────────────────────────
+const PRIO_KEY = 'prioridades-dia';
+let prioDragIdx = null;
+
+function getPrioridades() {
+  try { return JSON.parse(localStorage.getItem(PRIO_KEY)) || []; }
+  catch(_) { return []; }
+}
+function setPrioridades(list) {
+  localStorage.setItem(PRIO_KEY, JSON.stringify(list));
+}
+
+function addPrioridade() {
+  const input = document.getElementById('prioInput');
+  const text = input.value.trim();
+  if (!text) return;
+  const list = getPrioridades();
+  list.push({ text, done: false });
+  setPrioridades(list);
+  input.value = '';
+  renderPrioridades();
+}
+
+function togglePrioridade(idx) {
+  const list = getPrioridades();
+  if (list[idx]) list[idx].done = !list[idx].done;
+  setPrioridades(list);
+  renderPrioridades();
+}
+
+function removePrioridade(idx) {
+  const list = getPrioridades();
+  list.splice(idx, 1);
+  setPrioridades(list);
+  renderPrioridades();
+}
+
+function resetPrioridades() {
+  if (!confirm('Apagar todas as prioridades do dia?')) return;
+  setPrioridades([]);
+  renderPrioridades();
+}
+
+function prioDragStart(e, idx) {
+  prioDragIdx = idx;
+  e.currentTarget.classList.add('dragging');
+}
+function prioDragEnd(e) {
+  e.currentTarget.classList.remove('dragging');
+  document.querySelectorAll('.prio-item').forEach(el => el.classList.remove('drag-over'));
+}
+function prioDragOver(e, idx) {
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+}
+function prioDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+function prioDrop(e, idx) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (prioDragIdx===null || prioDragIdx===idx) return;
+  const list = getPrioridades();
+  const [moved] = list.splice(prioDragIdx, 1);
+  list.splice(idx, 0, moved);
+  setPrioridades(list);
+  prioDragIdx = null;
+  renderPrioridades();
+}
+
+function renderPrioridades() {
+  const el = document.getElementById('prioList');
+  const list = getPrioridades();
+  if (!list.length) {
+    el.innerHTML = '<div class="prio-empty">Nenhuma prioridade ainda. Adicione a primeira acima.</div>';
+    return;
+  }
+  el.innerHTML = list.map((item, idx) => `
+    <div class="prio-item ${item.done?'done':''}" draggable="true"
+      ondragstart="prioDragStart(event,${idx})" ondragend="prioDragEnd(event)"
+      ondragover="prioDragOver(event,${idx})" ondragleave="prioDragLeave(event)" ondrop="prioDrop(event,${idx})">
+      <span class="prio-handle">⠿</span>
+      <input type="checkbox" ${item.done?'checked':''} onchange="togglePrioridade(${idx})">
+      <span class="prio-text">${esc(item.text)}</span>
+      <span class="prio-del" onclick="removePrioridade(${idx})">✕</span>
+    </div>`).join('');
+}
+
+loadData();
+</script>
+</body>
+</html>
