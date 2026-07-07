@@ -2,7 +2,7 @@
   "ticker": "SOTB",
   "nome": "Atlantica Maquinas",
   "tipo": "IS",
-  "updatedAt": "2026-07-07T15:54:18.603Z",
+  "updatedAt": "2026-07-07T16:26:57.806Z",
   "months": [
     {
       "month": "janeiro",
@@ -55,12 +55,14 @@
       },
       "midia": {
         "meta": {
-          "cost": 3251.630000000005,
-          "clicks": 25095,
-          "impressions": 611695,
-          "leads": 447,
+          "cost": 4505.810000000009,
+          "clicks": 31529,
+          "impressions": 767275,
+          "leads": 698,
           "purchases": 0,
-          "purchaseValue": 0
+          "purchaseValue": 0,
+          "cpl": 6.45531518624643,
+          "roas": null
         },
         "google": {
           "cost": 392389731,
