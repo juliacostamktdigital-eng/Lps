@@ -53,15 +53,18 @@ jobs:
           BODY=$(grep '^data:' /tmp/hs_raw.txt | sed 's/^data: //')
           if [ -z "$BODY" ]; then BODY=$(cat /tmp/hs_raw.txt); fi
 
-          # 4. Filtrar clientes Colli. Ticker real da Fares Aquino no Cockpit e FARE1 (nao FARS).
-          #    "SOL" (Solucao Locadora) e "NEWS" (New Safes) sao renomeados pro apelido interno usado no resto
-          #    do painel (SOLC/NWSF), igual ao CK_TICKER_MAP do dashboard/server.js.
+          # 4. Filtrar clientes Colli. Ticker real da Fares Aquino no Cockpit e FARE1 (nao FARS), da Natuclean
+          #    e NTCLN (nao NATU). "SOL"/"NEWS"/"NTCLN" sao renomeados pro apelido interno usado no resto do
+          #    painel (SOLC/NWSF/NATU), igual ao CK_TICKER_MAP do dashboard/server.js. Os campos de health
+          #    score vem dentro de healthScoreTable, com fallback pra raiz caso a API mude.
           echo "$BODY" | jq '.result.content[0].text | fromjson |
               { updatedAt: (now | todate),
-                data: [.data[] | select(.ticker | test("^(ACCE|NATU|FARE1|MSZB|SOTB|TAWV|SOL|NEWS)$")) |
-                  { ticker: ({SOL:"SOLC", NEWS:"NWSF"}[.ticker] // .ticker),
-                    name, algorithm_flag, algorithm_health_avg_score, lt,
-                    projectStartDate, churnDate, atendimentoDiarioAtivo }]
+                data: [.data[] | select(.ticker | test("^(ACCE|NTCLN|FARE1|MSZB|SOTB|TAWV|SOL|NEWS)$")) |
+                  { ticker: ({NTCLN:"NATU", SOL:"SOLC", NEWS:"NWSF"}[.ticker] // .ticker),
+                    name,
+                    algorithm_flag: (.algorithm_flag // .healthScoreTable.algorithm_flag),
+                    algorithm_health_avg_score: (.algorithm_health_avg_score // .healthScoreTable.algorithm_health_avg_score),
+                    lt, projectStartDate, churnDate, atendimentoDiarioAtivo }]
               }' > painel/data/health_scores.json 2>/tmp/hs_jq_err.txt \
             || { echo "jq falhou — primeiros 300 chars da resposta:"; echo "$BODY" | head -c 300; echo; cat /tmp/hs_jq_err.txt; \
                  echo '{"updatedAt":"","data":[],"error":"parse failed"}' > painel/data/health_scores.json; }
