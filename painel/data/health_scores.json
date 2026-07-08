@@ -1,36 +1,6 @@
 {
-  "updatedAt": "2026-07-07T15:41:10Z",
+  "updatedAt": "2026-07-08T11:49:46Z",
   "data": [
-    {
-      "ticker": "SOTB",
-      "name": "SOTOBI MAQUINAS E ACESSORIOS PARA FABRICAS DE BLOCOS LTDA",
-      "algorithm_flag": "Care",
-      "algorithm_health_avg_score": "21.6",
-      "lt": 32,
-      "projectStartDate": "2023-10-30T00:00:00.000Z",
-      "churnDate": null,
-      "atendimentoDiarioAtivo": true
-    },
-    {
-      "ticker": "SOLC",
-      "name": "Solucao Locadora",
-      "algorithm_flag": null,
-      "algorithm_health_avg_score": null,
-      "lt": 0,
-      "projectStartDate": "2026-06-17T03:00:00.000Z",
-      "churnDate": null,
-      "atendimentoDiarioAtivo": false
-    },
-    {
-      "ticker": "NWSF",
-      "name": "New Safes",
-      "algorithm_flag": "Critical",
-      "algorithm_health_avg_score": "0",
-      "lt": 0,
-      "projectStartDate": "2026-07-01T03:00:00.000Z",
-      "churnDate": null,
-      "atendimentoDiarioAtivo": false
-    },
     {
       "ticker": "NATU",
       "name": "Natuclean",
@@ -42,12 +12,42 @@
       "atendimentoDiarioAtivo": false
     },
     {
-      "ticker": "FARE1",
-      "name": "FARES AQUINO SOCIEDADE INDIVIDUAL DE ADVOCACIA",
-      "algorithm_flag": "Safe",
+      "ticker": "SOTB",
+      "name": "SOTOBI MAQUINAS E ACESSORIOS PARA FABRICAS DE BLOCOS LTDA",
+      "algorithm_flag": "Care",
       "algorithm_health_avg_score": "21.6",
-      "lt": 3,
-      "projectStartDate": "2026-04-03T12:00:00.000Z",
+      "lt": 32,
+      "projectStartDate": "2023-10-30T00:00:00.000Z",
+      "churnDate": null,
+      "atendimentoDiarioAtivo": true
+    },
+    {
+      "ticker": "MSZB",
+      "name": "Massimo Zanetti Beverage Brasil Ltda",
+      "algorithm_flag": "Safe",
+      "algorithm_health_avg_score": "22.7",
+      "lt": 2,
+      "projectStartDate": "2026-04-15T03:00:00.000Z",
+      "churnDate": null,
+      "atendimentoDiarioAtivo": null
+    },
+    {
+      "ticker": "TAWV",
+      "name": "TAWÁ VEÍCULOS",
+      "algorithm_flag": "Care",
+      "algorithm_health_avg_score": "15.8",
+      "lt": 2,
+      "projectStartDate": "2026-04-27T03:00:00.000Z",
+      "churnDate": null,
+      "atendimentoDiarioAtivo": true
+    },
+    {
+      "ticker": "NWSF",
+      "name": "New Safes",
+      "algorithm_flag": "Critical",
+      "algorithm_health_avg_score": "0",
+      "lt": 0,
+      "projectStartDate": "2026-07-01T03:00:00.000Z",
       "churnDate": null,
       "atendimentoDiarioAtivo": false
     },
@@ -62,24 +62,24 @@
       "atendimentoDiarioAtivo": true
     },
     {
-      "ticker": "TAWV",
-      "name": "TAWÁ VEÍCULOS",
-      "algorithm_flag": "Care",
-      "algorithm_health_avg_score": "15.8",
-      "lt": 2,
-      "projectStartDate": "2026-04-27T03:00:00.000Z",
+      "ticker": "SOLC",
+      "name": "Solucao Locadora",
+      "algorithm_flag": null,
+      "algorithm_health_avg_score": null,
+      "lt": 0,
+      "projectStartDate": "2026-06-17T03:00:00.000Z",
       "churnDate": null,
-      "atendimentoDiarioAtivo": true
+      "atendimentoDiarioAtivo": false
     },
     {
-      "ticker": "MSZB",
-      "name": "Massimo Zanetti Beverage Brasil Ltda",
+      "ticker": "FARE1",
+      "name": "FARES AQUINO SOCIEDADE INDIVIDUAL DE ADVOCACIA",
       "algorithm_flag": "Safe",
-      "algorithm_health_avg_score": "22.7",
-      "lt": 2,
-      "projectStartDate": "2026-04-15T03:00:00.000Z",
+      "algorithm_health_avg_score": "21.6",
+      "lt": 3,
+      "projectStartDate": "2026-04-03T12:00:00.000Z",
       "churnDate": null,
-      "atendimentoDiarioAtivo": null
+      "atendimentoDiarioAtivo": false
     }
   ]
 }
