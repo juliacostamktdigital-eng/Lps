@@ -2,7 +2,7 @@
   "ticker": "MSZB",
   "nome": "Massimo Zanetti",
   "tipo": "EC",
-  "updatedAt": "2026-07-07T16:22:03.387Z",
+  "updatedAt": "2026-07-10T03:13:44.398Z",
   "months": [
     {
       "month": "janeiro",
@@ -72,43 +72,7 @@
       "growthpack": null,
       "midia": null,
       "entregas": null,
-      "cockpit": {
-        "flag": "Safe",
-        "score": 30,
-        "documentId": "umc8om8dne121vd6qbeoct6n",
-        "lt": 2,
-        "nome": "Massimo Zanetti Beverage Brasil Ltda",
-        "fee": 6750.2,
-        "dim": {
-          "resultados": 10,
-          "opsTrafego": "true",
-          "prazoEntregas": "true",
-          "entregas": "true",
-          "relacionamento": "true"
-        },
-        "ckPace": 0.07334,
-        "ckBudgetPlan": 500,
-        "ckBudgetReal": 36.67,
-        "ckLeadsMeta": 0,
-        "ckMqlMeta": 0,
-        "ckSqlMeta": 0,
-        "ckVendasMeta": 38,
-        "ckLeads": 0,
-        "ckMql": 0,
-        "ckSql": 0,
-        "ckVendas": 2,
-        "ckLeadsPacing": 0,
-        "ckMqlPacing": 0,
-        "ckSqlPacing": 0,
-        "ckVendasPacing": 0.05263157894736842,
-        "ckRevenuePacing": 0.04661754385964913,
-        "ckRevenueMeta": 5700,
-        "ckRevenueReal": 265.72,
-        "goalReached": 1,
-        "ckSynthesis": "",
-        "ckWhatsapp": "",
-        "ckActionPlan": ""
-      }
+      "cockpit": null
     },
     {
       "month": "agosto",

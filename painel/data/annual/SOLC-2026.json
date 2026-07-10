@@ -2,7 +2,7 @@
   "ticker": "SOLC",
   "nome": "Solucoes e Locacoes",
   "tipo": "IS",
-  "updatedAt": "2026-07-07T16:29:46.021Z",
+  "updatedAt": "2026-07-10T03:13:44.413Z",
   "months": [
     {
       "month": "janeiro",
@@ -20,19 +20,7 @@
       "year": 2026,
       "status": "closed",
       "growthpack": null,
-      "midia": {
-        "meta": {
-          "cost": 817.0299999999999,
-          "clicks": 353,
-          "impressions": 57450,
-          "leads": 0,
-          "purchases": 0,
-          "purchaseValue": 0,
-          "cpl": null,
-          "roas": null
-        },
-        "google": null
-      },
+      "midia": null,
       "entregas": null,
       "cockpit": null
     },
@@ -84,43 +72,7 @@
       "growthpack": null,
       "midia": null,
       "entregas": null,
-      "cockpit": {
-        "flag": "N/D",
-        "score": 0,
-        "documentId": "ghg3loowgt1qf3egp1qfer0h",
-        "lt": 0,
-        "nome": "Solucao Locadora",
-        "fee": 5149.57,
-        "dim": {
-          "resultados": 0,
-          "opsTrafego": null,
-          "prazoEntregas": null,
-          "entregas": null,
-          "relacionamento": null
-        },
-        "ckPace": 0,
-        "ckBudgetPlan": 0,
-        "ckBudgetReal": 0,
-        "ckLeadsMeta": 0,
-        "ckMqlMeta": 0,
-        "ckSqlMeta": 0,
-        "ckVendasMeta": 0,
-        "ckLeads": 0,
-        "ckMql": 0,
-        "ckSql": 0,
-        "ckVendas": 0,
-        "ckLeadsPacing": 0,
-        "ckMqlPacing": 0,
-        "ckSqlPacing": 0,
-        "ckVendasPacing": 0,
-        "ckRevenuePacing": 0,
-        "ckRevenueMeta": 0,
-        "ckRevenueReal": 0,
-        "goalReached": 1,
-        "ckSynthesis": "",
-        "ckWhatsapp": "",
-        "ckActionPlan": ""
-      }
+      "cockpit": null
     },
     {
       "month": "agosto",
