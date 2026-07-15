@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-14T11:35:41Z",
+  "updatedAt": "2026-07-15T11:39:13Z",
   "data": [
     {
       "ticker": "SOTB",
@@ -36,7 +36,7 @@
       "name": "Massimo Zanetti Beverage Brasil Ltda",
       "algorithm_flag": "Safe",
       "algorithm_health_avg_score": "23.9",
-      "lt": 2,
+      "lt": 3,
       "projectStartDate": "2026-04-15T03:00:00.000Z",
       "churnDate": null,
       "atendimentoDiarioAtivo": null
