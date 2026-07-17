@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-16T11:44:31Z",
+  "updatedAt": "2026-07-17T11:24:42Z",
   "data": [
     {
       "ticker": "SOTB",
@@ -66,7 +66,7 @@
       "name": "Solucao Locadora",
       "algorithm_flag": "Danger",
       "algorithm_health_avg_score": "20.0",
-      "lt": 0,
+      "lt": 1,
       "projectStartDate": "2026-06-17T03:00:00.000Z",
       "churnDate": null,
       "atendimentoDiarioAtivo": false
