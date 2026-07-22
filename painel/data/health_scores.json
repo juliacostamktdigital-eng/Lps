@@ -1,13 +1,23 @@
 {
-  "updatedAt": "2026-07-21T11:50:49Z",
+  "updatedAt": "2026-07-22T11:51:32Z",
   "data": [
     {
-      "ticker": "ACCE",
-      "name": "ACCENTURE PARTICIPACOES LTDA(ACCENTURE PARTICIPACOES LTDA - 54.271.277/0001-88)",
+      "ticker": "NATU",
+      "name": "Natuclean",
+      "algorithm_flag": "Danger",
+      "algorithm_health_avg_score": "22.4",
+      "lt": 1,
+      "projectStartDate": "2026-05-30T03:00:00.000Z",
+      "churnDate": null,
+      "atendimentoDiarioAtivo": false
+    },
+    {
+      "ticker": "SOTB",
+      "name": "SOTOBI MAQUINAS E ACESSORIOS PARA FABRICAS DE BLOCOS LTDA",
       "algorithm_flag": "Care",
-      "algorithm_health_avg_score": "25.8",
-      "lt": 9,
-      "projectStartDate": "2025-09-26T03:00:00.000Z",
+      "algorithm_health_avg_score": "23.1",
+      "lt": 32,
+      "projectStartDate": "2023-10-30T00:00:00.000Z",
       "churnDate": null,
       "atendimentoDiarioAtivo": true
     },
@@ -22,42 +32,12 @@
       "atendimentoDiarioAtivo": null
     },
     {
-      "ticker": "NATU",
-      "name": "Natuclean",
-      "algorithm_flag": "Danger",
-      "algorithm_health_avg_score": "22.4",
-      "lt": 1,
-      "projectStartDate": "2026-05-30T03:00:00.000Z",
-      "churnDate": null,
-      "atendimentoDiarioAtivo": false
-    },
-    {
-      "ticker": "FARE1",
-      "name": "FARES AQUINO SOCIEDADE INDIVIDUAL DE ADVOCACIA",
-      "algorithm_flag": "Safe",
+      "ticker": "ACCE",
+      "name": "ACCENTURE PARTICIPACOES LTDA(ACCENTURE PARTICIPACOES LTDA - 54.271.277/0001-88)",
+      "algorithm_flag": "Care",
       "algorithm_health_avg_score": "25.8",
-      "lt": 3,
-      "projectStartDate": "2026-04-03T12:00:00.000Z",
-      "churnDate": null,
-      "atendimentoDiarioAtivo": false
-    },
-    {
-      "ticker": "TAWV",
-      "name": "TAWÁ VEÍCULOS",
-      "algorithm_flag": "Safe",
-      "algorithm_health_avg_score": "19.2",
-      "lt": 2,
-      "projectStartDate": "2026-04-27T03:00:00.000Z",
-      "churnDate": null,
-      "atendimentoDiarioAtivo": true
-    },
-    {
-      "ticker": "NWSF",
-      "name": "New Safes",
-      "algorithm_flag": "Safe",
-      "algorithm_health_avg_score": "17.5",
-      "lt": 0,
-      "projectStartDate": "2026-07-01T03:00:00.000Z",
+      "lt": 9,
+      "projectStartDate": "2025-09-26T03:00:00.000Z",
       "churnDate": null,
       "atendimentoDiarioAtivo": true
     },
@@ -72,12 +52,22 @@
       "atendimentoDiarioAtivo": false
     },
     {
-      "ticker": "SOTB",
-      "name": "SOTOBI MAQUINAS E ACESSORIOS PARA FABRICAS DE BLOCOS LTDA",
-      "algorithm_flag": "Care",
-      "algorithm_health_avg_score": "23.1",
-      "lt": 32,
-      "projectStartDate": "2023-10-30T00:00:00.000Z",
+      "ticker": "NWSF",
+      "name": "New Safes",
+      "algorithm_flag": "Safe",
+      "algorithm_health_avg_score": "17.5",
+      "lt": 0,
+      "projectStartDate": "2026-07-01T03:00:00.000Z",
+      "churnDate": null,
+      "atendimentoDiarioAtivo": true
+    },
+    {
+      "ticker": "TAWV",
+      "name": "TAWÁ VEÍCULOS",
+      "algorithm_flag": "Safe",
+      "algorithm_health_avg_score": "19.2",
+      "lt": 2,
+      "projectStartDate": "2026-04-27T03:00:00.000Z",
       "churnDate": null,
       "atendimentoDiarioAtivo": true
     }
