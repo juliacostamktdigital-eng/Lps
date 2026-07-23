@@ -2,7 +2,7 @@
   "ticker": "SOLC",
   "nome": "Solucoes e Locacoes",
   "tipo": "IS",
-  "updatedAt": "2026-07-10T03:13:44.413Z",
+  "updatedAt": "2026-07-23T17:25:03.420Z",
   "months": [
     {
       "month": "janeiro",
@@ -20,7 +20,19 @@
       "year": 2026,
       "status": "closed",
       "growthpack": null,
-      "midia": null,
+      "midia": {
+        "meta": {
+          "cost": 817.03,
+          "clicks": 353,
+          "impressions": 57450,
+          "leads": 0,
+          "purchases": 0,
+          "purchaseValue": 0,
+          "cpl": null,
+          "roas": null
+        },
+        "google": null
+      },
       "entregas": null,
       "cockpit": null
     },
@@ -70,9 +82,57 @@
       "year": 2026,
       "status": "current",
       "growthpack": null,
-      "midia": null,
+      "midia": {
+        "meta": {
+          "cost": 342.61,
+          "clicks": 187,
+          "impressions": 23354,
+          "leads": 0,
+          "purchases": 0,
+          "purchaseValue": 0,
+          "cpl": null,
+          "roas": null
+        },
+        "google": null
+      },
       "entregas": null,
-      "cockpit": null
+      "cockpit": {
+        "flag": "Care",
+        "score": 24,
+        "documentId": "ghg3loowgt1qf3egp1qfer0h",
+        "lt": 1,
+        "nome": "Solucao Locadora",
+        "fee": 5149.57,
+        "dim": {
+          "resultados": 4,
+          "opsTrafego": "true",
+          "prazoEntregas": "true",
+          "entregas": "true",
+          "relacionamento": "true"
+        },
+        "ckPace": 0.2812790697674419,
+        "ckBudgetPlan": 3010,
+        "ckBudgetReal": 846.6500000000001,
+        "ckLeadsMeta": 120,
+        "ckMqlMeta": 48,
+        "ckSqlMeta": 19,
+        "ckVendasMeta": 10,
+        "ckLeads": 21,
+        "ckMql": 8,
+        "ckSql": 5,
+        "ckVendas": 0,
+        "ckLeadsPacing": 0.175,
+        "ckMqlPacing": 0.16666666666666666,
+        "ckSqlPacing": 0.2631578947368421,
+        "ckVendasPacing": 0,
+        "ckRevenuePacing": 0,
+        "ckRevenueMeta": 0,
+        "ckRevenueReal": 0,
+        "goalReached": 0.2631578947368421,
+        "ckSynthesis": "",
+        "ckWhatsapp": "",
+        "ckActionPlan": ""
+      }
     },
     {
       "month": "agosto",

@@ -2,7 +2,7 @@
   "ticker": "NWSF",
   "nome": "New Safes",
   "tipo": "IS",
-  "updatedAt": "2026-07-10T03:13:44.415Z",
+  "updatedAt": "2026-07-23T17:25:12.470Z",
   "months": [
     {
       "month": "janeiro",
@@ -72,7 +72,43 @@
       "growthpack": null,
       "midia": null,
       "entregas": null,
-      "cockpit": null
+      "cockpit": {
+        "flag": "Safe",
+        "score": 30,
+        "documentId": "j1mkltry8wh6ogwr4oukerya",
+        "lt": 0,
+        "nome": "New Safes",
+        "fee": 6328.7,
+        "dim": {
+          "resultados": 10,
+          "opsTrafego": "true",
+          "prazoEntregas": "true",
+          "entregas": "true",
+          "relacionamento": "true"
+        },
+        "ckPace": 0,
+        "ckBudgetPlan": 0,
+        "ckBudgetReal": 0,
+        "ckLeadsMeta": 0,
+        "ckMqlMeta": 0,
+        "ckSqlMeta": 0,
+        "ckVendasMeta": 0,
+        "ckLeads": 0,
+        "ckMql": 0,
+        "ckSql": 0,
+        "ckVendas": 0,
+        "ckLeadsPacing": 0,
+        "ckMqlPacing": 0,
+        "ckSqlPacing": 0,
+        "ckVendasPacing": 0,
+        "ckRevenuePacing": 0,
+        "ckRevenueMeta": 0,
+        "ckRevenueReal": 0,
+        "goalReached": 1,
+        "ckSynthesis": "",
+        "ckWhatsapp": "seguro",
+        "ckActionPlan": ""
+      }
     },
     {
       "month": "agosto",
