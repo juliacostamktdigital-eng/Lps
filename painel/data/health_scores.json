@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-06T12:05:21Z",
+  "updatedAt": "2026-08-07T10:57:44Z",
   "data": [
     {
       "ticker": "MSZB",
@@ -12,26 +12,6 @@
       "atendimentoDiarioAtivo": null
     },
     {
-      "ticker": "ACCE",
-      "name": "ACCENTURE PARTICIPACOES LTDA(ACCENTURE PARTICIPACOES LTDA - 54.271.277/0001-88)",
-      "algorithm_flag": "Safe",
-      "algorithm_health_avg_score": "27.4",
-      "lt": 10,
-      "projectStartDate": "2025-09-26T03:00:00.000Z",
-      "churnDate": null,
-      "atendimentoDiarioAtivo": true
-    },
-    {
-      "ticker": "NATU",
-      "name": "Natuclean",
-      "algorithm_flag": "Danger",
-      "algorithm_health_avg_score": "21.2",
-      "lt": 2,
-      "projectStartDate": "2026-05-30T03:00:00.000Z",
-      "churnDate": null,
-      "atendimentoDiarioAtivo": false
-    },
-    {
       "ticker": "SOLC",
       "name": "Solucao Locadora",
       "algorithm_flag": "Safe",
@@ -42,12 +22,12 @@
       "atendimentoDiarioAtivo": false
     },
     {
-      "ticker": "TAWV",
-      "name": "TAWÁ VEÍCULOS",
+      "ticker": "ACCE",
+      "name": "ACCENTURE PARTICIPACOES LTDA(ACCENTURE PARTICIPACOES LTDA - 54.271.277/0001-88)",
       "algorithm_flag": "Safe",
-      "algorithm_health_avg_score": "22.4",
-      "lt": 3,
-      "projectStartDate": "2026-04-27T03:00:00.000Z",
+      "algorithm_health_avg_score": "27.4",
+      "lt": 10,
+      "projectStartDate": "2025-09-26T03:00:00.000Z",
       "churnDate": null,
       "atendimentoDiarioAtivo": true
     },
@@ -62,14 +42,24 @@
       "atendimentoDiarioAtivo": true
     },
     {
-      "ticker": "FARE1",
-      "name": "FARES AQUINO SOCIEDADE INDIVIDUAL DE ADVOCACIA",
-      "algorithm_flag": "Safe",
-      "algorithm_health_avg_score": "28.2",
-      "lt": 4,
-      "projectStartDate": "2026-04-03T12:00:00.000Z",
+      "ticker": "NATU",
+      "name": "Natuclean",
+      "algorithm_flag": "Danger",
+      "algorithm_health_avg_score": "21.2",
+      "lt": 2,
+      "projectStartDate": "2026-05-30T03:00:00.000Z",
       "churnDate": null,
       "atendimentoDiarioAtivo": false
+    },
+    {
+      "ticker": "TAWV",
+      "name": "TAWÁ VEÍCULOS",
+      "algorithm_flag": "Safe",
+      "algorithm_health_avg_score": "22.4",
+      "lt": 3,
+      "projectStartDate": "2026-04-27T03:00:00.000Z",
+      "churnDate": null,
+      "atendimentoDiarioAtivo": true
     },
     {
       "ticker": "NWSF",
@@ -80,6 +70,16 @@
       "projectStartDate": "2026-07-01T03:00:00.000Z",
       "churnDate": null,
       "atendimentoDiarioAtivo": true
+    },
+    {
+      "ticker": "FARE1",
+      "name": "FARES AQUINO SOCIEDADE INDIVIDUAL DE ADVOCACIA",
+      "algorithm_flag": "Safe",
+      "algorithm_health_avg_score": "28.2",
+      "lt": 4,
+      "projectStartDate": "2026-04-03T12:00:00.000Z",
+      "churnDate": null,
+      "atendimentoDiarioAtivo": false
     }
   ]
 }
