@@ -2,10 +2,10 @@
 ,01/06/2026,01/07/2026,01/08/2026,01/09/2026,01/10/2026,01/11/2026,01/12/2026
 ,30/06/2026,31/07/2026,31/08/2026,30/09/2026,31/10/2026,30/11/2026,31/12/2026
 Mês,junho,julho,agosto,setembro,outubro,novembro,dezembro
-Investimento,"R$ 526,82","R$ 2.006,38","R$ 1.474,79","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00"
+Investimento,"R$ 526,82","R$ 2.006,38","R$ 1.484,42","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00"
 Ticket Médio,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Impressões,1.035,2.590,2.337,0,0,0,0
-Cliques Totais,100,345,291,0,0,0,0
+Impressões,1.035,2.590,2.379,0,0,0,0
+Cliques Totais,100,345,295,0,0,0,0
 Leads Botão WhatsApp,0,35,25,0,0,0,0
 Leads Formulário,4,15,6,0,0,0,0
 Leads Totais,0,50,31,0,0,0,0
@@ -14,13 +14,13 @@ SQL (Manual),2,3,2,,,,
 Vendas (Manual),0,0,0,,,,
 Receita Faturada (Manual),"R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00"
 ROAS,"0,00","0,00","0,00",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Taxa de Conversão Leads (Clique->Lead),"4,00%","4,35%","2,06%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Taxa de Conversão Leads (Clique->Lead),"4,00%","4,35%","2,03%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
 ,,,,,,,
-Custo por Clique,"R$ 5,27","R$ 5,82","R$ 5,07",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Custo por Clique,"R$ 5,27","R$ 5,82","R$ 5,03",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
 ,,,,,,,
-Custo por Lead,"R$ 131,71","R$ 133,76","R$ 245,80",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Custo por MQL ,"R$ 263,41","R$ 133,76","R$ 491,60",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Custo por SQL,"R$ 263,41","R$ 668,79","R$ 737,40",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Custo por Lead,"R$ 131,71","R$ 133,76","R$ 247,40",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Custo por MQL ,"R$ 263,41","R$ 133,76","R$ 494,81",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Custo por SQL,"R$ 263,41","R$ 668,79","R$ 742,21",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
 Custo por Compra,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
 ,,,,,,,
 % Lead - MQL,"50,00%","30,00%","50,00%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
@@ -38,13 +38,13 @@ Custo por Clique,,,,,,,
 Custo por Lead,,,,,,,
 ,,,,,,,
 ,,,,,,,
-Investimento Google,"R$ 526,82","R$ 2.006,38","R$ 1.474,79","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00"
-Impressões,1.035,2.590,2.337,0,0,0,0
-Cliques,100,345,291,0,0,0,0
-CTR,"9,66%","13,32%","12,45%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Investimento Google,"R$ 526,82","R$ 2.006,38","R$ 1.484,42","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00"
+Impressões,1.035,2.590,2.379,0,0,0,0
+Cliques,100,345,295,0,0,0,0
+CTR,"9,66%","13,32%","12,40%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
 Leads (Formulário),4,15,6,0,0,0,0
 Leads (WhatsApp),0,35,25,0,0,0,0
-Taxa de Conversão (Clique->Lead),"4,00%","4,35%","2,06%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Taxa de Conversão (Clique->Lead),"4,00%","4,35%","2,03%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
 ,,,,,,,
-Custo por Clique,"R$ 5,27","R$ 5,82","R$ 5,07",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Custo por Lead,"R$ 131,71","R$ 133,76","R$ 245,80",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Custo por Clique,"R$ 5,27","R$ 5,82","R$ 5,03",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+Custo por Lead,"R$ 131,71","R$ 133,76","R$ 247,40",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
