@@ -4,11 +4,11 @@
 Mês,junho,julho,agosto,setembro,outubro,novembro,dezembro
 Investimento,"R$ 526,82","R$ 2.006,38","R$ 1.484,42","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00"
 Ticket Médio,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
-Impressões,1.035,2.590,2.379,0,0,0,0
+Impressões,1.035,2.590,2.381,0,0,0,0
 Cliques Totais,100,345,295,0,0,0,0
-Leads Botão WhatsApp,0,35,25,0,0,0,0
+Leads Botão WhatsApp,0,35,30,0,0,0,0
 Leads Formulário,4,15,6,0,0,0,0
-Leads Totais,0,50,31,0,0,0,0
+Leads Totais,0,50,36,0,0,0,0
 MQL (Manual),2,15,3,,,,
 SQL (Manual),2,3,2,,,,
 Vendas (Manual),0,0,0,,,,
@@ -39,11 +39,11 @@ Custo por Lead,,,,,,,
 ,,,,,,,
 ,,,,,,,
 Investimento Google,"R$ 526,82","R$ 2.006,38","R$ 1.484,42","R$ 0,00","R$ 0,00","R$ 0,00","R$ 0,00"
-Impressões,1.035,2.590,2.379,0,0,0,0
+Impressões,1.035,2.590,2.381,0,0,0,0
 Cliques,100,345,295,0,0,0,0
-CTR,"9,66%","13,32%","12,40%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
+CTR,"9,66%","13,32%","12,39%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
 Leads (Formulário),4,15,6,0,0,0,0
-Leads (WhatsApp),0,35,25,0,0,0,0
+Leads (WhatsApp),0,35,30,0,0,0,0
 Taxa de Conversão (Clique->Lead),"4,00%","4,35%","2,03%",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
 ,,,,,,,
 Custo por Clique,"R$ 5,27","R$ 5,82","R$ 5,03",#DIV/0!,#DIV/0!,#DIV/0!,#DIV/0!
