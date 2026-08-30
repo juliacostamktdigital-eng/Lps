@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-08-29T14:58:30Z",
+  "updatedAt": "2026-08-30T14:44:35Z",
   "data": [
     {
       "ticker": "SOTB",
       "name": "SOTOBI MAQUINAS E ACESSORIOS PARA FABRICAS DE BLOCOS LTDA",
       "algorithm_flag": "Safe",
       "algorithm_health_avg_score": "25.8",
-      "lt": 33,
+      "lt": 34,
       "projectStartDate": "2023-10-30T00:00:00.000Z",
       "churnDate": null,
       "atendimentoDiarioAtivo": true
@@ -56,7 +56,7 @@
       "name": "Natuclean",
       "algorithm_flag": "Danger",
       "algorithm_health_avg_score": "18.1",
-      "lt": 2,
+      "lt": 3,
       "projectStartDate": "2026-05-30T03:00:00.000Z",
       "churnDate": null,
       "atendimentoDiarioAtivo": false
