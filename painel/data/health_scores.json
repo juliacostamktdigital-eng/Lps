@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-31T17:29:10Z",
+  "updatedAt": "2026-09-01T14:38:54Z",
   "data": [
     {
       "ticker": "SOTB",
@@ -76,7 +76,7 @@
       "name": "New Safes",
       "algorithm_flag": "Safe",
       "algorithm_health_avg_score": "27.4",
-      "lt": 1,
+      "lt": 2,
       "projectStartDate": "2026-07-01T03:00:00.000Z",
       "churnDate": null,
       "atendimentoDiarioAtivo": true
